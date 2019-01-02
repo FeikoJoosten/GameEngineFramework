@@ -104,6 +104,9 @@
       <AdditionalDependencies>glew32sd.lib;opengl32.lib;Ws2_32.lib;XInput.lib;vulkan-1.lib;gainputstatic-d.lib;glfw3.lib;EASTL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Vulkan\$(PlatformTarget);$(SolutionDir)ThirdParty\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget);$(SolutionDir)ThirdParty\GainInput\lib\$(Configuration);$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\lib-vc2015;$(SolutionDir)ThirdParty\EASTL-master\build\$(Configuration);$(SolutionDir)ThirdParty\assimp\lib\$(PlatformTarget)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>BuildScripts\copyResourcesToBuildDirectory.bat "$(Outdir)" $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -126,6 +129,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget);$(SolutionDir)ThirdParty\GainInput\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\lib-vc2015;$(SolutionDir)ThirdParty\Vulkan\$(PlatformTarget);$(SolutionDir)ThirdParty\EASTL-master\build64\$(Configuration);$(SolutionDir)ThirdParty\assimp\lib\$(PlatformTarget)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32sd.lib;opengl32.lib;Ws2_32.lib;XInput.lib;vulkan-1.lib;glfw3.lib;gainputstatic-d.lib;EASTL.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>BuildScripts\copyResourcesToBuildDirectory.bat "$(Outdir)" $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -150,6 +156,9 @@
       <AdditionalDependencies>glew32s.lib;opengl32.lib;Ws2_32.lib;XInput.lib;vulkan-1.lib;gainputstatic.lib;glfw3.lib;EASTL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Vulkan\$(PlatformTarget);$(SolutionDir)ThirdParty\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget);$(SolutionDir)ThirdParty\GainInput\lib\$(Configuration);$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\lib-vc2015;$(SolutionDir)ThirdParty\EASTL-master\build\$(Configuration);$(SolutionDir)ThirdParty\assimp\lib\$(PlatformTarget)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>BuildScripts\copyResourcesToBuildDirectory.bat "$(Outdir)" $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -174,6 +183,9 @@
       <AdditionalDependencies>glew32s.lib;opengl32.lib;Ws2_32.lib;XInput.lib;vulkan-1.lib;glfw3.lib;gainputstatic.lib;EASTL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget);$(SolutionDir)ThirdParty\GainInput\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\lib-vc2015;$(SolutionDir)ThirdParty\Vulkan\$(PlatformTarget);$(SolutionDir)ThirdParty\EASTL-master\build64\$(Configuration);$(SolutionDir)ThirdParty\assimp\lib\$(PlatformTarget)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>BuildScripts\copyResourcesToBuildDirectory.bat "$(Outdir)" $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="api.hpp" />
