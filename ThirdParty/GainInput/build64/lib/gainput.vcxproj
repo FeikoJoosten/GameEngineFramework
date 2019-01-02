@@ -1,0 +1,426 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{48F5C676-A5DC-3FC0-8AAA-8E9EC6564AF9}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>gainput</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\build64\lib\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">gainput.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">gainput-d</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\build64\lib\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">gainput.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">gainput</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\build64\lib\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gainput.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gainput</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\build64\lib\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">gainput.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">gainput</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;GAINPUT_LIB_DYNAMIC=1;CMAKE_INTDIR="Debug";gainput_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;GAINPUT_LIB_DYNAMIC=1;CMAKE_INTDIR=\"Debug\";gainput_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>Xinput9_1_0.lib;ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/Debug/gainput-d.lib</ImportLibrary>
+      <ProgramDataBaseFile>I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/Debug/gainput-d.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GAINPUT_LIB_DYNAMIC=1;CMAKE_INTDIR="Release";gainput_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GAINPUT_LIB_DYNAMIC=1;CMAKE_INTDIR=\"Release\";gainput_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>Xinput9_1_0.lib;ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/Release/gainput.lib</ImportLibrary>
+      <ProgramDataBaseFile>I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/Release/gainput.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GAINPUT_LIB_DYNAMIC=1;CMAKE_INTDIR="MinSizeRel";gainput_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat></DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GAINPUT_LIB_DYNAMIC=1;CMAKE_INTDIR=\"MinSizeRel\";gainput_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>Xinput9_1_0.lib;ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/MinSizeRel/gainput.lib</ImportLibrary>
+      <ProgramDataBaseFile>I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/MinSizeRel/gainput.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GAINPUT_LIB_DYNAMIC=1;CMAKE_INTDIR="RelWithDebInfo";gainput_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;GAINPUT_LIB_DYNAMIC=1;CMAKE_INTDIR=\"RelWithDebInfo\";gainput_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>Xinput9_1_0.lib;ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/RelWithDebInfo/gainput.lib</ImportLibrary>
+      <ProgramDataBaseFile>I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/RelWithDebInfo/gainput.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version></Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/lib/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-HI:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput" "-BI:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64" --check-stamp-file "I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/lib/CMakeLists.txt;I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\CMakeLists.txt;I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\build64\lib\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/lib/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-HI:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput" "-BI:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64" --check-stamp-file "I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/lib/CMakeLists.txt;I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\CMakeLists.txt;I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\build64\lib\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/lib/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-HI:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput" "-BI:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64" --check-stamp-file "I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/lib/CMakeLists.txt;I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\CMakeLists.txt;I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\build64\lib\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/lib/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-HI:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput" "-BI:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64" --check-stamp-file "I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/build64/lib/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">I:/Projects/Year 2/Y2017A-Y2-Team04/Projects/RTS Engine/ThirdParty/GainInput/lib/CMakeLists.txt;I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\CMakeLists.txt;I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\build64\lib\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\GainputAllocator.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\GainputInputDeltaState.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\GainputInputDevice.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\GainputInputManager.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\GainputInputMap.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\GainputInputState.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\GainputMapFilters.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\builtin\GainputInputDeviceBuiltIn.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputDev.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputMemoryStream.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputNetAddress.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputNetConnection.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputNetListener.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\gainput.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\gestures\GainputButtonStickGesture.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\gestures\GainputDoubleClickGesture.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\gestures\GainputHoldGesture.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\gestures\GainputPinchGesture.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\gestures\GainputRotateGesture.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\gestures\GainputSimultaneouslyDownGesture.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\gestures\GainputTapGesture.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\keyboard\GainputInputDeviceKeyboard.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\keyboard\GainputInputDeviceKeyboardMac.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\mouse\GainputInputDeviceMouse.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\pad\GainputInputDevicePad.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\pad\GainputInputDevicePadMac.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\recorder\GainputInputPlayer.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\recorder\GainputInputRecorder.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\recorder\GainputInputRecording.cpp"  />
+    <ClCompile Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\touch\GainputInputDeviceTouch.cpp"  />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\GainputHelpersEvdev.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\GainputWindows.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\builtin\GainputInputDeviceBuiltInAndroid.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\builtin\GainputInputDeviceBuiltInImpl.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\builtin\GainputInputDeviceBuiltInIos.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\builtin\GainputInputDeviceBuiltInNull.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputDev.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputDevProtocol.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputMemoryStream.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputNetAddress.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputNetConnection.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputNetListener.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\dev\GainputStream.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\keyboard\GainputInputDeviceKeyboardAndroid.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\keyboard\GainputInputDeviceKeyboardEvdev.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\keyboard\GainputInputDeviceKeyboardImpl.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\keyboard\GainputInputDeviceKeyboardLinux.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\keyboard\GainputInputDeviceKeyboardMac.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\keyboard\GainputInputDeviceKeyboardNull.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\keyboard\GainputInputDeviceKeyboardWin.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\keyboard\GainputInputDeviceKeyboardWinRaw.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\keyboard\GainputKeyboardKeyNames.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\mouse\GainputInputDeviceMouseEvdev.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\mouse\GainputInputDeviceMouseImpl.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\mouse\GainputInputDeviceMouseLinux.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\mouse\GainputInputDeviceMouseMac.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\mouse\GainputInputDeviceMouseNull.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\mouse\GainputInputDeviceMouseWin.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\mouse\GainputInputDeviceMouseWinRaw.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\mouse\GainputMouseInfo.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\pad\GainputInputDevicePadAndroid.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\pad\GainputInputDevicePadImpl.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\pad\GainputInputDevicePadIos.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\pad\GainputInputDevicePadLinux.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\pad\GainputInputDevicePadMac.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\pad\GainputInputDevicePadNull.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\pad\GainputInputDevicePadWin.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\touch\GainputInputDeviceTouchAndroid.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\touch\GainputInputDeviceTouchImpl.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\touch\GainputInputDeviceTouchIos.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\touch\GainputInputDeviceTouchNull.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\source\gainput\touch\GainputTouchInfo.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputAllocator.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputContainers.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputDebugRenderer.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputHelpers.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputInputDeltaState.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputInputDevice.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputInputDeviceBuiltIn.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputInputDeviceKeyboard.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputInputDeviceMouse.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputInputDevicePad.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputInputDeviceTouch.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputInputListener.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputInputManager.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputInputMap.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputInputState.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputIos.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputLog.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\GainputMapFilters.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\gainput.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\gestures\GainputButtonStickGesture.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\gestures\GainputDoubleClickGesture.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\gestures\GainputGestures.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\gestures\GainputHoldGesture.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\gestures\GainputPinchGesture.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\gestures\GainputRotateGesture.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\gestures\GainputSimultaneouslyDownGesture.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\gestures\GainputTapGesture.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\recorder\GainputInputPlayer.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\recorder\GainputInputRecorder.h" />
+    <ClInclude Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\lib\include\gainput\recorder\GainputInputRecording.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="I:\Projects\Year 2\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\build64\ZERO_CHECK.vcxproj">
+      <Project>{3BCD0238-33F9-3AA1-A7D2-D78D98C6590F}</Project>
+      <Name>ZERO_CHECK</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

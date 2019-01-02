@@ -1,0 +1,1 @@
+@call "C:\Program Files (x86)\PVS-Studio\x64\PVS-Studio.exe" --cfg "I:\Perforce\Georgi160470-Laptop\Projects\Y2017A-Y2-Team04\Projects\RTS Engine\ThirdParty\GainInput\build64\lib\GainputInputRecording.cpp.PVS-Studio.cfg"

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{7F8FFA9A-D8CA-4E9D-845D-FE252E1A63D3}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Engine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <ProjectName>Engine</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;_DEBUG;Engine_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\boost_1_65_1;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\Vulkan\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\EASTL-master\include;$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\Include;$(SolutionDir)ThirdParty\EASTL-master\test\packages\EABase\include\Common;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\FMOD\fsbank\include;$(SolutionDir)ThirdParty\FMOD\studio\include;$(SolutionDir)ThirdParty\FMOD\lowlevel\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32sd.lib;opengl32.lib;Ws2_32.lib;XInput.lib;vulkan-1.lib;gainputstatic-d.lib;glfw3.lib;EASTL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Vulkan\$(PlatformTarget);$(SolutionDir)ThirdParty\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget);$(SolutionDir)ThirdParty\GainInput\lib\$(Configuration);$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\lib-vc2015;$(SolutionDir)ThirdParty\EASTL-master\build\$(Configuration);$(SolutionDir)ThirdParty\assimp\lib\$(PlatformTarget)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;_DEBUG;Engine_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\boost_1_65_1;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\EASTL-master\include;$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\Include;$(SolutionDir)ThirdParty\EASTL-master\test\packages\EABase\include\Common;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\FMOD\lowlevel\include;$(SolutionDir)ThirdParty\FMOD\fsbank\include;$(SolutionDir)ThirdParty\FMOD\studio\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <ShowIncludes>false</ShowIncludes>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget);$(SolutionDir)ThirdParty\GainInput\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\lib-vc2015;$(SolutionDir)ThirdParty\Vulkan\$(PlatformTarget);$(SolutionDir)ThirdParty\EASTL-master\build64\$(Configuration);$(SolutionDir)ThirdParty\assimp\lib\$(PlatformTarget)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32sd.lib;opengl32.lib;Ws2_32.lib;XInput.lib;vulkan-1.lib;glfw3.lib;gainputstatic-d.lib;EASTL.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;NDEBUG;Engine_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\boost_1_65_1;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\Vulkan\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\EASTL-master\include;$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\Include;$(SolutionDir)ThirdParty\EASTL-master\test\packages\EABase\include\Common;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\FMOD\studio\include;$(SolutionDir)ThirdParty\FMOD\fsbank\include;$(SolutionDir)ThirdParty\FMOD\lowlevel\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;Ws2_32.lib;XInput.lib;vulkan-1.lib;gainputstatic.lib;glfw3.lib;EASTL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\Vulkan\$(PlatformTarget);$(SolutionDir)ThirdParty\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget);$(SolutionDir)ThirdParty\GainInput\lib\$(Configuration);$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\lib-vc2015;$(SolutionDir)ThirdParty\EASTL-master\build\$(Configuration);$(SolutionDir)ThirdParty\assimp\lib\$(PlatformTarget)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;NDEBUG;Engine_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\boost_1_65_1;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\EASTL-master\include;$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\Include;$(SolutionDir)ThirdParty\EASTL-master\test\packages\EABase\include\Common;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\FMOD\lowlevel\include;$(SolutionDir)ThirdParty\FMOD\fsbank\include;$(SolutionDir)ThirdParty\FMOD\studio\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;Ws2_32.lib;XInput.lib;vulkan-1.lib;glfw3.lib;gainputstatic.lib;EASTL.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget);$(SolutionDir)ThirdParty\GainInput\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)ThirdParty\glfw-3.2.1\$(PlatformTarget)\lib-vc2015;$(SolutionDir)ThirdParty\Vulkan\$(PlatformTarget);$(SolutionDir)ThirdParty\EASTL-master\build64\$(Configuration);$(SolutionDir)ThirdParty\assimp\lib\$(PlatformTarget)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="api.hpp" />
+    <ClInclude Include="Camera\Camera.hpp" />
+    <ClInclude Include="Camera\Frustum.hpp" />
+    <ClInclude Include="Components\Component.hpp" />
+    <ClInclude Include="Components\ModelComponent.hpp" />
+    <ClInclude Include="Components\TransformComponent.hpp" />
+    <ClInclude Include="engine.hpp" />
+    <ClInclude Include="Entity\Entity.hpp" />
+    <ClInclude Include="Entity\EntitySystem.hpp" />
+    <ClInclude Include="Input\InputManager.hpp" />
+    <ClInclude Include="Mesh\Mesh.h" />
+    <ClInclude Include="Mesh\OpenGLMesh.hpp" />
+    <ClInclude Include="Mesh\VulkanMesh.hpp" />
+    <ClInclude Include="Model\Model.h" />
+    <ClInclude Include="Model\OpenGLModel.hpp" />
+    <ClInclude Include="Model\VulkanModel.hpp" />
+    <ClInclude Include="Renderer\IMGUI\imconfig.h" />
+    <ClInclude Include="Renderer\IMGUI\imgui.h" />
+    <ClInclude Include="Renderer\IMGUI\imgui_internal.h" />
+    <ClInclude Include="Renderer\IMGUI\stb_rect_pack.h" />
+    <ClInclude Include="Renderer\IMGUI\stb_textedit.h" />
+    <ClInclude Include="Renderer\IMGUI\stb_truetype.h" />
+    <ClInclude Include="Renderer\imgui_impl_glfw_gl3.h" />
+    <ClInclude Include="Renderer\imgui_impl_glfw_vulkan.h" />
+    <ClInclude Include="Renderer\OpenGLRenderer.hpp" />
+    <ClInclude Include="Renderer\Renderer.hpp" />
+    <ClInclude Include="Renderer\VulkanRenderer.hpp" />
+    <ClInclude Include="Resources\ModelLoader.hpp" />
+    <ClInclude Include="Shader\OpenGLShader.hpp" />
+    <ClInclude Include="Shader\Shader.hpp" />
+    <ClInclude Include="Texture\OpenGLTexture.hpp" />
+    <ClInclude Include="Texture\Texture.hpp" />
+    <ClInclude Include="Texture\VulkanTexture.hpp" />
+    <ClInclude Include="types.hpp" />
+    <ClInclude Include="Utility\Utility.hpp" />
+    <ClInclude Include="Utility\Defines.hpp" />
+    <ClInclude Include="Utility\EngineImGui.hpp" />
+    <ClInclude Include="Utility\Event.hpp" />
+    <ClInclude Include="Utility\NewOverrides.hpp" />
+    <ClInclude Include="Utility\Time.hpp" />
+    <ClInclude Include="Utility\stb_image.h" />
+    <ClInclude Include="Window\OpenGLWindow.hpp" />
+    <ClInclude Include="Window\VulkanWindow.hpp" />
+    <ClInclude Include="Window\Window.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Camera\Camera.cpp" />
+    <ClCompile Include="Camera\Frustum.cpp" />
+    <ClCompile Include="Components\Component.cpp" />
+    <ClCompile Include="Components\ModelComponent.cpp" />
+    <ClCompile Include="Components\TransformComponent.cpp" />
+    <ClCompile Include="engine.cpp" />
+    <ClCompile Include="Entity\Entity.cpp" />
+    <ClCompile Include="Entity\EntitySystem.cpp" />
+    <ClCompile Include="Input\InputManager.cpp" />
+    <ClCompile Include="Mesh\Mesh.cpp" />
+    <ClCompile Include="Mesh\OpenGLMesh.cpp" />
+    <ClCompile Include="Mesh\VulkanMesh.cpp" />
+    <ClCompile Include="Model\Model.cpp" />
+    <ClCompile Include="Model\OpenGLModel.cpp" />
+    <ClCompile Include="Model\VulkanModel.cpp" />
+    <ClCompile Include="Renderer\IMGUI\imgui.cpp" />
+    <ClCompile Include="Renderer\IMGUI\imgui_demo.cpp" />
+    <ClCompile Include="Renderer\IMGUI\imgui_draw.cpp" />
+    <ClCompile Include="Renderer\imgui_impl_glfw_gl3.cpp" />
+    <ClCompile Include="Renderer\imgui_impl_glfw_vulkan.cpp" />
+    <ClCompile Include="Renderer\OpenGLRenderer.cpp" />
+    <ClCompile Include="Renderer\Renderer.cpp" />
+    <ClCompile Include="Renderer\VulkanRenderer.cpp" />
+    <ClCompile Include="Resources\ModelLoader.cpp" />
+    <ClCompile Include="Shader\OpenGLShader.cpp" />
+    <ClCompile Include="Shader\Shader.cpp" />
+    <ClCompile Include="Texture\OpenGLTexture.cpp" />
+    <ClCompile Include="Texture\Texture.cpp" />
+    <ClCompile Include="Texture\VulkanTexture.cpp" />
+    <ClCompile Include="Utility\Utility.cpp" />
+    <ClCompile Include="Utility\EngineImGui.cpp" />
+    <ClCompile Include="Utility\NewOverrides.cpp" />
+    <ClCompile Include="Utility\Time.cpp" />
+    <ClCompile Include="Window\OpenGLWindow.cpp" />
+    <ClCompile Include="Window\VulkanWindow.cpp" />
+    <ClCompile Include="Window\Window.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
