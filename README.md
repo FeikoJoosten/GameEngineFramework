@@ -15,7 +15,7 @@ A window should pop up with a simple menu stating a `Quit Game` button.
 
 By pressing `left ctrl`, `left shift` and `e` you can open a simple developer menu with pretty much no functionality.
 
-By opening `Engine/Utility/Defines.hpp` you can change the graphics API from `OpenGL` to `Vulkan` by changing `RENDERER 1` to `RENDERER 2`.
+By opening `Engine/Utility/Defines.hpp` you can change the graphics API from `OpenGL` to `Vulkan` by changing `RENDERER OpenGL` to `RENDERER Vulkan`.
 
 ## Please note
 This project will no longer be worked on and is purely for portfolio.
