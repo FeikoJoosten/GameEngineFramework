@@ -16,7 +16,7 @@
 
 EA_ONCE()
 
-#include <EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
 
 namespace eastl
 {

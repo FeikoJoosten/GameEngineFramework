@@ -89,15 +89,15 @@
 #define EASTL_STRING_H
 
 
-#include <EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
 #if EASTL_ABSTRACT_STRING_ENABLED
-	#include <EASTL/bonus/string_abstract.h>
+	#include <ThirdParty/EASTL-master/include/EASTL/bonus/string_abstract.h>
 #else // 'else' encompasses the entire rest of this file.
-#include <EASTL/allocator.h>
-#include <EASTL/iterator.h>
-#include <EASTL/algorithm.h>
-#include <EASTL/initializer_list.h>
-#include <EASTL/bonus/compressed_pair.h>
+#include <ThirdParty/EASTL-master/include/EASTL/allocator.h>
+#include <ThirdParty/EASTL-master/include/EASTL/iterator.h>
+#include <ThirdParty/EASTL-master/include/EASTL/algorithm.h>
+#include <ThirdParty/EASTL-master/include/EASTL/initializer_list.h>
+#include <ThirdParty/EASTL-master/include/EASTL/bonus/compressed_pair.h>
 
 EA_DISABLE_ALL_VC_WARNINGS()
 #include <stddef.h>             // size_t, ptrdiff_t, etc.
@@ -132,7 +132,7 @@ EA_RESTORE_ALL_VC_WARNINGS()
 	#pragma once // Some compilers (e.g. VC++) benefit significantly from using this. We've measured 3-4% build speed improvements in apps as a result.
 #endif
 
-#include <EASTL/internal/char_traits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/char_traits.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // EASTL_STRING_EXPLICIT

@@ -6,6 +6,9 @@
 // If you are new to ImGui, see examples/README.txt and documentation at the top of imgui.cpp.
 // https://github.com/ocornut/imgui
 
+#include "Engine/Utility/Defines.hpp"
+#ifdef USING_OPENGL
+
 #include "Engine/Renderer/IMGUI/imgui.h"
 
 #include "Engine/engine.hpp"
@@ -305,8 +308,9 @@ void ImGui_ImplGlfwGL3_NewFrame()
 	//double current_time = glfwGetTime();
 	//io.DeltaTime = g_Time > 0.0 ? float(current_time - g_Time) : float(1.0f / 60.0f);
 	//g_Time = current_time;
-	io.DeltaTime = Engine::Engine::GetTime().GetDeltaTime();
+	io.DeltaTime = Engine::Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime();
 
     // Start the frame
     ImGui::NewFrame();
 }
+#endif USING_OPENGL

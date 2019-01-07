@@ -30,7 +30,7 @@
 #ifndef CEREAL_TYPES_SHARED_PTR_HPP_
 #define CEREAL_TYPES_SHARED_PTR_HPP_
 
-#include "cereal/cereal.hpp"
+#include "cereal/include/cereal/cereal.hpp"
 #include <memory>
 #include <cstring>
 
@@ -333,7 +333,10 @@ namespace cereal
 
     if( id & detail::msb_32bit )
     {
-      ptr.reset( detail::Construct<T, Archive>::load_andor_construct() );
+	  if (!ptr)
+	  {
+		ptr.reset(detail::Construct<T, Archive>::load_andor_construct());
+	  }
       ar.registerSharedPointer( id, ptr );
       ar( CEREAL_NVP_("data", *ptr) );
     }
@@ -419,7 +422,7 @@ namespace cereal
 } // namespace cereal
 
 // automatically include polymorphic support
-#include "cereal/types/polymorphic.hpp"
+#include "cereal/include/cereal/types/polymorphic.hpp"
 
 #undef CEREAL_ALIGNOF
 #endif // CEREAL_TYPES_SHARED_PTR_HPP_

@@ -16,10 +16,10 @@
 #define EASTL_ARRAY_H
 
 
-#include <EASTL/internal/config.h>
-#include <EASTL/iterator.h>
-#include <EASTL/algorithm.h>
-#include <EASTL/utility.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/iterator.h>
+#include <ThirdParty/EASTL-master/include/EASTL/algorithm.h>
+#include <ThirdParty/EASTL-master/include/EASTL/utility.h>
 #include <stddef.h>
 
 #if EASTL_EXCEPTIONS_ENABLED

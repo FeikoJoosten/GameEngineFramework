@@ -1,7 +1,9 @@
 #include "Engine/Utility/EngineImGui.hpp"
-#include "Engine/Renderer/VulkanRenderer.hpp"
 #include "Engine/engine.hpp"
+#include "Engine/Renderer/IMGUI/imgui.h"
+
 #include <ThirdParty/glm/glm/gtx/string_cast.hpp>
+#include <ThirdParty/glm/glm/gtc/matrix_transform.hpp>
 
 namespace Engine
 {
@@ -24,6 +26,45 @@ namespace Engine
 		ImGuiWindowFlags_NoSavedSettings |
 		ImGuiWindowFlags_NoCollapse;
 
+	ImGuiInputTextFlags textFlags = ImGuiInputTextFlags_AutoSelectAll;
+	float devMenuCooldown = 0.f;
+	bool showMenuBar = false;
+
+	EngineImGui::EngineImGui()
+	{
+		Engine::GetEngine().lock()->GetRenderer().lock()->OnRender += Sharp::EventHandler::Bind(&EngineImGui::Render, this);
+	}
+
+	EngineImGui::~EngineImGui()
+	{
+		Engine::GetEngine().lock()->GetRenderer().lock()->OnRender -= Sharp::EventHandler::Bind(&EngineImGui::Render, this);
+	}
+
+	void EngineImGui::Render()
+	{
+		if (allowCameraMovement)
+			CameraMovement();
+
+		const gainput::InputDevice* keyboard = Engine::GetEngine().lock()->GetInputManager().lock()->GetInputManager().GetDevice(
+			Engine::GetEngine().lock()->GetInputManager().lock()->GetKeyboardId());
+
+		if (keyboard->GetBool(gainput::KeyCtrlL) && keyboard->GetBool(gainput::KeyShiftL) && keyboard->GetBool(gainput::KeyE))
+		{
+			if (devMenuCooldown < 0.f)
+			{
+				showMenuBar = !showMenuBar;
+				devMenuCooldown = 0.25f;
+			}
+		}
+		if (devMenuCooldown >= 0.f)
+			devMenuCooldown -= Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime();
+
+		if (showMenuBar)
+		{
+			DevMenu();
+		}
+	}
+
 	void EngineImGui::DevMenu()
 	{
 		ImGui::Begin("Menubar demo", &open, menuBarWindowFlags);
@@ -35,11 +76,15 @@ namespace Engine
 			{
 				if (ImGui::MenuItem("Close game"))
 				{
-					Engine::Engine::GetWindow().SetShouldClose(true);
+					Engine::Engine::GetEngine().lock()->GetWindow().lock()->SetShouldClose(true);
 				}
 				if (ImGui::MenuItem("Toggle Camera Movement"))
 				{
 					allowCameraMovement = !allowCameraMovement;
+				}
+				if (ImGui::MenuItem("Toggle Play/Pause mode"))
+				{
+					Engine::GetEngine().lock()->SetIsPlaying(!Engine::GetEngine().lock()->GetIsPlaying());
 				}
 				ImGui::EndMenu();
 			}
@@ -52,46 +97,37 @@ namespace Engine
 		ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - 175, 0));
 		ImGui::Begin("FPS window", &open, fpsWindowFlags);
 
-		const eastl::vector<float> deltaTimes = Engine::Engine::GetTime().GetPreviousFramerates();
-		ImGui::PlotLines("FPS", deltaTimes.data(), Engine::Engine::GetTime().GetMaxIterations(), 0, std::to_string(ImGui::GetIO().Framerate).c_str());
+		const eastl::vector<float> deltaTimes = Engine::GetEngine().lock()->GetTime().lock()->GetPreviousFramerates();
+		ImGui::PlotLines("FPS", deltaTimes.data(), Engine::GetEngine().lock()->GetTime().lock()->GetMaxIterations(), 0, std::to_string(ImGui::GetIO().Framerate).c_str());
 
 		ImGui::End();
 	}
-	
-	void EngineImGui::CameraMovement()
+
+	void EngineImGui::CameraMovement() const
 	{
-		if (!allowCameraMovement) return;
-
 		float camMoveSpeed = 100.f;
-		Camera& camera = Engine::GetCamera();
+		eastl::weak_ptr<Camera> camera = Engine::GetEngine().lock()->GetCamera();
 
-		const gainput::InputDevice* keyboard = Engine::GetInputManager().GetDevice(Engine::GetInputManager().GetKeyboardID());
-		/*const gainput::InputDevice* mouse = Engine::GetInputManager().GetDevice(Engine::GetInputManager().GetMouseID());
+		const gainput::InputDevice* keyboard = Engine::GetEngine().lock()->GetInputManager().lock()->GetInputManager().GetDevice(
+			Engine::GetEngine().lock()->GetInputManager().lock()->GetKeyboardId());
 
-		glm::vec2 cameraOffset =	glm::vec2(	mouse->GetFloat(gainput::MouseAxisX), 
-									mouse->GetFloat(gainput::MouseAxisY)) - 
-						glm::vec2(	mouse->GetFloatPrevious(gainput::MouseAxisX), 
-									mouse->GetFloatPrevious(gainput::MouseAxisY));
-		camera.UpdateRotationOffset( 0.5f * -cameraOffset);*/
-
-		if (keyboard->GetBool(gainput::KeyW))
+		if (keyboard->GetBool(gainput::KeyW) && !ImGui::GetIO().WantTextInput)
 		{
-			camera.MoveForwards(Engine::GetTime().GetDeltaTime() * camMoveSpeed);
+			camera.lock()->MoveForwards(Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime() * camMoveSpeed);
 		}
-		if (keyboard->GetBool(gainput::KeyS))
+		if (keyboard->GetBool(gainput::KeyS) && !ImGui::GetIO().WantTextInput)
 		{
-			camera.MoveBackwards(Engine::GetTime().GetDeltaTime() * camMoveSpeed);
+			camera.lock()->MoveBackwards(Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime() * camMoveSpeed);
 		}
-		if (keyboard->GetBool(gainput::KeyA))
+		if (keyboard->GetBool(gainput::KeyA) && !ImGui::GetIO().WantTextInput)
 		{
-			camera.MoveLeft(Engine::GetTime().GetDeltaTime() * camMoveSpeed);
+			camera.lock()->MoveLeft(Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime() * camMoveSpeed);
 		}
-		if (keyboard->GetBool(gainput::KeyD))
+		if (keyboard->GetBool(gainput::KeyD) && !ImGui::GetIO().WantTextInput)
 		{
-			camera.MoveRight(Engine::GetTime().GetDeltaTime() * camMoveSpeed);
+			camera.lock()->MoveRight(Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime() * camMoveSpeed);
 		}
-		glm::vec3 target = glm::normalize(camera.GetPosition() + camera.GetRotation());
-		std::cout << "Camera pos: " << glm::to_string(camera.GetPosition()) << " Target: " << glm::to_string(camera.GetPosition() - target) << std::endl;
-		camera.SetView(glm::lookAt(camera.GetPosition(), camera.GetPosition() - target, camera.GetUp()));
+		glm::vec3 target = glm::normalize(camera.lock()->GetPosition() + camera.lock()->GetRotation());
+		camera.lock()->SetView(glm::lookAt(camera.lock()->GetPosition(), camera.lock()->GetPosition() - target, camera.lock()->GetUp()));
 	}
 } //namespace Engine

@@ -39,8 +39,8 @@
 #include <type_traits>
 #include <typeindex>
 
-#include "cereal/macros.hpp"
-#include "cereal/access.hpp"
+#include "ThirdParty/cereal/include/cereal/macros.hpp"
+#include "ThirdParty/cereal/include/cereal/access.hpp"
 
 namespace cereal
 {

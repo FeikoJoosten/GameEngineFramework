@@ -7,18 +7,18 @@
 #define EASTL_RED_BLACK_TREE_H
 
 
-#include <EABase/eabase.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/eabase.h>
 #if defined(EA_PRAGMA_ONCE_SUPPORTED)
 	#pragma once
 #endif
 
-#include <EASTL/internal/config.h>
-#include <EASTL/type_traits.h>
-#include <EASTL/allocator.h>
-#include <EASTL/iterator.h>
-#include <EASTL/utility.h>
-#include <EASTL/algorithm.h>
-#include <EASTL/initializer_list.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/allocator.h>
+#include <ThirdParty/EASTL-master/include/EASTL/iterator.h>
+#include <ThirdParty/EASTL-master/include/EASTL/utility.h>
+#include <ThirdParty/EASTL-master/include/EASTL/algorithm.h>
+#include <ThirdParty/EASTL-master/include/EASTL/initializer_list.h>
 
 #ifdef _MSC_VER
 	#pragma warning(push, 0)

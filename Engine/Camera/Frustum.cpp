@@ -52,4 +52,34 @@ namespace Engine
 
 		d = glm::dot(-normal, p0);
 	}
+
+	Frustum::Face Frustum::GetFrontFace() const
+	{
+		return frontFace;
+	}
+
+	Frustum::Face Frustum::GetBackFace() const
+	{
+		return backFace;
+	}
+
+	Frustum::Face Frustum::GetTopFace() const
+	{
+		return topFace;
+	}
+
+	Frustum::Face Frustum::GetRightFace() const
+	{
+		return rightFace;
+	}
+
+	Frustum::Face Frustum::GetBottomFace() const
+	{
+		return bottomFace;
+	}
+
+	Frustum::Face Frustum::GetLeftFace() const
+	{
+		return leftFace;
+	}
 } // namespace Engine

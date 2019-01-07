@@ -7,13 +7,13 @@
 #define EASTL_UNIQUE_PTR_H
 
 
-#include <EABase/nullptr.h>
-#include <EASTL/internal/config.h>
-#include <EASTL/internal/smart_ptr.h>   // Defines smart_ptr_deleter
-#include <EASTL/internal/move_help.h>   // Defines EASTL_MOVE
-#include <EASTL/type_traits.h>
-#include <EASTL/functional.h>
-#include <EASTL/bonus/compressed_pair.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/nullptr.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/smart_ptr.h>   // Defines smart_ptr_deleter
+#include <ThirdParty/EASTL-master/include/EASTL/internal/move_help.h>   // Defines EASTL_MOVE
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/functional.h>
+#include <ThirdParty/EASTL-master/include/EASTL/bonus/compressed_pair.h>
 #include <stddef.h>
 
 #if defined(EA_PRAGMA_ONCE_SUPPORTED)

@@ -9,6 +9,8 @@
 #pragma once
 struct GLFWwindow;
 
+#ifdef USING_VULKAN
+
 #define IMGUI_VK_QUEUED_FRAMES 2
 
 struct ImGui_ImplGlfwVulkan_Init_Data
@@ -17,6 +19,8 @@ struct ImGui_ImplGlfwVulkan_Init_Data
 	VkPhysicalDevice       gpu;
 	VkDevice               device;
 	VkRenderPass           render_pass;
+	VkQueue				   graphics_queue;
+	uint32_t               sub_pass;
 	VkPipelineCache        pipeline_cache;
 	VkDescriptorPool       descriptor_pool;
 	void(*check_vk_result)(VkResult err);
@@ -32,3 +36,5 @@ IMGUI_API void        ImGui_ImplGlfwVulkan_InvalidateFontUploadObjects();
 IMGUI_API void        ImGui_ImplGlfwVulkan_InvalidateDeviceObjects();
 IMGUI_API bool        ImGui_ImplGlfwVulkan_CreateFontsTexture(VkCommandBuffer command_buffer);
 IMGUI_API bool        ImGui_ImplGlfwVulkan_CreateDeviceObjects();
+
+#endif

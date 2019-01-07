@@ -1,12 +1,13 @@
 #pragma once
 
+#include "Engine/Utility/Defines.hpp"
+#ifdef USING_OPENGL
 #include "Engine/api.hpp"
 #include "Engine/Shader/Shader.hpp"
+
 #include <ThirdParty/glm/glm/glm.hpp>
 #include <ThirdParty/EASTL-master/include/EASTL/map.h>
-#include <ThirdParty/EASTL-master/include/EASTL/unique_ptr.h>
-
-#define GLEW_STATIC
+#include <ThirdParty/EASTL-master/include/EASTL/shared_ptr.h>
 #include <ThirdParty/glew-2.1.0/include/GL/glew.h>
 
 namespace Engine
@@ -15,57 +16,99 @@ namespace Engine
 	class Texture;
 	class Color;
 
-	///
+	/// <summary>
 	/// ShaderParameter is a representation of an shader parameter.
-	/// It has a type and it will complain if the type declared in the
-	/// shader program is different.
-	///
+	/// It has a type and it will complain if the type declared in the shader program is different.
+	/// </summary>
 	class ShaderParameter
 	{
 		friend class OpenGLShader;
 
 	public:
 
-		/// Check if this parameter object is valid
+		/// <summary>
+		/// Check if this parameter object is valid.
+		/// </summary>
+		/// <returns>Returns true of this Shader Parameter has been properly initialized. </returns>
 		bool IsValid() const { return _location != -1; }
 
-		/// Gets the type of this parameter
+		/// <summary>
+		/// Gets the type of this parameter.
+		/// </summary>
+		/// <returns>Returns the type of this shader parameter as a GLenum.</returns>
 		GLenum GetType() const { return _type; }
 
-		/// Location of this parameter
+		/// <summary>
+		/// The location of this parameter.
+		/// </summary>
+		/// <returns>Returns the location of this parameter as a GLint.</returns>
 		GLint GetLocation() const { return _location; }
+		/// <summary>
+		/// Set the value of this parameter.
+		/// </summary>
+		/// <param name="val">The value expected as a float.</param>
+		void SetValue(float val) const;
 
-		/// Set the value. Parameter should be float.
-		void SetValue(float val);
+		/// <summary>
+		/// Set the value of this parameter.
+		/// </summary>
+		/// <param name="val">The value expected as an int.</param>
+		void SetValue(int val) const;
 
-		/// Set the value. Parameter should be int.
-		void SetValue(int val);
+		/// <summary>
+		/// Set the value of this parameter.
+		/// </summary>
+		/// <param name="val">The value expected as a bool.</param>
+		void SetValue(bool val) const;
 
-		/// Set the value. Parameter should be bool.
-		void SetValue(bool val);
+		/// <summary>
+		/// Set the value of this parameter.
+		/// </summary>
+		/// <param name="val">The value expected as a vector 2.</param>
+		void SetValue(const glm::vec2& vec) const;
 
-		/// Set the value. Parameter should be Vector2.
-		void SetValue(const glm::vec2& vec);
+		/// <summary>
+		/// Set the value of this parameter.
+		/// </summary>
+		/// <param name="val">The value expected as a vector 3.</param>
+		void SetValue(const glm::vec3& vec) const;
 
-		/// Set the value. Parameter should be Vector3.
-		void SetValue(const glm::vec3& vec);
+		/// <summary>
+		/// Set the value of this parameter.
+		/// </summary>
+		/// <param name="val">The value expected as a vector 4.</param>
+		void SetValue(const glm::vec4& vec) const;
 
-		/// Set the value. Parameter should be Vector4.
-		void SetValue(const glm::vec4& vec);
-
-		/// Set the value. Parameter should be Color.
+		/// <summary>
+		/// Set the value of this parameter.
+		/// </summary>
+		/// <param name="val">The value expected as a color.</param>
 		void SetValue(const Color& color);
 
-		/// Set the value. Parameter should be Matrix33.
-		void SetValue(const glm::mat4x4& mtx, bool transpose = false);
+		/// <summary>
+		/// Set the value of this parameter.
+		/// </summary>
+		/// <param name="val">The value expected as a matrix 4x4.</param>
+		/// <param name="transpose">This method can optionally transpose the given matrix. False by default.</param>
+		void SetValue(const glm::mat4x4& mtx, bool transpose = false) const;
 
-		/// Set the value. Parameter should be Texture.
-		void SetValue(Texture& texture);
+		/// <summary>
+		/// Set the value of this parameter.
+		/// </summary>
+		/// <param name="val">The value expected as a texture.</param>
+		void SetValue(Texture& texture_) const;
 
 	protected:
 
-		/// The shader creates a parameter.
-		ShaderParameter(Shader* shader, eastl::string name, GLenum type, GLint location, GLint sampler = -1)
+		/// <summary>
+		/// The constructor of a shader parameter, called by OpenGLShader.
+		/// </summary>
+		/// <param name="shader">A reference to the current shader.</param>
+		/// <param name="name">The name of the parameter you want to load in.</param>
+		/// <param name="type">The type of the parameter you want to load in.</param>
+		/// <param name="location">The location of the parameter you want to load in.</param>
+		/// <param name="sampler">The sampler of this parameter. -1 by default.</param>
+		ShaderParameter(OpenGLShader* shader, eastl::string name, GLenum type, GLint location, GLint sampler = -1)
 			: _shader(shader)
 			, _name(name)
 			, _type(type)
@@ -73,12 +116,20 @@ namespace Engine
 			, _sampler(sampler)
 		{}
 
-		/// Constructor for an invalid ShaderParameter
+		/// <summary>
+		/// A constructor for an invalid ShaderParameter.
+		/// </summary>
 		ShaderParameter() : _shader(nullptr), _name(""), _type(0), _location(-1), _sampler(-1) {}
 
-
-		/// The shader can reset the parameter after a reload
-		void Reset(Shader* shader, eastl::string name, GLenum type, GLint location, GLint sampler = -1)
+		/// <summary>
+		/// The shader is able to reset a shader parameter after a reload.
+		/// </summary>
+		/// <param name="shader">A reference to the current shader.</param>
+		/// <param name="name">The name of the parameter you want to load in.</param>
+		/// <param name="type">The type of the parameter you want to load in.</param>
+		/// <param name="location">The location of the parameter you want to load in.</param>
+		/// <param name="sampler">The sampler of this parameter. -1 by default.</param>
+		void Reset(OpenGLShader* shader, eastl::string name, GLenum type, GLint location, GLint sampler = -1)
 		{
 			this->_shader = shader;
 			this->_type = type;
@@ -87,8 +138,9 @@ namespace Engine
 			this->_sampler = sampler;
 		}
 
-		/// The shader should invalidate when reloading a new shader file
-		/// a some information can be old
+		/// <summary>
+		/// The shader should invalidate this shader parameter when reloading a new shader file. Otherwise some of the information can be old.
+		/// </summary>
 		void Invalidate()
 		{
 			_shader = nullptr;
@@ -98,68 +150,112 @@ namespace Engine
 			_sampler = -1;
 		}
 
-		/// The effect this parameter belongs to. Unused (beyond debugging)
-		Shader*			_shader;
+		/// <summary>
+		/// A reference to the shader this shader parameter belongs to.
+		/// </summary>
+		OpenGLShader*	_shader;
 
-		/// Name as defined in the shader file.
+		/// <summary>
+		/// Name of the shader parameter as defined in the shader file.
+		/// </summary>
 		eastl::string		_name;
 
-		/// Type as defined in the shader file.
+		/// <summary>
+		/// The type of the shader parameter as defined in the shader file.
+		/// </summary>
 		GLenum			_type;
 
-		/// Location for the setting for this.
+		/// <summary>
+		/// The location of this shader parameter.
+		/// </summary>
 		GLint			_location;
 
-		/// Only valid for type sampler (GL_SAMPLER_2D)
+		/// <summary>
+		/// The sampler of this shader parameter. NOTE: Only valid for the type GL_SAMPLER_2D/
+		/// </summary>
 		GLint			_sampler;
 	};
 
 
-	///
-	/// A vertex attribute
-	///
+	/// <summary>
+	/// ShaderAttrixbute is a representation of a vertex shader attribute.
+	/// </summary>
 	class ShaderAttribute
 	{
 		friend class OpenGLShader;
 
 	public:
 
-		/// Check if this parameter object is valid
+		/// <summary>
+		/// Check if this parameter object is valid.
+		/// </summary>
+		/// <returns>Returns true of this Shader Parameter has been properly initialized. </returns>
 		bool IsValid() const { return _location != -1; }
 
-		/// Gets the type of this parameter
+		/// <summary>
+		/// Gets the type of this parameter.
+		/// </summary>
+		/// <returns>Returns the type of this shader parameter as a GLenum.</returns>
 		GLenum GetType() const { return _type; }
 
-		/// Location of this parameter
+		/// <summary>
+		/// The location of this parameter.
+		/// </summary>
+		/// <returns>Returns the location of this parameter as a GLint.</returns>
 		GLint GetLocation() const { return _location; }
 
 		/// Check documentation for glVertexAttribPointer
+		/// <summary>
+		/// This method allows you to set the value of your shader attribute. NOTE: see this link for more information: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
+		/// </summary>
+		/// <param name="size">The size of the shader attribute.</param>
+		/// <param name="type">The type of the shader attribute.</param>
+		/// <param name="normalized">This bool defines if this value should be normalized before it's sent to the GPU.</param>
+		/// <param name="stride">The stride of the shader attribute.</param>
+		/// <param name="pointer">The pointer of the shader attribute.</param>
 		void SetAttributePointer(
 			GLint size,
 			GLenum type,
 			GLboolean normalized,
 			GLsizei stride,
-			const GLvoid * pointer);
+			const GLvoid * pointer) const;
 
-		/// Check documentation for glVertexAttribPointer
-		void DisableAttributePointer();
+		/// <summary>
+		/// This method allows you to disable the shader attribute. 
+		/// </summary>
+		void DisableAttributePointer() const;
 
 	protected:
 
 		/// The shader creates a parameter.
-		ShaderAttribute(Shader* shader, eastl::string name, GLenum type, GLint location) :
+		/// <summary>
+		/// The constructor of a shader attribute, called by OpenGLShader.
+		/// </summary>
+		/// <param name="shader">A reference to the current shader.</param>
+		/// <param name="name">The name of the attribute you want to load in.</param>
+		/// <param name="type">The type of the attribute you want to load in.</param>
+		/// <param name="location">The location of the attribute you want to load in.</param>
+		ShaderAttribute(OpenGLShader* shader, eastl::string name, GLenum type, GLint location) :
 			_shader(shader),
 			_name(name),
 			_type(type),
 			_location(location)
 		{}
 
-		/// Constructor for an invalid ShaderParameter
+		/// <summary>
+		/// A constructor for an invalid ShaderAttribute.
+		/// </summary>
 		ShaderAttribute() : _shader(nullptr), _name(""), _type(0), _location(-1) {}
 
 
-		/// The shader can reset the parameter after a reload
-		void Reset(Shader* shader, eastl::string name, GLenum type, GLint location)
+		/// <summary>
+		/// The shader is able to reset a shader attribute after a reload.
+		/// </summary>
+		/// <param name="shader">A reference to the current shader.</param>
+		/// <param name="name">The name of the attribute you want to load in.</param>
+		/// <param name="type">The type of the attribute you want to load in.</param>
+		/// <param name="location">The location of the attribute you want to load in.</param>
+		void Reset(OpenGLShader* shader, eastl::string name, GLenum type, GLint location)
 		{
 			this->_shader = shader;
 			this->_type = type;
@@ -167,8 +263,9 @@ namespace Engine
 			this->_name = name;
 		}
 
-		/// The shader should invalidate when reloading a new shader file
-		/// as some information can be old
+		/// <summary>
+		/// The shader should invalidate this shader parameter when reloading a new shader file. Otherwise some of the information can be old.
+		/// </summary>
 		void Invalidate()
 		{
 			_shader = nullptr;
@@ -179,71 +276,124 @@ namespace Engine
 
 
 	protected:
-		/// The effect this parameter belongs to. Unused (beyond debugging)
-		Shader*		_shader;
+		/// <summary>
+		/// A reference to the shader this shader attribute belongs to.
+		/// </summary>
+		OpenGLShader*	_shader;
 
-		/// Name as defined in the shader file.
+		/// <summary>
+		/// Name of the shader attribute as defined in the shader file.
+		/// </summary>
 		eastl::string  _name;
 
-		/// Type as defined in the shader file.
+		/// <summary>
+		/// The type of the shader attribute as defined in the shader file.
+		/// </summary>
 		GLenum		_type;
 
-		/// Location for the setting for this.
+		/// <summary>
+		/// The location of this shader attribute.
+		/// </summary>
 		GLint		_location;
-
 	};
 
-	///
-	/// Shader is a class representing a compiled GPU program
-	///
+	/// <summary>
+	/// This object is used to store information regarding the OpenGLShader.
+	/// </summary>
 	class ENGINE_API OpenGLShader : public Shader
 	{
-	public:
-		
-		///Create a shader with vertex and fragment programs
-		explicit OpenGLShader(	const eastl::string& vertexFileName,
-								const eastl::string& fragmentFileName);
+	private:
 
-		///Create a shader with vertex, fragment and geometry programs
-		explicit OpenGLShader(	const eastl::string& vertexFileName,
-								const eastl::string& fragmentFileName,
-								const eastl::string& geometryFileName);
+	private:
+		friend class OpenGLRenderer;
+
+		///Create a shader with vertex and fragment programs
+		/// <summary>
+		/// Constructor that allows you to create a shader instande with a vertex file and fragment file.
+		/// </summary>
+		/// <param name="vertexFileName">The vertex shader file you want to load.
+		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
+		/// <param name="fragmentFileName">The fragment shader file you want to load. 
+		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
+		explicit OpenGLShader(const eastl::string& vertexFileName,
+			const eastl::string& fragmentFileName);
+
+		///Create a shader with vertex and fragment programs
+		/// <summary>
+		/// Constructor that allows you to create a shader instande with a vertex file and fragment file.
+		/// </summary>
+		/// <param name="vertexFileName">The vertex shader file you want to load.
+		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
+		/// <param name="fragmentFileName">The fragment shader file you want to load. 
+		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
+		/// <param name="geometryFileName">The geometry shader file you want to load. This value is optional.
+		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
+		explicit OpenGLShader(const eastl::string& vertexFileName,
+			const eastl::string& fragmentFileName,
+			const eastl::string& geometryFileName);
 
 		explicit OpenGLShader(const Shader& other) = delete;
 		OpenGLShader(OpenGLShader &&other) = delete;
 
-		/// Load with source (as oposed to files)
+	public:
+		///Create a shader with vertex and fragment programs
+		/// <summary>
+		/// Constructor that allows you to create a shader instande with a vertex file and fragment file.
+		/// </summary>
+		/// <param name="vertexFileName">The vertex shader file you want to load.
+		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
+		/// <param name="fragmentFileName">The fragment shader file you want to load. 
+		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
+		/// <param name="geometryFileName">The geometry shader file you want to load. This value is optional.
+		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
+		/// <returns>Returns true if the shader files have succesfully been loaded.</returns>
 		bool LoadSource(const eastl::string& vertexShader,
-						const eastl::string& fragmentShader,
-						const eastl::string& geometryShader);
+			const eastl::string& fragmentShader,
+			const eastl::string& geometryShader);
 
-		/// Get active parameter by name. If the parameter is not present/active
-		/// you will get an invalid one.
-		ShaderParameter* GetParameter(const eastl::string& name);
+		/// <summary>
+		/// This method will allow you to get a parameter by its name.
+		/// </summary>
+		/// <param name="name">The name of the parameter you want to get.</param>
+		/// <returns>Returns the parameter if it has been loaded. Otherwise it'll return an expired weak pointer.</returns>
+		eastl::weak_ptr<ShaderParameter> GetParameter(const eastl::string& name);
 
-		/// Get active attribute by name. If the attribute is not present/active
-		/// you will get an invalid one.
-		ShaderAttribute* GetAttribute(const eastl::string& name);
+		/// <summary>
+		/// This method will allow you to get a attribute by its name.
+		/// </summary>
+		/// <param name="name">The name of the attribute you want to get.</param>
+		/// <returns>Returns the attribute if it has been loaded. Otherwise it'll return an expired weak pointer.</returns>
+		eastl::weak_ptr<ShaderAttribute> GetAttribute(const eastl::string& name);
 
-		/// Get the program in case you want to do everyting manually
+		/// <summary>
+		/// This method allows you to get the program of this shader.
+		/// </summary>
+		/// <returns>Returns the program as a GLuint.</returns>
 		GLuint GetProgram() const;
 
+		/// <summary>
+		/// Call this method before you start rendering.
+		/// </summary>
 		void Activate() override;
+		/// <summary>
+		/// Call this method after you've finished rendering.
+		/// </summary>
 		void Deactivate() override;
 
 	private:
 
 		void LoadParameters();
 
-		bool Validate();
+		bool Validate() const;
 
 		/// Store all the parameters
-		eastl::map<eastl::string, eastl::unique_ptr<ShaderParameter>> parameters;
+		eastl::map<eastl::string, eastl::shared_ptr<ShaderParameter>> parameters;
 
 		/// Store all the attributes
-		eastl::map<eastl::string, eastl::unique_ptr<ShaderAttribute>> attributes;
+		eastl::map<eastl::string, eastl::shared_ptr<ShaderAttribute>> attributes;
 
 		/// GL id (name) of the compiled program
 		GLuint program = 0;
 	};
 } //namespace Engine
+#endif

@@ -35,12 +35,12 @@
 #define EASTL_LIST_H
 
 
-#include <EASTL/internal/config.h>
-#include <EASTL/allocator.h>
-#include <EASTL/type_traits.h>
-#include <EASTL/iterator.h>
-#include <EASTL/algorithm.h>
-#include <EASTL/initializer_list.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/allocator.h>
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/iterator.h>
+#include <ThirdParty/EASTL-master/include/EASTL/algorithm.h>
+#include <ThirdParty/EASTL-master/include/EASTL/initializer_list.h>
 
 EA_DISABLE_ALL_VC_WARNINGS()
 #include <new>

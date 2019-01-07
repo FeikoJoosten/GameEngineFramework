@@ -10,20 +10,20 @@
 
 
 // Identify the compiler and declare the EA_COMPILER_xxxx defines
-#include <EABase/config/eacompiler.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/config/eacompiler.h>
 
 // Identify traits which this compiler supports, or does not support
-#include <EABase/config/eacompilertraits.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/config/eacompilertraits.h>
 
 // Identify the platform and declare the EA_xxxx defines
-#include <EABase/config/eaplatform.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/config/eaplatform.h>
 
 #if defined(EA_PRAGMA_ONCE_SUPPORTED)
 	#pragma once // Some compilers (e.g. VC++) benefit significantly from using this. We've measured 3-4% build speed improvements in apps as a result.
 #endif
 
 // Always include version.h for backwards compatibility.
-#include <EABase/version.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/version.h>
 
 // ------------------------------------------------------------------------
 // The C++ standard defines size_t as a built-in type. Some compilers are

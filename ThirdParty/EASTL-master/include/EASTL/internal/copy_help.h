@@ -11,9 +11,9 @@
 	#pragma once
 #endif
 
-#include <EASTL/internal/config.h>
-#include <EASTL/type_traits.h>
-#include <EASTL/iterator.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/iterator.h>
 #include <string.h> // memcpy, memcmp, memmove
 
 

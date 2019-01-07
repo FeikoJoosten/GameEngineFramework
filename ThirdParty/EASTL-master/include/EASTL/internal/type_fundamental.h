@@ -7,8 +7,8 @@
 #define EASTL_INTERNAL_TYPE_FUNDAMENTAL_H
 
 
-#include <EABase/eabase.h>
-#include <EABase/nullptr.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/eabase.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/nullptr.h>
 
 #if defined(EA_PRAGMA_ONCE_SUPPORTED)
 	#pragma once

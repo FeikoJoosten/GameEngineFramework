@@ -15,8 +15,8 @@
 #endif
 
 
-#include <EASTL/internal/config.h>
-#include <EASTL/numeric_limits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/numeric_limits.h>
 
 
 

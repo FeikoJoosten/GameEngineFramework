@@ -42,7 +42,7 @@ For more information, please refer to <http://unlicense.org/>
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include <EABase/eabase.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/eabase.h>
 #if defined(EA_PRAGMA_ONCE_SUPPORTED)
 	#pragma once
 #endif
@@ -50,14 +50,14 @@ For more information, please refer to <http://unlicense.org/>
 #ifndef EASTL_INTERNAL_FUNCTION_H
 #define EASTL_INTERNAL_FUNCTION_H
 
-#include <EABase/nullptr.h>
-#include <EABase/config/eacompilertraits.h>
-#include <EASTL/type_traits.h>
-#include <EASTL/utility.h>
-#include <EASTL/allocator.h>
-#include <EASTL/internal/move_help.h>
-#include <EASTL/internal/mem_fn.h>
-#include <EASTL/internal/allocator_traits_fwd_decls.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/nullptr.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/config/eacompilertraits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/utility.h>
+#include <ThirdParty/EASTL-master/include/EASTL/allocator.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/move_help.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/mem_fn.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/allocator_traits_fwd_decls.h>
 
 // RTTI currently disabled.  User can re-enable via the define below but note this code path isn't tested.
 #define FUNC_NO_RTTI	

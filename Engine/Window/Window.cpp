@@ -1,116 +1,154 @@
 #include "Engine/Window/Window.hpp"
 #include "Engine/engine.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
-#include <cstdio>
-#include <cstdlib>
+#include "Engine/Utility/Logging.hpp"
+#include "Engine/Input/InputManager.hpp"
+
+#ifdef USING_VULKAN
+#include "Engine/Renderer/VulkanRenderer.hpp"
+#endif
 
 void error_callback(int error, const char* description)
 {
-	fprintf(stderr, "Error: %s\n", description);
+	eastl::string errorcallback = "Error: ";
+	errorcallback.append(description);
+
+	debug_error("Window", "Error_callback", errorcallback);
 }
 
-//TODO -- Feiko | allow this callback to be virtual
-void Engine::Window::OnWindowResized(GLFWwindow*, int width, int height)
-{
-	if (width == 0 || height == 0) return;
-
-	Engine::Engine::GetWindow().SetWidth(width);
-	Engine::Engine::GetWindow().SetHeight(height);
-
-	int display_w, display_h;
-	glfwGetFramebufferSize(Engine::Engine::GetWindow().GetGLFWWindow(), &display_w, &display_h);
-
-	ImGuiIO& io = ImGui::GetIO();
-	io.DisplaySize = ImVec2(float(width), float(height));
-	io.DisplayFramebufferScale = ImVec2(width > 0 ? (float(display_w) / width) : 0, height > 0 ? (float(display_h) / height) : 0);
-}
-
-Engine::Window::Window(int width, int height, const char* title) noexcept : width(width), height(height)
-{
-	glfwSetErrorCallback(error_callback);
-
-	if (!glfwInit())
+struct DestroyglfwWin {
+	void operator()(GLFWwindow* ptr) const
 	{
-		glfwTerminate();
-		exit(EXIT_FAILURE);
+		glfwDestroyWindow(ptr);
 	}
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+};
 
-	window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-	//glfwSetWindowUserPointer(window, this);
-
-	if (!window)
+namespace Engine
+{
+	//TODO -- Feiko | allow this callback to be virtual
+	void Window::OnWindowResized(GLFWwindow* window, int width, int height)
 	{
-		glfwTerminate();
-		exit(EXIT_FAILURE);
+		if (width == 0 || height == 0) return;
+
+		Engine::GetEngine().lock()->GetWindow().lock()->SetWidth(width);
+		Engine::GetEngine().lock()->GetWindow().lock()->SetHeight(height);
+
+		int display_w, display_h;
+		glfwGetFramebufferSize(Engine::GetEngine().lock()->GetWindow().lock()->GetGLFWWindow().lock().get(), &display_w, &display_h);
+		Engine::GetEngine().lock()->GetWindow().lock()->displayWidth = display_w;
+		Engine::GetEngine().lock()->GetWindow().lock()->displayHeight = display_h;
+
+		// Update display size for gainput
+		Engine::GetEngine().lock()->GetInputManager().lock()->GetInputManager().SetDisplaySize(width, height);
+
+		ImGuiIO& io = ImGui::GetIO();
+		io.DisplaySize = ImVec2(float(width), float(height));
+		io.DisplayFramebufferScale = ImVec2(width > 0 ? (float(display_w) / width) : 0, height > 0 ? (float(display_h) / height) : 0);
+
+#ifdef USING_VULKAN
+		Engine::GetEngine().lock()->GetRenderer<VulkanRenderer>().lock()->Resized();
+#endif
 	}
 
-	int display_w, display_h;
-	glfwGetFramebufferSize(window, &display_w, &display_h);
+	bool Window::ShouldClose() const noexcept
+	{
+		if (window != nullptr)
+			return glfwWindowShouldClose(window.get());
+		return true;
+	}
 
-	ImGuiIO& io = ImGui::GetIO();
-	io.DisplaySize = ImVec2(float(width), float(height));
-	io.DisplayFramebufferScale = ImVec2(width > 0 ? (float(display_w) / width) : 0, height > 0 ? (float(display_h) / height) : 0);
+	void Window::SetShouldClose(bool value) const noexcept
+	{
+		if (window != nullptr)
+			glfwSetWindowShouldClose(window.get(), int(value));
+	}
 
-	glfwSetWindowSizeCallback(window, OnWindowResized);
-}
+	HWND Window::GetWindowHandle() const noexcept
+	{
+		return glfwGetWin32Window(window.get());
+	}
 
-Engine::Window::~Window() noexcept
-{
-	glfwDestroyWindow(window);
-	glfwTerminate();
-	exit(EXIT_SUCCESS);
-}
+	eastl::weak_ptr<GLFWwindow> Window::GetGLFWWindow() const noexcept
+	{
+		return window;
+	}
 
-bool Engine::Window::ShouldClose() noexcept
-{
-	if (window != nullptr)
-		return glfwWindowShouldClose(window);
-	return true;
-}
+	eastl::string Window::GetTitle() const
+	{
+		return title;
+	}
 
-void Engine::Window::SetShouldClose(bool value) noexcept
-{
-	if (window != nullptr)
-		glfwSetWindowShouldClose(window, int(value));
-}
+	int Window::GetWidth() const noexcept
+	{
+		return width;
+	}
 
-void Engine::Window::Update() noexcept
-{
-	//Main render loop
-}
+	int Window::GetDisplayWidth() const noexcept
+	{
+		return displayWidth;
+	}
 
-HWND Engine::Window::GetWindowHandle() noexcept
-{
-	return glfwGetWin32Window(window);
-}
+	int Window::GetHeight() const noexcept
+	{
+		return height;
+	}
 
-GLFWwindow* Engine::Window::GetGLFWWindow() noexcept
-{
-	return window;
-}
+	int Window::GetDisplayHeight() const noexcept
+	{
+		return displayHeight;
+	}
 
-int Engine::Window::GetWidth() noexcept
-{
-	return width;
-}
+	Window::Window(int width, int height, const char* title) noexcept : width(width), height(height), title(title)
+	{
+		glfwSetErrorCallback(error_callback);
+		if (!glfwInit())
+		{
+			glfwTerminate();
+			exit(EXIT_FAILURE);
+		}
 
-int Engine::Window::GetHeight() noexcept
-{
-	return height;
-}
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+		window = eastl::unique_ptr<GLFWwindow, DestroyglfwWin>(glfwCreateWindow(width, height, title, nullptr, nullptr));
 
-void Engine::Window::SwapBuffers() noexcept
-{
-	glfwSwapBuffers(window);
-}
+		if (!window)
+		{
+			glfwTerminate();
+			exit(EXIT_FAILURE);
+		}
 
-void Engine::Window::SetWidth(int newWidth)
-{
-	width = newWidth;
-}
+		glfwGetFramebufferSize(window.get(), &displayWidth, &displayHeight);
 
-void Engine::Window::SetHeight(int newHeight)
-{
-	height = newHeight;
-}
+		glfwSetWindowSizeCallback(window.get(), OnWindowResized);
+
+
+		ImGuiIO& io = ImGui::GetIO();
+		io.DisplaySize = ImVec2(float(width), float(height));
+		io.DisplayFramebufferScale = ImVec2(width > 0 ? (float(displayWidth) / width) : 0, height > 0 ? (float(displayHeight) / height) : 0);
+	}
+
+	Window::~Window() noexcept
+	{
+		glfwDestroyWindow(window.get());
+		glfwTerminate();
+	}
+
+	void Window::Update() const noexcept
+	{
+	}
+
+	void Window::SwapBuffers() const noexcept
+	{
+		glfwSwapBuffers(window.get());
+	}
+
+	void Window::SetWidth(int newWidth)
+	{
+		width = newWidth;
+	}
+
+	void Window::SetHeight(int newHeight)
+	{
+		height = newHeight;
+	}
+
+} //namespace Engine

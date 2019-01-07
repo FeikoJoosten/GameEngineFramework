@@ -76,7 +76,7 @@
 //   state of a text widget (except for the string, which you will store
 //   separately).
 //
-//   To compile in this mode, you must define STB_TEXTEDIT_CHARTYPE to a
+//   To Compile in this mode, you must define STB_TEXTEDIT_CHARTYPE to a
 //   primitive type that defines a single character (e.g. char, wchar_t, etc).
 //
 //   To save space or increase undo-ability, you can optionally define the
@@ -97,7 +97,7 @@
 // Implementation mode:
 //
 //   If you define STB_TEXTEDIT_IMPLEMENTATION before including this, it
-//   will compile the implementation of the text edit widget, depending
+//   will Compile the implementation of the text edit widget, depending
 //   on a large number of symbols which must be defined before the include.
 //
 //   The implementation is defined only as static functions. You will then

@@ -7,13 +7,13 @@
 #define EASTL_INTERNAL_ALLOCATOR_TRAITS_H
 
 
-#include <EABase/eabase.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/eabase.h>
 #if defined(EA_PRAGMA_ONCE_SUPPORTED)
 	#pragma once
 #endif
 
-#include <EASTL/internal/config.h>
-#include <EASTL/numeric_limits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/numeric_limits.h>
 
 namespace eastl
 {

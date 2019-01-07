@@ -42,12 +42,12 @@
 #define EASTL_SHARED_PTR_H
 
 
-#include <EASTL/internal/config.h>
-#include <EASTL/internal/smart_ptr.h>
-#include <EASTL/internal/thread_support.h>
-#include <EASTL/unique_ptr.h>
-#include <EASTL/functional.h>
-#include <EASTL/allocator.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/smart_ptr.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/thread_support.h>
+#include <ThirdParty/EASTL-master/include/EASTL/unique_ptr.h>
+#include <ThirdParty/EASTL-master/include/EASTL/functional.h>
+#include <ThirdParty/EASTL-master/include/EASTL/allocator.h>
 #if EASTL_RTTI_ENABLED
 	#include <typeinfo>
 #endif
@@ -1932,7 +1932,7 @@ namespace eastl
 
 
 // We have to either #include enable_shared.h here or we need to move the enable_shared source code to here.
-#include <EASTL/internal/enable_shared.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/enable_shared.h>
 
 
 #endif // Header include guard

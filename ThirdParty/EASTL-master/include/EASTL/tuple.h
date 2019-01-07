@@ -5,12 +5,12 @@
 #ifndef EASTL_TUPLE_H
 #define EASTL_TUPLE_H
 
-#include <EASTL/internal/config.h>
-#include <EASTL/functional.h>
-#include <EASTL/type_traits.h>
-#include <EASTL/utility.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/functional.h>
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/utility.h>
 
-#include <EASTL/internal/tuple_fwd_decls.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/tuple_fwd_decls.h>
 
 EA_DISABLE_VC_WARNING(4623) // warning C4623: default constructor was implicitly defined as deleted
 EA_DISABLE_VC_WARNING(4510) // warning C4510: default constructor could not be generated

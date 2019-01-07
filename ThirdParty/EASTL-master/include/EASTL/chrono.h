@@ -19,10 +19,10 @@
 	#pragma once 
 #endif
 
-#include <EASTL/internal/config.h>
-#include <EASTL/type_traits.h>
-#include <EASTL/numeric_limits.h>
-#include <EASTL/ratio.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/numeric_limits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/ratio.h>
 
 
 // TODO:  move to platform specific cpp or header file

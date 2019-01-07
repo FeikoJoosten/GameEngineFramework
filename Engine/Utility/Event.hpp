@@ -42,11 +42,11 @@ namespace Sharp    // short for SharpTools
 	class ENGINE_API EventHandlerImplBase
 	{
 	public:
-		EventHandlerImplBase() {}  ///< needed to define the constructor since we defined the destructor (compiler would otherwise object)
+		EventHandlerImplBase() {}  // needed to define the constructor since we defined the destructor (compiler would otherwise object)
 
-		virtual ~EventHandlerImplBase() {} ///< destructor should be made virtual for base as we are going to delete through a base pointer
+		virtual ~EventHandlerImplBase() {} // destructor should be made virtual for base as we are going to delete through a base pointer
 
-		virtual bool IsBindedToSameFunctionAs(EventHandlerImplBase<T>*) = 0;   ///< verify if both handlers are binded to the same function.
+		virtual bool IsBindedToSameFunctionAs(EventHandlerImplBase<T>*) = 0;   // verify if both handlers are binded to the same function.
 
 
 
@@ -72,7 +72,7 @@ namespace Sharp    // short for SharpTools
 	class ENGINE_API EventHandlerImpl : public EventHandlerImplBase<T>
 	{
 	public:
-		virtual void OnEvent(T&) = 0;  ///< will be called eventually when a Event is raised
+		virtual void OnEvent(T&) = 0;  // will be called eventually when a Event is raised
 
 	};
 
@@ -116,7 +116,7 @@ namespace Sharp    // short for SharpTools
 		}
 
 	private:
-		void(*m_pFunctionToCall)(T&); ///< passed in the constructor. Will get called when an event is raised.
+		void(*m_pFunctionToCall)(T&); // passed in the constructor. Will get called when an event is raised.
 
 	};
 
@@ -164,9 +164,9 @@ namespace Sharp    // short for SharpTools
 		}
 
 	private:
-		U* m_pCallerInstance;  ///< passed in the constructor. This watcher will only be used to call a member function, so m_pCallerInstance would hold the object through which that member function is called.
+		U* m_pCallerInstance;  // passed in the constructor. This watcher will only be used to call a member function, so m_pCallerInstance would hold the object through which that member function is called.
 
-		void(U::*m_pMemberFunction)(T&); ///< passed in the constructor. This watcher will only be used to call a member function through m_pCallerInstance.
+		void(U::*m_pMemberFunction)(T&); // passed in the constructor. This watcher will only be used to call a member function through m_pCallerInstance.
 
 	};
 
@@ -188,7 +188,7 @@ namespace Sharp    // short for SharpTools
 	class ENGINE_API EventHandlerImpl<void> : public EventHandlerImplBase<void>
 	{
 	public:
-		virtual void OnEvent() = 0;  ///< will be called eventually when an Event is raised
+		virtual void OnEvent() = 0;  // will be called eventually when an Event is raised
 
 	};
 
@@ -232,7 +232,7 @@ namespace Sharp    // short for SharpTools
 		}
 
 	private:
-		void(*m_pFunctionToCall)(); ///< passed in the constructor. Will get called when an event is raised.
+		void(*m_pFunctionToCall)(); // passed in the constructor. Will get called when an event is raised.
 
 	};
 
@@ -280,9 +280,9 @@ namespace Sharp    // short for SharpTools
 		}
 
 	private:
-		U* m_pCallerInstance;  ///< passed in the constructor. This watcher will only be used to call a member function, so m_pCallerInstance would hold the object through which that member function is called.
+		U* m_pCallerInstance;  // passed in the constructor. This watcher will only be used to call a member function, so m_pCallerInstance would hold the object through which that member function is called.
 
-		void(U::*m_pMemberFunction)(); ///< passed in the constructor. This watcher will only be used to call a member function through m_pCallerInstance.
+		void(U::*m_pMemberFunction)(); // passed in the constructor. This watcher will only be used to call a member function through m_pCallerInstance.
 
 	};
 
@@ -306,9 +306,9 @@ namespace Sharp    // short for SharpTools
 
 	/** a syntax-sugar class that is used to assign a function as a handler to an Event
 
-	* @example myEvent += EventHandler::Bind(OnMessage);  // for non member or static functions
+	* {@code myEvent += EventHandler::Bind(OnMessage);}  // for non member or static functions
 
-	* @example myEvent += EventHandler::Bind(&ThisClass::OnMessage, this);  // called inside ThisClass constructor as recommended
+	* {@code myEvent += EventHandler::Bind(&ThisClass::OnMessage, this);}  // called inside ThisClass constructor as recommended
 
 	* @author Amer Saffo
 
@@ -377,7 +377,7 @@ namespace Sharp    // short for SharpTools
 		}
 
 	private:
-		EventHandler();  ///< default constructor made private to prevent creating instances of this class. EventHandler only purpose is to provide Event with the Bind function
+		EventHandler();  // default constructor made private to prevent creating instances of this class. EventHandler only purpose is to provide Event with the Bind function
 
 	};
 
@@ -403,7 +403,7 @@ namespace Sharp    // short for SharpTools
 
 			 * Sharp Event provide an event mechanism that is similar to that found in C#
 
-			 * @example myEvent += EventHandler::Bind(&ThisClass::OnMessage, this);  // called inside ThisClass constructor as recommended
+			 * {@code myEvent += EventHandler::Bind(&ThisClass::OnMessage, this);}  // called inside ThisClass constructor as recommended
 
 			 * @author Amer Saffo
 
@@ -441,8 +441,8 @@ namespace Sharp    // short for SharpTools
 
 		/**
 					 * This is how you connect a handler to this event.
-				 * @example myEvent += EventHandler::Bind(&ThisClass::OnMessage, this);  // example of binding inside ThisClass constructor as recommended
-					 *   @example myEvent -= EventHandler::Bind(&ThisClass::OnMessage, this);  // example of unbinding in destructor
+				 * {@code myEvent += EventHandler::Bind(&ThisClass::OnMessage, this);}  // example of binding inside ThisClass constructor as recommended
+					 *   {@code myEvent -= EventHandler::Bind(&ThisClass::OnMessage, this);}  // example of unbinding in destructor
 					 * @note : You can Bind to a private member function as long as you have access to that private function at the time of binding (i.e binding from within the class).
 					 * @note on memory: As a rule of thumb, always bind in the constructor and unbind in the destructor.
 					 *                                    However, you can go lazy and rely on the Event destructor to unbind if:
@@ -475,7 +475,7 @@ namespace Sharp    // short for SharpTools
 		/**
 					 * you can use this to remove a handler you previously added.
 					 * @note : removing a handler that was already removed is harmless, as this call does nothing and simply return when it does not find the handler.
-					 *   @example myEvent -= EventHandler::Bind(&ThisClass::OnMessage, this);  // example of unbinding in destructor
+					 *   {@code myEvent -= EventHandler::Bind(&ThisClass::OnMessage, this);}  // example of unbinding in destructor
 					 */
 		EventBase<T>& operator -= (EventHandlerImpl<T>* pHandlerToRemove)
 		{
@@ -527,14 +527,14 @@ namespace Sharp    // short for SharpTools
 		}
 
 	private:
-		EventBase(const EventBase&);  ///< private to disable copying
+		EventBase(const EventBase&);  // private to disable copying
 
-		EventBase& operator=(const EventBase&); ///< private to disable copying
+		EventBase& operator=(const EventBase&); // private to disable copying
 
 
 	protected:
 
-		eastl::list< EventHandlerImpl<T>* > m_eventHandlers;  ///< all handlers will be notified when operator() is called.
+		eastl::list< EventHandlerImpl<T>* > m_eventHandlers;  // all handlers will be notified when operator() is called.
 
 
 
@@ -544,7 +544,7 @@ namespace Sharp    // short for SharpTools
 		//typedef boost::shared_lock< boost::shared_mutex > ReadLock;
 		//typedef boost::upgrade_lock< boost::shared_mutex > UpgradeableReadLock;
 		//typedef boost::upgrade_to_unique_lock< boost::shared_mutex > UpgradedWriteLock;  // upgrade an upgradeable read lock to a write lock without releasing it.
-		//boost::shared_mutex m_handlersMutex; ///< used a shared mutex because we don't want threads raising the event to block each other. while adding/removing a handler should block all access.
+		//boost::shared_mutex m_handlersMutex; // used a shared mutex because we don't want threads raising the event to block each other. while adding/removing a handler should block all access.
 
 //#endif // SHARP_EVENT_NO_BOOST
 
@@ -565,7 +565,7 @@ namespace Sharp    // short for SharpTools
 		/**
 		* this call actually raises the event.
 		* It does so by passing the event data to all event handlers.
-		* @example @code myEvent(data);  // this how you would normally raise an event
+		* {@code myEvent(data);}  // this how you would normally raise an event
 		*/
 		void operator()(T& eventData)
 		{
@@ -599,7 +599,7 @@ namespace Sharp    // short for SharpTools
 		/**
 		* this call actually raises the event.
 		* It does so by calling all event handlers.
-		* @example @code myEvent();  // this how you would normally raise a void event
+		* {@code myEvent();}  // this how you would normally raise a void event
 		*/
 		void operator()()
 		{

@@ -1,102 +1,88 @@
 #include "Engine/Entity/Entity.hpp"
 #include "Engine/engine.hpp"
 #include "Engine/Entity/EntitySystem.hpp"
-#include "Engine/Components/TransformComponent.hpp"
-#include "Engine/Components/ModelComponent.hpp"
-#include "Engine/Renderer/OpenGLRenderer.hpp"
-#include <iostream>
 
 namespace Engine
 {
-	eastl::vector<eastl::shared_ptr<Component>> Entity::GetAllComponents()
+	Entity::Entity(eastl::string name) : name(name), Id(-1), isActive(true)
+	{
+	}
+
+	void Entity::InitializeEntity()
+	{
+	}
+
+	eastl::vector<eastl::shared_ptr<Component>> Entity::GetAllComponents() const
 	{
 		return components;
 	}
 
-	void Entity::AddComponent(eastl::unique_ptr<Component> &&componentToAdd)
+	eastl::shared_ptr<Entity> Entity::GetPointer() const
 	{
-		components.push_back(eastl::move(componentToAdd));
-	}
-
-	void Entity::AddComponents(eastl::vector<eastl::unique_ptr<Component>>& componentsToAdd)
-	{
-		for (size_t i = 0, size = componentsToAdd.size(); i < size; ++i)
-			components.push_back(eastl::move(componentsToAdd[i]));
-	}
-
-	void Entity::RemoveComponent(Component componentToRemove)
-	{
-		for (auto it = components.begin(); it != components.end(); it++)
-		{
-			if (typeid(it) == typeid(&componentToRemove))
-			{
-				components.erase(it);
-				break;
-			}
-		}
-
-		components.shrink_to_fit();
-	}
-
-	void Entity::RemoveComponents(eastl::vector<Component>& componentsToRemove)
-	{
-		for (auto it = components.begin(); it != components.end(); it++)
-		{
-			for (auto componentsIt = componentsToRemove.begin(), componentsEnd = componentsToRemove.end(); componentsIt != componentsEnd; ++componentsIt)
-			{
-				std::cout << typeid(it).name() << "      " << typeid(componentsIt).name() << std::endl;
-				if (typeid(it) == typeid(componentsIt))
-				{
-					components.erase(it);
-					break;
-				}
-			}
-		}
-
-		components.shrink_to_fit();
+		return Engine::GetEngine().lock()->GetEntitySystem().lock()->GetEntity(Id).lock();
 	}
 
 	void Entity::Update()
 	{
-		for (auto it = components.begin(), end = components.end(); it != end; ++it)
+		if (isActive == false)
+			return;
+
+		for (size_t i = 0, size = components.size(); i < size; ++i)
 		{
-			
+			if (components[i]->isEnabled == false)
+				continue;
+
+			components[i]->Update();
 		}
 	}
-	
-	void Entity::Render()
-	{
-		auto transform = GetComponent<TransformComponent>();
-		if (transform == nullptr) return;
 
-		auto model = GetComponent<ModelComponent>();
-		if (model == nullptr) return;
-
-		Engine::GetRenderer().Render(transform->GetModelMatrix(), model->GetModel());
-	}
-
-	size_t Entity::ComponentCount()
+	size_t Entity::ComponentCount() const
 	{
 		return components.size();
 	}
 
-	int Entity::GetTeamID()
+	uint64_t Entity::GetID() const
 	{
-		return teamID;
+		return Id;
 	}
 
-	int Entity::GetID()
+	bool Entity::GetIsActive() const
 	{
-		return int(ID);
+		return isActive;
 	}
 
-	void Entity::SetTeamID(int teamID)
+	void Entity::SetIsActive(bool isActive)
 	{
-		this->teamID = teamID;
+		this->isActive = isActive;
 	}
 
-	void Entity::SetID(glm::uint_t ID)
+	void Entity::SetID(uint64_t Id)
 	{
-		this->ID = ID;
+		this->Id = Id;
+	}
+
+	void Entity::OnComponentAdded(eastl::weak_ptr<Component> addedComponent)
+	{
+		// No need to inform the last added component that it just has been added.
+		for (size_t i = 0, size = components.size() - 1; i < size; ++i)
+			components[i]->OnComponentAdded(addedComponent);
+	}
+
+	void Entity::OnComponentRemoved(eastl::weak_ptr<Component> removedComponent)
+	{
+		for (size_t i = 0, size = components.size(); i < size; ++i)
+			components[i]->OnComponentRemoved(removedComponent);
+	}
+
+	void Entity::OnBeginContact(eastl::weak_ptr<Entity> entity)
+	{
+		for (size_t i = 0, size = components.size(); i < size; ++i)
+			components[i]->OnBeginContact(entity);
+	}
+
+	void Entity::OnEndContact(eastl::weak_ptr<Entity> entity)
+	{
+		for (size_t i = 0, size = components.size(); i < size; ++i)
+			components[i]->OnEndContact(entity);
 	}
 } // namespace Engine

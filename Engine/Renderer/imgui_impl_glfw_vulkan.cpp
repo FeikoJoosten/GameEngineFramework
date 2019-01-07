@@ -6,6 +6,9 @@
 // If you are new to ImGui, see examples/README.txt and documentation at the top of imgui.cpp.
 // https://github.com/ocornut/imgui
 
+#include "Engine/Utility/Defines.hpp"
+#ifdef USING_VULKAN
+
 #include "IMGUI/imgui.h"
 
 #include "Engine/engine.hpp"
@@ -703,7 +706,7 @@ bool ImGui_ImplGlfwVulkan_Init(GLFWwindow* window, ImGui_ImplGlfwVulkan_Init_Dat
 	io.GetClipboardTextFn = ImGui_ImplGlfwVulkan_GetClipboardText;
 	io.ClipboardUserData = g_Window;
 #ifdef _WIN32
-	io.ImeWindowHandle = Engine::Engine::GetWindow().GetWindowHandle();
+	io.ImeWindowHandle = Engine::Engine::GetEngine().lock()->GetWindow().lock()->GetWindowHandle();
 #endif
 
 	ImGui_ImplGlfwVulkan_CreateDeviceObjects();
@@ -726,7 +729,7 @@ void ImGui_ImplGlfwVulkan_NewFrame()
 	//double current_time = glfwGetTime();
 	//io.DeltaTime = g_Time > 0.0 ? float(current_time - g_Time) : float(1.0f / 60.0f);
 	//g_Time = current_time;
-	io.DeltaTime = Engine::Engine::GetTime().GetDeltaTime();
+	io.DeltaTime = Engine::Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime();
 
 	// Start the frame
 	ImGui::NewFrame();
@@ -739,3 +742,4 @@ void ImGui_ImplGlfwVulkan_Render(VkCommandBuffer command_buffer)
 	g_CommandBuffer = VK_NULL_HANDLE;
 	g_FrameIndex = (g_FrameIndex + 1) % IMGUI_VK_QUEUED_FRAMES;
 }
+#endif // USING_VULKAN

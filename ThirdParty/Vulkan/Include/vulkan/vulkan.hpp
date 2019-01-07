@@ -28,7 +28,7 @@
 #include <system_error>
 #include <tuple>
 #include <type_traits>
-#include <vulkan/vulkan.h>
+#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
 #ifndef VULKAN_HPP_DISABLE_ENHANCED_MODE
 # include <memory>
 # include <vector>

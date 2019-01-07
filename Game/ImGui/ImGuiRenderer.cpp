@@ -1,18 +1,16 @@
 #include "Game/ImGui/ImGuiRenderer.hpp"
 #include "Engine/Utility/Event.hpp"
 #include "Engine/engine.hpp"
-#include "Engine/Renderer/VulkanRenderer.hpp"
-#include "Engine/Renderer/imgui_impl_glfw_vulkan.h"
-#include "Engine/Renderer/IMGUI/imgui_internal.h"
+#include "Engine/Renderer/IMGUI/imgui.h"
 
 ImGuiRenderer::ImGuiRenderer()
 {
-	Engine::Engine::GetRenderer().OnRender += Sharp::EventHandler::Bind(MainMenu);
+	Engine::Engine::GetEngine().lock()->GetRenderer().lock()->OnRender += Sharp::EventHandler::Bind(MainMenu);
 }
 
 ImGuiRenderer::~ImGuiRenderer()
 {
-	Engine::Engine::GetRenderer().OnRender -= Sharp::EventHandler::Bind(MainMenu);
+	Engine::Engine::GetEngine().lock()->GetRenderer().lock()->OnRender -= Sharp::EventHandler::Bind(MainMenu);
 }
 
 static bool openMainMenu = true;
@@ -21,7 +19,7 @@ static bool open = true;
 void ImGuiRenderer::MainMenu()
 {
 	// Center the window
-	glm::vec2 windowSize = glm::vec2(Engine::Engine::GetWindow().GetWidth(), Engine::Engine::GetWindow().GetHeight());
+	glm::vec2 windowSize = glm::vec2(Engine::Engine::GetEngine().lock()->GetWindow().lock()->GetWidth(), Engine::Engine::GetEngine().lock()->GetWindow().lock()->GetHeight());
 	ImGuiWindowFlags windowFlags =
 		ImGuiWindowFlags_NoTitleBar |
 		ImGuiWindowFlags_NoResize |
@@ -40,7 +38,7 @@ void ImGuiRenderer::MainMenu()
 
 		if (ImGui::Button("Quit Game", ImVec2(200, 30)))
 		{
-			Engine::Engine::GetWindow().SetShouldClose(true);
+			Engine::Engine::GetEngine().lock()->GetWindow().lock()->SetShouldClose(true);
 		}
 		ImGui::End();
 	}

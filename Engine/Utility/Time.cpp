@@ -12,21 +12,17 @@ namespace Engine
 		previousFramerates.resize(maxIterations);
 	}
 
-	Time::~Time()
-	{
-	}
-
-	float Time::GetDeltaTime()
+	float Time::GetDeltaTime() const
 	{
 		return deltaTime;
 	}
 
-	int Time::GetMaxIterations()
+	int Time::GetMaxIterations() const
 	{
 		return maxIterations;
 	}
 
-	eastl::vector<float> Time::GetPreviousFramerates()
+	eastl::vector<float> Time::GetPreviousFramerates() const
 	{
 		return previousFramerates;
 	}

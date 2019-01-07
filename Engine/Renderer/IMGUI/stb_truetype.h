@@ -3323,7 +3323,7 @@ typedef int stbrp_coord;
 // COMPILER WARNING ?!?!?                                                         //
 //                                                                                //
 //                                                                                //
-// if you get a compile warning due to these symbols being defined more than      //
+// if you get a Compile warning due to these symbols being defined more than      //
 // once, move #include "stb_rect_pack.h" before #include "stb_truetype.h"         //
 //                                                                                //
 ////////////////////////////////////////////////////////////////////////////////////
@@ -3987,7 +3987,7 @@ STBTT_DEF int stbtt_CompareUTF8toUTF16_bigendian(const char *s1, int len1, const
 //   1.05 (2015-04-15) fix misplaced definitions for STBTT_STATIC
 //   1.04 (2015-04-15) typo in example
 //   1.03 (2015-04-12) STBTT_STATIC, fix memory leak in new packing, various fixes
-//   1.02 (2014-12-10) fix various warnings & compile issues w/ stb_rect_pack, C++
+//   1.02 (2014-12-10) fix various warnings & Compile issues w/ stb_rect_pack, C++
 //   1.01 (2014-12-08) fix subpixel position when oversampling to exactly match
 //                        non-oversampled; STBTT_POINT_SIZE for packed case only
 //   1.00 (2014-12-06) add new PackBegin etc. API, w/ support for oversampling

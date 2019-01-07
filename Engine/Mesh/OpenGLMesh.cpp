@@ -1,17 +1,13 @@
+#include "Engine/Utility/Defines.hpp"
+#ifdef USING_OPENGL
 #include "Engine/Mesh/OpenGLMesh.hpp"
 #include <ThirdParty/glew-2.1.0/include/GL/glew.h>
 
 namespace Engine
 {
-	OpenGLMesh::OpenGLMesh(eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices,
-		eastl::vector<Texture*> textures) : Mesh(vertices, indices, textures)
+	OpenGLMesh::OpenGLMesh(eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices) : Mesh(vertices, indices)
 	{
 		OpenGLMesh::SetUpMesh();
-	}
-
-	void OpenGLMesh::AddTexture(eastl::string textureName)
-	{
-		Mesh::AddTexture(textureName);
 	}
 
 	void OpenGLMesh::SetUpMesh()
@@ -27,7 +23,7 @@ namespace Engine
 		glGetError();
 
 		// Copy into VBO
-		glBufferData(GL_ARRAY_BUFFER, (sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2)) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 		glGetError();
 		glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind buffer
 		glGetError();
@@ -45,7 +41,7 @@ namespace Engine
 		glGetError();
 
 		// Copy into VBO
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * indices.size(), &indices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
 		glGetError();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 1); // Unbind buffer
 		glGetError();
@@ -55,3 +51,4 @@ namespace Engine
 		//Could clear vertices & indices here
 	}
 } // namespace Engine
+#endif

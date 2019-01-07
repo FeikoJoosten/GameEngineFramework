@@ -7,13 +7,13 @@
 #define EASTL_INTERNAL_TYPE_POD_H
 
 
-#include <EABase/eabase.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/eabase.h>
 #if defined(EA_PRAGMA_ONCE_SUPPORTED)
 	#pragma once
 #endif
 
 #include <limits.h>
-#include <EASTL/type_traits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>
 
 namespace eastl
 {

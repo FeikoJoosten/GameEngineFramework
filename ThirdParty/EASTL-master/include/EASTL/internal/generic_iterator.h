@@ -14,14 +14,14 @@
 #define EASTL_INTERNAL_GENERIC_ITERATOR_H
 
 
-#include <EABase/eabase.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/eabase.h>
 #if defined(EA_PRAGMA_ONCE_SUPPORTED)
 	#pragma once
 #endif
 
-#include <EASTL/internal/config.h>
-#include <EASTL/iterator.h>
-#include <EASTL/type_traits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/iterator.h>
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>
 
 
 #ifdef _MSC_VER

@@ -21,7 +21,7 @@
 	#pragma once 
 #endif
 
-#include <EABase/eabase.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/eabase.h>
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -75,8 +75,8 @@
 //////////////////////////////////////////////////////////////////////////////
 
 
-#include <EASTL/internal/config.h>
-#include <EASTL/type_traits.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>
 
 
 namespace eastl 

@@ -5,9 +5,9 @@
 #ifndef EASTL_INTEGER_SEQUENCE_H
 #define EASTL_INTEGER_SEQUENCE_H
 
-#include <EABase/config/eacompiler.h>
-#include <EASTL/internal/config.h>
-#include <EASTL/type_traits.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/config/eacompiler.h>
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>
 
 namespace eastl
 {

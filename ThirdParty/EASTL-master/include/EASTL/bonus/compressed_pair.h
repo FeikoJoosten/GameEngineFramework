@@ -60,9 +60,9 @@
 #define EASTL_COMPRESSED_PAIR_H
 
 
-#include <EASTL/internal/config.h>
-#include <EASTL/type_traits.h>     
-#include <EASTL/bonus/call_traits.h>     
+#include <ThirdParty/EASTL-master/include/EASTL/internal/config.h>
+#include <ThirdParty/EASTL-master/include/EASTL/type_traits.h>     
+#include <ThirdParty/EASTL-master/include/EASTL/bonus/call_traits.h>     
 
 #if defined(EA_PRAGMA_ONCE_SUPPORTED)
 	#pragma once // Some compilers (e.g. VC++) benefit significantly from using this. We've measured 3-4% build speed improvements in apps as a result.

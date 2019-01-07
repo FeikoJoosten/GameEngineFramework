@@ -1,6 +1,10 @@
+#define GLM_FORCE_SWIZZLE 1
+#define GLM_FORCE_RADIANS 1
+
 #include "Engine/Camera/Camera.hpp"
 #include "Engine/Utility/defines.hpp"
 #include <ThirdParty/glm/glm/gtc/matrix_transform.hpp>
+#include <ThirdParty/glm/glm/gtx/euler_angles.hpp>
 
 namespace Engine
 {
@@ -8,9 +12,11 @@ namespace Engine
 		fov(fov), aspectRatio(aspectRatio), verticalAngle(0), clippingPlanes(zNear, zFar), position(position),
 		rotation(rotation)
 	{
+		horizontalAngle = glm::pi<float>();
 		glm::vec3 target = glm::normalize(position + rotation);
 		view = glm::lookAt(position, position - target, glm::normalize(GetUp()));
 		projection = glm::perspective(glm::radians(fov), aspectRatio, clippingPlanes.x, clippingPlanes.y);
+		UpdateFrustum(GetRight(), GetUp());
 	}
 
 	float Camera::GetFoV() const
@@ -28,38 +34,42 @@ namespace Engine
 		return clippingPlanes;
 	}
 
-	glm::vec3 Camera::GetUp()
+	glm::vec3 Camera::GetUp() const
 	{
-#if RENDERER == 1
 		return glm::cross(GetRight(), rotation);
-#elif RENDERER == 2
-		return -glm::cross(GetRight(), rotation);
-#else
-		return glm::cross(GetRight(), rotation);
-#endif
 	}
 
-	glm::vec3 Camera::GetRight()
+	glm::vec3 Camera::GetRight() const
 	{
+#ifdef USING_OPENGL
 		return glm::vec3(
 			sin(horizontalAngle - glm::half_pi<float>()),
 			0,
 			cos(horizontalAngle - glm::half_pi<float>()));
+#endif
+#ifdef USING_VULKAN
+		return glm::vec3(
+			sin(horizontalAngle - glm::half_pi<float>()),
+			0,
+			cos(horizontalAngle - glm::half_pi<float>()));
+#endif
 	}
 
-	glm::vec3 Camera::GetPosition()
+	glm::vec3 Camera::GetPosition() const
 	{
 		return position;
 	}
 
-	glm::vec3 Camera::GetRotation()
+	glm::vec3 Camera::GetRotation() const
 	{
 		return rotation;
 	}
 
 	glm::mat4x4 Camera::GetView() const
 	{
-		return view;
+		glm::vec4 target(0.f, 0.f, -1.f, 1.f);
+		target = glm::eulerAngleYXZ(rotation.y, rotation.x, rotation.z)*target;
+		return glm::lookAt(position, position + glm::vec3(target.x, target.y, target.z), glm::vec3(0.f, 1.f, 0.f));
 	}
 
 	glm::mat4x4 Camera::GetProjection() const
@@ -69,10 +79,10 @@ namespace Engine
 
 	glm::mat4x4 Camera::GetViewProjection() const
 	{
-		return view * projection;
+		return GetView() * GetProjection();
 	}
 
-	Frustum Camera::GetFrustum()
+	Frustum Camera::GetFrustum() const
 	{
 		return frustum;
 	}
@@ -116,21 +126,41 @@ namespace Engine
 
 	void Camera::MoveLeft(float distanceToMove)
 	{
-		position += -glm::vec3(distanceToMove, 0, 0);
+		glm::vec4 translation = glm::eulerAngleYXZ(rotation.y, rotation.x, rotation.z) * -glm::vec4(distanceToMove, 0.f, 0.f, 0.f);
+		position += glm::vec3(translation.x, translation.y, translation.z);
 	}
 
 	void Camera::MoveRight(float distanceToMove)
 	{
-		position += glm::vec3(distanceToMove, 0, 0);
+		glm::vec4 translation = glm::eulerAngleYXZ(rotation.y, rotation.x, rotation.z) * glm::vec4(distanceToMove, 0.f, 0.f, 0.f);
+		position += glm::vec3(translation.x, translation.y, translation.z);
 	}
 
 	void Camera::MoveForwards(float distanceToMove)
 	{
-		position += glm::vec3(0, 0, distanceToMove);
+		glm::vec4 translation = glm::eulerAngleYXZ(rotation.y, rotation.x, rotation.z) * -glm::vec4(0.f, 0.f, distanceToMove, 0.f);
+		position += glm::vec3(translation.x, translation.y, translation.z);
 	}
 
 	void Camera::MoveBackwards(float distanceToMove)
 	{
-		position += -glm::vec3(0, 0, distanceToMove);
+		glm::vec4 translation = glm::eulerAngleYXZ(rotation.y, rotation.x, rotation.z) * glm::vec4(0.f, 0.f, distanceToMove, 0.f);
+		position += glm::vec3(translation.x, translation.y, translation.z);
+	}
+
+	void Camera::SetPostionAndRotation(glm::vec3 position, glm::vec3 rotation)
+	{
+		this->position = position;
+		this->rotation = rotation;
+	}
+
+	void Camera::SetPosition(glm::vec3 position)
+	{
+		SetPostionAndRotation(position, rotation);
+	}
+
+	void Camera::SetRotation(glm::vec3 rotation)
+	{
+		SetPostionAndRotation(position, rotation);
 	}
 } // namespace Engine

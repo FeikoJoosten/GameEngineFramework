@@ -1,4 +1,7 @@
 #include "Engine/Texture/OpenGLTexture.hpp"
+#ifdef USING_OPENGL
+#include "Engine/Utility/Utility.hpp"
+
 #include <ThirdParty/glew-2.1.0/include/GL/glew.h>
 
 namespace Engine
@@ -7,9 +10,16 @@ namespace Engine
 	{
 		eastl::string baseLocation = "Resources/Textures/";
 		baseLocation.append(filename);
-		stbi_uc* textureData = stbi_load(baseLocation.c_str(), &width, &height, &channels, STBI_rgb_alpha);
-		OpenGLTexture::CreateTextureWithData(textureData, true); //ToDo: Make Vulkan texture class, this function needs to call createTexture() before image gets destroyed
+		stbi_uc* textureData = stbi_load(
+			Utility::FileExists(baseLocation) ?
+			baseLocation.c_str() :
+			"Resources/Textures/default.png", &width, &height, &channels, STBI_rgb_alpha);
+		OpenGLTexture::CreateTextureWithData(textureData, true);
 		stbi_image_free(textureData);
+	}
+
+	OpenGLTexture::OpenGLTexture(int width, int height) : Texture(width, height)
+	{
 	}
 
 	OpenGLTexture::~OpenGLTexture()
@@ -20,8 +30,9 @@ namespace Engine
 			glDeleteTextures(1, &textureReference);
 	}
 
-	void OpenGLTexture::CreateTextureWithData(stbi_uc* data, bool genMipMaps)
+	void OpenGLTexture::CreateTextureWithData(stbi_uc* data, bool genMipMaps, TextureDataSize bytes, bool storage)
 	{
+		this->dataSize = bytes;
 		GLuint textureReference = GLuint(texture);
 		if (textureReference)
 			glDeleteTextures(1, &textureReference);
@@ -46,6 +57,32 @@ namespace Engine
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glGetError();
 
+		GLenum type;
+
+		switch (bytes) {
+		case TextureDataSize::U_CHAR:
+			type = GL_UNSIGNED_BYTE;
+			break;
+		case TextureDataSize::S_CHAR:
+			type = GL_UNSIGNED_BYTE;
+			break;
+		case TextureDataSize::U_SHORT:
+			type = GL_UNSIGNED_SHORT;
+			break;
+		case TextureDataSize::S_SHORT:
+			type = GL_UNSIGNED_SHORT;
+			break;
+		case TextureDataSize::U_INT:
+			type = GL_UNSIGNED_INT;
+			break;
+		case TextureDataSize::S_INT:
+			type = GL_UNSIGNED_INT;
+			break;
+		default:
+			type = GL_UNSIGNED_BYTE;
+			break;
+		}
+
 		glTexImage2D(
 			GL_TEXTURE_2D,						// What (target)
 			0,									// Mip-map level
@@ -54,7 +91,7 @@ namespace Engine
 			height,								// Height
 			0,									// Border
 			GL_RGBA,							// Format (how to use)
-			GL_UNSIGNED_BYTE,					// Type   (how to intepret)
+			type,					// Type   (how to intepret)
 			data);								// Data
 		glGetError();
 
@@ -66,3 +103,4 @@ namespace Engine
 		texture = uint64_t(textureReference);
 	}
 } //namespace Engine
+#endif

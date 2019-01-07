@@ -102,7 +102,7 @@
 #define INCLUDED_eahave_H
 
 
-#include <EABase/eabase.h>
+#include <ThirdParty/EASTL-master/test/packages/EABase/include/Common/EABase/eabase.h>
 
 
 #if defined(EA_PRAGMA_ONCE_SUPPORTED)

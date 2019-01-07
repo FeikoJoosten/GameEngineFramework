@@ -1,14 +1,17 @@
+#include "Engine/Utility/Defines.hpp"
+#ifdef USING_OPENGL
 #include "Engine/Shader/OpenGLShader.hpp"
 #include "Engine/Texture/Texture.hpp"
 #include "Engine/engine.hpp"
+#include "Engine/Utility/Logging.hpp"
 #include "Engine/Utility/Utility.hpp"
+
 #include <assert.h>
 #include <ThirdParty/glm/glm/gtc/type_ptr.hpp>
-#include <iostream>
 
 namespace Engine
 {
-	
+
 	////////////////////////////////////////////////////////////////////////////////
 	// Compile shader and report success or failure
 	////////////////////////////////////////////////////////////////////////////////
@@ -33,8 +36,8 @@ namespace Engine
 		{
 			GLchar *log = static_cast<GLchar *>(malloc(logLength));
 			glGetShaderInfoLog(*shader, logLength, &logLength, log);
-			//LOG("Shader compile log:\n%s", log);
-			std::cout << "Shader compile log: \n" << log << std::endl;
+			eastl::string logInfo = log;
+			debug_info("OpenGLShader", "CompileShader", eastl::string("Shader compile log: \n " + logInfo));
 			free(log);
 		}
 
@@ -65,8 +68,8 @@ namespace Engine
 		{
 			GLchar *log = static_cast<GLchar *>(malloc(logLength));
 			glGetProgramInfoLog(prog, logLength, &logLength, log);
-			//LOG("Program link log:\n%s", log);
-			std::cout << " Program link log: \n" << log << std::endl;
+			eastl::string logInfo = log;
+			debug_info("OpenGLShader", "LinkProgram", eastl::string("Program link log: \n " + logInfo));
 			free(log);
 		}
 
@@ -109,7 +112,7 @@ namespace Engine
 	//
 	////////////////////////////////////////////////////////////////////////////////
 
-	void ShaderParameter::SetValue(float val)
+	void ShaderParameter::SetValue(float val) const
 	{
 		if (!IsValid())
 			return;
@@ -120,7 +123,7 @@ namespace Engine
 		glGetError();
 	}
 
-	void ShaderParameter::SetValue(int val)
+	void ShaderParameter::SetValue(int val) const
 	{
 		if (!IsValid())
 			return;
@@ -130,7 +133,7 @@ namespace Engine
 		glGetError();
 	}
 
-	void ShaderParameter::SetValue(bool val)
+	void ShaderParameter::SetValue(bool val) const
 	{
 		if (!IsValid())
 			return;
@@ -140,7 +143,7 @@ namespace Engine
 		glGetError();
 	}
 
-	void ShaderParameter::SetValue(const glm::vec2& vec)
+	void ShaderParameter::SetValue(const glm::vec2& vec) const
 	{
 		if (!IsValid())
 			return;
@@ -150,7 +153,7 @@ namespace Engine
 		glGetError();
 	}
 
-	void ShaderParameter::SetValue(const glm::vec3& vec)
+	void ShaderParameter::SetValue(const glm::vec3& vec) const
 	{
 		if (!IsValid())
 			return;
@@ -160,7 +163,7 @@ namespace Engine
 		glGetError();
 	}
 
-	void ShaderParameter::SetValue(const glm::vec4& vec)
+	void ShaderParameter::SetValue(const glm::vec4& vec) const
 	{
 		if (!IsValid())
 			return;
@@ -170,7 +173,7 @@ namespace Engine
 		glGetError();
 	}
 
-	void ShaderParameter::SetValue(const glm::mat4x4& mtx, bool transpose)
+	void ShaderParameter::SetValue(const glm::mat4x4& mtx, bool transpose) const
 	{
 		if (!IsValid())
 			return;
@@ -180,7 +183,7 @@ namespace Engine
 		glGetError();
 	}
 
-	void ShaderParameter::SetValue(Texture &texture)
+	void ShaderParameter::SetValue(Texture &texture_) const
 	{
 		if (!IsValid())
 			return;
@@ -190,7 +193,7 @@ namespace Engine
 		glActiveTexture(GL_TEXTURE0 + _sampler);
 		glGetError();
 		// Work with this texture
-		glBindTexture(GL_TEXTURE_2D, GLuint(texture.GetTexture()));
+		glBindTexture(GL_TEXTURE_2D, GLuint(texture_.GetTexture()));
 		glGetError();
 		// Set the sampler
 		glUniform1i(_location, _sampler);
@@ -207,7 +210,7 @@ namespace Engine
 		GLenum type,
 		GLboolean normalized,
 		GLsizei stride,
-		const GLvoid *pointer)
+		const GLvoid *pointer) const
 	{
 		if (!IsValid())
 			return;
@@ -226,7 +229,7 @@ namespace Engine
 		glGetError();
 	}
 
-	void ShaderAttribute::DisableAttributePointer()
+	void ShaderAttribute::DisableAttributePointer() const
 	{
 		if (!IsValid())
 			return;
@@ -242,20 +245,20 @@ namespace Engine
 	////////////////////////////////////////////////////////////////////////////////
 
 	GLuint LoadShader(eastl::string filePath, int shaderType)
-	{		
+	{
 		GLuint shader;
 		CompileShader(&shader, shaderType, reinterpret_cast<char const *const>(Utility::ReadFile(filePath, std::ios::binary).data()));
 		return shader;
 	}
 
-	OpenGLShader::OpenGLShader(const eastl::string& vertexFileName, const eastl::string& fragmentFileName) : 
-	OpenGLShader(vertexFileName, fragmentFileName, "")
+	OpenGLShader::OpenGLShader(const eastl::string& vertexFileName, const eastl::string& fragmentFileName) :
+		OpenGLShader(vertexFileName, fragmentFileName, "")
 	{}
 
-	OpenGLShader::OpenGLShader(	const eastl::string& vertexFileName, 
-								const eastl::string& fragmentFileName,
-								const eastl::string& geometryFileName)
-	{		
+	OpenGLShader::OpenGLShader(const eastl::string& vertexFileName,
+		const eastl::string& fragmentFileName,
+		const eastl::string& geometryFileName)
+	{
 		if (!LoadSource(vertexFileName, fragmentFileName, geometryFileName))
 			return;
 	}
@@ -265,12 +268,13 @@ namespace Engine
 	{
 		program = glCreateProgram();
 
-		GLuint vertShader = LoadShader(vertexShader, GL_VERTEX_SHADER);
-		GLuint fragShader = LoadShader(fragmentShader, GL_FRAGMENT_SHADER);
+		eastl::string shaderPath = "Resources/Shaders/";
+		GLuint vertShader = LoadShader(shaderPath + vertexShader, GL_VERTEX_SHADER);
+		GLuint fragShader = LoadShader(shaderPath + fragmentShader, GL_FRAGMENT_SHADER);
 		GLuint geomShader = 0;
 
 		if (geometryShader.length() > 0)
-			geomShader = LoadShader(geometryShader, GL_GEOMETRY_SHADER);
+			geomShader = LoadShader(shaderPath + geometryShader, GL_GEOMETRY_SHADER);
 
 		// Attach vertex shader to program
 		glAttachShader(program, vertShader);
@@ -331,32 +335,30 @@ namespace Engine
 		return true;
 	}
 
-	ShaderParameter* OpenGLShader::GetParameter(const eastl::string& name)
+	eastl::weak_ptr<ShaderParameter> OpenGLShader::GetParameter(const eastl::string& name)
 	{
 		// Try to find param
 		auto itr = parameters.find(name);
 		if (itr != parameters.end())
-			return itr->second.get();
+			return itr->second;
 
 		// Create and return a non-valid param that is stored in collection
 		// in case it becomes valid after a reload
-		ShaderParameter* param = new ShaderParameter();
-		parameters[name] = eastl::unique_ptr<ShaderParameter>(param);
-		return param;
+		parameters[name] = eastl::shared_ptr<ShaderParameter>();
+		return parameters[name];
 	}
 
-	ShaderAttribute* OpenGLShader::GetAttribute(const eastl::string& name)
+	eastl::weak_ptr<ShaderAttribute> OpenGLShader::GetAttribute(const eastl::string& name)
 	{
 		// Try to find param
 		auto itr = attributes.find(name);
 		if (itr != attributes.end())
-			return itr->second.get();
+			return itr->second;
 
 		// Create and return a non-valid param that is stored in collection
 		// in case it becomes valid after a reload
-		ShaderAttribute* attrib = new ShaderAttribute();
-		attributes[name] = eastl::unique_ptr<ShaderAttribute>(attrib);
-		return attrib;
+		attributes[name] = eastl::shared_ptr<ShaderAttribute>();
+		return attributes[name];
 	}
 
 	GLuint OpenGLShader::GetProgram() const
@@ -421,12 +423,12 @@ namespace Engine
 			}
 			else
 			{
-				ShaderParameter* param;
+				eastl::shared_ptr<ShaderParameter> param;
 				if (type == GL_SAMPLER_2D || type == GL_SAMPLER_CUBE)
-					param = new ShaderParameter(this, name, type, location, samplerCount++);
+					param = eastl::shared_ptr<ShaderParameter>(new ShaderParameter(this, name, type, location, samplerCount++));
 				else
-					param = new ShaderParameter(this, name, type, location);
-				parameters[name] = eastl::unique_ptr<ShaderParameter>(param);
+					param = eastl::shared_ptr<ShaderParameter>(new ShaderParameter(this, name, type, location));
+				parameters[name] = param;
 			}
 		}
 
@@ -462,13 +464,12 @@ namespace Engine
 			}
 			else
 			{
-				ShaderAttribute* attribute = new ShaderAttribute(this, name, type, location);
-				attributes[name] = eastl::unique_ptr<ShaderAttribute>(attribute);
+				attributes[name] = eastl::shared_ptr<ShaderAttribute>(new ShaderAttribute(this, name, type, location));
 			}
 		}
 	}
 
-	bool OpenGLShader::Validate()
+	bool OpenGLShader::Validate() const
 	{
 		if (!ValidateProgram(program))
 		{
@@ -479,3 +480,4 @@ namespace Engine
 		return true;
 	}
 } //namespace Engine
+#endif
