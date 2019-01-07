@@ -18,7 +18,7 @@
 /// <summary>
 /// This value determines the current graphics API.
 /// </summary>
-#define RENDERER Vulkan
+#define RENDERER OpenGL
 #endif
 
 #ifdef NDEBUG
