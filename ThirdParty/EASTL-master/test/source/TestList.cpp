@@ -5,6 +5,7 @@
 #include "EASTLTest.h"
 #include <EASTL/list.h>
 #include <EASTL/sort.h>
+#include <EASTL/fixed_allocator.h>
 
 using namespace eastl;
 
@@ -617,8 +618,10 @@ int TestList()
 		auto insert_pos = a.begin();
 		eastl::advance(insert_pos, 5);
 
-		a.insert(insert_pos, 4, 42);
+		auto result = a.insert(insert_pos, 4, 42);
 		VERIFY(a == ref);
+		VERIFY(*result == 42);
+		VERIFY(*(--result) == 4);
 	}
 
 	// void insert(const_iterator position, InputIterator first, InputIterator last);
@@ -630,8 +633,10 @@ int TestList()
 		auto insert_pos = a.begin();
 		eastl::advance(insert_pos, 5);
 
-		a.insert(insert_pos, to_insert.begin(), to_insert.end());
+		auto result = a.insert(insert_pos, to_insert.begin(), to_insert.end());
 		VERIFY(a == ref);
+		VERIFY(*result == 42);
+		VERIFY(*(--result) == 4);
 	}
 
 	// iterator insert(const_iterator position, std::initializer_list<value_type> ilist);
@@ -713,10 +718,20 @@ int TestList()
 
 	// void reset_lose_memory()    
 	{
-		eastl::list<int> a = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-		a.reset_lose_memory();
-		VERIFY(a.empty());
-		VERIFY(a.size() == 0);
+		typedef eastl::list<int, fixed_allocator> IntList;
+		typedef IntList::node_type                IntListNode;
+		const size_t  kBufferCount = 10;
+		IntListNode   buffer1[kBufferCount];
+		IntList       intList1;
+		const size_t  kAlignOfIntListNode = EA_ALIGN_OF(IntListNode);
+		intList1.get_allocator().init(buffer1, sizeof(buffer1), sizeof(IntListNode), kAlignOfIntListNode);
+
+		intList1 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+		VERIFY(!intList1.empty());
+		VERIFY(intList1.size() == 10);
+		intList1.reset_lose_memory();
+		VERIFY(intList1.empty());
+		VERIFY(intList1.size() == 0);
 	}
 
 	// void remove(const T& x);
@@ -867,15 +882,6 @@ int TestList()
 		VERIFY(a2 == rref);
 	}
 
-	// void reset()
-	{
-	#if EASTL_RESET_ENABLED
-		eastl::list<int> a = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-		a.reset();
-		VERIFY(a.empty());
-		VERIFY(a.size() == 0);
-	#endif
-	}
 
 	// void merge(this_type& x);
 	// void merge(this_type&& x);
@@ -952,6 +958,7 @@ int TestList()
 		a.sort([](const A& lhs, const A& rhs) { return lhs.mValue < rhs.mValue; });
 		VERIFY(a == ref);
 	}
+
 
 	return nErrorCount;
 }

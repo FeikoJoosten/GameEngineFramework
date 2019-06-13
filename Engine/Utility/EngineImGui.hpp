@@ -1,5 +1,5 @@
 #pragma once
-#include <EASTL-master/include/EASTL/shared_ptr.h>
+#include <ThirdParty/EASTL-master/include/EASTL/shared_ptr.h>
 
 namespace Engine
 {

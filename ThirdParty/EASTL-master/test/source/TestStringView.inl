@@ -16,6 +16,31 @@ int TEST_STRING_NAME()
 			VERIFY(sw.size() == sw.length());
 		}
 
+		// User-reported regression:  constructing string_view from a nullptr, NULL, 0
+		{
+			{
+				StringViewT sw(nullptr);
+				VERIFY(sw.empty());
+				VERIFY(sw.data() == nullptr);
+				VERIFY(sw.size() == 0);
+				VERIFY(sw.size() == sw.length());
+			}
+			{
+				StringViewT sw(0);
+				VERIFY(sw.empty());
+				VERIFY(sw.data() == nullptr);
+				VERIFY(sw.size() == 0);
+				VERIFY(sw.size() == sw.length());
+			}
+			{
+				StringViewT sw(NULL);
+				VERIFY(sw.empty());
+				VERIFY(sw.data() == nullptr);
+				VERIFY(sw.size() == 0);
+				VERIFY(sw.size() == sw.length());
+			}
+		}
+
 		// EA_CONSTEXPR basic_string_view(const basic_string_view& other) = default;
 		{
 			auto* pLiteral = LITERAL("Hello, World");
@@ -247,6 +272,11 @@ int TEST_STRING_NAME()
 			}
 
 			{
+				VERIFY(StringViewT(LITERAL("Aa")).compare(StringViewT(LITERAL("A"))) > 0);
+				VERIFY(StringViewT(LITERAL("A")).compare(StringViewT(LITERAL("Aa"))) < 0);
+			}
+
+			{
 				StringViewT sw1(LITERAL("Hello, World"));
 				StringViewT sw2(LITERAL("Hello, WWorld"));
 				StringViewT sw3(LITERAL("Hello, Wzorld"));
@@ -283,7 +313,7 @@ int TEST_STRING_NAME()
 		{
 			StringViewT sw(LITERAL("*** Hello"));
 			VERIFY(sw.compare(4, 5, LITERAL("Hello")) == 0);
-			VERIFY(sw.compare(4, 5, LITERAL("Hello 555")) == 0);
+			VERIFY(sw.compare(4, 5, LITERAL("Hello 555")) != 0);
 			VERIFY(sw.compare(4, 5, LITERAL("hello")) != 0);
 		}
 
@@ -292,7 +322,7 @@ int TEST_STRING_NAME()
 			StringViewT sw(LITERAL("*** Hello ***"));
 			VERIFY(sw.compare(4, 5, LITERAL("Hello"), 5) == 0);
 			VERIFY(sw.compare(0, 1, LITERAL("*"), 1) == 0);
-			VERIFY(sw.compare(0, 2, LITERAL("**"), 1) == 0);
+			VERIFY(sw.compare(0, 2, LITERAL("**"), 1) != 0);
 			VERIFY(sw.compare(0, 2, LITERAL("**"), 2) == 0);
 			VERIFY(sw.compare(0, 2, LITERAL("^^"), 2) != 0);
 		}
@@ -453,9 +483,33 @@ int TEST_STRING_NAME()
 		// template<> struct hash<std::u16string_view>;
 		// template<> struct hash<std::u32string_view>;
 		{
-			// todo
+			StringViewT sw1(LITERAL("Hello, World"));
+			StringViewT sw2(LITERAL("Hello, World"), 5);
+			StringViewT sw3(LITERAL("Hello"));
+			auto s = LITERAL("Hello");
+
+			VERIFY(eastl::hash<StringViewT>{}(sw1) != eastl::hash<StringViewT>{}(sw2));
+			VERIFY(eastl::hash<StringViewT>{}(sw2) == eastl::hash<StringViewT>{}(sw3));
+			VERIFY(eastl::hash<StringViewT>{}(sw3) == eastl::hash<decltype(s)>{}(s));
 		}
 	}
+
+	{
+		StringViewT sw1(LITERAL("AAAAABBBBBCCCDDDDDEEEEEFFFGGH"));
+
+		VERIFY( sw1.starts_with(LITERAL('A')));
+		VERIFY(!sw1.starts_with(LITERAL('X')));
+		VERIFY( sw1.starts_with(LITERAL("AAAA")));
+		VERIFY( sw1.starts_with(StringViewT(LITERAL("AAAA"))));
+		VERIFY(!sw1.starts_with(LITERAL("AAAB")));
+
+		VERIFY( sw1.ends_with(LITERAL('H')));
+		VERIFY(!sw1.ends_with(LITERAL('X')));
+		VERIFY( sw1.ends_with(LITERAL("FGGH")));
+		VERIFY( sw1.ends_with(StringViewT(LITERAL("FGGH"))));
+		VERIFY(!sw1.ends_with(LITERAL("FGGH$")));
+	}
+
 	return nErrorCount;
 }
 

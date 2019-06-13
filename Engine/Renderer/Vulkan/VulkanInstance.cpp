@@ -1,5 +1,5 @@
 #include "Engine/Renderer/Vulkan/VulkanInstance.hpp"
-#include <EASTL-master/include/EASTL/vector.h>
+#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
 
 #ifdef USING_VULKAN
 
@@ -66,9 +66,9 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL defaultDebugCallback(
 	stream += code;
 	stream += "] ";
 	stream += " [OBJ:";
-	stream += obj;
+	stream += char(obj);
 	stream += "] [LOCATION:";
-	stream += location;
+	stream += char(location);
 	stream += "] ";
 	stream += msg;
 	//hex::CLogger::CLog(stream.str().c_str(), hex::ELogChannel::LogChannel_Graphics, importance);

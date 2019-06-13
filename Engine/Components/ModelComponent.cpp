@@ -39,12 +39,12 @@ namespace Engine
 		eastl::weak_ptr<ResourceManager> resourceManager = Engine::GetEngine().lock()->GetResourceManager();
 
 		// Get Model
-		eastl::shared_ptr<Model> model = resourceManager.lock()->CreateModel(path, path);
+		eastl::weak_ptr<Model> model = resourceManager.lock()->CreateModel(path, path);
 
-		if (model != nullptr)
+		if (model.expired() == false && model.lock().get() != nullptr)
 		{
 			this->path = path;
-			model = model;
+			this->model = model;
 		}
 	}
 
@@ -55,25 +55,24 @@ namespace Engine
 
 	void ModelComponent::Update()
 	{
-		if (model == nullptr || isEnabled == false || GetOwner().lock()->GetIsActive() == false)
+		if (model.expired() || isEnabled == false || GetOwner().lock()->GetIsActive() == false)
 			return;
 
 		if (transformComponent.expired())
 			return;
 
-		GetModel().lock()->Update(
-			Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime());
+		GetModel().lock()->Update(Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime());
 	}
 
 	void ModelComponent::Render()
 	{
-		if (model == nullptr || isEnabled == false || GetOwner().lock()->GetIsActive() == false)
+		if (model.expired() || isEnabled == false || GetOwner().lock()->GetIsActive() == false)
 			return;
 
 		if (transformComponent.expired())
 			return;
 
-		Engine::GetEngine().lock()->GetRenderer().lock()->Render(transformComponent.lock()->GetModelMatrix(), model);
+		Engine::GetEngine().lock()->GetRenderer().lock()->Render(transformComponent.lock()->GetModelMatrix(), Engine::GetEngine().lock()->GetResourceManager().lock()->GetModel(model.lock()->GetName()).lock());
 	}
 
 	void ModelComponent::OnComponentAdded(eastl::weak_ptr<Component> addedComponent)

@@ -50,14 +50,14 @@ namespace Engine {
 		/// Returns nullptr if the current material doesn't have a diffuse texture.
 		/// </summary>
 		/// <returns>The diffuse texture used by the material. NOTE: Will return a temporary texture in case the default diffuse texture hasn't been assigned.</returns>
-		eastl::shared_ptr<Texture> GetDiffuseTexture();
+		eastl::weak_ptr<Texture> GetDiffuseTexture();
 
 		/// <summary>
 		/// Returns the diffuse texture that was defined by the model this material was created from. 
 		/// Returns nullptr if no diffuse texture was specified for the material.
 		/// </summary>
 		/// <returns>The default diffuse texture for the material. NOTE: Will return a temporary texture in case the default diffuse texture hasn't been assigned.</returns>
-		eastl::shared_ptr<Texture> GetDefaultDiffuseTexture();
+		eastl::weak_ptr<Texture> GetDefaultDiffuseTexture();
 
 		/// <summary>
 		/// Indicates if the material has a diffuse texture loaded or not.
@@ -83,14 +83,14 @@ namespace Engine {
 		/// Returns nullptr if the current material doesn't have a bump map texture.
 		/// </summary>
 		/// <returns>The bump map texture used by the material. NOTE: Will return a temporary texture in case the default bump map texture hasn't been assigned.</returns>
-		eastl::shared_ptr<Texture> GetBumpMapTexture() const;
+		eastl::weak_ptr<Texture> GetBumpMapTexture() const;
 
 		/// <summary>
 		/// Returns the bump map texture that was defined by the model this material was created from. 
 		/// Returns nullptr if no bump map texture was specified for the material.
 		/// </summary>
 		/// <returns>The default bump map texture for the material. NOTE: Will return a temporary texture in case the default bump map texture hasn't been assigned.</returns>
-		eastl::shared_ptr<Texture> GetDefaultBumpMapTexture() const;
+		eastl::weak_ptr<Texture> GetDefaultBumpMapTexture() const;
 
 		/// <summary>
 		/// Indicates if the material has a bump map texture loaded or not.
@@ -109,14 +109,14 @@ namespace Engine {
 		/// Returns nullptr if the current material doesn't have a specular texture.
 		/// </summary>
 		/// <returns>The specular texture used by the material.</returns>
-		eastl::shared_ptr<Texture> GetSpecularTexture() const;
+		eastl::weak_ptr<Texture> GetSpecularTexture() const;
 
 		/// <summary>
 		/// Returns the specular texture that was defined by the model this material was created from. 
 		/// Returns nullptr if no specular texture was specified for the material.
 		/// </summary>
 		/// <returns>The default specular texture for the material.</returns>
-		eastl::shared_ptr<Texture> GetDefaultSpecularTexture() const;
+		eastl::weak_ptr<Texture> GetDefaultSpecularTexture() const;
 
 		/// <summary>
 		/// Indicates if the material has a specular texture loaded or not.
@@ -225,16 +225,16 @@ namespace Engine {
 
 		eastl::string modelName;
 
-		eastl::shared_ptr<Texture> diffuseTexture;
-		eastl::shared_ptr<Texture> defaultDiffuseTexture;
-		eastl::shared_ptr<Texture> bumpMapTexture;
-		eastl::shared_ptr<Texture> defaultBumpMapTexture;
-		eastl::shared_ptr<Texture> specularTexture;
-		eastl::shared_ptr<Texture> defaultSpecularTexture;
+		eastl::weak_ptr<Texture> diffuseTexture;
+		eastl::weak_ptr<Texture> defaultDiffuseTexture;
+		eastl::weak_ptr<Texture> bumpMapTexture;
+		eastl::weak_ptr<Texture> defaultBumpMapTexture;
+		eastl::weak_ptr<Texture> specularTexture;
+		eastl::weak_ptr<Texture> defaultSpecularTexture;
 
-		eastl::shared_ptr<Texture> missingTexture;
+		eastl::weak_ptr<Texture> missingTexture;
 
-		eastl::shared_ptr<Texture> LoadTexture(const aiScene* scene, aiMaterial* material, aiTextureType textureType);
+		eastl::weak_ptr<Texture> LoadTexture(const aiScene* scene, aiMaterial* material, aiTextureType textureType);
 	};
 
 } // namespace Engine

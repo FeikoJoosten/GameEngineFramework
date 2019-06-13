@@ -80,11 +80,14 @@ int TestMap()
 
 	{
 		// C++11 emplace and related functionality
-		nErrorCount += TestMapCpp11<eastl::map<int, TestObject> >();
-
-		nErrorCount += TestMultimapCpp11<eastl::multimap<int, TestObject> >();
-
+		nErrorCount += TestMapCpp11<eastl::map<int, TestObject>>();
+		nErrorCount += TestMultimapCpp11<eastl::multimap<int, TestObject>>();
 		nErrorCount += TestMapCpp11NonCopyable<eastl::map<int, NonCopyable>>();
+	}
+
+	{
+		// C++17 try_emplace and related functionality
+		nErrorCount += TestMapCpp17<eastl::map<int, TestObject>>();
 	}
 
 
@@ -149,6 +152,25 @@ int TestMap()
 			EATEST_VERIFY_NOTHROW(map3.at(0));
 		#endif
 		EATEST_VERIFY(map3.at(0) == 1);
+	}
+
+	// User regression test
+	{
+	#if !EASTL_RBTREE_LEGACY_SWAP_BEHAVIOUR_REQUIRES_COPY_CTOR
+		typedef eastl::map<int, MoveOnlyTypeDefaultCtor> IntMOMap;
+
+		IntMOMap m1, m2;
+		m2[0] = MoveOnlyTypeDefaultCtor(0);
+		m2[1] = MoveOnlyTypeDefaultCtor(1);
+
+		EATEST_VERIFY( m1.empty());
+		EATEST_VERIFY(!m2.empty());
+
+		m1.swap(m2);
+
+		EATEST_VERIFY(!m1.empty());
+		EATEST_VERIFY( m2.empty());
+	#endif
 	}
 
 //    todo:  create a test case for this.

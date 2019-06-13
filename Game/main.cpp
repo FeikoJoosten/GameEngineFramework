@@ -4,6 +4,8 @@
 #include "Engine/engine.hpp"
 #include "Engine/Components/TransformComponent.hpp"
 #include "Game/ImGui/ImGuiRenderer.hpp"
+#include "Engine/Components/ModelComponent.hpp"
+#include "Engine/Components/LightComponent.hpp"
 
 #if defined(_WIN32) && defined(UNICODE)
 #include <utf8.h>
@@ -67,7 +69,12 @@ int main(int argumentCount, char *inArguments[])
 
 	// ImGuiRenderer handles the main menu menu's. It works standalone, but has to be cleared in the correct order.
 	eastl::unique_ptr<ImGuiRenderer> imGuiRenderer = eastl::make_unique<ImGuiRenderer>();
-	Engine::Engine::GetEngine().lock()->GetCamera().lock()->SetPostionAndRotation(glm::vec3(0, 250, 0), glm::vec3(0, -1, 0));
+	Engine::Engine::GetEngine().lock()->GetCamera().lock()->SetPostionAndRotation(glm::vec3(0, 30, -75), glm::vec3(-44.15f, 9.43f, 1));
+	eastl::weak_ptr<Engine::EntitySystem> entitySystem = Engine::Engine::GetEngine().lock()->GetEntitySystem();
+	eastl::weak_ptr<Engine::Entity> entity = entitySystem.lock()->CreateEntity("Amazing Entity");
+	entity.lock()->AddComponent<Engine::TransformComponent>();
+	entity.lock()->AddComponent<Engine::ModelComponent>("jeep1.fbx");
+	entity.lock()->AddComponent<Engine::LightComponent>("light", LIGHT_POINT_LIGHT, glm::vec3(0, 50, 0), glm::vec3(), glm::vec3(1, 1, 1), 3000, 100, 10, 10);
 
 	while (!Engine::Engine::GetEngine().lock()->GetWindow().lock()->ShouldClose())
 	{

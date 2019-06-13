@@ -77,9 +77,9 @@ namespace Engine {
 
 		VkDescriptorSetLayout layouts[] = { layout };
 		renderer_->GetDescriptorPool(threadID)->AllocateDescriptorSet(1, layouts, &materialDescriptorSets_[pipelineID][set][threadID]);
-		eastl::shared_ptr<VulkanTexture> missing = eastl::static_pointer_cast<VulkanTexture, Texture>(missingTexture);
-		if (diffuseTexture != nullptr) {
-			eastl::shared_ptr<VulkanTexture> diffuse = eastl::static_pointer_cast<VulkanTexture, Texture>(diffuseTexture);
+		eastl::weak_ptr<VulkanTexture> missing = eastl::static_pointer_cast<VulkanTexture, Texture>(missingTexture.lock());
+		if (diffuseTexture.expired() == false) {
+			eastl::shared_ptr<VulkanTexture> diffuse = eastl::static_pointer_cast<VulkanTexture, Texture>(diffuseTexture.lock());
 			renderer_->GetDescriptorPool(threadID)->DescriptorSetBindToImage(materialDescriptorSets_[pipelineID][set][threadID], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 				diffuse->GetImageView(),
 				diffuse->GetSampler(),
@@ -87,12 +87,12 @@ namespace Engine {
 		}
 		else
 			renderer_->GetDescriptorPool(threadID)->DescriptorSetBindToImage(materialDescriptorSets_[pipelineID][set][threadID], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-				missing->GetImageView(),
-				missing->GetSampler(),
+				missing.lock()->GetImageView(),
+				missing.lock()->GetSampler(),
 				0, 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 		
-		if (specularTexture != nullptr) {
-			eastl::shared_ptr<VulkanTexture> specular = eastl::static_pointer_cast<VulkanTexture, Texture>(specularTexture);
+		if (specularTexture.expired() == false) {
+			eastl::shared_ptr<VulkanTexture> specular = eastl::static_pointer_cast<VulkanTexture, Texture>(specularTexture.lock());
 			renderer_->GetDescriptorPool(threadID)->DescriptorSetBindToImage(materialDescriptorSets_[pipelineID][set][threadID], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 				specular->GetImageView(),
 				specular->GetSampler(),
@@ -100,12 +100,12 @@ namespace Engine {
 		}
 		else
 			renderer_->GetDescriptorPool(threadID)->DescriptorSetBindToImage(materialDescriptorSets_[pipelineID][set][threadID], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-				missing->GetImageView(),
-				missing->GetSampler(),
+				missing.lock()->GetImageView(),
+				missing.lock()->GetSampler(),
 				1, 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 
-		if (bumpMapTexture != nullptr) {
-			eastl::shared_ptr<VulkanTexture> bumpMap = eastl::static_pointer_cast<VulkanTexture, Texture>(bumpMapTexture);
+		if (bumpMapTexture.expired() == false) {
+			eastl::shared_ptr<VulkanTexture> bumpMap = eastl::static_pointer_cast<VulkanTexture, Texture>(bumpMapTexture.lock());
 			renderer_->GetDescriptorPool(threadID)->DescriptorSetBindToImage(materialDescriptorSets_[pipelineID][set][threadID], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 				bumpMap->GetImageView(),
 				bumpMap->GetSampler(),
@@ -113,8 +113,8 @@ namespace Engine {
 		}
 		else
 			renderer_->GetDescriptorPool(threadID)->DescriptorSetBindToImage(materialDescriptorSets_[pipelineID][set][threadID], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-				missing->GetImageView(),
-				missing->GetSampler(),
+				missing.lock()->GetImageView(),
+				missing.lock()->GetSampler(),
 				2, 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 
 		renderer_->GetDescriptorPool(threadID)->DescriptorSetBindToBuffer(materialDescriptorSets_[pipelineID][set][threadID], materialDataBuffer_->GetBuffer(),
@@ -150,7 +150,7 @@ namespace Engine {
 								0, 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 						}
 						else {
-							eastl::shared_ptr<VulkanTexture> missing = eastl::static_pointer_cast<VulkanTexture, Texture>(missingTexture);
+							eastl::shared_ptr<VulkanTexture> missing = eastl::static_pointer_cast<VulkanTexture, Texture>(missingTexture.lock());
 							descriptorPool_->DescriptorSetBindToImage(materialDescriptorSets_[i][j][k], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 								missing->GetImageView(),
 								missing->GetSampler(),
@@ -178,7 +178,7 @@ namespace Engine {
 								2, 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 						}
 						else {
-							eastl::shared_ptr<VulkanTexture> missing = eastl::static_pointer_cast<VulkanTexture, Texture>(missingTexture);
+							eastl::shared_ptr<VulkanTexture> missing = eastl::static_pointer_cast<VulkanTexture, Texture>(missingTexture.lock());
 							descriptorPool_->DescriptorSetBindToImage(materialDescriptorSets_[i][j][k], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 								missing->GetImageView(),
 								missing->GetSampler(),
@@ -198,7 +198,7 @@ namespace Engine {
 			for (size_t j = 0, size2 = materialDescriptorSets_[i].size(); j < size2; ++j) {
 				for (size_t k = 0, size3 = materialDescriptorSets_[i][j].size(); k < size3; ++k) {
 					if (materialDescriptorSets_[i][j][k] != VK_NULL_HANDLE) {
-						if (diffuseTexture != nullptr) {
+						if (diffuseTexture.expired() == false) {
 							eastl::shared_ptr<VulkanTexture> specular = eastl::static_pointer_cast<VulkanTexture, Texture>(specularTexture);
 							descriptorPool_->DescriptorSetBindToImage(materialDescriptorSets_[i][j][k], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 								specular->GetImageView(),
@@ -206,7 +206,7 @@ namespace Engine {
 								1, 0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 						}
 						else {
-							eastl::shared_ptr<VulkanTexture> missing = eastl::static_pointer_cast<VulkanTexture, Texture>(missingTexture);
+							eastl::shared_ptr<VulkanTexture> missing = eastl::static_pointer_cast<VulkanTexture, Texture>(missingTexture.lock());
 							descriptorPool_->DescriptorSetBindToImage(materialDescriptorSets_[i][j][k], VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 								missing->GetImageView(),
 								missing->GetSampler(),

@@ -131,7 +131,7 @@ namespace Engine {
 
 		Engine::GetEngine().lock()->GetResourceManager().lock()->CreateTexture("default.png");
 		defaultTexture_ = eastl::dynamic_pointer_cast<VulkanTexture, Texture>(
-			Engine::GetEngine().lock()->GetResourceManager().lock()->GetTexture("default.png"));
+			Engine::GetEngine().lock()->GetResourceManager().lock()->GetTexture("default.png").lock());
 	}
 
 

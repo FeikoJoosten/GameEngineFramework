@@ -20,6 +20,7 @@
 #include <EASTL/deque.h>
 #include <EASTL/algorithm.h>
 #include <EASTL/allocator.h>
+#include <EASTL/numeric.h>
 #include <EASTL/random.h>
 #include <EABase/eahave.h>
 #include <cmath>
@@ -147,33 +148,37 @@ namespace eastl
 			   { return (*mpArray)[a] < (*mpArray)[b]; }
 		};
 
-
 		// Radix sort elements
-		struct RadixSortElement8
+		template <typename Key>
+		struct RadixSortElement
 		{
-			typedef uint8_t radix_type;
-			uint8_t  mKey;
+			typedef Key radix_type;
+			Key  mKey;
 			uint16_t mData;
+
+			bool operator<(const RadixSortElement<Key> &other) const
+			{
+				return mKey < other.mKey;
+			}
 		};
 
-		struct RadixSortElement16
-		{
-			typedef uint16_t radix_type;
-			uint16_t mKey;
-			uint16_t mData;
-		};
+		typedef RadixSortElement<uint8_t> RadixSortElement8;
+		typedef RadixSortElement<uint16_t> RadixSortElement16;
+		typedef RadixSortElement<uint32_t> RadixSortElement32;
 
-		struct RadixSortElement32
+		template <typename integer_type>
+		struct identity_extract_radix_key
 		{
-			typedef uint32_t radix_type;
-			uint32_t mKey;
-			uint16_t mData;
-		};
+			typedef integer_type radix_type;
 
+			const radix_type operator()(const integer_type& x) const
+			{
+				return x;
+			}
+		};
 	} // namespace Internal
 
 } // namespace eastl
-
 
 int TestSort()
 {
@@ -233,6 +238,7 @@ int TestSort()
 						intArraySaved.push_back(n);
 				}
 			}
+			const int64_t expectedSum = eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0));
 
 			for(int j = 0; j < 300 + (gEASTL_TestLevel * 50); j++)
 			{
@@ -241,43 +247,59 @@ int TestSort()
 				intArray = intArraySaved;
 				bubble_sort(intArray.begin(), intArray.end());
 				EATEST_VERIFY(is_sorted(intArray.begin(), intArray.end()));
+				EATEST_VERIFY(eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0)) == expectedSum);
 
 				intArray = intArraySaved;
 				shaker_sort(intArray.begin(), intArray.end());
 				EATEST_VERIFY(is_sorted(intArray.begin(), intArray.end()));
+				EATEST_VERIFY(eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0)) == expectedSum);
 
 				intArray = intArraySaved;
 				insertion_sort(intArray.begin(), intArray.end());
 				EATEST_VERIFY(is_sorted(intArray.begin(), intArray.end()));
+				EATEST_VERIFY(eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0)) == expectedSum);
 
 				intArray = intArraySaved;
 				selection_sort(intArray.begin(), intArray.end());
 				EATEST_VERIFY(is_sorted(intArray.begin(), intArray.end()));
+				EATEST_VERIFY(eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0)) == expectedSum);
 
 				intArray = intArraySaved;
 				shell_sort(intArray.begin(), intArray.end());
 				EATEST_VERIFY(is_sorted(intArray.begin(), intArray.end()));
+				EATEST_VERIFY(eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0)) == expectedSum);
 
 				intArray = intArraySaved;
 				comb_sort(intArray.begin(), intArray.end());
 				EATEST_VERIFY(is_sorted(intArray.begin(), intArray.end()));
+				EATEST_VERIFY(eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0)) == expectedSum);
 
 				intArray = intArraySaved;
 				heap_sort(intArray.begin(), intArray.end());
 				EATEST_VERIFY(is_sorted(intArray.begin(), intArray.end()));
+				EATEST_VERIFY(eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0)) == expectedSum);
 
 				intArray = intArraySaved;
 				merge_sort(intArray.begin(), intArray.end(), *get_default_allocator((EASTLAllocatorType*)NULL));
 				EATEST_VERIFY(is_sorted(intArray.begin(), intArray.end()));
+				EATEST_VERIFY(eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0)) == expectedSum);
 
 				intArray = intArraySaved;
 				vector<int64_t> buffer(intArray.size());
 				merge_sort_buffer(intArray.begin(), intArray.end(), &buffer[0]);
 				EATEST_VERIFY(is_sorted(intArray.begin(), intArray.end()));
+				EATEST_VERIFY(eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0)) == expectedSum);
 
 				intArray = intArraySaved;
 				quick_sort(intArray.begin(), intArray.end());
 				EATEST_VERIFY(is_sorted(intArray.begin(), intArray.end()));
+				EATEST_VERIFY(eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0)) == expectedSum);
+
+				intArray = intArraySaved;
+				buffer.resize(intArray.size()/2);
+				tim_sort_buffer(intArray.begin(), intArray.end(), buffer.data());
+				EATEST_VERIFY(is_sorted(intArray.begin(), intArray.end()));
+				EATEST_VERIFY(eastl::accumulate(begin(intArraySaved), end(intArraySaved), int64_t(0)) == expectedSum);
 			}
 		}
 	}
@@ -343,10 +365,115 @@ int TestSort()
 				toArray = toArraySaved;
 				quick_sort(toArray.begin(), toArray.end());
 				EATEST_VERIFY(is_sorted(toArray.begin(), toArray.end()));
+
+				toArray = toArraySaved;
+				vector<TestObject> buffer(toArray.size()/2);
+				tim_sort_buffer(toArray.begin(), toArray.end(), buffer.data());
+				EATEST_VERIFY(is_sorted(toArray.begin(), toArray.end()));
 			}
 		}
 	}
 
+	// Test that stable sorting algorithms are actually stable
+	{
+		struct StableSortTestObj
+		{
+			StableSortTestObj()
+			{
+			}
+
+			StableSortTestObj(int value)
+				:value(value)
+				,initialPositionIndex(0)
+			{
+			}
+
+			int value;
+			size_t initialPositionIndex;
+		};
+
+		// During the test this comparison is used to sort elements based on value.
+		struct StableSortCompare
+		{
+			bool operator()(const StableSortTestObj& a, const StableSortTestObj& b)
+			{
+				return a.value < b.value;
+			}
+		};
+
+		// During the test this comparison is used to verify the sort was a stable sort.  i.e. if values are the same then
+		// their relative position should be maintained.
+		struct StableSortCompareForStability
+		{
+			bool operator()(const StableSortTestObj& a, const StableSortTestObj& b)
+			{
+				if (a.value != b.value)
+				{
+					return a.value < b.value;
+				}
+				else
+				{
+					return a.initialPositionIndex < b.initialPositionIndex;
+				}
+			}
+		};
+
+		vector<StableSortTestObj> toArray, toArraySaved;
+		StableSortCompare compare;
+		StableSortCompareForStability compareForStability;
+
+		for (int i = 0; i < (150 + (gEASTL_TestLevel * 200)); i += (i < 5) ? 1 : 37) // array sizes of 0 to 300 - 2100, depending on test level.
+		{
+			for (int n = 0; n < i; n++)
+			{
+				toArraySaved.push_back(StableSortTestObj(n));
+
+				if (rng.RandLimit(10) == 0)
+				{
+					toArraySaved.push_back(StableSortTestObj(n));
+
+					if (rng.RandLimit(5) == 0)
+						toArraySaved.push_back(StableSortTestObj(n));
+				}
+			}
+			vector<StableSortTestObj> tempBuffer;
+			tempBuffer.resize(toArraySaved.size());
+
+			for (int j = 0; j < 300 + (gEASTL_TestLevel * 50); j++)
+			{
+				eastl::random_shuffle(toArraySaved.begin(), toArraySaved.end(), rng);
+				// Store the intial position of each element in the array before sorting.  This position can then be used to verify that the sorting operation is stable.
+				for (vector<StableSortTestObj>::size_type k = 0; k < toArraySaved.size(); k++)
+				{
+					toArraySaved[k].initialPositionIndex = k;
+				}
+
+				toArray = toArraySaved;
+				bubble_sort(toArray.begin(), toArray.end(), compare);
+				EATEST_VERIFY(is_sorted(toArray.begin(), toArray.end(), compareForStability));
+
+				toArray = toArraySaved;
+				shaker_sort(toArray.begin(), toArray.end(), compare);
+				EATEST_VERIFY(is_sorted(toArray.begin(), toArray.end(), compareForStability));
+
+				toArray = toArraySaved;
+				insertion_sort(toArray.begin(), toArray.end(), compare);
+				EATEST_VERIFY(is_sorted(toArray.begin(), toArray.end(), compareForStability));
+
+				toArray = toArraySaved;
+				tim_sort_buffer(toArray.begin(), toArray.end(), tempBuffer.data(), compare);
+				EATEST_VERIFY(is_sorted(toArray.begin(), toArray.end(), compareForStability));
+
+				toArray = toArraySaved;
+				merge_sort(toArray.begin(), toArray.end(), *get_default_allocator((EASTLAllocatorType*)NULL), compare);
+				EATEST_VERIFY(is_sorted(toArray.begin(), toArray.end(), compareForStability));
+
+				toArray = toArraySaved;
+				merge_sort_buffer(toArray.begin(), toArray.end(), tempBuffer.data(), compare);
+				EATEST_VERIFY(is_sorted(toArray.begin(), toArray.end(), compareForStability));
+			}
+		}
+	}
 
 	{
 		// OutputIterator merge(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator result)
@@ -410,7 +537,7 @@ int TestSort()
 				pRadixSortElementArray32[i].mData = (uint16_t)i;
 			}
 			radix_sort<RadixSortElement32*, extract_radix_key<RadixSortElement32> >(pRadixSortElementArray32, pRadixSortElementArray32 + kCount, pRadixSortElementArrayTemp32);
-			// To do: EATEST_VERIFY sort proceeded correctly.
+			EATEST_VERIFY(is_sorted(pRadixSortElementArray32, pRadixSortElementArray32 + kCount));
 			delete[] pRadixSortElementArray32;
 			delete[] pRadixSortElementArrayTemp32;
 		}
@@ -424,7 +551,7 @@ int TestSort()
 				pRadixSortElementArray16[i].mData = (uint16_t)i;
 			}
 			radix_sort<RadixSortElement16*, extract_radix_key<RadixSortElement16> >(pRadixSortElementArray16, pRadixSortElementArray16 + kCount, pRadixSortElementArrayTemp16);
-			// To do: EATEST_VERIFY sort proceeded correctly.
+			EATEST_VERIFY(is_sorted(pRadixSortElementArray16, pRadixSortElementArray16 + kCount));
 			delete[] pRadixSortElementArray16;
 			delete[] pRadixSortElementArrayTemp16;
 		}
@@ -438,12 +565,81 @@ int TestSort()
 				pRadixSortElementArray8[i].mData = (uint8_t)i;
 			}
 			radix_sort<RadixSortElement8*, extract_radix_key<RadixSortElement8> >(pRadixSortElementArray8, pRadixSortElementArray8 + kCount, pRadixSortElementArrayTemp8);
-			// To do: EATEST_VERIFY sort proceeded correctly.
+			EATEST_VERIFY(is_sorted(pRadixSortElementArray8, pRadixSortElementArray8 + kCount));
 			delete[] pRadixSortElementArray8;
 			delete[] pRadixSortElementArrayTemp8;
 		}
 	}
 
+	{
+		// Do some white-box testing of radix sort to verify internal optimizations work properly for some edge cases.
+
+		{
+			uint32_t input[] = { 123, 15, 76, 2, 74, 12, 62, 91 };
+			uint32_t buffer[EAArrayCount(input)];
+			radix_sort<uint32_t*, identity_extract_radix_key<uint32_t>>(begin(input), end(input), buffer);
+			EATEST_VERIFY(is_sorted(begin(input), end(input)));
+		}
+		{
+			// Test values where some digit positions have identical values
+			uint32_t input[] = { 0x75000017, 0x74000003, 0x73000045, 0x76000024, 0x78000033, 0x76000099, 0x78000043, 0x75000010 };
+			uint32_t buffer[EAArrayCount(input)];
+			radix_sort<uint32_t*, identity_extract_radix_key<uint32_t>>(begin(input), end(input), buffer);
+			EATEST_VERIFY(is_sorted(begin(input), end(input)));
+		}
+		{
+			// Test values where some digit positions have identical values
+			uint32_t input[] = { 0x00750017, 0x00740003, 0x00730045, 0x00760024, 0x00780033, 0x00760099, 0x00780043, 0x00750010 };
+			uint32_t buffer[EAArrayCount(input)];
+			radix_sort<uint32_t*, identity_extract_radix_key<uint32_t>>(begin(input), end(input), buffer);
+			EATEST_VERIFY(is_sorted(begin(input), end(input)));
+		}
+		{
+			// Test values where an odd number of scatter operations will be done during sorting (which forces a copy operation to move values back to the input buffer).
+			uint32_t input[] = { 0x00000017, 0x00000003, 0x00000045, 0x00000024, 0x00000033, 0x00000099, 0x00000043, 0x00000010 };
+			uint32_t buffer[EAArrayCount(input)];
+			radix_sort<uint32_t*, identity_extract_radix_key<uint32_t>>(begin(input), end(input), buffer);
+			EATEST_VERIFY(is_sorted(begin(input), end(input)));
+		}
+	}
+
+	{
+		// Test different values for DigitBits
+
+		{
+			uint32_t input[] = {2514513, 6278225, 2726217, 963245656, 35667326, 2625624562, 3562562562, 1556256252};
+			uint32_t buffer[EAArrayCount(input)];
+			radix_sort<uint32_t*, identity_extract_radix_key<uint32_t>, 1>(begin(input), end(input), buffer);
+			EATEST_VERIFY(is_sorted(begin(input), end(input)));
+		}
+		{
+			uint32_t input[] = { 2514513, 6278225, 2726217, 963245656, 35667326, 2625624562, 3562562562, 1556256252 };
+			uint32_t buffer[EAArrayCount(input)];
+			radix_sort<uint32_t*, identity_extract_radix_key<uint32_t>, 3>(begin(input), end(input), buffer);
+			EATEST_VERIFY(is_sorted(begin(input), end(input)));
+		}
+		{
+			uint32_t input[] = { 2514513, 6278225, 2726217, 963245656, 35667326, 2625624562, 3562562562, 1556256252 };
+			uint32_t buffer[EAArrayCount(input)];
+			radix_sort<uint32_t*, identity_extract_radix_key<uint32_t>, 6>(begin(input), end(input), buffer);
+			EATEST_VERIFY(is_sorted(begin(input), end(input)));
+		}
+		{
+			// Test a value for DigitBits that is more than half the size of the type.
+			uint16_t input[] = { 14513, 58225, 26217, 34656, 63326, 24562, 35562, 15652 };
+			uint16_t buffer[EAArrayCount(input)];
+			radix_sort<uint16_t*, identity_extract_radix_key<uint16_t>, 11>(begin(input), end(input), buffer);
+			EATEST_VERIFY(is_sorted(begin(input), end(input)));
+		}
+		{
+			// Test a value for DigitBits that is the size of the type itself.
+			uint8_t input[] = { 113, 225, 217, 56, 26, 162, 62, 152 };
+			uint8_t buffer[EAArrayCount(input)];
+			radix_sort<uint8_t*, identity_extract_radix_key<uint8_t>, 8>(begin(input), end(input), buffer);
+			EATEST_VERIFY(is_sorted(begin(input), end(input)));
+		}
+
+	}
 
 	{
 		// void bucket_sort(ForwardIterator first, ForwardIterator last, ContainerArray& bucketArray, HashFunction hash)
@@ -558,6 +754,12 @@ int TestSort()
 		StatefulCompare::Reset();
 		intDeque = intDequeSaved;
 		quick_sort<IntDequeIterator, StatefulCompare&>(intDeque.begin(), intDeque.end(), compare);
+		EATEST_VERIFY((StatefulCompare::nCtorCount == 0) && (StatefulCompare::nDtorCount == 0) && (StatefulCompare::nCopyCount == 0));
+
+		StatefulCompare::Reset();
+		vector<int> buffer(intDeque.size()/2);
+		intDeque = intDequeSaved;
+		tim_sort_buffer<IntDequeIterator, int, StatefulCompare&>(intDeque.begin(), intDeque.end(), buffer.data(), compare);
 		EATEST_VERIFY((StatefulCompare::nCtorCount == 0) && (StatefulCompare::nDtorCount == 0) && (StatefulCompare::nCopyCount == 0));
 	}
 

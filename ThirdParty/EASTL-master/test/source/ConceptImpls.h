@@ -56,6 +56,14 @@ public:
 	const int value;
 };
 
+
+struct NotDefaultConstructible
+{
+	NotDefaultConstructible() = delete;
+};
+static_assert(!eastl::is_default_constructible<NotDefaultConstructible>::value, "'NotDefaultConstructible' is default constructible.");
+
+
 class CopyConstructible
 {
 public:
@@ -141,9 +149,8 @@ private:
 	MoveAssignable() : value(defaultValue) {}
 };
 
-class MoveAndDefaultConstructible
+struct MoveAndDefaultConstructible
 {
-public:
 	static const int defaultValue = 42;
 
 	MoveAndDefaultConstructible() : value(defaultValue) {}
@@ -155,59 +162,29 @@ public:
 	MoveAndDefaultConstructible& operator=(MoveAndDefaultConstructible&&) = delete;
 
 	const int value;
-
-private:
 };
 
 struct MissingMoveConstructor
 {
-	MissingMoveConstructor()
-	{
-	}
-
-	MissingMoveConstructor(const MissingMoveConstructor & other)
-	{
-	}
-
-	MissingMoveConstructor & operator= (MissingMoveConstructor && other)
-	{
-		return *this;
-	}
-
-	MissingMoveConstructor & operator= (const MissingMoveConstructor & other)
-	{
-		return *this;
-	}
-
-	bool operator< (const MissingMoveConstructor & other) const
-	{
-		return true;
-	}
+	MissingMoveConstructor() {}
+	MissingMoveConstructor(const MissingMoveConstructor&) {}
+	MissingMoveConstructor& operator=(MissingMoveConstructor&&) { return *this; }
+	MissingMoveConstructor& operator=(const MissingMoveConstructor&) { return *this; }
+	bool operator<(const MissingMoveConstructor&) const { return true; }
 };
 
 struct MissingMoveAssignable
 {
-	MissingMoveAssignable()
-	{
-	}
+	MissingMoveAssignable() {}
+	MissingMoveAssignable(const MissingMoveAssignable&) {}
+	MissingMoveAssignable(MissingMoveAssignable&&) {}
+	MissingMoveAssignable& operator=(const MissingMoveAssignable&) { return *this; }
+	bool operator<(const MissingMoveAssignable&) const { return true; }
+};
 
-	MissingMoveAssignable(const MissingMoveAssignable & other)
-	{
-	}
-
-	MissingMoveAssignable(MissingMoveAssignable && other)
-	{
-	}
-
-	MissingMoveAssignable & operator= (const MissingMoveAssignable& other)
-	{
-		return *this;
-	}
-
-	bool operator< (const MissingMoveAssignable & other) const
-	{
-		return true;
-	}
+struct MissingEquality
+{
+	MissingEquality& operator==(const MissingEquality&) = delete;
 };
 
 #endif  // !defined(EA_COMPILER_NO_DEFAULTED_FUNCTIONS) && !defined(EA_COMPILER_NO_DELETED_FUNCTIONS)

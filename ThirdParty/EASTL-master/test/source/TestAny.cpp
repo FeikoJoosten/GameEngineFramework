@@ -223,19 +223,36 @@ int TestAny()
 		VERIFY(a1.has_value());
 	}
 
+	// swap tests
 	{
-		any a1 = 42;
-		any a2 = 24;
-		VERIFY(any_cast<int>(a1) == 42);
-		VERIFY(any_cast<int>(a2) == 24);
+		{
+			any a1 = 42;
+			any a2 = 24;
+			VERIFY(any_cast<int>(a1) == 42);
+			VERIFY(any_cast<int>(a2) == 24);
 
-		a1.swap(a2);
-		VERIFY(any_cast<int>(a1) == 24);
-		VERIFY(any_cast<int>(a2) == 42);
+			a1.swap(a2);
+			VERIFY(any_cast<int>(a1) == 24);
+			VERIFY(any_cast<int>(a2) == 42);
 
-		eastl::swap(a1, a2);
-		VERIFY(any_cast<int>(a1) == 42);
-		VERIFY(any_cast<int>(a2) == 24);
+			eastl::swap(a1, a2);
+			VERIFY(any_cast<int>(a1) == 42);
+			VERIFY(any_cast<int>(a2) == 24);
+		}
+		{
+			any a1 = string("hello");
+			any a2 = string("world");
+			VERIFY(any_cast<string>(a1) == "hello");
+			VERIFY(any_cast<string>(a2) == "world");
+
+			a1.swap(a2);
+			VERIFY(any_cast<string>(a1) == "world");
+			VERIFY(any_cast<string>(a2) == "hello");
+
+			eastl::swap(a1, a2);
+			VERIFY(any_cast<string>(a1) == "hello");
+			VERIFY(any_cast<string>(a2) == "world");
+		}
 	}
 
 	#if EASTL_RTTI_ENABLED
@@ -358,24 +375,20 @@ int TestAny()
 
 	// Aligned type tests
 	{
-		// TODO(rparolin): Aligned types that do not fit into the local buffer optimization require use of global
-		// operator new that takes the alignment parameter.  I'm hesitant to add this dependency as it is not widely
-		// used in EASTL containers.  Consider for a future release.
-		//
-		// {
-		//    any a = Align16(1337);
-		//    VERIFY(any_cast<Align16>(a) == Align16(1337));
-		// }
-		//
-		// {
-		//     any a = Align32(1337);
-		//     VERIFY(any_cast<Align32>(a) == Align32(1337));
-		// }
-		//
-		// {
-		//     any a = Align64(1337);
-		//     VERIFY(any_cast<Align64>(a) == Align64(1337));
-		// }
+		{
+		   any a = Align16(1337);
+		   VERIFY(any_cast<Align16>(a) == Align16(1337));
+		}
+		
+		{
+			any a = Align32(1337);
+			VERIFY(any_cast<Align32>(a) == Align32(1337));
+		}
+		
+		{
+			any a = Align64(1337);
+			VERIFY(any_cast<Align64>(a) == Align64(1337));
+		}
 	}
 
 	// make_any
@@ -388,6 +401,68 @@ int TestAny()
 		{
 			auto a = make_any<RequiresInitList>(std::initializer_list<int>{1,2,3,4,5,6,7,8});
 			VERIFY(any_cast<RequiresInitList&>(a).sum == 36);
+		}
+	}
+
+	// user reported regression that eastl::any constructor was not decaying the deduced type correctly.
+	{
+		float f = 42.f;
+		eastl::any a(f);
+		VERIFY(any_cast<float>(a) == 42.f);
+	}
+
+	//testing unsafe operations
+	{
+		eastl::any a = 1;
+		int* i = eastl::any_cast<int>(&a);
+		VERIFY((*i) == 1);
+
+		a = 2;
+		int *j = (int*)eastl::unsafe_any_cast<void>(&a);
+		VERIFY((*j) == 2);
+
+		const eastl::any b = 3;
+		const void * p = eastl::unsafe_any_cast<void>(&b);
+		void *q = const_cast<void *>(p);
+		int *r = static_cast<int *>(q);
+		VERIFY((*r) == 3);
+	}
+
+	// user regression when calling the assignment operator
+	{
+		{
+			eastl::any a1;
+			eastl::any a2;
+			VERIFY(a1.has_value() == false);
+			VERIFY(a2.has_value() == false);
+
+			a1 = a2;
+			VERIFY(a1.has_value() == false);
+			VERIFY(a2.has_value() == false);
+		}
+
+		{
+			eastl::any a1 = 42;
+			eastl::any a2;
+			VERIFY(a1.has_value() == true);
+			VERIFY(a2.has_value() == false);
+
+			a1 = a2;
+			VERIFY(a1.has_value() == false);
+			VERIFY(a2.has_value() == false);
+		}
+
+		{
+			eastl::any a1;
+			eastl::any a2 = 42;
+			VERIFY(a1.has_value() == false);
+			VERIFY(a2.has_value() == true);
+
+			a1 = a2;
+			VERIFY(a1.has_value() == true);
+			VERIFY(a2.has_value() == true);
+			VERIFY(any_cast<int>(a1) == 42);
+			VERIFY(any_cast<int>(a2) == 42);
 		}
 	}
 

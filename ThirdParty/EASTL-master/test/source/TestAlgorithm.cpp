@@ -20,11 +20,9 @@
 #include <EASTL/string.h>
 #include <EASTL/set.h>
 #include <EASTL/sort.h>
-#include <ConceptImpls.h>
+#include "ConceptImpls.h"
 #include <EAStdC/EAMemory.h>
 #include "EASTLTest.h"  // Put this after the above so that it doesn't block any warnings from the includes above.
-
-#include <algorithm> // reference sort() implementation
 
 namespace eastl
 {
@@ -126,6 +124,34 @@ static int TestMinMax()
 	int nErrorCount = 0;
 
 	EA::UnitTest::Rand rng(EA::UnitTest::GetRandSeed());
+
+	{
+		// NOTE(rparolin): This compiles but it should not.  We provide explicit eastl::max overloads for float, double,
+		// and long double which enable this behaviour.  It is not standards compliant and it will be removed in a
+		// future release.
+		{
+			struct Foo
+			{
+				operator float() const { return 0; }
+			};
+
+			Foo f1;
+			float f2{};
+			eastl::max(f1, f2);
+		}
+
+		// NOTE(rparolin): This will not compile because we lack explicit eastl::max overloads for 'int'.
+		// {
+		//	 struct Foo
+		//	 {
+		//		 operator int() const { return 0; }
+		//	 };
+
+		//	 Foo f1;
+		//	 int f2{};
+		//	 eastl::max(f1, f2);
+		// }
+	}
 
 	{
 		// const T& min(const T& a, const T& b);
@@ -890,11 +916,7 @@ int TestAlgorithm()
   
 			eastl::move(src.begin(), src.end(), dest.begin());
 			EATEST_VERIFY((dest[0] == "0") && (dest[3] == "3"));
-			#if EASTL_MOVE_SEMANTICS_ENABLED
-				EATEST_VERIFY(src[0].empty() && src[3].empty());
-			#else
-				// Else move_backward wasn't able to use C++11 move and instead did a copy.
-			#endif
+			EATEST_VERIFY(src[0].empty() && src[3].empty());
 		}
 
 		{
@@ -906,11 +928,7 @@ int TestAlgorithm()
   
 			eastl::move_backward(src.begin(), src.end(), dest.end());
 			EATEST_VERIFY((dest[0] == "0") && (dest[3] == "3"));
-			#if EASTL_MOVE_SEMANTICS_ENABLED
-				EATEST_VERIFY(src[0].empty() && src[3].empty());
-			#else
-				// Else move_backward wasn't able to use C++11 move and instead did a copy.
-			#endif
+			EATEST_VERIFY(src[0].empty() && src[3].empty());
 		}
 	}
 
@@ -1295,6 +1313,25 @@ int TestAlgorithm()
 		EATEST_VERIFY(i == 1000);
 	}
 
+	// for_each_n
+	{
+		{
+			vector<int> v = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+			for_each_n(v.begin(), 5, [](auto& e) { e += 10; });
+
+			vector<int> expected = {10, 11, 12, 13, 14, 5, 6, 7, 8, 9};
+			EATEST_VERIFY(v == expected);
+		}
+
+		// verify lambda can return a result that is ignored.
+		{
+			vector<int> v = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+			for_each_n(v.begin(), 5, [](auto& e) { e += 10; return 42; });
+
+			vector<int> expected = {10, 11, 12, 13, 14, 5, 6, 7, 8, 9};
+			EATEST_VERIFY(v == expected);
+		}
+	}
 
 	{
 		// void generate(ForwardIterator first, ForwardIterator last, Generator generator)
@@ -2339,8 +2376,8 @@ int TestAlgorithm()
 		}
 	}
 
-	// disable in MSVC2013 because eastl::is_copy_constructible is always true...
-	#ifndef EA_COMPILER_MSVC_2013
+	// test eastl::sort with move-only type
+	{
 		{
 			eastl::vector<eastl::unique_ptr<int>> vec;
 			eastl::sort(vec.begin(), vec.end(), [](const eastl::unique_ptr<int>& lhs, const eastl::unique_ptr<int>& rhs) { return *lhs < *rhs; });
@@ -2376,57 +2413,22 @@ int TestAlgorithm()
 			EATEST_VERIFY(*vec[2] == 7);
 		}
 		{
-			for(unsigned tests=0; tests<500; ++tests)
+			for (unsigned tests = 0; tests < 50; ++tests)
 			{
 				eastl::vector<eastl::unique_ptr<int>> vec1;
-				eastl::vector<eastl::unique_ptr<int>> vec2;
-				eastl::vector<int> vec3;
-				eastl::vector<int> vec4;
-				eastl::vector<int> vec5;
-				eastl::vector<int> vec6;
 
-				const int numbersToSort = 100;
-
-				for(int i=0; i<numbersToSort; ++i)
+				for (int i = 0; i < 100; ++i)
 				{
 					int randomNumber = rng();
 					vec1.emplace_back(new int(randomNumber));
-					vec2.emplace_back(new int(randomNumber));
-					vec3.push_back(randomNumber);
-					vec4.push_back(randomNumber);
-					vec5.push_back(randomNumber);
-					vec6.push_back(randomNumber);
 				}
 
-				// used STL sort as reference for correctness
-				eastl::sort(vec1.begin(), vec1.end(), [](const eastl::unique_ptr<int>& lhs, const eastl::unique_ptr<int>& rhs) { return *lhs < *rhs; });
-				std::sort(vec2.begin(), vec2.end(), [](const eastl::unique_ptr<int>& lhs, const eastl::unique_ptr<int>& rhs) { return *lhs < *rhs; });
-
-				for(int i=0; i<numbersToSort; ++i)
-				{
-					EATEST_VERIFY(*vec1[i] == *vec2[i]);
-				}
-
-				eastl::sort(vec3.begin(), vec3.end());
-				std::sort(vec4.begin(), vec4.end());
-
-				for(int i=0; i<numbersToSort; ++i)
-				{
-					EATEST_VERIFY(*vec2[i] == vec3[i]);
-					EATEST_VERIFY(vec3[i] == vec4[i]);
-				}
-
-				eastl::sort(vec5.begin(), vec5.end(), [](const int& lhs, const int& rhs) { return lhs < rhs; } );
-				std::sort(vec6.begin(), vec6.end(), [](const int& lhs, const int& rhs) { return lhs < rhs; } );
-
-				for(int i=0; i<numbersToSort; ++i)
-				{
-					EATEST_VERIFY(vec4[i] == vec5[i]);
-					EATEST_VERIFY(vec5[i] == vec6[i]);
-				}
+				auto vec1Cmp = [](const eastl::unique_ptr<int>& lhs, const eastl::unique_ptr<int>& rhs) { return *lhs < *rhs; };
+				eastl::sort(vec1.begin(), vec1.end(), vec1Cmp);
+				EATEST_VERIFY(eastl::is_sorted(vec1.begin(), vec1.end(), vec1Cmp));
 			}
 		}
-	#endif
+	}
 
 	EATEST_VERIFY(TestObject::IsClear());
 	TestObject::Reset();

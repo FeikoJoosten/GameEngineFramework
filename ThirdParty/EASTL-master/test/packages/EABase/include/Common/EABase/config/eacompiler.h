@@ -16,6 +16,7 @@
  *     EA_COMPILER_QNX
  *     EA_COMPILER_GREEN_HILLS
  *     EA_COMPILER_CLANG
+ *     EA_COMPILER_CLANG_CL
  *     
  *     EA_COMPILER_VERSION = <integer>
  *     EA_COMPILER_NAME = <string>
@@ -68,6 +69,9 @@
  *     EA_COMPILER_NO_INITIALIZER_LISTS
  *     EA_COMPILER_NO_NORETURN
  *     EA_COMPILER_NO_CARRIES_DEPENDENCY
+ *     EA_COMPILER_NO_FALLTHROUGH
+ *     EA_COMPILER_NO_NODISCARD
+ *     EA_COMPILER_NO_MAYBE_UNUSED
  *     EA_COMPILER_NO_NONSTATIC_MEMBER_INITIALIZERS
  *     EA_COMPILER_NO_RIGHT_ANGLE_BRACKETS
  *     EA_COMPILER_NO_ALIGNOF
@@ -95,6 +99,7 @@
  * 
  *  C++17 functionality
  *     EA_COMPILER_NO_INLINE_VARIABLES
+ *     EA_COMPILER_NO_ALIGNED_NEW
  *     
  *-----------------------------------------------------------------------------
  *
@@ -293,6 +298,8 @@
 	#if !defined(EA_COMPILER_CPP17_ENABLED) && defined(__cplusplus)
 		#if (__cplusplus >= 201703L) 
 			#define EA_COMPILER_CPP17_ENABLED 1
+		#elif defined(_MSVC_LANG) && (_MSVC_LANG >= 201703L) // C++17+
+			#define EA_COMPILER_CPP17_ENABLED 1
 		#endif
 	#endif
 
@@ -309,7 +316,8 @@
 		#define EA_COMPILER_NAME    "RVCT"
 	  //#define EA_COMPILER_STRING (defined below)
 
-	#elif defined(__clang__)
+	// Clang's GCC-compatible driver.
+	#elif defined(__clang__) && !defined(_MSC_VER)
 		#define EA_COMPILER_CLANG   1
 		#define EA_COMPILER_VERSION (__clang_major__ * 100 + __clang_minor__)
 		#define EA_COMPILER_NAME    "clang"
@@ -388,6 +396,11 @@
 		#define EA_COMPILER_VERSION _MSC_VER
 		#define EA_COMPILER_NAME "Microsoft Visual C++"
 	  //#define EA_COMPILER_STRING (defined below)
+
+		#if defined(__clang__)
+			// Clang's MSVC-compatible driver.
+			#define EA_COMPILER_CLANG_CL 1
+		#endif
 
 		#define EA_STANDARD_LIBRARY_MSVC 1
 		#define EA_STANDARD_LIBRARY_MICROSOFT 1
@@ -589,7 +602,7 @@
 		#if defined(_MSC_VER)
 			#define EA_DISABLE_ALL_VC_WARNINGS()  \
 				__pragma(warning(push, 0)) \
-				__pragma(warning(disable: 4244 4265 4267 4350 4472 4509 4548 4710 4985 6320 4755 4625 4626 4702)) // Some warnings need to be explicitly called out.
+				__pragma(warning(disable: 4244 4265 4267 4350 4472 4509 4548 4623 4710 4985 6320 4755 4625 4626 4702)) // Some warnings need to be explicitly called out.
 		#else
 			#define EA_DISABLE_ALL_VC_WARNINGS()
 		#endif
@@ -614,10 +627,24 @@
 			EA_RESTORE_ALL_VC_WARNINGS()
 		#endif
 
-		#if defined(__cplusplus) && defined(_YVALS) /* If using the Dinkumware Standard library... */
+		#if defined(__cplusplus) && defined(_CPPLIB_VER) /* If using the Dinkumware Standard library... */
 			#define EA_HAVE_DINKUMWARE_CPP_LIBRARY 1
 		#else
 			#define EA_NO_HAVE_DINKUMWARE_CPP_LIBRARY 1
+		#endif
+	#endif
+
+
+	// EA_COMPILER_NO_ALIGNED_NEW
+	//
+	//
+	#if !defined(EA_COMPILER_NO_ALIGNED_NEW)
+		#if defined(_HAS_ALIGNED_NEW) && _HAS_ALIGNED_NEW // VS2017 15.5 Preview 
+			// supported.
+		#elif defined(EA_COMPILER_CPP17_ENABLED)
+			// supported.
+		#else
+			#define EA_COMPILER_NO_ALIGNED_NEW 1
 		#endif
 	#endif
 
@@ -626,7 +653,7 @@
 	// If defined then the compiler's version of operator new is not decorated
 	// with a throw specification. This is useful for us to know because we 
 	// often want to write our own overloaded operator new implementations.
-	// We needs such operator new overrides to be declared identically to the
+	// We need such operator new overrides to be declared identically to the
 	// way the compiler is defining operator new itself.
 	//
 	// Example usage:
@@ -640,10 +667,16 @@
 	//      void  operator delete[](void*, const std::nothrow_t&) EA_THROW_SPEC_DELETE_NONE();
 	//
 	#if defined(EA_HAVE_DINKUMWARE_CPP_LIBRARY)
-		#if defined(_MSC_VER) && (_MSC_VER >= 1910)  // VS2017+
+		#if defined(_MSC_VER) && (_MSC_VER >= 1912)  // VS2017 15.3+ 
+			#define EA_THROW_SPEC_NEW(x)        noexcept(false)
+			#define EA_THROW_SPEC_NEW_NONE()    noexcept 
+			#define EA_THROW_SPEC_DELETE_NONE() noexcept 
+
+		#elif defined(_MSC_VER) && (_MSC_VER >= 1910)  // VS2017+
 			#define EA_THROW_SPEC_NEW(x)        throw(x)
 			#define EA_THROW_SPEC_NEW_NONE()    throw() 
 			#define EA_THROW_SPEC_DELETE_NONE() throw() 
+
 		#else
 			#if defined(EA_PLATFORM_PS4)
 				#define EA_THROW_SPEC_NEW(X)        _THROWS(X)
@@ -656,8 +689,9 @@
 			#endif
 			#define EA_THROW_SPEC_NEW_NONE()    _THROW0()
 			#define EA_THROW_SPEC_DELETE_NONE() _THROW0()
+
 		#endif
-	#elif defined(EA_COMPILER_NO_EXCEPTIONS) && !defined(EA_COMPILER_RVCT) && !defined(EA_PLATFORM_LINUX) && !defined(EA_PLATFORM_APPLE)
+	#elif defined(EA_COMPILER_NO_EXCEPTIONS) && !defined(EA_COMPILER_RVCT) && !defined(EA_PLATFORM_LINUX) && !defined(EA_PLATFORM_APPLE) && !defined(CS_UNDEFINED_STRING)
 		#define EA_COMPILER_NO_NEW_THROW_SPEC 1
 
 		#define EA_THROW_SPEC_NEW(x)
@@ -816,6 +850,23 @@
 		#endif
 	#endif
 
+
+	// EA_COMPILER_NO_CONSTEXPR_IF
+	//
+	// Refers to C++17 = constexpr if(const expression) conditionals.
+	//
+	#if !defined(EA_COMPILER_NO_CONSTEXPR_IF)
+		#if defined(EA_COMPILER_CPP17_ENABLED) && (defined(_MSC_VER) && (EA_COMPILER_VERSION >= 1911)) // VS2017 15.3+
+			// supported.
+		#elif defined(EA_COMPILER_CPP17_ENABLED) && defined(__clang__) && (EA_COMPILER_VERSION >= 309) // Clang 3.9+
+			// supported.
+		#elif defined(EA_COMPILER_CPP17_ENABLED) && defined(__GNUC__) && (EA_COMPILER_VERSION >= 7000) // GCC 7+
+			// supported.
+		#else
+			#define EA_COMPILER_NO_CONSTEXPR_IF 1
+		#endif
+	#endif
+	
 
 	// EA_COMPILER_NO_OVERRIDE
 	// 
@@ -1160,7 +1211,6 @@
 	#endif
 
 
-	// ------------------------------------------------------------------------
 	// EA_COMPILER_NO_CARRIES_DEPENDENCY
 	// 
 	// Refers to C++11 declaration attribute: carries_dependency.
@@ -1179,6 +1229,67 @@
 		//    // supported.
 		#else
 			#define EA_COMPILER_NO_CARRIES_DEPENDENCY 1
+		#endif
+	#endif
+
+
+	// EA_COMPILER_NO_FALLTHROUGH
+	// 
+	// Refers to C++17 declaration attribute: fallthrough.
+	// http://en.cppreference.com/w/cpp/language/attributes
+	//
+	#if !defined(EA_COMPILER_NO_FALLTHROUGH)
+		#if defined(EA_COMPILER_CPP17_ENABLED) 
+			// supported.
+		#else
+			#define EA_COMPILER_NO_FALLTHROUGH 1
+		#endif
+	#endif
+
+
+	// EA_COMPILER_NO_NODISCARD
+	// 
+	// Refers to C++17 declaration attribute: nodiscard.
+	// http://en.cppreference.com/w/cpp/language/attributes
+	//
+	#if !defined(EA_COMPILER_NO_NODISCARD)
+		#if defined(EA_COMPILER_CPP17_ENABLED) 
+			// supported.
+		#else
+			#define EA_COMPILER_NO_NODISCARD 1
+		#endif
+	#endif
+
+
+	// EA_COMPILER_NO_MAYBE_UNUSED
+	// 
+	// Refers to C++17 declaration attribute: maybe_unused.
+	// http://en.cppreference.com/w/cpp/language/attributes
+	//
+	#if !defined(EA_COMPILER_NO_MAYBE_UNUSED)
+		#if defined(EA_COMPILER_CPP17_ENABLED) 
+			// supported.
+		#elif defined(EA_COMPILER_MSVC) && (EA_COMPILER_VERSION >= 1912) // VS2017 15.3+
+			// supported.
+		#else
+			#define EA_COMPILER_NO_MAYBE_UNUSED 1
+		#endif
+	#endif
+
+
+	// EA_COMPILER_NO_STRUCTURED_BINDING
+	//
+	// Indicates if target compiler supports the C++17 "structured binding" language feature.
+	// https://en.cppreference.com/w/cpp/language/structured_binding
+	//
+	//
+	#if !defined(EA_COMPILER_NO_STRUCTURED_BINDING)
+		#if defined(EA_COMPILER_CPP17_ENABLED) 
+			// supported.
+		#elif defined(EA_COMPILER_MSVC) && (EA_COMPILER_VERSION >= 1912) // VS2017 15.3+
+			// supported.
+		#else
+			#define EA_COMPILER_NO_STRUCTURED_BINDING 1
 		#endif
 	#endif
 

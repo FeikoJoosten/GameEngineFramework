@@ -99,6 +99,21 @@ void*  MallocAllocator::mpLastAllocation = NULL;
 //
 int InstanceAllocator::mMismatchCount = 0;
 
+
+///////////////////////////////////////////////////////////////////////////////
+// CountingAllocator
+//
+uint64_t CountingAllocator::activeAllocCount      = 0;
+uint64_t CountingAllocator::totalAllocCount       = 0;
+uint64_t CountingAllocator::totalDeallocCount     = 0;
+uint64_t CountingAllocator::totalCtorCount        = 0;
+uint64_t CountingAllocator::defaultCtorCount      = 0;
+uint64_t CountingAllocator::copyCtorCount         = 0;
+uint64_t CountingAllocator::assignOpCount         = 0;
+uint64_t CountingAllocator::totalAllocatedMemory  = 0;
+uint64_t CountingAllocator::activeAllocatedMemory = 0;
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // gEASTL_TestLevel
 //
@@ -143,7 +158,7 @@ StdSTLType GetStdSTLType()
 		return kSTLPort;                    // Descendent of the old HP / SGI STL.
 	#elif defined(_RWSTD_VER_STR)
 		return kSTLApache;                  // a.k.a. Rogue Wave, which is a descendent of the old HP / SGI STL.
-	#elif defined(_YVALS)
+	#elif defined(_CPPLIB_VER)
 		return kSTLDinkumware;              // Indicated by the presence of the central yvals.h header.
 	#elif defined(_LIBCPP_VECTOR)
 		return kSTLClang;
@@ -181,7 +196,7 @@ const char* GetStdSTLName()
 		return "Sony Dinkumware";
 
 	// Special case for Dinkumware.
-	#elif defined(_YVALS)
+	#elif defined(_CPPLIB_VER)
 		#if defined(_MSC_VER)
 			return "VC++ Dinkumware";
 		#else

@@ -29,7 +29,7 @@
 #ifndef CEREAL_ARCHIVES_BINARY_HPP_
 #define CEREAL_ARCHIVES_BINARY_HPP_
 
-#include "cereal/include/cereal/cereal.hpp"
+#include <ThirdParty/cereal/include/cereal/cereal.hpp>
 #include <sstream>
 
 namespace cereal

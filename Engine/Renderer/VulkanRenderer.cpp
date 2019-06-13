@@ -336,11 +336,19 @@ namespace Engine
 		eastl::vector<eastl::shared_ptr<Mesh>> meshes = model->GetModelMeshes();
 
 		for (size_t i = 0, size = meshes.size(); i < size; i++) {
+			if (meshes[i] == nullptr)
+			{
+				continue;
+			}
+
 			eastl::shared_ptr<VulkanMaterial> material =
 				eastl::dynamic_pointer_cast<VulkanMaterial, Material>(model->GetMeshMaterial(meshes[i]));
 
-			if (!eastl::dynamic_pointer_cast<VulkanMesh, Mesh>(meshes[i])->IsAnimated() ||
-				model->GetCurrentAnimationIndex() == -1 ||
+			bool isAnimated = eastl::dynamic_pointer_cast<VulkanMesh, Mesh>(meshes[i])->IsAnimated();
+			size_t currentAnimationIndex = model->GetCurrentAnimationIndex();
+
+			if (!isAnimated ||
+				currentAnimationIndex == -1 ||
 				model->GetSkeleton() == nullptr) {
 				vulkanStaticMeshRenderer->RenderMesh(modelMatrix,
 					eastl::dynamic_pointer_cast<VulkanMesh, Mesh>(meshes[i]), material, mainColor);

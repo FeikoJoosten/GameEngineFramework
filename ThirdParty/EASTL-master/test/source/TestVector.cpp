@@ -31,9 +31,6 @@ template class eastl::vector<int>;
 template class eastl::vector<Align64>;
 template class eastl::vector<TestObject>;
 
-// TODO(rparolin): Fix compiler errors and enable this 
-// template class eastl::vector<eastl::unique_ptr<int>>;
-
 
 // This tests "uninitialized_fill" usage in vector when T has a user provided
 // address-of operator overload.  In these situations, EASTL containers must use
@@ -53,6 +50,7 @@ struct HasAddressOfOperator
 {
 	// problematic 'addressof' operator that doesn't return a pointer type
     AddressOfOperatorResult operator&() const { return {}; }
+	bool operator==(const HasAddressOfOperator&) const { return false; }
 };
 template class eastl::vector<HasAddressOfOperator>;  // force compile all functions of vector
 
@@ -137,13 +135,22 @@ struct testmovable
 {
 	EA_NON_COPYABLE(testmovable)
 public:
-	testmovable() {}
+	testmovable() EA_NOEXCEPT {}
 
 	testmovable(testmovable&&) EA_NOEXCEPT {}
 
 	testmovable& operator=(testmovable&&) EA_NOEXCEPT { return *this; }
 };
 
+struct TestMoveAssignToSelf
+{
+	TestMoveAssignToSelf() EA_NOEXCEPT : mMovedToSelf(false)      {}
+	TestMoveAssignToSelf(const TestMoveAssignToSelf& other)       { mMovedToSelf = other.mMovedToSelf; }
+	TestMoveAssignToSelf& operator=(TestMoveAssignToSelf&&)       { mMovedToSelf = true; return *this; }
+	TestMoveAssignToSelf& operator=(const TestMoveAssignToSelf&) = delete;
+
+	bool mMovedToSelf;
+};
 
 #if EASTL_VARIABLE_TEMPLATES_ENABLED
 	/// custom type-trait which checks if a type is comparable via the <operator.
@@ -284,7 +291,6 @@ int TestVector()
 	TestObject::Reset();
 
 	{
-#if EASTL_MOVE_SEMANTICS_ENABLED
 		using namespace eastl;
 
 		// vector(this_type&& x)
@@ -307,9 +313,9 @@ int TestVector()
 
 		// Should be able to emplace_back an item with const members (non-copyable)
 		eastl::vector<ItemWithConst> myVec2;
-		myVec2.emplace_back(42);
+		ItemWithConst& ref = myVec2.emplace_back(42);
 		EATEST_VERIFY(myVec2.back().i == 42);
-#endif
+		EATEST_VERIFY(ref.i == 42);
 	}
 
 	{
@@ -481,10 +487,6 @@ int TestVector()
 		EATEST_VERIFY(intArray.validate());
 		EATEST_VERIFY(intArray.size() == 56);
 		EATEST_VERIFY(intArray[5] == 5);
-
-#if EASTL_MOVE_SEMANTICS_ENABLED
-
-#endif
 	}
 
 	{
@@ -512,89 +514,29 @@ int TestVector()
 	{
 		using namespace eastl;
 
-#if EASTL_MOVE_SEMANTICS_ENABLED && EASTL_VARIADIC_TEMPLATES_ENABLED
-// template<class... Args>
-// iterator emplace(const_iterator position, Args&&... args);
+		// template<class... Args>
+		// iterator emplace(const_iterator position, Args&&... args);
 
-// template<class... Args>
-// void emplace_back(Args&&... args);
-#else
-#if EASTL_MOVE_SEMANTICS_ENABLED
-// iterator emplace(const_iterator position, value_type&& value);
-// void     emplace_back(value_type&& value);
-#endif
+		// template<class... Args>
+		// void emplace_back(Args&&... args);
 
-// iterator emplace(const_iterator position, value_type& value);
-// void     emplace_back(value_type& value);
-#endif
+		// iterator insert(const_iterator position, value_type&& value);
+		// void push_back(value_type&& value);
 
-#if EASTL_MOVE_SEMANTICS_ENABLED
-// iterator insert(const_iterator position, value_type&& value);
-// void push_back(value_type&& value);
-#endif
-
-#if EASTL_MOVE_SEMANTICS_ENABLED && EASTL_VARIADIC_TEMPLATES_ENABLED
 		TestObject::Reset();
 
 		vector<TestObject> toVectorA;
 
-		toVectorA.emplace_back(2, 3, 4);
+		TestObject& ref = toVectorA.emplace_back(2, 3, 4);
 		EATEST_VERIFY((toVectorA.size() == 1) && (toVectorA.back().mX == (2 + 3 + 4)) &&
 					  (TestObject::sTOCtorCount == 1));
+		EATEST_VERIFY(ref.mX == (2 + 3 + 4));
 
 		toVectorA.emplace(toVectorA.begin(), 3, 4, 5);
 		EATEST_VERIFY((toVectorA.size() == 2) && (toVectorA.front().mX == (3 + 4 + 5)) &&
 					  (TestObject::sTOCtorCount == 3));  // 3 because the original count of 1, plus the existing vector
 														 // element will be moved, plus the one being emplaced.
-#else
-#if EASTL_MOVE_SEMANTICS_ENABLED
-		TestObject::Reset();
 
-		// We have a potential problem here in that the compiler is not required to use move construction below.
-		// It is allowed to use standard copy construction if it wants. We could force it with eastl::move() usage.
-		vector<TestObject> toVectorA;
-
-		toVectorA.emplace_back(TestObject(2, 3, 4));
-		EATEST_VERIFY((toVectorA.size() == 1) && (toVectorA.back().mX == (2 + 3 + 4)) &&
-					  (TestObject::sTOMoveCtorCount == 1));
-
-		toVectorA.emplace(toVectorA.begin(), TestObject(3, 4, 5));
-		EATEST_VERIFY((toVectorA.size() == 2) && (toVectorA.front().mX == (3 + 4 + 5)) &&
-					  (TestObject::sTOMoveCtorCount == 3));  // 3 because the original count of 1, plus the existing
-															 // vector element will be moved, plus the one being
-															 // emplaced.
-#endif
-
-		TestObject::Reset();
-
-		vector<TestObject> toVectorB;
-		TestObject to234(2, 3, 4);
-		TestObject to345(3, 4, 5);
-
-		toVectorB.emplace_back(to234);  // This will be copied (not moved) by compilers that don't support rvalue move
-										// because it's not a temporary and we don't use eastl::move() on it.
-		EATEST_VERIFY((toVectorB.size() == 1) && (toVectorB.back().mX == (2 + 3 + 4)) &&
-					  (TestObject::sTOArgCtorCount == 2));
-		EATEST_VERIFY((TestObject::sTOCopyCtorCount + TestObject::sTOMoveCtorCount) ==
-					  1);  // A compiler that supports move may in fact take advantage of that internally.
-
-		toVectorB.emplace(toVectorB.begin(), to345);  // This will be copied (not moved) by compilers that don't support
-													  // rvalue move because it's not a temporary and we don't use
-													  // eastl::move() on it.
-		EATEST_VERIFY((toVectorB.size() == 2) && (toVectorB.front().mX == (3 + 4 + 5)) &&
-					  (TestObject::sTOArgCtorCount == 2));
-		EATEST_VERIFY((TestObject::sTOCopyCtorCount + TestObject::sTOMoveCtorCount) ==
-					  3);  // A compiler that supports move may in fact take advantage of that internally.
-
-		EATEST_VERIFY(
-			to234.mX ==
-			(2 + 3 +
-			 4));  // Verify that the object was copied and not moved. If it was moved then mX would be 0 and not 2+3+4.
-		EATEST_VERIFY(to345.mX == (3 + 4 + 5));
-#endif
-
-#if EASTL_MOVE_SEMANTICS_ENABLED
-		// This test is similar to the emplace EASTL_MOVE_SEMANTICS_ENABLED pathway above.
 		TestObject::Reset();
 
 		// void push_back(T&& x);
@@ -611,7 +553,6 @@ int TestVector()
 					  (TestObject::sTOMoveCtorCount == 3));  // 3 because the original count of 1, plus the existing
 															 // vector element will be moved, plus the one being
 															 // emplaced.
-#endif
 	}
 
 	// We don't check for TestObject::IsClear because we messed with state above and don't currently have a matching set
@@ -624,6 +565,10 @@ int TestVector()
 		// iterator erase(iterator position);
 		// iterator erase(iterator first, iterator last);
 		// iterator erase_unsorted(iterator position);
+		// iterator erase_first(const T& pos);
+		// iterator erase_first_unsorted(const T& pos);
+		// iterator erase_last(const T& pos);
+		// iterator erase_last_unsorted(const T& pos);
 		// void     clear();
 
 		vector<int> intArray(20);
@@ -710,6 +655,143 @@ int TestVector()
 		EATEST_VERIFY(intArray[0] == 19);
 		EATEST_VERIFY(intArray[10] == 18);
 		EATEST_VERIFY(intArray[16] == 16);
+
+		// iterator erase_first(iterator position);
+		intArray.resize(20);
+		for (i = 0; i < 20; i++)
+			intArray[i] = (int)i % 3; // (i.e. 0,1,2,0,1,2...)
+
+		intArray.erase_first(1);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 19);
+		EATEST_VERIFY(intArray[0] == 0);
+		EATEST_VERIFY(intArray[1] == 2);
+		EATEST_VERIFY(intArray[2] == 0);
+		EATEST_VERIFY(intArray[3] == 1);
+		EATEST_VERIFY(intArray[18] == 1);
+
+		intArray.erase_first(1);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 18);
+		EATEST_VERIFY(intArray[0] == 0);
+		EATEST_VERIFY(intArray[1] == 2);
+		EATEST_VERIFY(intArray[2] == 0);
+		EATEST_VERIFY(intArray[3] == 2);
+		EATEST_VERIFY(intArray[17] == 1);
+
+		intArray.erase_first(0);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 17);
+		EATEST_VERIFY(intArray[0] == 2);
+		EATEST_VERIFY(intArray[1] == 0);
+		EATEST_VERIFY(intArray[2] == 2);
+		EATEST_VERIFY(intArray[3] == 0);
+		EATEST_VERIFY(intArray[16] == 1);
+
+		// iterator erase_first_unsorted(const T& val);
+		intArray.resize(20);
+		for (i = 0; i < 20; i++)
+			intArray[i] = (int) i/2; // every two values are the same (i.e. 0,0,1,1,2,2,3,3...)
+
+		intArray.erase_first_unsorted(1);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 19);
+		EATEST_VERIFY(intArray[0] == 0);
+		EATEST_VERIFY(intArray[1] == 0);
+		EATEST_VERIFY(intArray[2] == 9);
+		EATEST_VERIFY(intArray[3] == 1);
+		EATEST_VERIFY(intArray[18] == 9);
+
+		intArray.erase_first_unsorted(1);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 18);
+		EATEST_VERIFY(intArray[0] == 0);
+		EATEST_VERIFY(intArray[1] == 0);
+		EATEST_VERIFY(intArray[2] == 9);
+		EATEST_VERIFY(intArray[3] == 9);
+		EATEST_VERIFY(intArray[17] == 8);
+
+		intArray.erase_first_unsorted(0);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 17);
+		EATEST_VERIFY(intArray[0] == 8);
+		EATEST_VERIFY(intArray[1] == 0);
+		EATEST_VERIFY(intArray[2] == 9);
+		EATEST_VERIFY(intArray[3] == 9);
+		EATEST_VERIFY(intArray[16] == 8);
+
+		// iterator erase_last(const T& val);
+		intArray.resize(20);
+		for (i = 0; i < 20; i++)
+			intArray[i] = (int)i % 3; // (i.e. 0,1,2,0,1,2...)
+
+		intArray.erase_last(1);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 19);
+		EATEST_VERIFY(intArray[0] == 0);
+		EATEST_VERIFY(intArray[1] == 1);
+		EATEST_VERIFY(intArray[2] == 2);
+		EATEST_VERIFY(intArray[3] == 0);
+		EATEST_VERIFY(intArray[15] == 0);
+		EATEST_VERIFY(intArray[16] == 1);
+		EATEST_VERIFY(intArray[17] == 2);
+		EATEST_VERIFY(intArray[18] == 0);
+
+		intArray.erase_last(1);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 18);
+		EATEST_VERIFY(intArray[0] == 0);
+		EATEST_VERIFY(intArray[1] == 1);
+		EATEST_VERIFY(intArray[2] == 2);
+		EATEST_VERIFY(intArray[3] == 0);
+		EATEST_VERIFY(intArray[14] == 2);
+		EATEST_VERIFY(intArray[15] == 0);
+		EATEST_VERIFY(intArray[16] == 2);
+		EATEST_VERIFY(intArray[17] == 0);
+
+		intArray.erase_last(0);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 17);
+		EATEST_VERIFY(intArray[0] == 0);
+		EATEST_VERIFY(intArray[1] == 1);
+		EATEST_VERIFY(intArray[2] == 2);
+		EATEST_VERIFY(intArray[3] == 0);
+		EATEST_VERIFY(intArray[13] == 1);
+		EATEST_VERIFY(intArray[14] == 2);
+		EATEST_VERIFY(intArray[15] == 0);
+		EATEST_VERIFY(intArray[16] == 2);
+
+		// iterator erase_last_unsorted(const T& val);
+		intArray.resize(20);
+		for (i = 0; i < 20; i++)
+			intArray[i] = (int)i / 2; // every two values are the same (i.e. 0,0,1,1,2,2,3,3...)
+
+		intArray.erase_last_unsorted(1);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 19);
+		EATEST_VERIFY(intArray[0] == 0);
+		EATEST_VERIFY(intArray[1] == 0);
+		EATEST_VERIFY(intArray[2] == 1);
+		EATEST_VERIFY(intArray[3] == 9);
+		EATEST_VERIFY(intArray[18] == 9);
+
+		intArray.erase_last_unsorted(1);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 18);
+		EATEST_VERIFY(intArray[0] == 0);
+		EATEST_VERIFY(intArray[1] == 0);
+		EATEST_VERIFY(intArray[2] == 9);
+		EATEST_VERIFY(intArray[3] == 9);
+		EATEST_VERIFY(intArray[17] == 8);
+
+		intArray.erase_last_unsorted(0);
+		EATEST_VERIFY(intArray.validate());
+		EATEST_VERIFY(intArray.size() == 17);
+		EATEST_VERIFY(intArray[0] == 0);
+		EATEST_VERIFY(intArray[1] == 8);
+		EATEST_VERIFY(intArray[2] == 9);
+		EATEST_VERIFY(intArray[3] == 9);
+		EATEST_VERIFY(intArray[16] == 8);
 	}
 
 	EATEST_VERIFY(TestObject::IsClear());
@@ -826,8 +908,8 @@ int TestVector()
 		using namespace eastl;
 
 		// iterator insert(iterator position, const value_type& value);
-		// void     insert(iterator position, size_type n, const value_type& value);
-		// void     insert(iterator position, InputIterator first, InputIterator last);
+		// iterator insert(iterator position, size_type n, const value_type& value);
+		// iterator insert(iterator position, InputIterator first, InputIterator last);
 		// iterator insert(const_iterator position, std::initializer_list<T> ilist);
 
 		vector<int> v(7, 13);
@@ -853,18 +935,34 @@ int TestVector()
 			VerifySequence(v.begin(), v.end(), int(), "vector.insert", 13, 13, 13, 13, 13, 13, 13, 49, 99, 999, -1));
 
 		// Insert multiple copies
-		v.insert(v.begin() + 5, 3, 42);
+		it = v.insert(v.begin() + 5, 3, 42);
+        EATEST_VERIFY(it == v.begin() + 5);
 		EATEST_VERIFY(VerifySequence(v.begin(), v.end(), int(), "vector.insert", 13, 13, 13, 13, 13, 42, 42, 42, 13, 13,
 									 49, 99, 999, -1));
 
+        // Insert multiple copies with count == 0
+        vector<int>::iterator at = v.end();
+        it = v.insert(at, 0, 666);
+        EATEST_VERIFY(it == at);
+        EATEST_VERIFY(VerifySequence(v.begin(), v.end(), int(), "vector.insert", 13, 13, 13, 13, 13, 42, 42, 42, 13, 13,
+                                     49, 99, 999, -1));
 		// Insert iterator range
 		const int data[] = {2, 3, 4, 5};
-		v.insert(v.begin() + 1, data, data + 4);
+		it = v.insert(v.begin() + 1, data, data + 4);
+        EATEST_VERIFY(it == v.begin() + 1);
+		EATEST_VERIFY(VerifySequence(v.begin(), v.end(), int(), "vector.insert", 13, 2, 3, 4, 5, 13, 13, 13, 13, 42, 42,
+									 42, 13, 13, 49, 99, 999, -1));
+
+        // Insert empty iterator range
+        at = v.begin() + 1;
+		it = v.insert(at, data + 4, data + 4);
+        EATEST_VERIFY(it == at);
 		EATEST_VERIFY(VerifySequence(v.begin(), v.end(), int(), "vector.insert", 13, 2, 3, 4, 5, 13, 13, 13, 13, 42, 42,
 									 42, 13, 13, 49, 99, 999, -1));
 
 		// Insert with reallocation
-		v.insert(v.end() - 3, 6, 17);
+		it = v.insert(v.end() - 3, 6, 17);
+        EATEST_VERIFY(it == v.end() - (3 + 6));
 		EATEST_VERIFY(VerifySequence(v.begin(), v.end(), int(), "vector.insert", 13, 2, 3, 4, 5, 13, 13, 13, 13, 42, 42,
 									 42, 13, 13, 17, 17, 17, 17, 17, 17, 49, 99, 999, -1));
 
@@ -924,7 +1022,6 @@ int TestVector()
 	EATEST_VERIFY(TestObject::IsClear());
 	TestObject::Reset();
 
-#if EASTL_MOVE_SEMANTICS_ENABLED
 	{
 		// Test insert move objects
 		eastl::vector<TestObject> toVector1;
@@ -938,7 +1035,9 @@ int TestVector()
 
 		// Insert more objects than the existing number using insert with iterator
 		TestObject::Reset();
-		toVector1.insert(toVector1.begin(), toVector2.begin(), toVector2.end());
+        eastl::vector<TestObject>::iterator it;
+		it = toVector1.insert(toVector1.begin(), toVector2.begin(), toVector2.end());
+        EATEST_VERIFY(it == toVector1.begin());
 		EATEST_VERIFY(VerifySequence(toVector1.begin(), toVector1.end(), int(), "vector.insert", 10, 11, 12, 0, 1, -1));
 		EATEST_VERIFY(TestObject::sTOMoveCtorCount + TestObject::sTOMoveAssignCount == 2 &&
 					  TestObject::sTOCopyCtorCount + TestObject::sTOCopyAssignCount == 3); // Move 2 existing elements and copy the 3 inserted
@@ -948,14 +1047,16 @@ int TestVector()
 
 		// Insert less objects than the existing number using insert with iterator
 		TestObject::Reset();
-		toVector1.insert(toVector1.begin(), toVector3.begin(), toVector3.end());
+		it = toVector1.insert(toVector1.begin(), toVector3.begin(), toVector3.end());
 		EATEST_VERIFY(VerifySequence(toVector1.begin(), toVector1.end(), int(), "vector.insert", 20, 10, 11, 12, 0, 1, -1));
+        EATEST_VERIFY(it == toVector1.begin());
 		EATEST_VERIFY(TestObject::sTOMoveCtorCount + TestObject::sTOMoveAssignCount == 5 &&
 					  TestObject::sTOCopyCtorCount + TestObject::sTOCopyAssignCount == 1); // Move 5 existing elements and copy the 1 inserted
 
 		// Insert more objects than the existing number using insert without iterator
 		TestObject::Reset();
-		toVector1.insert(toVector1.begin(), 1, TestObject(17));
+		it = toVector1.insert(toVector1.begin(), 1, TestObject(17));
+        EATEST_VERIFY(it == toVector1.begin());
 		EATEST_VERIFY(VerifySequence(toVector1.begin(), toVector1.end(), int(), "vector.insert", 17, 20, 10, 11, 12, 0, 1, -1));
 		EATEST_VERIFY(TestObject::sTOMoveCtorCount + TestObject::sTOMoveAssignCount == 6 &&
 					  TestObject::sTOCopyCtorCount + TestObject::sTOCopyAssignCount == 2); // Move 6 existing element and copy the 1 inserted +
@@ -963,13 +1064,13 @@ int TestVector()
 
 		// Insert less objects than the existing number using insert without iterator
 		TestObject::Reset();
-		toVector1.insert(toVector1.begin(), 10, TestObject(18));
+		it = toVector1.insert(toVector1.begin(), 10, TestObject(18));
+        EATEST_VERIFY(it == toVector1.begin());
 		EATEST_VERIFY(VerifySequence(toVector1.begin(), toVector1.end(), int(), "vector.insert", 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 17, 20, 10, 11, 12, 0, 1, -1));
 		EATEST_VERIFY(TestObject::sTOMoveCtorCount + TestObject::sTOMoveAssignCount == 7 &&
 					  TestObject::sTOCopyCtorCount + TestObject::sTOCopyAssignCount == 11); // Move 7 existing element and copy the 10 inserted +
 																							// the temporary one inside the function
 	}
-#endif
 
 	TestObject::Reset();
 
@@ -1059,7 +1160,6 @@ int TestVector()
 		EATEST_VERIFY(v.capacity() == 0);
 		EATEST_VERIFY(VerifySequence(v.begin(), v.end(), int(), "vector.reset", -1));
 
-#if EASTL_MOVE_SEMANTICS_ENABLED
 		// Test set_capacity make a move when reducing size
 		vector<TestObject> toArray2(10, TestObject(7));
 		TestObject::Reset();
@@ -1067,7 +1167,6 @@ int TestVector()
 		EATEST_VERIFY(TestObject::sTOMoveCtorCount == 5 &&
 					  TestObject::sTOCopyCtorCount + TestObject::sTOCopyAssignCount == 0); // Move the 5 existing elements, no copy
 		EATEST_VERIFY(VerifySequence(toArray2.begin(), toArray2.end(), int(), "vector.set_capacity", 7, 7, 7, 7, 7, -1));
-#endif
 	}
 
 	TestObject::Reset();
@@ -1421,17 +1520,23 @@ int TestVector()
 		v2.push_back(StructWithConstRefToInt(j));
 	}
 
-#if EASTL_MOVE_SEMANTICS_ENABLED
 	{
 		// Regression for issue with vector containing non-copyable values reported by user
 		eastl::vector<testmovable> moveablevec;
 		testmovable moveable;
 		moveablevec.insert(moveablevec.end(), eastl::move(moveable));
 	}
-#endif
+
+	{
+		// Calling erase of empty range should not call a move assignment to self
+		eastl::vector<TestMoveAssignToSelf> v1;
+		v1.push_back(TestMoveAssignToSelf());
+		EATEST_VERIFY(!v1[0].mMovedToSelf);
+		v1.erase(v1.begin(), v1.begin());
+		EATEST_VERIFY(!v1[0].mMovedToSelf);
+	}
 
 #if defined(EASTL_TEST_CONCEPT_IMPLS)
-
 	{
 		// vector default constructor should require no more than Destructible
 		eastl::vector<Destructible> v1;
@@ -1469,7 +1574,6 @@ int TestVector()
 		EATEST_VERIFY(v4.size() == 2 && v4[0].value == v4[1].value && v4[0].value == CopyConstructible::defaultValue);
 	}
 
-#if EASTL_MOVE_SEMANTICS_ENABLED
 	{
 		// vector::reserve() should only require MoveInsertible
 		eastl::vector<MoveConstructible> v5;
@@ -1492,7 +1596,6 @@ int TestVector()
 			eastl::move_iterator<MoveConstructible*>(eastl::end(moveConstructibleArray)));
 		EATEST_VERIFY(v7.size() == 1 && v7[0].value == MoveConstructible::defaultValue);
 	}
-#endif
 
 	{
 		// vector::swap() should only require Destructible. We also test with DefaultConstructible as it gives us a
@@ -1507,7 +1610,6 @@ int TestVector()
 		EATEST_VERIFY(v6.size() == 2 && v7.size() == 1);
 	}
 
-#if EASTL_MOVE_SEMANTICS_ENABLED
 	{
 		// vector::resize() should only require MoveInsertable and DefaultInsertable
 		eastl::vector<MoveAndDefaultConstructible> v8;
@@ -1525,8 +1627,6 @@ int TestVector()
 		v1.erase(begin(v1));
 		EATEST_VERIFY(v1.empty());
 	}
-#endif
-
 #endif // EASTL_TEST_CONCEPT_IMPLS
 
 	{
@@ -1543,13 +1643,13 @@ int TestVector()
 				typedef int* pointer;
 				typedef int& reference;
 
-				bool operator!=(const iterator& rhs) const { return false; }
-				iterator& operator++()                     { return *this; }
-				iterator operator++(int)                   { return *this; }
-				container_value_type operator*()           { return {}; }
+				bool operator!=(const iterator&) const { return false; }
+				iterator& operator++()                 { return *this; }
+				iterator operator++(int)               { return *this; }
+				container_value_type operator*()       { return {};    }
 			};
 
-			container_with_custom_iterator() {}
+			container_with_custom_iterator() EA_NOEXCEPT {}
 
 			iterator begin() const { return {}; }
 			iterator end() const   { return {}; }

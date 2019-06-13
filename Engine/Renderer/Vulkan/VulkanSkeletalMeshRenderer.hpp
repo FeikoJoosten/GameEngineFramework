@@ -55,7 +55,7 @@ namespace Engine {
 
 		Ubo_t ubo_;
 
-		eastl::shared_ptr<VulkanTexture> defaultTexture_;
+		eastl::weak_ptr<VulkanTexture> defaultTexture_;
 
 		VkDescriptorSet oldBones_;
 

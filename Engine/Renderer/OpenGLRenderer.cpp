@@ -53,6 +53,8 @@ namespace Engine {
 		eastl::vector<eastl::shared_ptr<Mesh>>& meshes = model->GetModelMeshes();
 		for (size_t i = 0, size = meshes.size(); i < size; ++i)
 		{
+			if (meshes[i] == nullptr) continue;
+
 			if (glIsBuffer(GLuint(meshes[i]->GetVBO())) != GL_TRUE)
 			{
 				_ASSERT("The vertex buffer is not a valid buffer (VBO).");
@@ -81,7 +83,7 @@ namespace Engine {
 
 			if (model->GetMeshMaterial(meshes[i])->IsDiffuseLoaded())
 			{
-				textureParam.lock()->SetValue(*model->GetMeshMaterial(meshes[i])->GetDiffuseTexture());
+				textureParam.lock()->SetValue(*model->GetMeshMaterial(meshes[i])->GetDiffuseTexture().lock());
 			}
 			glGetError();
 

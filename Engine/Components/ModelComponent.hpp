@@ -32,9 +32,9 @@ namespace Engine
 		/// </summary>
 		void InitializeComponent() override;
 
+	public:
 		virtual ~ModelComponent();
 
-	public:
 		/// <summary>
 		/// This method allows you to change the model to render of this model component.
 		/// </summary>
@@ -73,7 +73,7 @@ namespace Engine
 		void OnComponentAdded(eastl::weak_ptr<Component> addedComponent) override;
 		void OnComponentRemoved(eastl::weak_ptr<Component> removedComponent) override;
 
-		eastl::shared_ptr<Model> model;
+		eastl::weak_ptr<Model> model;
 		eastl::weak_ptr<TransformComponent> transformComponent;
 		eastl::string path;
 	};

@@ -94,39 +94,38 @@ int TestMapConstruction()
 
 
 		// operator=(map&&)
-		#if EASTL_MOVE_SEMANTICS_ENABLED
-			// We test just the EASTL container here.
-			eastl::scoped_ptr<T1> pT1P(new T1);
-			eastl::scoped_ptr<T1> pT1Q(new T1);
-			T1& t1P = *pT1P;
-			T1& t1Q = *pT1Q;
+		// We test just the EASTL container here.
+		eastl::scoped_ptr<T1> pT1P(new T1);
+		eastl::scoped_ptr<T1> pT1Q(new T1);
+		T1& t1P = *pT1P;
+		T1& t1Q = *pT1Q;
 
-			typename T1::key_type k10(0);
-			typename T1::key_type k11(1);
-			typename T1::key_type k12(2);
-			typename T1::key_type k13(3);
-			typename T1::key_type k14(4);
-			typename T1::key_type k15(5);
+		typename T1::key_type k10(0);
+		typename T1::key_type k11(1);
+		typename T1::key_type k12(2);
+		typename T1::key_type k13(3);
+		typename T1::key_type k14(4);
+		typename T1::key_type k15(5);
 
-			typename T1::value_type v10(k10, typename T1::mapped_type(0));
-			typename T1::value_type v11(k11, typename T1::mapped_type(1));
-			typename T1::value_type v12(k12, typename T1::mapped_type(2));
-			typename T1::value_type v13(k13, typename T1::mapped_type(3));
-			typename T1::value_type v14(k14, typename T1::mapped_type(4));
-			typename T1::value_type v15(k15, typename T1::mapped_type(5));
+		typename T1::value_type v10(k10, typename T1::mapped_type(0));
+		typename T1::value_type v11(k11, typename T1::mapped_type(1));
+		typename T1::value_type v12(k12, typename T1::mapped_type(2));
+		typename T1::value_type v13(k13, typename T1::mapped_type(3));
+		typename T1::value_type v14(k14, typename T1::mapped_type(4));
+		typename T1::value_type v15(k15, typename T1::mapped_type(5));
 
-			t1P.insert(v10);
-			t1P.insert(v11);
-			t1P.insert(v12);
+		t1P.insert(v10);
+		t1P.insert(v11);
+		t1P.insert(v12);
 
-			t1Q.insert(v13);
-			t1Q.insert(v14);
-			t1Q.insert(v15);
+		t1Q.insert(v13);
+		t1Q.insert(v14);
+		t1Q.insert(v15);
 
-			t1Q = eastl::move(t1P); // We are effectively requesting to swap t1A with t1B.
-		  //EATEST_VERIFY((t1P.size() == 3) && (t1P.find(k13) != t1P.end()) && (t1P.find(k14) != t1P.end()) && (t1P.find(k15) != t1P.end()));  // Currently operator=(this_type&& x) clears x instead of swapping with it.
-			EATEST_VERIFY((t1Q.size() == 3) && (t1Q.find(k10) != t1Q.end()) && (t1Q.find(k11) != t1Q.end()) && (t1Q.find(k12) != t1Q.end()));
-		#endif
+		t1Q = eastl::move(t1P); // We are effectively requesting to swap t1A with t1B.
+	  //EATEST_VERIFY((t1P.size() == 3) && (t1P.find(k13) != t1P.end()) && (t1P.find(k14) != t1P.end()) && (t1P.find(k15) != t1P.end()));  // Currently operator=(this_type&& x) clears x instead of swapping with it.
+		EATEST_VERIFY((t1Q.size() == 3) && (t1Q.find(k10) != t1Q.end()) && (t1Q.find(k11) != t1Q.end()) && (t1Q.find(k12) != t1Q.end()));
+
 
 		// swap
 		t1E.swap(t1D);
@@ -688,26 +687,14 @@ int TestMapCpp11()
 {
 	int nErrorCount = 0;
 
-	//#if EASTL_MOVE_SEMANTICS_ENABLED && EASTL_VARIADIC_TEMPLATES_ENABLED
-	//    template <class... Args>
-	//    insert_return_type emplace(Args&&... args);
+	// template <class... Args>
+	// insert_return_type emplace(Args&&... args);
 	//
-	//    template <class... Args> 
-	//    iterator emplace_hint(const_iterator position, Args&&... args);
-	//#else
-	//    #if EASTL_MOVE_SEMANTICS_ENABLED
-	//        insert_return_type emplace(value_type&& value);
-	//        iterator emplace_hint(const_iterator position, value_type&& value);
-	//    #endif
+	// template <class... Args> 
+	// iterator emplace_hint(const_iterator position, Args&&... args);
 	//
-	//    insert_return_type emplace(const value_type& value);
-	//    iterator emplace_hint(const_iterator position, const value_type& value);
-	//#endif
-	//
-	//#if EASTL_MOVE_SEMANTICS_ENABLED
-	//    insert_return_type insert(value_type&& value);
-	//    iterator insert(const_iterator position, value_type&& value);
-	//#endif
+	// insert_return_type insert(value_type&& value);
+	// iterator insert(const_iterator position, value_type&& value);
 	TestObject::Reset();
 
 	typedef T1 TOMap;
@@ -719,47 +706,45 @@ int TestMapCpp11()
 	TestObject to0(0);
 	TestObject to1(1);
 
-	#if EASTL_MOVE_SEMANTICS_ENABLED
-		toMapInsertResult = toMap.emplace(value_type(0, to0));
-		EATEST_VERIFY(toMapInsertResult.second == true);
-		//EATEST_VERIFY((TestObject::sTOCopyCtorCount == 2) && (TestObject::sTOMoveCtorCount == 1));  // Disabled until we can guarantee its behavior and deal with how it's different between compilers of differing C++11 support.
+	toMapInsertResult = toMap.emplace(value_type(0, to0));
+	EATEST_VERIFY(toMapInsertResult.second == true);
+	//EATEST_VERIFY((TestObject::sTOCopyCtorCount == 2) && (TestObject::sTOMoveCtorCount == 1));  // Disabled until we can guarantee its behavior and deal with how it's different between compilers of differing C++11 support.
 
-		toMapInsertResult = toMap.emplace(value_type(1, eastl::move(to1)));
-		EATEST_VERIFY(toMapInsertResult.second == true);
+	toMapInsertResult = toMap.emplace(value_type(1, eastl::move(to1)));
+	EATEST_VERIFY(toMapInsertResult.second == true);
 
-		// insert_return_type t1A.emplace(value_type&& value);
-		TestObject to4(4);
-		value_type value40(4, to4);
-		EATEST_VERIFY(toMap.find(4) == toMap.end());
-		EATEST_VERIFY(value40.second.mX == 4); // It should change to 0 below during the move swap.
-		toMapInsertResult = toMap.emplace(eastl::move(value40));
-		EATEST_VERIFY(toMapInsertResult.second == true);
-		EATEST_VERIFY(toMap.find(4) != toMap.end());
-		EATEST_VERIFY(value40.second.mX == 0);
+	// insert_return_type t1A.emplace(value_type&& value);
+	TestObject to4(4);
+	value_type value40(4, to4);
+	EATEST_VERIFY(toMap.find(4) == toMap.end());
+	EATEST_VERIFY(value40.second.mX == 4); // It should change to 0 below during the move swap.
+	toMapInsertResult = toMap.emplace(eastl::move(value40));
+	EATEST_VERIFY(toMapInsertResult.second == true);
+	EATEST_VERIFY(toMap.find(4) != toMap.end());
+	EATEST_VERIFY(value40.second.mX == 0);
 
-		value_type value41(4, to4);
-		toMapInsertResult = toMap.emplace(eastl::move(value41));
-		EATEST_VERIFY(toMapInsertResult.second == false);
-		EATEST_VERIFY(toMap.find(4) != toMap.end());
+	value_type value41(4, to4);
+	toMapInsertResult = toMap.emplace(eastl::move(value41));
+	EATEST_VERIFY(toMapInsertResult.second == false);
+	EATEST_VERIFY(toMap.find(4) != toMap.end());
 
-		// iterator t1A.emplace_hint(const_iterator position, value_type&& value);
-		TestObject to5(5);
-		value_type value50(5, to5);
-		toMapInsertResult = toMap.emplace(eastl::move(value50));
-		EATEST_VERIFY(toMapInsertResult.second == true);
-		EATEST_VERIFY(toMap.find(5) != toMap.end());
+	// iterator t1A.emplace_hint(const_iterator position, value_type&& value);
+	TestObject to5(5);
+	value_type value50(5, to5);
+	toMapInsertResult = toMap.emplace(eastl::move(value50));
+	EATEST_VERIFY(toMapInsertResult.second == true);
+	EATEST_VERIFY(toMap.find(5) != toMap.end());
 
-		value_type value51(5, to5);
-		toMapIterator = toMap.emplace_hint(toMapInsertResult.first, eastl::move(value51));
-		EATEST_VERIFY(toMapIterator->first == 5);
-		EATEST_VERIFY(toMap.find(5) != toMap.end());
+	value_type value51(5, to5);
+	toMapIterator = toMap.emplace_hint(toMapInsertResult.first, eastl::move(value51));
+	EATEST_VERIFY(toMapIterator->first == 5);
+	EATEST_VERIFY(toMap.find(5) != toMap.end());
 
-		TestObject to6(6);
-		value_type value6(6, to6);
-		toMapIterator = toMap.emplace_hint(toMap.begin(), eastl::move(value6)); // specify a bad hint. Insertion should still work.
-		EATEST_VERIFY(toMapIterator->first == 6);
-		EATEST_VERIFY(toMap.find(6) != toMap.end());
-	#endif
+	TestObject to6(6);
+	value_type value6(6, to6);
+	toMapIterator = toMap.emplace_hint(toMap.begin(), eastl::move(value6)); // specify a bad hint. Insertion should still work.
+	EATEST_VERIFY(toMapIterator->first == 6);
+	EATEST_VERIFY(toMap.find(6) != toMap.end());
 		
 	TestObject to2(2);
 	EATEST_VERIFY(toMap.find(2) == toMap.end());
@@ -788,36 +773,34 @@ int TestMapCpp11()
 	EATEST_VERIFY(toMapIterator->first == 8);
 	EATEST_VERIFY(toMap.find(8) != toMap.end());
 
-	#if EASTL_MOVE_SEMANTICS_ENABLED
-		// insert_return_type t1A.insert(value_type&& value);
-		TestObject to3(3);
-		EATEST_VERIFY(toMap.find(3) == toMap.end());
-		toMapInsertResult = toMap.insert(value_type(3, to3));
-		EATEST_VERIFY(toMapInsertResult.second == true);
-		EATEST_VERIFY(toMap.find(3) != toMap.end());
-		toMapInsertResult = toMap.insert(value_type(3, to3));
-		EATEST_VERIFY(toMapInsertResult.second == false);
-		EATEST_VERIFY(toMap.find(3) != toMap.end());
+	// insert_return_type t1A.insert(value_type&& value);
+	TestObject to3(3);
+	EATEST_VERIFY(toMap.find(3) == toMap.end());
+	toMapInsertResult = toMap.insert(value_type(3, to3));
+	EATEST_VERIFY(toMapInsertResult.second == true);
+	EATEST_VERIFY(toMap.find(3) != toMap.end());
+	toMapInsertResult = toMap.insert(value_type(3, to3));
+	EATEST_VERIFY(toMapInsertResult.second == false);
+	EATEST_VERIFY(toMap.find(3) != toMap.end());
 
 
-		// iterator t1A.insert(const_iterator position, value_type&& value);
-		TestObject to9(9);
-		value_type value90(9, to9);
-		toMapInsertResult = toMap.emplace(eastl::move(value90));
-		EATEST_VERIFY(toMapInsertResult.second == true);
-		EATEST_VERIFY(toMap.find(9) != toMap.end());
+	// iterator t1A.insert(const_iterator position, value_type&& value);
+	TestObject to9(9);
+	value_type value90(9, to9);
+	toMapInsertResult = toMap.emplace(eastl::move(value90));
+	EATEST_VERIFY(toMapInsertResult.second == true);
+	EATEST_VERIFY(toMap.find(9) != toMap.end());
 
-		value_type value91(9, to9);
-		toMapIterator = toMap.emplace_hint(toMapInsertResult.first, eastl::move(value91));
-		EATEST_VERIFY(toMapIterator->first == 9);
-		EATEST_VERIFY(toMap.find(9) != toMap.end());
+	value_type value91(9, to9);
+	toMapIterator = toMap.emplace_hint(toMapInsertResult.first, eastl::move(value91));
+	EATEST_VERIFY(toMapIterator->first == 9);
+	EATEST_VERIFY(toMap.find(9) != toMap.end());
 
-		TestObject to10(10);
-		value_type value10(10, to10);
-		toMapIterator = toMap.emplace_hint(toMap.begin(), eastl::move(value10)); // specify a bad hint. Insertion should still work.
-		EATEST_VERIFY(toMapIterator->first == 10);
-		EATEST_VERIFY(toMap.find(10) != toMap.end());
-	#endif
+	TestObject to10(10);
+	value_type value10(10, to10);
+	toMapIterator = toMap.emplace_hint(toMap.begin(), eastl::move(value10)); // specify a bad hint. Insertion should still work.
+	EATEST_VERIFY(toMapIterator->first == 10);
+	EATEST_VERIFY(toMap.find(10) != toMap.end());
 
 	return nErrorCount;
 }
@@ -861,26 +844,14 @@ int TestMultimapCpp11()
 {
 	int nErrorCount = 0;
 
-	//#if EASTL_MOVE_SEMANTICS_ENABLED && EASTL_VARIADIC_TEMPLATES_ENABLED
-	//    template <class... Args>
-	//    insert_return_type emplace(Args&&... args);
+	// template <class... Args>
+	// insert_return_type emplace(Args&&... args);
 	//
-	//    template <class... Args> 
-	//    iterator emplace_hint(const_iterator position, Args&&... args);
-	//#else
-	//    #if EASTL_MOVE_SEMANTICS_ENABLED
-	//        insert_return_type emplace(value_type&& value);
-	//        iterator emplace_hint(const_iterator position, value_type&& value);
-	//    #endif
+	// template <class... Args> 
+	// iterator emplace_hint(const_iterator position, Args&&... args);
 	//
-	//    insert_return_type emplace(const value_type& value);
-	//    iterator emplace_hint(const_iterator position, const value_type& value);
-	//#endif
-	//
-	//#if EASTL_MOVE_SEMANTICS_ENABLED
-	//    insert_return_type insert(value_type&& value);
-	//    iterator insert(const_iterator position, value_type&& value);
-	//#endif
+	// insert_return_type insert(value_type&& value);
+	// iterator insert(const_iterator position, value_type&& value);
 	TestObject::Reset();
 
 	typedef T1 TOMap;
@@ -891,47 +862,45 @@ int TestMultimapCpp11()
 	TestObject to0(0);
 	TestObject to1(1);
 
-	#if EASTL_MOVE_SEMANTICS_ENABLED
-		toMapIterator = toMap.emplace(value_type(0, to0));
-		EATEST_VERIFY(toMapIterator->first == 0);
-		//EATEST_VERIFY((TestObject::sTOCopyCtorCount == 2) && (TestObject::sTOMoveCtorCount == 1));  // Disabled until we can guarantee its behavior and deal with how it's different between compilers of differing C++11 support.
+	toMapIterator = toMap.emplace(value_type(0, to0));
+	EATEST_VERIFY(toMapIterator->first == 0);
+	//EATEST_VERIFY((TestObject::sTOCopyCtorCount == 2) && (TestObject::sTOMoveCtorCount == 1));  // Disabled until we can guarantee its behavior and deal with how it's different between compilers of differing C++11 support.
 
-		toMapIterator = toMap.emplace(value_type(1, eastl::move(to1)));
-		EATEST_VERIFY(toMapIterator->first == 1);
+	toMapIterator = toMap.emplace(value_type(1, eastl::move(to1)));
+	EATEST_VERIFY(toMapIterator->first == 1);
 
-		// insert_return_type t1A.emplace(value_type&& value);
-		TestObject to4(4);
-		value_type value40(4, to4);
-		EATEST_VERIFY(toMap.find(4) == toMap.end());
-		EATEST_VERIFY(value40.second.mX == 4); // It should change to 0 below during the move swap.
-		toMapIterator = toMap.emplace(eastl::move(value40));
-		EATEST_VERIFY(toMapIterator->first == 4);
-		EATEST_VERIFY(toMap.find(4) != toMap.end());
-		EATEST_VERIFY(value40.second.mX == 0);
+	// insert_return_type t1A.emplace(value_type&& value);
+	TestObject to4(4);
+	value_type value40(4, to4);
+	EATEST_VERIFY(toMap.find(4) == toMap.end());
+	EATEST_VERIFY(value40.second.mX == 4); // It should change to 0 below during the move swap.
+	toMapIterator = toMap.emplace(eastl::move(value40));
+	EATEST_VERIFY(toMapIterator->first == 4);
+	EATEST_VERIFY(toMap.find(4) != toMap.end());
+	EATEST_VERIFY(value40.second.mX == 0);
 
-		value_type value41(4, to4);
-		toMapIterator = toMap.emplace(eastl::move(value41));
-		EATEST_VERIFY(toMapIterator->first == 4);
-		EATEST_VERIFY(toMap.find(4) != toMap.end());
+	value_type value41(4, to4);
+	toMapIterator = toMap.emplace(eastl::move(value41));
+	EATEST_VERIFY(toMapIterator->first == 4);
+	EATEST_VERIFY(toMap.find(4) != toMap.end());
 
-		// iterator t1A.emplace_hint(const_iterator position, value_type&& value);
-		TestObject to5(5);
-		value_type value50(5, to5);
-		toMapIterator = toMap.emplace(eastl::move(value50));
-		EATEST_VERIFY(toMapIterator->first == 5);
-		EATEST_VERIFY(toMap.find(5) != toMap.end());
+	// iterator t1A.emplace_hint(const_iterator position, value_type&& value);
+	TestObject to5(5);
+	value_type value50(5, to5);
+	toMapIterator = toMap.emplace(eastl::move(value50));
+	EATEST_VERIFY(toMapIterator->first == 5);
+	EATEST_VERIFY(toMap.find(5) != toMap.end());
 
-		value_type value51(5, to5);
-		toMapIterator = toMap.emplace_hint(toMapIterator, eastl::move(value51));
-		EATEST_VERIFY(toMapIterator->first == 5);
-		EATEST_VERIFY(toMap.find(5) != toMap.end());
+	value_type value51(5, to5);
+	toMapIterator = toMap.emplace_hint(toMapIterator, eastl::move(value51));
+	EATEST_VERIFY(toMapIterator->first == 5);
+	EATEST_VERIFY(toMap.find(5) != toMap.end());
 
-		TestObject to6(6);
-		value_type value6(6, to6);
-		toMapIterator = toMap.emplace_hint(toMap.begin(), eastl::move(value6)); // specify a bad hint. Insertion should still work.
-		EATEST_VERIFY(toMapIterator->first == 6);
-		EATEST_VERIFY(toMap.find(6) != toMap.end());
-	#endif
+	TestObject to6(6);
+	value_type value6(6, to6);
+	toMapIterator = toMap.emplace_hint(toMap.begin(), eastl::move(value6)); // specify a bad hint. Insertion should still work.
+	EATEST_VERIFY(toMapIterator->first == 6);
+	EATEST_VERIFY(toMap.find(6) != toMap.end());
 		
 	TestObject to2(2);
 	EATEST_VERIFY(toMap.find(2) == toMap.end());
@@ -960,39 +929,186 @@ int TestMultimapCpp11()
 	EATEST_VERIFY(toMapIterator->first == 8);
 	EATEST_VERIFY(toMap.find(8) != toMap.end());
 
-	#if EASTL_MOVE_SEMANTICS_ENABLED
-		// insert_return_type t1A.insert(value_type&& value);
-		TestObject to3(3);
-		EATEST_VERIFY(toMap.find(3) == toMap.end());
-		toMapIterator = toMap.insert(value_type(3, to3));
-		EATEST_VERIFY(toMapIterator->first == 3);
-		EATEST_VERIFY(toMap.find(3) != toMap.end());
-		toMapIterator = toMap.insert(value_type(3, to3));
-		EATEST_VERIFY(toMapIterator->first == 3);
-		EATEST_VERIFY(toMap.find(3) != toMap.end());
+	// insert_return_type t1A.insert(value_type&& value);
+	TestObject to3(3);
+	EATEST_VERIFY(toMap.find(3) == toMap.end());
+	toMapIterator = toMap.insert(value_type(3, to3));
+	EATEST_VERIFY(toMapIterator->first == 3);
+	EATEST_VERIFY(toMap.find(3) != toMap.end());
+	toMapIterator = toMap.insert(value_type(3, to3));
+	EATEST_VERIFY(toMapIterator->first == 3);
+	EATEST_VERIFY(toMap.find(3) != toMap.end());
 
 
-		// iterator t1A.insert(const_iterator position, value_type&& value);
-		TestObject to9(9);
-		value_type value90(9, to9);
-		toMapIterator = toMap.emplace(eastl::move(value90));
-		EATEST_VERIFY(toMapIterator->first == 9);
-		EATEST_VERIFY(toMap.find(9) != toMap.end());
+	// iterator t1A.insert(const_iterator position, value_type&& value);
+	TestObject to9(9);
+	value_type value90(9, to9);
+	toMapIterator = toMap.emplace(eastl::move(value90));
+	EATEST_VERIFY(toMapIterator->first == 9);
+	EATEST_VERIFY(toMap.find(9) != toMap.end());
 
-		value_type value91(9, to9);
-		toMapIterator = toMap.emplace_hint(toMapIterator, eastl::move(value91));
-		EATEST_VERIFY(toMapIterator->first == 9);
-		EATEST_VERIFY(toMap.find(9) != toMap.end());
+	value_type value91(9, to9);
+	toMapIterator = toMap.emplace_hint(toMapIterator, eastl::move(value91));
+	EATEST_VERIFY(toMapIterator->first == 9);
+	EATEST_VERIFY(toMap.find(9) != toMap.end());
 
-		TestObject to10(10);
-		value_type value10(10, to10);
-		toMapIterator = toMap.emplace_hint(toMap.begin(), eastl::move(value10)); // specify a bad hint. Insertion should still work.
-		EATEST_VERIFY(toMapIterator->first == 10);
-		EATEST_VERIFY(toMap.find(10) != toMap.end());
-	#endif
+	TestObject to10(10);
+	value_type value10(10, to10);
+	toMapIterator = toMap.emplace_hint(toMap.begin(), eastl::move(value10)); // specify a bad hint. Insertion should still work.
+	EATEST_VERIFY(toMapIterator->first == 10);
+	EATEST_VERIFY(toMap.find(10) != toMap.end());
 
 	return nErrorCount;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////
+// TestMapCpp17
+//
+// This function is designed to work with map, fixed_map, hash_map, fixed_hash_map, unordered_map.
+//
+template <typename T1>
+int TestMapCpp17()
+{
+
+	int nErrorCount = 0;
+
+	TestObject::Reset();
+
+	typedef T1 TOMap;
+	typedef typename TOMap::mapped_type mapped_type;
+	typename TOMap::iterator toMapIterator;
+
+
+	{
+		// pair<iterator, bool> try_emplace (const key_type& k, Args&&... args);
+		// pair<iterator, bool> try_emplace (key_type&& k, Args&&... args);
+		// iterator             try_emplace (const_iterator hint, const key_type& k, Args&&... args);
+		// iterator             try_emplace (const_iterator hint, key_type&& k, Args&&... args);
+
+		TOMap toMap;
+
+		{ // do initial insert
+			auto result = toMap.try_emplace(7, 7); // test fwding to conversion-ctor
+			VERIFY(result.second);
+			VERIFY(result.first->second == mapped_type(7));
+			VERIFY(toMap.size() == 1);
+		}
+
+		{ // verify duplicate not inserted
+			auto result = toMap.try_emplace(7, mapped_type(7)); // test fwding to copy-ctor
+			VERIFY(!result.second);
+			VERIFY(result.first->second == mapped_type(7));
+			VERIFY(toMap.size() == 1);
+		}
+
+		{ // verify duplicate not inserted
+			auto hint = toMap.find(7);
+			auto result = toMap.try_emplace(hint, 7, 7); // test fwding to conversion-ctor
+			VERIFY(result->first == 7);
+			VERIFY(result->second == mapped_type(7));
+			VERIFY(toMap.size() == 1);
+		}
+
+		{ // verify duplicate not inserted
+			auto hint = toMap.find(7);
+			auto result = toMap.try_emplace(hint, 7, mapped_type(7)); // test fwding to copy-ctor
+			VERIFY(result->first == 7);
+			VERIFY(result->second == mapped_type(7));
+			VERIFY(toMap.size() == 1);
+		}
+
+		{
+			{
+				auto result = toMap.try_emplace(8, 8); 
+				VERIFY(result.second);
+				VERIFY(result.first->second == mapped_type(8));
+				VERIFY(toMap.size() == 2);
+			}
+			{
+				auto result = toMap.try_emplace(9, mapped_type(9)); 
+				VERIFY(result.second);
+				VERIFY(result.first->second == mapped_type(9));
+				VERIFY(toMap.size() == 3);
+			}
+		}
+	}
+
+	{
+		// eastl::pair<iterator, bool> insert_or_assign(const key_type& k, M&& obj);
+		// eastl::pair<iterator, bool> insert_or_assign(key_type&& k, M&& obj);
+		// iterator                    insert_or_assign(const_iterator hint, const key_type& k, M&& obj);
+		// iterator                    insert_or_assign(const_iterator hint, key_type&& k, M&& obj);
+
+		TOMap toMap;
+
+		{
+			// initial rvalue insert
+			auto result = toMap.insert_or_assign(3, mapped_type(3));
+			VERIFY(result.second);
+			VERIFY(toMap.size() == 1);
+			VERIFY(result.first->first == 3);
+			VERIFY(result.first->second == mapped_type(3));
+
+			// verify rvalue assign occurred
+			result = toMap.insert_or_assign(3, mapped_type(9));
+			VERIFY(!result.second);
+			VERIFY(toMap.size() == 1);
+			VERIFY(result.first->first == 3);
+			VERIFY(result.first->second == mapped_type(9));
+		}
+
+		{
+			mapped_type mt5(5);
+			mapped_type mt6(6);
+			mapped_type mt7(7);
+
+			{
+				// initial lvalue insert
+				auto result = toMap.insert_or_assign(5, mt5);
+				VERIFY(result.second);
+				VERIFY(toMap.size() == 2);
+				VERIFY(result.first->first == 5);
+				VERIFY(result.first->second == mt5);
+			}
+
+			{
+				// verify lvalue assign occurred
+				auto result = toMap.insert_or_assign(5, mt7);
+				VERIFY(!result.second);
+				VERIFY(toMap.size() == 2);
+				VERIFY(result.first->first == 5);
+				VERIFY(result.first->second == mt7);
+			}
+
+			{
+				// verify lvalue hints
+				auto hint = toMap.find(5);
+				auto result = toMap.insert_or_assign(hint, 6, mt6);
+				VERIFY(result != toMap.end());
+				VERIFY(toMap.size() == 3);
+				VERIFY(result->first == 6);
+				VERIFY(result->second == mt6);
+			}
+
+			{
+				// verify rvalue hints
+				auto hint = toMap.find(6);
+				auto result = toMap.insert_or_assign(hint, 7, mapped_type(7));
+				VERIFY(result != toMap.end());
+				VERIFY(toMap.size() == 4);
+				VERIFY(result->first == 7);
+				VERIFY(result->second == mapped_type(7));
+			}
+		}
+	}
+
+	EATEST_VERIFY(TestObject::IsClear());
+	TestObject::Reset();
+
+	return nErrorCount;
+}
+
 
 template<typename HashContainer>
 struct HashContainerReserveTest

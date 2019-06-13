@@ -22,16 +22,16 @@ namespace Engine {
 
 		diffuseTexture = LoadTexture(scene, material, aiTextureType_DIFFUSE);
 		defaultDiffuseTexture = diffuseTexture;
-		if (diffuseTexture != nullptr)
+		if (diffuseTexture.expired() == false)
 			materialData_.diffuseTextureLoaded = 1;
 		specularTexture = LoadTexture(scene, material, aiTextureType_SPECULAR);
 		defaultSpecularTexture = specularTexture;
-		if (specularTexture != nullptr)
+		if (specularTexture.expired() == false)
 			materialData_.specularTextureLoaded = 1;
 		
 		bumpMapTexture = LoadTexture(scene, material, aiTextureType_NORMALS);
 		defaultBumpMapTexture = bumpMapTexture;
-		if (bumpMapTexture != nullptr)
+		if (bumpMapTexture.expired() == false)
 			materialData_.bumpMapLoaded = 1;
 
 		missingTexture = Engine::GetEngine().lock()->GetResourceManager().lock()->CreateTexture("default.png");
@@ -84,12 +84,12 @@ namespace Engine {
 	{
 		diffuseTexture = Engine::GetEngine().lock()->GetResourceManager().lock()->CreateTexture(diffuseTextureName);
 
-		if (materialData_.diffuseTextureLoaded != 1 && diffuseTexture != nullptr) 
+		if (materialData_.diffuseTextureLoaded != 1 && diffuseTexture.expired() == false)
 		{
 			materialData_.diffuseTextureLoaded = 1;
 			UpdateMaterialData();
 		}
-		else if (diffuseTexture == nullptr) {
+		else if (diffuseTexture.expired() == false) {
 			materialData_.diffuseTextureLoaded = 0;
 			UpdateMaterialData();
 		}
@@ -110,17 +110,17 @@ namespace Engine {
 		}
 	}
 
-	eastl::shared_ptr<Texture> Material::GetDiffuseTexture()
+	eastl::weak_ptr<Texture> Material::GetDiffuseTexture()
 	{
-		if(diffuseTexture != nullptr)
+		if(diffuseTexture.expired() == false)
 			return diffuseTexture;
 
 		return missingTexture;
 	}
 
-	eastl::shared_ptr<Texture> Material::GetDefaultDiffuseTexture()
+	eastl::weak_ptr<Texture> Material::GetDefaultDiffuseTexture()
 	{
-		if(defaultDiffuseTexture != nullptr)
+		if(defaultDiffuseTexture.expired() == false)
 			return defaultDiffuseTexture;
 
 		return missingTexture;
@@ -135,12 +135,12 @@ namespace Engine {
 	{
 		bumpMapTexture = Engine::GetEngine().lock()->GetResourceManager().lock()->CreateTexture(bumpMapTextureName);
 
-		if (materialData_.bumpMapLoaded != 1 && bumpMapTexture != nullptr)
+		if (materialData_.bumpMapLoaded != 1 && bumpMapTexture.expired() == false)
 		{
 			materialData_.bumpMapLoaded = 1;
 			UpdateMaterialData();
 		}
-		else if (bumpMapTexture == nullptr) {
+		else if (bumpMapTexture.expired()) {
 			materialData_.bumpMapLoaded = 0;
 			UpdateMaterialData();
 		}
@@ -161,17 +161,17 @@ namespace Engine {
 		}
 	}
 
-	eastl::shared_ptr<Texture> Material::GetBumpMapTexture() const
+	eastl::weak_ptr<Texture> Material::GetBumpMapTexture() const
 	{
-		if (bumpMapTexture != nullptr)
+		if (bumpMapTexture.expired() == false)
 			return bumpMapTexture;
 
 		return missingTexture;
 	}
 
-	eastl::shared_ptr<Texture> Material::GetDefaultBumpMapTexture() const
+	eastl::weak_ptr<Texture> Material::GetDefaultBumpMapTexture() const
 	{
-		if (defaultBumpMapTexture != nullptr)
+		if (defaultBumpMapTexture.expired() == false)
 			return defaultBumpMapTexture;
 
 		return missingTexture;
@@ -197,12 +197,12 @@ namespace Engine {
 		}
 	}
 
-	eastl::shared_ptr<Texture> Material::GetSpecularTexture() const
+	eastl::weak_ptr<Texture> Material::GetSpecularTexture() const
 	{
 		return specularTexture;
 	}
 
-	eastl::shared_ptr<Texture> Material::GetDefaultSpecularTexture() const
+	eastl::weak_ptr<Texture> Material::GetDefaultSpecularTexture() const
 	{
 		return defaultSpecularTexture;
 	}
@@ -284,8 +284,8 @@ namespace Engine {
 		if (materialData_.diffuseColor != other.materialData_.diffuseColor) return false;
 		if (materialData_.specularColor != other.materialData_.specularColor) return false;
 
-		if (this->diffuseTexture != other.diffuseTexture) return false;
-		if (this->specularTexture != other.specularTexture) return false;
+		if (this->diffuseTexture.lock().get() != other.diffuseTexture.lock().get()) return false;
+		if (this->specularTexture.lock().get() != other.specularTexture.lock().get()) return false;
 
 		return true;
 	}
@@ -294,7 +294,7 @@ namespace Engine {
 	{
 	}
 
-	eastl::shared_ptr<Texture> Material::LoadTexture(const aiScene* scene, aiMaterial * material, aiTextureType textureType)
+	eastl::weak_ptr<Texture> Material::LoadTexture(const aiScene* scene, aiMaterial * material, aiTextureType textureType)
 	{
 		if (material->GetTextureCount(textureType) > 0) { // Textures located
 			aiString path;
@@ -304,10 +304,10 @@ namespace Engine {
 
 				eastl::string name = modelName + eastl::string(path.C_Str());
 
-				eastl::shared_ptr<Texture> ret = Engine::GetEngine().lock()->
+				eastl::weak_ptr<Texture> ret = Engine::GetEngine().lock()->
 					GetResourceManager().lock()->GetTexture(name);
 
-				if (ret != nullptr)
+				if (ret.expired() == false)
 					return ret;
 
 				uint32_t index = atoi(path.C_Str() + 1);
@@ -347,7 +347,7 @@ namespace Engine {
 				}
 				else 
 				{
-					return nullptr;
+					return eastl::shared_ptr<Texture>();
 				}
 			}
 			else 
@@ -357,7 +357,7 @@ namespace Engine {
 		}
 		else 
 		{
-			return nullptr;
+			return eastl::shared_ptr<Texture>();
 		}
 	}
 

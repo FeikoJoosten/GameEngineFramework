@@ -127,6 +127,14 @@ namespace Engine
 		{
 			camera.lock()->MoveRight(Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime() * camMoveSpeed);
 		}
+		if (keyboard->GetBool(gainput::KeyE) && !ImGui::GetIO().WantTextInput)
+		{
+			camera.lock()->SetRotation(camera.lock()->GetRotation() += glm::vec3(0, 1, 0) * Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime());
+		}
+		if (keyboard->GetBool(gainput::KeyQ) && !ImGui::GetIO().WantTextInput)
+		{
+			camera.lock()->SetRotation(camera.lock()->GetRotation() += glm::vec3(0, -1, 0) * Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime());
+		}
 		glm::vec3 target = glm::normalize(camera.lock()->GetPosition() + camera.lock()->GetRotation());
 		camera.lock()->SetView(glm::lookAt(camera.lock()->GetPosition(), camera.lock()->GetPosition() - target, camera.lock()->GetUp()));
 	}

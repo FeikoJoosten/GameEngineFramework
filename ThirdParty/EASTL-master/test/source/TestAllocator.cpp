@@ -10,6 +10,7 @@
 #include <EASTL/core_allocator_adapter.h>
 #include <EASTL/list.h>
 #include <EAStdC/EAString.h>
+#include <EAStdC/EAAlignment.h>
 
 
 
@@ -115,6 +116,40 @@ static int TestFixedAllocator()
 		intList2.get_allocator().init(buffer2, sizeof(buffer2), sizeof(IntListNode), kAlignOfIntListNode);
 		intList2 = intList1;
 		EATEST_VERIFY(intList2.size() == kBufferCount);
+	}
+
+	// fixed_allocator_with_overflow, ensure allocations are coming from fixed buffer. This is to
+	// prevent a reported user regression where all allocations were being routed to the overflow
+	// allocator.
+	{
+		const int DEFAULT_VALUE = 0xbaadf00d;
+		const int TEST_VALUE = 0x12345689;
+		const size_t kBufferCount = 10;
+
+		typedef eastl::list<int, fixed_allocator_with_overflow> IntList;
+		typedef IntList::node_type IntListNode;
+
+		IntList intList1;
+		const size_t kAlignOfIntListNode = EA_ALIGN_OF(IntListNode);
+
+		// ensure the fixed buffer contains the default value that will be replaced
+		IntListNode buffer1[kBufferCount];
+		for (int i = 0; i < kBufferCount; i++)
+		{
+			buffer1[i].mValue = DEFAULT_VALUE;
+			EATEST_VERIFY(buffer1[i].mValue == DEFAULT_VALUE);
+		}
+
+		// replace all the values in the local buffer with the test value
+		intList1.get_allocator().init(buffer1, sizeof(buffer1), sizeof(IntListNode), kAlignOfIntListNode);
+		for (size_t i = 0; i < kBufferCount; i++)
+			intList1.push_back(TEST_VALUE);
+
+		// ensure the local buffer has been altered with the contents of the list::push_back
+		for (int i = 0; i < kBufferCount; i++)
+		{
+			EATEST_VERIFY(buffer1[i].mValue == TEST_VALUE);
+		}
 	}
 
 	{  // fixed_allocator_with_overflow
@@ -304,6 +339,39 @@ static int TestSwapAllocator()
 	return nErrorCount;
 }
 
+static int TestAllocationOffsetAndAlignment()
+{
+	int nErrorCount = 0;
+
+	auto testAllocatorAlignment = [&nErrorCount](int requestedSize, int requestedAlignment, int requestedOffset)
+	{
+		CountingAllocator::resetCount();
+		CountingAllocator a;
+
+		void* p = allocate_memory(a, requestedSize, requestedAlignment, requestedOffset);
+
+		EATEST_VERIFY(p != nullptr);
+		EATEST_VERIFY(EA::StdC::IsAligned(p, requestedAlignment));
+
+		a.deallocate(p, requestedSize);
+		EATEST_VERIFY(CountingAllocator::getActiveAllocationSize() == 0);
+	};
+
+	testAllocatorAlignment(100, 1, 0);
+	testAllocatorAlignment(100, 2, 0);
+	testAllocatorAlignment(100, 4, 0);
+	testAllocatorAlignment(100, 8, 0);
+	testAllocatorAlignment(100, 16, 0);
+
+	testAllocatorAlignment(100, 1, 16);
+	testAllocatorAlignment(100, 2, 16);
+	testAllocatorAlignment(100, 4, 16);
+	testAllocatorAlignment(100, 8, 16);
+	testAllocatorAlignment(100, 16, 16);
+
+	return nErrorCount;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // TestAllocator
@@ -312,6 +380,7 @@ int TestAllocator()
 {
 	int nErrorCount = 0;
 	
+	nErrorCount += TestAllocationOffsetAndAlignment();
 	nErrorCount += TestFixedAllocator();
 	nErrorCount += TestAllocatorMalloc();
 	nErrorCount += TestCoreAllocatorAdapter();

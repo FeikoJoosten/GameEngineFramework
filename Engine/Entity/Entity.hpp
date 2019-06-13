@@ -160,7 +160,7 @@ namespace Engine
 	template <class ComponentType, class... Args>
 	eastl::weak_ptr<ComponentType> Entity::AddComponent(Args&&... args)
 	{
-		std::shared_ptr<ComponentType> componentToAdd = eastl::shared_ptr<ComponentType>(new ComponentType(eastl::forward<Args>(args)...));
+		eastl::shared_ptr<ComponentType> componentToAdd = eastl::shared_ptr<ComponentType>(new ComponentType(eastl::forward<Args>(args)...));
 		components.push_back(eastl::move(componentToAdd));
 
 		eastl::shared_ptr<Component> componentToReturn = components.back();
