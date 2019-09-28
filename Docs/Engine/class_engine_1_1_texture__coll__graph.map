@@ -1,8 +1,0 @@
-<map id="Engine::Texture" name="Engine::Texture">
-<area shape="rect" id="node1" title="This object is used to store information regarding a texture. NOTE: Only the resource manager is allo..." alt="" coords="128,175,305,369"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,73,83"/>
-<area shape="rect" id="node3" title=" " alt="" coords="97,5,152,83"/>
-<area shape="rect" id="node4" title=" " alt="" coords="193,5,232,83"/>
-<area shape="rect" id="node5" title=" " alt="" coords="256,5,375,83"/>
-<area shape="rect" id="node6" title=" " alt="" coords="399,5,447,83"/>
-</map>

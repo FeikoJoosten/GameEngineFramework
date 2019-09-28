@@ -1,4 +1,0 @@
-<map id="Engine::CollisionComponent" name="Engine::CollisionComponent">
-<area shape="rect" id="node1" title="The Collision component is an entities link to the Collision System and allows for interaction with t..." alt="" coords="5,409,191,707"/>
-<area shape="rect" id="node2" href="$class_engine_1_1_component.html" title="This is the base class for components. NOTE: only the Entity class is allowed to create this object." alt="" coords="9,5,187,361"/>
-</map>

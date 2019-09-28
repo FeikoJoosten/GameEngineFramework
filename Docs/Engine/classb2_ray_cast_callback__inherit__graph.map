@@ -1,5 +1,0 @@
-<map id="b2RayCastCallback" name="b2RayCastCallback">
-<area shape="rect" id="node1" title=" " alt="" coords="163,5,299,83"/>
-<area shape="rect" id="node2" href="$class_engine_1_1_ray_cast_closest_callback.html" title="Gets the first entity hit by the ray Callback class used to get collision data from ray queries" alt="" coords="5,131,220,237"/>
-<area shape="rect" id="node3" href="$class_engine_1_1_ray_cast_multiple_callback.html" title="Gets the all entities hit by the ray Callback class used to get collision data from ray queries NOTE:..." alt="" coords="244,131,459,237"/>
-</map>

@@ -1,6 +1,0 @@
-<map id="Engine::Entity" name="Engine::Entity">
-<area shape="rect" id="node1" title="This object is able a holder object for components. NOTE: only the EntitySystem is allowed to create ..." alt="" coords="107,160,283,457"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,13,73,90"/>
-<area shape="rect" id="node3" title=" " alt="" coords="98,5,293,97"/>
-<area shape="rect" id="node4" title=" " alt="" coords="317,13,372,90"/>
-</map>

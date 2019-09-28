@@ -1,8 +1,0 @@
-<map id="Engine::Component" name="Engine::Component">
-<area shape="rect" id="node1" title="This is the base class for components. NOTE: only the Entity class is allowed to create this object." alt="" coords="448,5,625,361"/>
-<area shape="rect" id="node2" href="$class_engine_1_1_animation_component.html" title=" " alt="" coords="5,534,209,1007"/>
-<area shape="rect" id="node3" href="$class_engine_1_1_collision_component.html" title="The Collision component is an entities link to the Collision System and allows for interaction with t..." alt="" coords="233,622,419,919"/>
-<area shape="rect" id="node4" href="$class_engine_1_1_light_component.html" title=" " alt="" coords="443,600,630,941"/>
-<area shape="rect" id="node5" href="$class_engine_1_1_model_component.html" title="This component is used to keep track of the meshes and textures to render. NOTE: only the Entity clas..." alt="" coords="654,695,825,846"/>
-<area shape="rect" id="node6" href="$class_engine_1_1_transform_component.html" title=" " alt="" coords="849,409,1043,1132"/>
-</map>

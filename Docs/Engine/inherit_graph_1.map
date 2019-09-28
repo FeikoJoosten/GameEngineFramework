@@ -1,5 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classb2_ray_cast_callback.html" title=" " alt="" coords="5,31,141,57"/>
-<area shape="rect" id="node2" href="$class_engine_1_1_ray_cast_closest_callback.html" title="Gets the first entity hit by the ray Callback class used to get collision data from ray queries" alt="" coords="189,5,404,32"/>
-<area shape="rect" id="node3" href="$class_engine_1_1_ray_cast_multiple_callback.html" title="Gets the all entities hit by the ray Callback class used to get collision data from ray queries NOTE:..." alt="" coords="189,56,404,83"/>
-</map>

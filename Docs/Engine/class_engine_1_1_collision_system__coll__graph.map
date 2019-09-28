@@ -1,3 +1,0 @@
-<map id="Engine::CollisionSystem" name="Engine::CollisionSystem">
-<area shape="rect" id="node1" title="The Collision System handles and stores run&#45;time collision data using the Box2D library" alt="" coords="5,5,225,185"/>
-</map>
