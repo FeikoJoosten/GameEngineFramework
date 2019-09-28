@@ -1,0 +1,4 @@
+<map id="Engine::ModelComponent" name="Engine::ModelComponent">
+<area shape="rect" id="node1" title="This component is used to keep track of the meshes and textures to render. NOTE: only the Entity clas..." alt="" coords="9,409,179,560"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_component.html" title="This is the base class for components. NOTE: only the Entity class is allowed to create this object." alt="" coords="5,5,183,361"/>
+</map>

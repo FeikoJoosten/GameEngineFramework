@@ -1,0 +1,4 @@
+<map id="Engine::Component" name="Engine::Component">
+<area shape="rect" id="node1" title="This is the base class for components. NOTE: only the Entity class is allowed to create this object." alt="" coords="5,145,183,501"/>
+<area shape="rect" id="node2" title=" " alt="" coords="71,5,117,83"/>
+</map>

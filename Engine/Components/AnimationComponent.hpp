@@ -66,7 +66,7 @@ namespace Engine {
 		/// <summary>
 		/// Resets the animation of the specified model component.
 		/// </summary>
-		/// <param name="ModelComponent">The model component to reset the animation for.</param>
+		/// <param name="modelComponent">The model component to reset the animation for.</param>
 		void ResetModelAnimation(eastl::weak_ptr<ModelComponent> modelComponent);
 
 		/// <summary>

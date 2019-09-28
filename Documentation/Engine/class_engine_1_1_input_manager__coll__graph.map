@@ -1,0 +1,3 @@
+<map id="Engine::InputManager" name="Engine::InputManager">
+<area shape="rect" id="node1" title="This object is a simple wrapper class regarding gainput. It also sends information to ImGUI to keep t..." alt="" coords="5,5,153,171"/>
+</map>

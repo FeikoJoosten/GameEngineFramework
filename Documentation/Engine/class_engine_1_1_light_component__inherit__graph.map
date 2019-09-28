@@ -1,0 +1,4 @@
+<map id="Engine::LightComponent" name="Engine::LightComponent">
+<area shape="rect" id="node1" title=" " alt="" coords="5,409,192,751"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_component.html" title="This is the base class for components. NOTE: only the Entity class is allowed to create this object." alt="" coords="10,5,187,361"/>
+</map>

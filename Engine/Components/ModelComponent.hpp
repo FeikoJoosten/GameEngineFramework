@@ -44,7 +44,7 @@ namespace Engine
 		/// <summary>
 		/// This method allows you to change the model to render of this model component.
 		/// </summary>
-		/// <param name="newModel">The path of the new model to use.</param>
+		/// <param name="path">The path of the new model to use.</param>
 		void SetModel(const eastl::string& path);
 
 		/// <summary>

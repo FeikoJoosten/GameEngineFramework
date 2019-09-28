@@ -43,7 +43,7 @@ namespace Engine
 		/// <summary>
 		/// This method loads animations from a file, and adds them to the skeleton with the specified name.
 		/// </summary>
-		/// <param name="modelName">The model to add animations to.</param>
+		/// <param name="skeletonName">The model to add animations to.</param>
 		/// <param name="animationsToLoad">The file containing the animations. NOTE: The animation file needs to be located under 'Resources/Animations/'
 		/// You then give the animation file name + its extension. The file can be in a subfolder of 'Resources/Animations/'</param>
 		/// <param name="names">A vector containing names for the animations being loaded. 
@@ -56,11 +56,11 @@ namespace Engine
 		/// <param name="mesh">The mesh you want to load in.</param>
 		/// <param name="skeleton">The skeleton the mesh is bound to. Passing a nullptr will create a non-animated mesh.</param>
 		/// <param name="vertices">The vertices of the mesh.</param>
-		/// <param name="indices">The incides of the mesh.</param>
+		/// <param name="indices">The indices of the mesh.</param>
 		/// <returns>Returns a shared_ptr of the mesh you want to create.</returns>
 		eastl::weak_ptr<Mesh> CreateMesh(aiMesh *mesh, eastl::shared_ptr<Skeleton> skeleton, eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices);
 		/// <summary>
-		/// This method allowes you to get a texture with the definded name.
+		/// This method allows you to get a texture with the defined name.
 		/// </summary>
 		/// <param name="textureName">The texture you want to find. NOTE: The texture needs to be located under 'Resources/Textures/'. You then give the texture name + extension.
 		/// The texture can be in a subfolder of 'Resources/Textures/'.</param>

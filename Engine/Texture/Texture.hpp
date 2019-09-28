@@ -63,6 +63,7 @@ namespace Engine
 		/// <param name="data">The data of this texture.</param>
 		/// <param name="genMipMaps">This bool defines if this texture should generate mip maps.</param>
 		/// <param name="bytes">The number of bytes per color. Default is 1 (single char)</param>
+		/// <param name="storage">Used by Vulkan only. Defines if you want to use VK_IMAGE_USAGE_STORAGE_BIT or VK_IMAGE_USAGE_SAMPLED_BIT.</param>
 		virtual void CreateTextureWithData(stbi_uc* data, bool genMipMaps, TextureDataSize bytes = TextureDataSize::U_CHAR, bool storage = false);
 
 		/// <summary>

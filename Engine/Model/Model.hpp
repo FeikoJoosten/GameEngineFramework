@@ -83,7 +83,6 @@ namespace Engine
 		/// <summary>
 		/// Returns the duration of a single loop of the animation.
 		/// </summary>
-		/// <param name="animation">The index of the animation to return the duration of.</param>
 		/// <returns>Duration of the animation in seconds.</returns>
 		float GetAnimationDuration() const;
 

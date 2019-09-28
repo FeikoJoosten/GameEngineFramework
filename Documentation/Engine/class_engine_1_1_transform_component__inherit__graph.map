@@ -1,0 +1,4 @@
+<map id="Engine::TransformComponent" name="Engine::TransformComponent">
+<area shape="rect" id="node1" title=" " alt="" coords="5,409,199,1132"/>
+<area shape="rect" id="node2" href="$class_engine_1_1_component.html" title="This is the base class for components. NOTE: only the Entity class is allowed to create this object." alt="" coords="13,5,191,361"/>
+</map>

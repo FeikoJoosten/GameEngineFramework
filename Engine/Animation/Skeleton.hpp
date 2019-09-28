@@ -29,11 +29,12 @@ namespace Engine {
 
 		/// <summary>
 		/// Loads in animation data form the provided scene.
-		/// If the animation data doesn't match the skeleton of the model (using bone names that aren't in the skeleton)
+		/// If the animation data does not match the skeleton of the model (using bone names that are not in the skeleton)
 		/// a error gets reported but the data will be loaded.
 		/// The skeleton data used will be the data from the scene used to first initialize the object.
 		/// </summary>
-		/// <param name="scene">Scene to load aditional animations from.</param>
+		/// <param name="scene">Scene to load additional animations from.</param>
+		/// <param name="names">The optional names of the animation sets to load.</param>
 		void LoadAnimationSet(const aiScene* scene, eastl::vector<eastl::string> names = {});
 
 		/// <summary>

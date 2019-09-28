@@ -1,0 +1,4 @@
+<map id="Engine::RayCastClosestCallback" name="Engine::RayCastClosestCallback">
+<area shape="rect" id="node1" title="Gets the first entity hit by the ray Callback class used to get collision data from ray queries" alt="" coords="5,131,220,237"/>
+<area shape="rect" id="node2" href="$classb2_ray_cast_callback.html" title=" " alt="" coords="45,5,181,83"/>
+</map>
