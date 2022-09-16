@@ -18,12 +18,6 @@ namespace Engine {
 		debug_error("Window", "Error_callback", errorCallback + description)
 	}
 
-	struct DestroyGlfwWin {
-		void operator()(GLFWwindow* ptr) const {
-			glfwDestroyWindow(ptr);
-		}
-	};
-
 	Window::Window() noexcept {
 		settingsPath = Engine::ENGINE_SETTINGS_PATH + std::string { NAMEOF_TYPE(Window) } + "/" + std::string { NAMEOF_TYPE(WindowInitializationData) };
 		WindowInitializationData initializationData {};
@@ -68,7 +62,10 @@ namespace Engine {
 		return true;
 	}
 
-	void Window::SetShouldClose(const bool value) const noexcept {
+	void Window::SetShouldClose(const bool value) noexcept {
+		if (value)
+			OnWindowShutdownRequestedEvent(Get());
+
 		if (window != nullptr)
 			glfwSetWindowShouldClose(window.get(), static_cast<int>(value));
 	}
@@ -139,7 +136,7 @@ namespace Engine {
 		}
 
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-		window = std::unique_ptr<GLFWwindow, DestroyGlfwWin>(glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr));
+		window = std::shared_ptr<GLFWwindow>(glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr));
 
 		if (!window) {
 			glfwTerminate();

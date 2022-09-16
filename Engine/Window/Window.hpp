@@ -70,7 +70,7 @@ namespace Engine {
 		/// </summary>
 		/// <param name="value">Use true to close this window, false to do nothing.</param>
 		/// <returns></returns>
-		void SetShouldClose(bool value) const noexcept;
+		void SetShouldClose(bool value) noexcept;
 
 		/// <summary>
 		/// The hardware handle to this window.
@@ -127,6 +127,7 @@ namespace Engine {
 		[[nodiscard]] int GetDisplayHeight() const noexcept;
 
 		Sharp::Event<GLFWwindow*, int, int> OnWindowResizedEvent;
+		Sharp::Event<std::shared_ptr<Window>> OnWindowShutdownRequestedEvent;
 
 	protected:
 		int width {};

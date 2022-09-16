@@ -12,7 +12,9 @@
 namespace Engine {
 	OpenGLRenderer::OpenGLRenderer(const std::string& vertexShader, const std::string& fragmentShader)
 	{
-		ImGui_ImplGlfwGL3_Init(Window::Get()->GetGlfwWindow().get());
+		window = Window::Get();
+		ImGui_ImplGlfwGL3_Init(window->GetGlfwWindow().get());
+		window->OnWindowShutdownRequestedEvent += Sharp::EventHandler::Bind(this, &OpenGLRenderer::HandleOnWindowShutdownRequestedEvent);
 
 		this->shader = std::shared_ptr<OpenGLShader>(new OpenGLShader(vertexShader, fragmentShader));
 		projParam = this->shader->GetParameter("u_projection");
@@ -24,19 +26,11 @@ namespace Engine {
 		positionAttribute = this->shader->GetAttribute("a_position");
 		normalAttribute = this->shader->GetAttribute("a_normal");
 		textureAttribute = this->shader->GetAttribute("a_texture");
-
-	}
-
-	OpenGLRenderer::~OpenGLRenderer()
-	{
-		ImGui_ImplGlfwGL3_Shutdown();
-		window.reset(); // Keep window in memory so ImGUI can shutdown properly
 	}
 
 	void OpenGLRenderer::RendererBegin(const glm::mat4x4 & view, const glm::mat4x4 & projection)
 	{
 		ImGui_ImplGlfwGL3_NewFrame();
-		window = Window::Get();
 		glViewport(0, 0, window->GetDisplayWidth(), window->GetDisplayHeight());
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_BLEND);
@@ -107,6 +101,11 @@ namespace Engine {
 		ImGui::Render();
 		shader->Deactivate();
 		glfwSwapBuffers(Window::Get()->GetGlfwWindow().get());
+	}
+
+	void OpenGLRenderer::HandleOnWindowShutdownRequestedEvent(const std::shared_ptr<Window> windowPtr) {
+		windowPtr->OnWindowShutdownRequestedEvent -= Sharp::EventHandler::Bind(this, &OpenGLRenderer::HandleOnWindowShutdownRequestedEvent);
+		ImGui_ImplGlfwGL3_Shutdown();
 	}
 } // namespace Engine
 #endif // USING_OPENGL

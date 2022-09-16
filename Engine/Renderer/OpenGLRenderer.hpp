@@ -20,7 +20,7 @@ namespace Engine {
 		OpenGLRenderer() = delete;
 		OpenGLRenderer(const OpenGLRenderer& other) = delete;
 		OpenGLRenderer(OpenGLRenderer&& other) noexcept = delete;
-		virtual ~OpenGLRenderer() override;
+		virtual ~OpenGLRenderer() override = default;
 
 		OpenGLRenderer& operator=(const OpenGLRenderer& other) = delete;
 		OpenGLRenderer& operator=(OpenGLRenderer&& other) noexcept = delete;
@@ -43,6 +43,8 @@ namespace Engine {
 		/// This method is used to reset the current frame, so it's ready for the next frame.
 		/// </summary>
 		virtual void RendererEnd() override;
+
+		void HandleOnWindowShutdownRequestedEvent(std::shared_ptr<Window> windowPtr);
 
 		std::shared_ptr<OpenGLShader> shader;
 		std::shared_ptr<Window> window;
