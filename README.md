@@ -32,8 +32,12 @@ To support the Vulkan renderer, be sure to install the [VULKAN SDK](https://vulk
     Window creation library
 * [GLM](https://github.com/g-truc/glm)
     OpenGL Math library
+* [IMGUI](https://github.com/ocornut/imgui)
+    GUI library with support for OpenGL and Vulkan
 * [nameof](https://github.com/Neargye/nameof/)
     C++ 17 utility script which allows you to retrieve names of variables/classes
+* [Sharp::Event](https://www.codeproject.com/Tips/1069718/Sharp-Tools-A-NET-like-Event-in-Cplusplus)
+    C++ implementation of C# Events
 * [stb](https://github.com/nothings/stb)
     Used for loading of images
 * [utf8cpp](https://github.com/nemtrif/utfcpp)
