@@ -1,10 +1,9 @@
 #pragma once
 
-#include <memory>
-#include <string>
 #include "Engine/Utility/Defines.hpp"
 #include "Engine/Api.hpp"
 #include "Engine/Engine.hpp"
+#include "Engine/Utility/Event.hpp"
 
 #if _WIN32 || _WIN64
 #define NOMINMAX
@@ -13,16 +12,16 @@
 #define GLFW_EXPOSE_NATIVE_WGL
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
 #endif
 
-namespace Engine
-{
+#include <memory>
+#include <string>
+
+namespace Engine {
 	/// <summary>
 	/// This object stores any information regarding the created GLFW window.
 	/// </summary>
-	class ENGINE_API Window
-	{
+	class ENGINE_API Window {
 		struct WindowInitializationData {
 			/// <summary>
 			/// WindowWidth defines the width of the engine window.
@@ -38,29 +37,19 @@ namespace Engine
 			/// Window Title defines the title of the engine window.
 			/// Default is "".
 			/// </summary>
-			std::string windowTitle{};
+			std::string windowTitle {};
 
 			template <class Archive>
 			void Serialize(Archive& archive);
 		};
 
-		friend class Application;
-		friend class Renderer;
-#ifdef USING_OPENGL
-		friend class OpenGLWindow;
-		friend class OpenGLRenderer;
-#endif
-#ifdef USING_VULKAN
-		friend class VulkanWindow;
-		friend class VulkanRenderer;
-#endif
-
+	protected:
 		Window() noexcept;
 	public:
 
+		virtual ~Window() noexcept;
 		Window(const Window& other) = delete;
 		Window(Window&& other) noexcept = delete;
-		virtual ~Window() noexcept;
 
 		Window& operator=(const Window& other) = delete;
 		Window& operator=(Window&& other) noexcept = delete;
@@ -71,18 +60,10 @@ namespace Engine
 		static std::shared_ptr<WindowType> Get();
 
 		/// <summary>
-		/// This method is called whenever the GLFW window is resized.
-		/// </summary>
-		/// <param name="glfwWindow">This is a reference to the window pointer.</param>
-		/// <param name="width">The new width.</param>
-		/// <param name="height">The new height.</param>
-		static void OnWindowResized(GLFWwindow* glfwWindow, int width, int height);
-
-		/// <summary>
 		/// This method returns if this window should close.
 		/// </summary>
 		/// <returns>Returns true if this window should close, will return false otherwise.</returns>
-		bool ShouldClose() const noexcept;
+		[[nodiscard]] bool ShouldClose() const noexcept;
 
 		/// <summary>
 		/// This method allows you to close the window.
@@ -94,81 +75,83 @@ namespace Engine
 		/// <summary>
 		/// The hardware handle to this window.
 		/// </summary>
-		/// <returns>Returns the hardware handle to this window as a HWND.</returns>
-		HWND GetWindowHandle() const noexcept;
+		/// <returns>Returns the hardware handle to this window.</returns>
+		[[nodiscard]] HWND GetWindowHandle() const noexcept;
 
 		/// <summary>
 		/// Allows you to get the glfw pointer.
 		/// </summary>
-		/// <returns>Returns the glfw pointer as a weak pointer.</returns>
-		std::weak_ptr<GLFWwindow> GetGLFWWindow() const noexcept;
+		/// <returns>Returns the glfw pointer as a shared pointer.</returns>
+		[[nodiscard]] std::shared_ptr<GLFWwindow> GetGlfwWindow() const noexcept;
 
 		/// <summary>
 		/// This method allows you to get the title of this window.
 		/// </summary>
-		/// <returns>Returns the title of this window as a std::string</returns>
-		std::string GetTitle() const;
+		/// <returns>Returns the title of this window</returns>
+		[[nodiscard]] std::string GetTitle() const;
 
 		/// <summary>
 		/// This method allows you to get the width of this window.
 		/// </summary>
 		/// <returns>Returns the width of this window as an int.</returns>
-		int GetWidth() const noexcept;
-
-		/// <summary>
-		/// This method allows you to get the display width of this window.
-		/// </summary>
-		/// <returns>Returns the display width of this window as an int.</returns>
-		int GetDisplayWidth() const noexcept;
-
-		/// <summary>
-		/// This method allows you to get the height of this window.
-		/// </summary>
-		/// <returns>Returns the height of this window as an int.</returns>
-		int GetHeight() const noexcept;
-
-		/// <summary>
-		/// This method allows you to get the display height of this window.
-		/// </summary>
-		/// <returns>Returns the display height of this window as an int.</returns>
-		int GetDisplayHeight() const noexcept;
-
-	protected:
-		int width, displayWidth {};
-		int height, displayHeight {};
-		std::shared_ptr<GLFWwindow> window;
-		std::string title {};
-
-		void CreateInternalWindow();
-		
-		/// <summary>
-		/// General update method for this window. NOTE: Can only be called by the engine.
-		/// </summary>
-		/// <returns></returns>
-		void Update() const noexcept;
-
-		/// <summary>
-		/// This method allows you to swap the buffers of this window. NOTE: can only be called by the renderer.
-		/// </summary>
-		/// <returns></returns>
-		void SwapBuffers() const noexcept;
+		[[nodiscard]] int GetWidth() const noexcept;
 
 		/// <summary>
 		/// This method allows you to set the width of this window.
 		/// </summary>
 		/// <param name="newWidth">The new width of this window.</param>
 		void SetWidth(int newWidth);
+
+		/// <summary>
+		/// This method allows you to get the display width of this window.
+		/// </summary>
+		/// <returns>Returns the display width of this window as an int.</returns>
+		[[nodiscard]] int GetDisplayWidth() const noexcept;
+
+		/// <summary>
+		/// This method allows you to get the height of this window.
+		/// </summary>
+		/// <returns>Returns the height of this window as an int.</returns>
+		[[nodiscard]] int GetHeight() const noexcept;
+
 		/// <summary>
 		/// This method allows you to set the height of this window.
 		/// </summary>
 		/// <param name="newHeight">The new height of this window.</param>
 		void SetHeight(int newHeight);
 
+		/// <summary>
+		/// This method allows you to get the display height of this window.
+		/// </summary>
+		/// <returns>Returns the display height of this window as an int.</returns>
+		[[nodiscard]] int GetDisplayHeight() const noexcept;
+
+		Sharp::Event<GLFWwindow*, int, int> OnWindowResizedEvent;
+
+	protected:
+		int width {};
+		int displayWidth {};
+		int height {};
+		int displayHeight {};
+		std::shared_ptr<GLFWwindow> window;
+		std::string title {};
+
+		/// <summary>
+		/// This method is called whenever the GLFW window is resized.
+		/// </summary>
+		/// <param name="glfwWindow">This is a reference to the window pointer.</param>
+		/// <param name="newWidth">The new width.</param>
+		/// <param name="newHeight">The new height.</param>
+		virtual void OnWindowResized(GLFWwindow* glfwWindow, int newWidth, int newHeight);
+
+		void CreateInternalWindow();
+
 	private:
 		std::string settingsPath {};
+
+		static void WindowResizeCallback(GLFWwindow* glfwWindow, const int width, const int height);
 	};
-	
-	
+
 	template <class Archive> void Window::WindowInitializationData::Serialize(Archive& archive) {
 		archive(CEREAL_NVP(windowWidth),
 			CEREAL_NVP(windowHeight),

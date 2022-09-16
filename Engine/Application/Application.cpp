@@ -52,8 +52,6 @@ namespace Engine {
 
 	void Application::Render() {
 		const std::shared_ptr<Engine> engine = Engine::instance;
-		if (engine->window != nullptr)
-			engine->window->Update();
 
 		if (engine->renderer == nullptr) return;
 		if (engine->cameraManager == nullptr) return;

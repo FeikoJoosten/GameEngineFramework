@@ -21,9 +21,9 @@ namespace Engine {
 
 		InputManager() noexcept;
 	public:
+		~InputManager() noexcept;
 		InputManager(const InputManager& other) = delete;
 		InputManager(InputManager&& other) noexcept = delete;
-		~InputManager() noexcept = default;
 
 		InputManager& operator=(const InputManager& other) = delete;
 		InputManager& operator=(InputManager&& other) noexcept = delete;
@@ -73,9 +73,10 @@ namespace Engine {
 		gainput::DeviceId keyboardId;
 		gainput::DeviceId gamepadId;
 		InputDefaults inputDefaults;
+		std::shared_ptr<Window> window;
 
 		void Update() noexcept;
 
-		friend void Window::OnWindowResized(GLFWwindow* glfwWindow, int width, int height);
+		void HandleOnWindowResizedEvent(GLFWwindow* glfwWindow, int newWidth, int newHeight);
 	};
 } //namespace Engine

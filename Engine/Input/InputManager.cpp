@@ -88,8 +88,12 @@ namespace Engine
 {
 	InputManager::InputManager() noexcept : inputManager()
 	{
-		std::shared_ptr<Window> window = Window::Get();
-		inputManager.SetDisplaySize(window->GetWidth(), window->GetHeight());
+		window = Window::Get();
+		if (window) {
+			inputManager.SetDisplaySize(window->GetWidth(), window->GetHeight());
+
+			window->OnWindowResizedEvent += Sharp::EventHandler::Bind(this, &InputManager::HandleOnWindowResizedEvent);
+		}
 
 		mouseId = inputManager.CreateDevice<gainput::InputDeviceMouse>();
 		keyboardId = inputManager.CreateDevice<gainput::InputDeviceKeyboard>();
@@ -116,6 +120,11 @@ namespace Engine
 		io.KeyMap[ImGuiKey_X] = gainput::KeyX;
 		io.KeyMap[ImGuiKey_Y] = gainput::KeyY;
 		io.KeyMap[ImGuiKey_Z] = gainput::KeyZ;
+	}
+
+	InputManager::~InputManager() noexcept {
+		if(window)
+			window->OnWindowResizedEvent -= Sharp::EventHandler::Bind(this, &InputManager::HandleOnWindowResizedEvent);
 	}
 
 	std::shared_ptr<InputManager> InputManager::Get() {
@@ -188,5 +197,9 @@ namespace Engine
 				io.AddInputCharacter(ImWchar(char(key)));
 			}
 		}
+	}
+
+	void InputManager::HandleOnWindowResizedEvent(GLFWwindow* glfwWindow, const int newWidth, const int newHeight) {
+		inputManager.SetDisplaySize(newWidth, newHeight);
 	}
 } // namespace Engine

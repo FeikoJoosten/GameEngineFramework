@@ -4,9 +4,6 @@
 #include "Engine/Components/TransformComponent.hpp"
 #include "Engine/Entity/EntitySystem.hpp"
 
-// To cast the int to void* without getting compiler warnings
-#define INT_TO_VOID_PTR(val) ((void*)(size_t) val)
-
 namespace Engine {
 
 	CollisionSystem::CollisionSystem() {

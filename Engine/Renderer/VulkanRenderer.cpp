@@ -37,6 +37,8 @@ namespace Engine
 
 	VulkanRenderer::~VulkanRenderer()
 	{
+		if (window)
+			window->OnWindowResizedEvent -= Sharp::EventHandler::Bind(this, &VulkanRenderer::HandleOnWindowResizedEvent);
 		vkWaitForFences(vulkanLogicalDevice_->GetDevice(),
 			static_cast<uint32_t>(drawingFinishedFences_.size()),
 			drawingFinishedFences_.data(),
@@ -74,18 +76,19 @@ namespace Engine
 		InitializeRenderer(Window::Get<VulkanWindow>());
 	}
 
-	void VulkanRenderer::InitializeRenderer(std::weak_ptr<VulkanWindow> window)
+	void VulkanRenderer::InitializeRenderer(std::shared_ptr<VulkanWindow> window)
 	{
 		if (initialized)
 			return;
 
 		this->window = window;
+		window->OnWindowResizedEvent += Sharp::EventHandler::Bind(this, &VulkanRenderer::HandleOnWindowResizedEvent);
 
 		swapChain = VK_NULL_HANDLE;
 
 		CreateInstance();
 
-		glfwCreateWindowSurface(vulkanInstance_->GetInstance(), window.lock()->window.get(), nullptr, &surface);
+		glfwCreateWindowSurface(vulkanInstance_->GetInstance(), window->GetGlfwWindow().get(), nullptr, &surface);
 
 		FindPhysicalDevice();
 
@@ -1113,7 +1116,7 @@ namespace Engine
 
 		VkSurfaceFormatKHR surfaceFormat = vulkanPhysicalDevice_->ChooseSwapSurfaceFormat(details.formats);
 		VkPresentModeKHR presentMode = vulkanPhysicalDevice_->ChooseSwapPresentMode(details.presentModes);
-		VkExtent2D extent = vulkanPhysicalDevice_->ChooseSwapExtent(details.capabilities, window.lock()->GetDisplayWidth(), window.lock()->GetDisplayHeight());
+		VkExtent2D extent = vulkanPhysicalDevice_->ChooseSwapExtent(details.capabilities, window->GetDisplayWidth(), window->GetDisplayHeight());
 
 		uint32_t imageCount = details.capabilities.minImageCount + 1;
 		if (details.capabilities.maxImageCount > 0 && imageCount > details.capabilities.maxImageCount) {
@@ -2275,7 +2278,7 @@ namespace Engine
 		initData.check_vk_result = check_vk_result;
 		initData.render_pass = renderPass;
 		initData.sub_pass = static_cast<int>(RenderSubPasses::IMGUI_PASS);
-		ImGui_ImplGlfwVulkan_Init(window.lock()->GetGLFWWindow().lock().get(), &initData);
+		ImGui_ImplGlfwVulkan_Init(window->GetGlfwWindow().get(), &initData);
 
 		VkCommandBuffer commandBuffer;
 
@@ -2749,6 +2752,10 @@ namespace Engine
 			vkDestroyCommandPool(vulkanLogicalDevice_->GetDevice(), threads[i]->commandPool, nullptr);
 			delete threads[i];
 		}
+	}
+
+	void VulkanRenderer::HandleOnWindowResizedEvent(GLFWwindow* glfwWindow, const int width, const int height) {
+		Resized();
 	}
 
 	VkFormat VulkanRenderer::FindSupportedDepthFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)

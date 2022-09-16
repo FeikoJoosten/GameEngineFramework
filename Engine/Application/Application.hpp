@@ -5,6 +5,7 @@
 namespace Engine {
 	class ENGINE_API Application {
 	public:
+
 		static bool GetIsPlaying();
 
 		static void SetIsPlaying(bool newIsPlaying);

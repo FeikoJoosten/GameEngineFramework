@@ -61,7 +61,8 @@ namespace Engine
 	public:
 		VulkanRenderer(VulkanRenderer const &other) = default;
 		VulkanRenderer(VulkanRenderer &&other) noexcept = default;
-		~VulkanRenderer();
+
+		virtual ~VulkanRenderer() override;
 	private:
 
 	public:
@@ -76,7 +77,7 @@ namespace Engine
 		/// Binds the renderer to a specific window, all render calls by this renderer object will only affect this window.
 		/// </summary>
 		/// <param name="window">The window to bind the renderer to.</param>
-		void InitializeRenderer(std::weak_ptr<VulkanWindow> window);
+		void InitializeRenderer(std::shared_ptr<VulkanWindow> window);
 
 		/// <summary>
 		/// Tell the renderer that the window it was bound too was resized, and the pipeline needs to be recreated.
@@ -432,6 +433,8 @@ namespace Engine
 		void DestroyRenderers();
 		void DestroyThreads();
 
+		void HandleOnWindowResizedEvent(GLFWwindow* glfwWindow, const int width, const int height);
+
 		VkFormat VulkanRenderer::FindSupportedDepthFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
 		std::unique_ptr<VulkanInstance> vulkanInstance_;
@@ -447,7 +450,7 @@ namespace Engine
 
 		VulkanDeviceFeatures_t requiredFeatures{};
 
-		std::weak_ptr<VulkanWindow> window;
+		std::shared_ptr<VulkanWindow> window;
 
 		VkSurfaceKHR surface{};
 

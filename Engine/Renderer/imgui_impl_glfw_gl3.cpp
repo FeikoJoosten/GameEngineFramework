@@ -17,6 +17,8 @@
 #include "Engine/Renderer/imgui_impl_glfw_gl3.h"
 #include "Engine/Window/Window.hpp"
 
+#include <GLFW/glfw3native.h>
+
 // GL3W/GLFW
 #ifdef _WIN32
 #undef APIENTRY

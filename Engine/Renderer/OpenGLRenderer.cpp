@@ -12,7 +12,7 @@
 namespace Engine {
 	OpenGLRenderer::OpenGLRenderer(const std::string& vertexShader, const std::string& fragmentShader)
 	{
-		ImGui_ImplGlfwGL3_Init(Window::Get()->GetGLFWWindow().lock().get());
+		ImGui_ImplGlfwGL3_Init(Window::Get()->GetGlfwWindow().get());
 
 		this->shader = std::shared_ptr<OpenGLShader>(new OpenGLShader(vertexShader, fragmentShader));
 		projParam = this->shader->GetParameter("u_projection");
@@ -106,7 +106,7 @@ namespace Engine {
 	{
 		ImGui::Render();
 		shader->Deactivate();
-		Window::Get()->SwapBuffers();
+		glfwSwapBuffers(Window::Get()->GetGlfwWindow().get());
 	}
 } // namespace Engine
 #endif // USING_OPENGL
