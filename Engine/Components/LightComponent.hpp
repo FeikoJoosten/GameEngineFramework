@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Engine/api.hpp"
+#include "Engine/Api.hpp"
 #include "Engine/Components/Component.hpp"
 #include "Engine/Utility/Light.hpp"
 #include "Engine/Utility/Defines.hpp"
 
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
-#include <ThirdParty/glm/glm/detail/type_vec3.hpp>
+#include <glm/detail/type_vec3.hpp>
 
 namespace Engine {
 
@@ -18,7 +17,7 @@ namespace Engine {
 	class ENGINE_API LightComponent : public Component
 	{
 	public:
-		~LightComponent();
+		virtual ~LightComponent() override = default;
 
 		/// <summary>
 		/// Sets the name of the light. This is used internally 
@@ -30,13 +29,13 @@ namespace Engine {
 		/// <param name="name">The new name of the light. 
 		/// NOTE: Unless you want to have multiple references to the same light,
 		/// prefix this with the entity name for safety.</param>
-		void SetLightName(eastl::string name);
+		void SetLightName(std::string name);
 
 		/// <summary>
 		/// Returns the name of the light. The default name is the entity name.
 		/// </summary>
 		/// <returns>The name of the light.</returns>
-		eastl::string GetLightName() const;
+		std::string GetLightName() const;
 
 		/// <summary>
 		/// Sets the type of the light. NOTE: the type non-existent (-1) disables the light.
@@ -142,33 +141,33 @@ namespace Engine {
 		/// <param name="coneOuterAngle">The angle of spot light that is the outer most angle a pixel can still recieve incoming light.
 		/// If a pixel is between the inner and outer angle the strength of the light will slowly fade depending how close to the
 		/// outer angle the pixel is. Only used for spot lights.</param>
-		explicit LightComponent(eastl::string name, LightType type, glm::vec3 position, glm::vec3 direction, glm::vec3 color,
+		explicit LightComponent(std::string name, LightType type, glm::vec3 position, glm::vec3 direction, glm::vec3 color,
 			float radius, float attunuation, float coneInnerAngle, float coneOuterAngle) noexcept;
 
 		/// <summary>
 		/// Creates a new light component with the given name, but doesn't set the variables for the light.
 		/// </summary>
 		/// <param name="name">The name to use for the light.</param>
-		explicit LightComponent(eastl::string name) noexcept;
+		explicit LightComponent(std::string name) noexcept;
 
 	private:
 		friend class Entity;
 
-		void InitializeComponent() override;
+		virtual void InitializeComponent(const std::vector<std::shared_ptr<Component>>& availableComponents) override;
 
-		void Update() override;
+		virtual void Update() override;
 
-		eastl::string lightName;
+		std::string lightName;
 
 		bool vulkanEnabled;
 		bool active;
 		bool created;
 
 #ifdef USING_OPENGL
-		eastl::weak_ptr<Renderer> renderer;
+		std::weak_ptr<Renderer> renderer;
 #endif
 #ifdef USING_VULKAN
-		eastl::weak_ptr<VulkanRenderer> renderer;
+		std::weak_ptr<VulkanRenderer> renderer;
 #endif
 
 		Light lightInfo;

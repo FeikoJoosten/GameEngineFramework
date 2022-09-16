@@ -2,15 +2,15 @@
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
 
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
+#include <vulkan/vulkan.h>
 
 #include "Engine/Renderer/Vulkan/VulkanPipeline.hpp"
 #include "Engine/Renderer/Vulkan/VulkanLogicalDevice.hpp"
 #include "Engine/Texture/VulkanTexture.hpp"
 #include "Engine/Renderer/Vulkan/VulkanBuffer.hpp"
 #include "Engine/Renderer/Vulkan/VulkanDescriptorPool.hpp"
-#include <ThirdParty/glm/glm/glm.hpp>
-#include <ThirdParty/EASTL-master/include/EASTL/shared_ptr.h>
+#include <glm/glm.hpp>
+#include <memory>
 
 namespace Engine {
 
@@ -24,7 +24,7 @@ namespace Engine {
 
 		void StartRender(VkCommandBuffer renderPassBuffer, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
-		void RenderSprite(eastl::weak_ptr<VulkanTexture> texture, glm::mat4 modelMatrix);
+		void RenderSprite(std::weak_ptr<VulkanTexture> texture, glm::mat4 modelMatrix);
 
 		void FinishRender();
 
@@ -33,13 +33,13 @@ namespace Engine {
 		void Recreate();
 
 	protected:
-		eastl::unique_ptr<VulkanPipeline> renderPassPipeline;
+		std::unique_ptr<VulkanPipeline> renderPassPipeline;
 
-		eastl::unique_ptr<VulkanBuffer> uboBuffer;
-		eastl::unique_ptr<VulkanBuffer> vertexBuffer;
-		eastl::unique_ptr<VulkanBuffer> indexBuffer;
+		std::unique_ptr<VulkanBuffer> uboBuffer;
+		std::unique_ptr<VulkanBuffer> vertexBuffer;
+		std::unique_ptr<VulkanBuffer> indexBuffer;
 
-		eastl::vector<uint32_t> indices;
+		std::vector<uint32_t> indices;
 		
 		typedef struct {
 			glm::vec3 position;

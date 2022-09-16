@@ -1,103 +1,104 @@
 #include "Engine/Utility/Defines.hpp"
+#include "Engine/Window/Window.hpp"
 
 #ifdef USING_OPENGL
 #include "Engine/Renderer/OpenGLRenderer.hpp"
+#include "Engine/Renderer/OpenGLUtility.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
 #include "Engine/Renderer/imgui_impl_glfw_gl3.h"
 #include "Engine/Mesh/Mesh.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 
 namespace Engine {
-	OpenGLRenderer::OpenGLRenderer(eastl::string vertexShader, eastl::string fragmentShader) noexcept
+	OpenGLRenderer::OpenGLRenderer(const std::string& vertexShader, const std::string& fragmentShader)
 	{
-		this->shader = eastl::shared_ptr<OpenGLShader>(new OpenGLShader(vertexShader, fragmentShader));
+		ImGui_ImplGlfwGL3_Init(Window::Get()->GetGLFWWindow().lock().get());
+
+		this->shader = std::shared_ptr<OpenGLShader>(new OpenGLShader(vertexShader, fragmentShader));
 		projParam = this->shader->GetParameter("u_projection");
 		modelParam = this->shader->GetParameter("u_model");
 		viewParam = this->shader->GetParameter("u_view");
 		textureParam = this->shader->GetParameter("u_texture");
 		mainTextureColor = this->shader->GetParameter("u_mainTextColor");
 
-		positionAttrib = this->shader->GetAttribute("a_position");
-		normalAttrib = this->shader->GetAttribute("a_normal");
-		textureAttrib = this->shader->GetAttribute("a_texture");
+		positionAttribute = this->shader->GetAttribute("a_position");
+		normalAttribute = this->shader->GetAttribute("a_normal");
+		textureAttribute = this->shader->GetAttribute("a_texture");
 
-		ImGui_ImplGlfwGL3_Init(Engine::GetEngine().lock()->GetWindow().lock()->GetGLFWWindow().lock().get());
 	}
 
-	OpenGLRenderer::~OpenGLRenderer() noexcept
+	OpenGLRenderer::~OpenGLRenderer()
 	{
 		ImGui_ImplGlfwGL3_Shutdown();
+		window.reset(); // Keep window in memory so ImGUI can shutdown properly
 	}
 
 	void OpenGLRenderer::RendererBegin(const glm::mat4x4 & view, const glm::mat4x4 & projection)
 	{
 		ImGui_ImplGlfwGL3_NewFrame();
-		glViewport(0, 0, Engine::GetEngine().lock()->GetWindow().lock()->GetDisplayWidth(), Engine::GetEngine().lock()->GetWindow().lock()->GetDisplayHeight());
+		window = Window::Get();
+		glViewport(0, 0, window->GetDisplayWidth(), window->GetDisplayHeight());
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		shader->Activate();
 
-		viewParam.lock()->SetValue(view);
-		projParam.lock()->SetValue(projection);
+		viewParam->SetValue(view);
+		projParam->SetValue(projection);
 	}
 
-	void OpenGLRenderer::Render(const glm::mat4x4& modelMatrix, eastl::shared_ptr<Model> model, const glm::vec4& mainColor)
+	void OpenGLRenderer::Render(const glm::mat4x4& modelMatrix, const std::shared_ptr<Model> model, const glm::vec4& mainColor)
 	{
 		if (model == nullptr)
 			return;
 
-		modelParam.lock()->SetValue(modelMatrix);
-		mainTextureColor.lock()->SetValue(mainColor);
+		modelParam->SetValue(modelMatrix);
+		mainTextureColor->SetValue(mainColor);
 
-		eastl::vector<eastl::shared_ptr<Mesh>>& meshes = model->GetModelMeshes();
-		for (size_t i = 0, size = meshes.size(); i < size; ++i)
-		{
-			if (meshes[i] == nullptr) continue;
+		const std::vector<std::shared_ptr<Mesh>>& meshes = model->GetModelMeshes();
+		for (const std::shared_ptr<Mesh>& mesh : meshes) {
+			if (mesh == nullptr) continue;
 
-			if (glIsBuffer(GLuint(meshes[i]->GetVBO())) != GL_TRUE)
-			{
+			const GLuint vboBuffer = static_cast<GLuint>(mesh->GetVBO());
+			const GLuint eboBuffer = static_cast<GLuint>(mesh->GetEBO());
+			if (glIsBuffer(vboBuffer) != GL_TRUE)
 				_ASSERT("The vertex buffer is not a valid buffer (VBO).");
-			}
-			if (glIsBuffer(GLuint(meshes[i]->GetEBO())) != GL_TRUE)
-			{
+			if (glIsBuffer(eboBuffer) != GL_TRUE)
 				_ASSERT("The index buffer is not a valid buffer (EBO)");
-			}
 
 			// Bind the buffers to the global state
-			glBindBuffer(GL_ARRAY_BUFFER, GLuint(meshes[i]->GetVBO()));
-			glGetError();
+			glBindBuffer(GL_ARRAY_BUFFER, vboBuffer);
+			glCheckError();
 
 			// Default to VBO values, the pointer addresses are interpreted as byte-offsets.
 			const void* firstPosition = reinterpret_cast<const void*>(offsetof(Vertex, position));
 			const void* firstNormal = reinterpret_cast<const void*>(offsetof(Vertex, normal));
 			const void* firstTexture = reinterpret_cast<const void*>(offsetof(Vertex, texCoords));
 
-			GLsizei stride = sizeof(Vertex);
-			positionAttrib.lock()->SetAttributePointer(3, GL_FLOAT, GL_FALSE, stride, firstPosition);
-			normalAttrib.lock()->SetAttributePointer(3, GL_FLOAT, GL_FALSE, stride, firstNormal);
-			textureAttrib.lock()->SetAttributePointer(2, GL_FLOAT, GL_FALSE, stride, firstTexture);
+			constexpr GLsizei stride = sizeof(Vertex);
+			positionAttribute->SetAttributePointer(3, GL_FLOAT, GL_FALSE, stride, firstPosition);
+			normalAttribute->SetAttributePointer(3, GL_FLOAT, GL_FALSE, stride, firstNormal);
+			textureAttribute->SetAttributePointer(2, GL_FLOAT, GL_FALSE, stride, firstTexture);
 
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GLuint(meshes[i]->GetEBO()));
-			glGetError();
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboBuffer);
+			glCheckError();
 
-			if (model->GetMeshMaterial(meshes[i])->IsDiffuseLoaded())
-			{
-				textureParam.lock()->SetValue(*model->GetMeshMaterial(meshes[i])->GetDiffuseTexture().lock());
-			}
-			glGetError();
+			const std::shared_ptr<Material> meshMaterial = model->GetMeshMaterial(mesh);
+			if (meshMaterial->IsDiffuseLoaded())
+				textureParam->SetValue(*meshMaterial->GetDiffuseTexture().lock());
+			glCheckError();
 
-			glDrawElements(GL_TRIANGLES, GLsizei(meshes[i]->indices.size()), GL_UNSIGNED_INT, reinterpret_cast<const void*>(0));
-			glGetError();
+			glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh->indices.size()), GL_UNSIGNED_INT, nullptr);
+			glCheckError();
 
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glGetError();
+			glCheckError();
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 1);
-			glGetError();
+			glCheckError();
 
-			positionAttrib.lock()->DisableAttributePointer();
-			normalAttrib.lock()->DisableAttributePointer();
-			textureAttrib.lock()->DisableAttributePointer();
+			positionAttribute->DisableAttributePointer();
+			normalAttribute->DisableAttributePointer();
+			textureAttribute->DisableAttributePointer();
 		}
 	}
 
@@ -105,7 +106,7 @@ namespace Engine {
 	{
 		ImGui::Render();
 		shader->Deactivate();
-		Engine::GetEngine().lock()->GetWindow().lock()->SwapBuffers();
+		Window::Get()->SwapBuffers();
 	}
 } // namespace Engine
 #endif // USING_OPENGL

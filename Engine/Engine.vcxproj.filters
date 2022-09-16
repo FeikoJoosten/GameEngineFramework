@@ -121,12 +121,30 @@
     <Filter Include="Source Files\Particle System">
       <UniqueIdentifier>{72c914b8-f1dc-4175-b053-5245c2c34cba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application">
+      <UniqueIdentifier>{5605a1db-71f8-4726-b102-9cca86068494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Application">
+      <UniqueIdentifier>{2fc5b332-3f7a-4206-bcaf-41ce78ff7406}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{a75be5ec-6740-4d78-b949-ee36ecbb34f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene">
+      <UniqueIdentifier>{244fdac5-cf09-45bb-b288-a2c69af45430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AssetManagement">
+      <UniqueIdentifier>{9a268d5f-6308-4eb7-9934-dfce0acc6731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\AssetManagement">
+      <UniqueIdentifier>{3f226689-0844-4008-885b-a64ed2f6b0f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="api.hpp">
+    <ClInclude Include="Api.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="engine.hpp">
+    <ClInclude Include="Engine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Components\Component.hpp">
@@ -139,9 +157,6 @@
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Utility\Defines.hpp">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\NewOverrides.hpp">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Components\ModelComponent.hpp">
@@ -210,7 +225,7 @@
     <ClInclude Include="Utility\Event.hpp">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Camera\Camera.hpp">
+    <ClInclude Include="Camera\CameraComponent.hpp">
       <Filter>Header Files\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Camera\Frustum.hpp">
@@ -237,16 +252,10 @@
     <ClInclude Include="Animation\Skeleton.hpp">
       <Filter>Header Files\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Collision\CollisionCallback.hpp">
-      <Filter>Header Files\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="Collision\CollisionSystem.hpp">
       <Filter>Header Files\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Collision\CollisionTypes.hpp">
-      <Filter>Header Files\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Collision\RaycastCallback.hpp">
       <Filter>Header Files\Collision</Filter>
     </ClInclude>
     <ClInclude Include="Components\AnimationComponent.hpp">
@@ -330,8 +339,38 @@
     <ClInclude Include="Utility\Vertex.hpp">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\stb_image.h">
-      <Filter>Header Files\Utility</Filter>
+    <ClInclude Include="Components\RenderComponent.hpp">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\CameraManager.hpp">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Application.hpp">
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.hpp">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneManager.hpp">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\EngineSettings.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\AssetManager.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\Asset.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandLineArguments\CommandLineArgumentsManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\OpenGLUtility.hpp">
+      <Filter>Header Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -346,9 +385,6 @@
     </ClCompile>
     <ClCompile Include="Entity\EntitySystem.cpp">
       <Filter>Source Files\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\NewOverrides.cpp">
-      <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Components\ModelComponent.cpp">
       <Filter>Source Files\Components</Filter>
@@ -410,7 +446,7 @@
     <ClCompile Include="Mesh\OpenGLMesh.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Camera\Camera.cpp">
+    <ClCompile Include="Camera\CameraComponent.cpp">
       <Filter>Source Files\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Camera\Frustum.cpp">
@@ -437,13 +473,7 @@
     <ClCompile Include="Animation\Skeleton.cpp">
       <Filter>Source Files\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Collision\CollisionCallback.cpp">
-      <Filter>Source Files\Collision</Filter>
-    </ClCompile>
     <ClCompile Include="Collision\CollisionSystem.cpp">
-      <Filter>Source Files\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Collision\RaycastCallback.cpp">
       <Filter>Source Files\Collision</Filter>
     </ClCompile>
     <ClCompile Include="Components\AnimationComponent.cpp">
@@ -511,6 +541,39 @@
     </ClCompile>
     <ClCompile Include="Utility\Logging.cpp">
       <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\RenderComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Application.cpp">
+      <Filter>Source Files\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\Animation.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneManager.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\EngineSettings.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\AssetManager.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\Asset.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandLineArguments\CommandLineArgumentsManager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

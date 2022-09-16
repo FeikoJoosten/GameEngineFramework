@@ -1,16 +1,21 @@
 #include "Game/ImGui/ImGuiRenderer.hpp"
 #include "Engine/Utility/Event.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
+#include "Engine/Renderer/Renderer.hpp"
+#include "Engine/Window/Window.hpp"
+
+#include <glm/detail/type_vec.hpp>
+
 
 ImGuiRenderer::ImGuiRenderer()
 {
-	Engine::Engine::GetEngine().lock()->GetRenderer().lock()->OnRender += Sharp::EventHandler::Bind(MainMenu);
+	Engine::Renderer::Get()->PostRenderComponentsRenderEvent += Sharp::EventHandler::Bind(MainMenu);
 }
 
 ImGuiRenderer::~ImGuiRenderer()
 {
-	Engine::Engine::GetEngine().lock()->GetRenderer().lock()->OnRender -= Sharp::EventHandler::Bind(MainMenu);
+	Engine::Renderer::Get()->PostRenderComponentsRenderEvent -= Sharp::EventHandler::Bind(MainMenu);
 }
 
 static bool openMainMenu = true;
@@ -19,8 +24,9 @@ static bool open = true;
 void ImGuiRenderer::MainMenu()
 {
 	// Center the window
-	glm::vec2 windowSize = glm::vec2(Engine::Engine::GetEngine().lock()->GetWindow().lock()->GetWidth(), Engine::Engine::GetEngine().lock()->GetWindow().lock()->GetHeight());
-	ImGuiWindowFlags windowFlags =
+	const std::shared_ptr<Engine::Window> window = Engine::Window::Get();
+	const glm::vec2 windowSize = glm::vec2(window->GetWidth(), window->GetHeight());
+	constexpr ImGuiWindowFlags windowFlags =
 		ImGuiWindowFlags_NoTitleBar |
 		ImGuiWindowFlags_NoResize |
 		ImGuiWindowFlags_NoMove |
@@ -31,14 +37,14 @@ void ImGuiRenderer::MainMenu()
 	// Main Menu
 	if (openMainMenu)
 	{
-		ImVec2 imGuiWindowSize = ImVec2(200, 75);
+		const ImVec2 imGuiWindowSize = ImVec2(200, 75);
 		ImGui::SetNextWindowSize(imGuiWindowSize, ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowPos(ImVec2((windowSize.x * 0.5f), (windowSize.y * 0.5f)), ImGuiCond_FirstUseEver, ImVec2(0.5f, 0.5));
 		ImGui::Begin("MainMenu", &open, ImVec2(420, 50), 0.f, windowFlags);
 
 		if (ImGui::Button("Quit Game", ImVec2(200, 30)))
 		{
-			Engine::Engine::GetEngine().lock()->GetWindow().lock()->SetShouldClose(true);
+			window->SetShouldClose(true);
 		}
 		ImGui::End();
 	}

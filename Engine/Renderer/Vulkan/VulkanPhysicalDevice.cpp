@@ -2,11 +2,11 @@
 #ifdef USING_VULKAN
 
 #include "Engine/Renderer/Vulkan/VulkanInstance.hpp"
-#include <ThirdParty/EASTL-master/include/EASTL/map.h>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
-#include <ThirdParty/EASTL-master/include/EASTL/utility.h>
-#include <ThirdParty/EASTL-master/include/EASTL/algorithm.h>
-#include <ThirdParty/EASTL-master/include/EASTL/numeric_limits.h>
+#include <map>
+#include <vector>
+#include <utility>
+#include <algorithm>
+#include <numeric>
 
 namespace Engine {
 
@@ -15,7 +15,7 @@ namespace Engine {
 
 		uint32_t familyCount = 0;
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &familyCount, nullptr);
-		eastl::vector<VkQueueFamilyProperties> properties(familyCount);
+		std::vector<VkQueueFamilyProperties> properties(familyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &familyCount, properties.data());
 
 		for (int i = 0; i < static_cast<int>(properties.size()); i++) {
@@ -69,16 +69,16 @@ namespace Engine {
 		return details;
 	}
 
-	VulkanPhysicalDevice * VulkanPhysicalDevice::GetBestPhysicalDevice(VulkanInstance * instance, VkSurfaceKHR surface, eastl::vector<const char*> requiredExtensions, VulkanDeviceFeatures_t requiredFeatures, VulkanDeviceFeatures_t optionalFeatures, VulkanDeviceQueueRequestedFamilies_t requestedQueueFamilies, bool GPU)
+	VulkanPhysicalDevice * VulkanPhysicalDevice::GetBestPhysicalDevice(VulkanInstance * instance, VkSurfaceKHR surface, std::vector<const char*> requiredExtensions, VulkanDeviceFeatures_t requiredFeatures, VulkanDeviceFeatures_t optionalFeatures, VulkanDeviceQueueRequestedFamilies_t requestedQueueFamilies, bool GPU)
 	{
 		//return nullptr;
 		uint32_t deviceCount = 0;
 		vkEnumeratePhysicalDevices(instance->GetInstance(), &deviceCount, nullptr);
 		if (deviceCount < 1)
 			return nullptr;
-		eastl::vector<VkPhysicalDevice> devices(deviceCount);
+		std::vector<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(instance->GetInstance(), &deviceCount, devices.data());
-		eastl::multimap<float, VkPhysicalDevice> selectedDevices;
+		std::multimap<float, VkPhysicalDevice> selectedDevices;
 		for (int i = 0; i < static_cast<int>(devices.size()); i++) {
 			VkPhysicalDeviceProperties deviceProperties;
 			VkPhysicalDeviceFeatures deviceFeatures;
@@ -92,7 +92,7 @@ namespace Engine {
 
 			uint32_t extensionCount = 0;
 			vkEnumerateDeviceExtensionProperties(devices[i], NULL, &extensionCount, nullptr);
-			eastl::vector<VkExtensionProperties> extensions(extensionCount);
+			std::vector<VkExtensionProperties> extensions(extensionCount);
 			vkEnumerateDeviceExtensionProperties(devices[i], NULL, &extensionCount, extensions.data());
 
 			bool extensionNotFound = false;
@@ -155,7 +155,7 @@ namespace Engine {
 							score += -1.f*optionalFeaturesValues[j];
 					}
 				}
-				selectedDevices.insert(eastl::make_pair(score, devices[i]));
+				selectedDevices.insert(std::make_pair(score, devices[i]));
 			}
 		}
 		if (selectedDevices.rbegin()->first > 0.f) {
@@ -163,12 +163,12 @@ namespace Engine {
 		}
 		return nullptr;
 	}
-	eastl::vector<VulkanPhysicalDevice*> VulkanPhysicalDevice::GetAllPhysicalDevices(VulkanInstance* instance, VkSurfaceKHR surface)
+	std::vector<VulkanPhysicalDevice*> VulkanPhysicalDevice::GetAllPhysicalDevices(VulkanInstance* instance, VkSurfaceKHR surface)
 	{
 		uint32_t deviceCount = 0;
 		vkEnumeratePhysicalDevices(instance->GetInstance(), &deviceCount, nullptr);
-		eastl::vector<VulkanPhysicalDevice*> Vulkandevices(deviceCount);
-		eastl::vector<VkPhysicalDevice> devices(deviceCount);
+		std::vector<VulkanPhysicalDevice*> Vulkandevices(deviceCount);
+		std::vector<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(instance->GetInstance(), &deviceCount, devices.data());
 		for (int i = 0; i < static_cast<int>(devices.size()); i++) {
 			Vulkandevices[i] = new VulkanPhysicalDevice(devices[i], surface);
@@ -199,7 +199,7 @@ namespace Engine {
 		return details;
 	}
 
-	VkSurfaceFormatKHR VulkanPhysicalDevice::ChooseSwapSurfaceFormat(const eastl::vector<VkSurfaceFormatKHR>& availableFormats)
+	VkSurfaceFormatKHR VulkanPhysicalDevice::ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats)
 	{
 
 		if (availableFormats.size() == 1 && availableFormats[0].format == VK_FORMAT_UNDEFINED) {
@@ -216,7 +216,7 @@ namespace Engine {
 
 	}
 
-	VkPresentModeKHR VulkanPhysicalDevice::ChooseSwapPresentMode(const eastl::vector<VkPresentModeKHR> availablePresentModes)
+	VkPresentModeKHR VulkanPhysicalDevice::ChooseSwapPresentMode(const std::vector<VkPresentModeKHR> availablePresentModes)
 	{
 		VkPresentModeKHR bestMode = VK_PRESENT_MODE_FIFO_KHR;
 
@@ -235,7 +235,7 @@ namespace Engine {
 
 	VkExtent2D VulkanPhysicalDevice::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR & capabilities, int width, int height)
 	{
-		if (capabilities.currentExtent.width != eastl::numeric_limits<uint32_t>::max()) {
+		if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
 			return capabilities.currentExtent;
 		}
 		else {

@@ -1,6 +1,7 @@
 #include "Engine/Renderer/Vulkan/VulkanPipeline.hpp"
 
 #ifdef USING_VULKAN
+#include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/Renderer/Vulkan/VulkanLogicalDevice.hpp"
 #include "Engine/Renderer/VulkanRenderer.hpp"
 #include <fstream>
@@ -11,8 +12,7 @@ namespace Engine {
 
 	uint32_t VulkanPipeline::pipelineIdCounter = 0;
 
-	VulkanPipeline::VulkanPipeline(VulkanLogicalDevice* device, VulkanRenderer* renderer)
-	{
+	VulkanPipeline::VulkanPipeline(VulkanLogicalDevice* device, VulkanRenderer* renderer) {
 		this->pipelineId = pipelineIdCounter;
 		pipelineIdCounter++;
 
@@ -86,56 +86,54 @@ namespace Engine {
 
 	}
 
-	VulkanPipeline::~VulkanPipeline()
-	{
-		if (pipeline != 0)
-			vkDestroyPipeline(device->GetDevice(), pipeline, nullptr);
+	VulkanPipeline::~VulkanPipeline() {
+		const VkDevice& vulkanDevice = device->GetDevice();
+		if (pipeline != nullptr)
+			vkDestroyPipeline(vulkanDevice, pipeline, nullptr);
 
-		if (pipelineLayout != 0)
-			vkDestroyPipelineLayout(device->GetDevice(), pipelineLayout, nullptr);
+		if (pipelineLayout != nullptr)
+			vkDestroyPipelineLayout(vulkanDevice, pipelineLayout, nullptr);
 
-		for (int i = 0; i < static_cast<int>(descriptorSets.size()); i++) {
-			vkDestroyDescriptorSetLayout(device->GetDevice(), descriptorSets[i].descriptorSet, nullptr);
-
+		for (const DescriptorSet_t& descriptorSet : descriptorSets) {
+			vkDestroyDescriptorSetLayout(vulkanDevice, descriptorSet.descriptorSet, nullptr);
 		}
 
-		if (descriptorSetLayout != 0)
-			vkDestroyDescriptorSetLayout(device->GetDevice(), descriptorSetLayout, nullptr);
+		if (descriptorSetLayout != nullptr)
+			vkDestroyDescriptorSetLayout(vulkanDevice, descriptorSetLayout, nullptr);
 
-		if (vertexShaderModule != 0)
-			vkDestroyShaderModule(device->GetDevice(), vertexShaderModule, nullptr);
+		if (vertexShaderModule != nullptr)
+			vkDestroyShaderModule(vulkanDevice, vertexShaderModule, nullptr);
 
-		if (teslationEvaluationShaderModule != 0)
-			vkDestroyShaderModule(device->GetDevice(), teslationEvaluationShaderModule, nullptr);
+		if (teslationEvaluationShaderModule != nullptr)
+			vkDestroyShaderModule(vulkanDevice, teslationEvaluationShaderModule, nullptr);
 
-		if (teslationControlShaderModule != 0)
-			vkDestroyShaderModule(device->GetDevice(), teslationControlShaderModule, nullptr);
+		if (teslationControlShaderModule != nullptr)
+			vkDestroyShaderModule(vulkanDevice, teslationControlShaderModule, nullptr);
 
-		if (geometryShaderModule != 0)
-			vkDestroyShaderModule(device->GetDevice(), geometryShaderModule, nullptr);
+		if (geometryShaderModule != nullptr)
+			vkDestroyShaderModule(vulkanDevice, geometryShaderModule, nullptr);
 
-		if (fragmentShaderModule != 0)
-			vkDestroyShaderModule(device->GetDevice(), fragmentShaderModule, nullptr);
+		if (fragmentShaderModule != nullptr)
+			vkDestroyShaderModule(vulkanDevice, fragmentShaderModule, nullptr);
 
 	}
 
-	bool VulkanPipeline::LoadShader(SHADER_TYPE type, eastl::string name, bool spirv)
-	{
+	bool VulkanPipeline::LoadShader(SHADER_TYPE type, std::string name, bool spirv) {
 		if (!spirv)
 			return false;
 
-		eastl::string path = "Resources/Shaders/Vulkan/Compiled/" + name;
+		std::string path = AssetManager::Get()->GetProjectRoot() + "Resources/Shaders/Vulkan/Compiled/" + name;
 
 		FILE* file = fopen(path.c_str(), "rb");
 
 		if (!file) {
-			eastl::string s = "[ERROR] Opening shader file " + path + " failed";
+			std::string s = "[ERROR] Opening shader file " + path + " failed";
 			std::cout << s.c_str() << std::endl;
 			return false;
 		}
 		fseek(file, 0L, SEEK_END);
 		size_t fileSize = static_cast<size_t>(ftell(file));
-		eastl::vector<char> buffer(fileSize);
+		std::vector<char> buffer(fileSize);
 		fseek(file, 0L, SEEK_SET);
 		fread(buffer.data(), sizeof(char), fileSize, file);
 
@@ -147,8 +145,7 @@ namespace Engine {
 			ret = CompileShaderModule(buffer, &vertexShaderModule);
 			if (ret != 0) {
 				vertexShader.clear();
-			}
-			else {
+			} else {
 				VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
 				vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 				vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
@@ -222,8 +219,7 @@ namespace Engine {
 		return true;
 	}
 
-	int VulkanPipeline::Compile()
-	{
+	int VulkanPipeline::Compile() {
 		if (vertexShader.size() == 0)
 			return VULKAN_PIPELINE_COMPILE_MISSING_SHADER_VERTEX;
 		if (fragmentShader.size() == 0)
@@ -247,7 +243,7 @@ namespace Engine {
 		colorBlending.blendConstants[2] = 0.0f; // Optional
 		colorBlending.blendConstants[3] = 0.0f; // Optional
 
-		eastl::vector<VkDynamicState> dynamicStates;
+		std::vector<VkDynamicState> dynamicStates;
 
 		dynamicStates.push_back(VK_DYNAMIC_STATE_SCISSOR);
 
@@ -256,18 +252,17 @@ namespace Engine {
 		dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
 		dynamicState.pDynamicStates = dynamicStates.data();
 
-		eastl::vector<VkDescriptorSetLayout> descriptorLayouts;
+		std::vector<VkDescriptorSetLayout> descriptorLayouts;
 
-		for (int i = 0; i < static_cast<int>(descriptorSets.size()); i++) {
-			if (descriptorSets[i].descriptorSet == 0) {
+		for (DescriptorSet_t& descriptorSet : descriptorSets) {
+			if (descriptorSet.descriptorSet == nullptr) {
 				VkDescriptorSetLayoutCreateInfo createInfo = {};
 				createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-				createInfo.bindingCount = static_cast<uint32_t>(descriptorSets[i].descriptionSetLayoutBindings.size());
-				createInfo.pBindings = descriptorSets[i].descriptionSetLayoutBindings.data();
-				vkCreateDescriptorSetLayout(device->GetDevice(), &createInfo, nullptr, &descriptorSets[i].descriptorSet);
+				createInfo.bindingCount = static_cast<uint32_t>(descriptorSet.descriptionSetLayoutBindings.size());
+				createInfo.pBindings = descriptorSet.descriptionSetLayoutBindings.data();
+				vkCreateDescriptorSetLayout(device->GetDevice(), &createInfo, nullptr, &descriptorSet.descriptorSet);
 			}
-			descriptorLayouts.push_back(descriptorSets[i].descriptorSet);
-
+			descriptorLayouts.push_back(descriptorSet.descriptorSet);
 		}
 
 
@@ -278,12 +273,12 @@ namespace Engine {
 
 		VkResult res = vkCreatePipelineLayout(device->GetDevice(), &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating pipeline layout failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating pipeline layout failed";
 			std::cout << s.c_str() << std::endl;
 			return res;
 		}
 
-		eastl::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
 
 		for (int i = 0; i < 5; i++) {
 			if (ShaderStageCreateInfo[i].sType != 0) {
@@ -311,7 +306,7 @@ namespace Engine {
 
 		res = vkCreateGraphicsPipelines(device->GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating pipeline failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating pipeline failed";
 			std::cout << s.c_str() << std::endl;
 			return res;
 		}
@@ -319,8 +314,7 @@ namespace Engine {
 		return 0;
 	}
 
-	void VulkanPipeline::SetInputAssemblyState(VkPrimitiveTopology topology, bool primitiveRestartEnabled)
-	{
+	void VulkanPipeline::SetInputAssemblyState(VkPrimitiveTopology topology, bool primitiveRestartEnabled) {
 		InputAssemblyStateCreateInfo = {};
 		InputAssemblyStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		InputAssemblyStateCreateInfo.topology = topology;
@@ -330,8 +324,7 @@ namespace Engine {
 			InputAssemblyStateCreateInfo.primitiveRestartEnable = VK_FALSE;
 	}
 
-	void VulkanPipeline::AddVertexInputBindingDescription(uint32_t binding, uint32_t stride, VkVertexInputRate inputRate)
-	{
+	void VulkanPipeline::AddVertexInputBindingDescription(uint32_t binding, uint32_t stride, VkVertexInputRate inputRate) {
 		VkVertexInputBindingDescription description = {};
 		description.binding = binding;
 		description.stride = stride;
@@ -342,16 +335,14 @@ namespace Engine {
 		vertexInputInfo.pVertexBindingDescriptions = vertexInputBindingDescriptions.data();
 	}
 
-	void VulkanPipeline::AddVertexInputBindingDescription(VkVertexInputBindingDescription description)
-	{
+	void VulkanPipeline::AddVertexInputBindingDescription(VkVertexInputBindingDescription description) {
 		vertexInputBindingDescriptions.push_back(description);
 
 		vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(vertexInputBindingDescriptions.size());
 		vertexInputInfo.pVertexBindingDescriptions = vertexInputBindingDescriptions.data();
 	}
 
-	void VulkanPipeline::AddVertexInputAttributeDescription(uint32_t location, uint32_t binding, VkFormat format, uint32_t offset)
-	{
+	void VulkanPipeline::AddVertexInputAttributeDescription(uint32_t location, uint32_t binding, VkFormat format, uint32_t offset) {
 		VkVertexInputAttributeDescription description = {};
 		description.location = location;
 		description.binding = binding;
@@ -363,16 +354,14 @@ namespace Engine {
 		vertexInputInfo.pVertexAttributeDescriptions = vertexInputAttributeDescriptions.data();
 	}
 
-	void VulkanPipeline::AddVertexInputAttributeDescription(VkVertexInputAttributeDescription description)
-	{
+	void VulkanPipeline::AddVertexInputAttributeDescription(VkVertexInputAttributeDescription description) {
 		vertexInputAttributeDescriptions.push_back(description);
 
 		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexInputAttributeDescriptions.size());
 		vertexInputInfo.pVertexAttributeDescriptions = vertexInputAttributeDescriptions.data();
 	}
 
-	void VulkanPipeline::SetRasterizerSettings(VkBool32 depthClamp, VkBool32 discardEnable, VkPolygonMode polygonMode, float lineWidth, VkCullModeFlagBits culling, VkFrontFace frontFace, VkBool32 depthBiasEnabled, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor)
-	{
+	void VulkanPipeline::SetRasterizerSettings(VkBool32 depthClamp, VkBool32 discardEnable, VkPolygonMode polygonMode, float lineWidth, VkCullModeFlagBits culling, VkFrontFace frontFace, VkBool32 depthBiasEnabled, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor) {
 		rasterizer.depthClampEnable = depthClamp;
 		rasterizer.rasterizerDiscardEnable = discardEnable;
 		rasterizer.polygonMode = polygonMode;
@@ -385,8 +374,7 @@ namespace Engine {
 		rasterizer.depthBiasSlopeFactor = depthBiasSlopeFactor;
 	}
 
-	void VulkanPipeline::CreateColorBlendAttachment(VkBool32 blendEnabled, VkColorComponentFlags colorWriteMask, VkBlendFactor colorSrcFactor, VkBlendFactor colorDstFactor, VkBlendOp colorBlendOp, VkBlendFactor alphaSrcFactor, VkBlendFactor alphaDstFactor, VkBlendOp alphaBlendOp)
-	{
+	void VulkanPipeline::CreateColorBlendAttachment(VkBool32 blendEnabled, VkColorComponentFlags colorWriteMask, VkBlendFactor colorSrcFactor, VkBlendFactor colorDstFactor, VkBlendOp colorBlendOp, VkBlendFactor alphaSrcFactor, VkBlendFactor alphaDstFactor, VkBlendOp alphaBlendOp) {
 		VkPipelineColorBlendAttachmentState colorBlendAttachment;
 		colorBlendAttachment.blendEnable = blendEnabled;
 		colorBlendAttachment.colorWriteMask = colorWriteMask;
@@ -408,8 +396,7 @@ namespace Engine {
 		float maxDepthBounds,
 		VkBool32 stencilTestEnable,
 		VkStencilOpState front,
-		VkStencilOpState back)
-	{
+		VkStencilOpState back) {
 		depthStencilStateCreateInfo.depthTestEnable = depthTestEnable;
 		depthStencilStateCreateInfo.depthWriteEnable = depthWriteEnable;
 		depthStencilStateCreateInfo.depthCompareOp = depthCompareOp;
@@ -421,8 +408,7 @@ namespace Engine {
 		depthStencilStateCreateInfo.back = back;
 	}
 
-	void VulkanPipeline::AddDescriptorSetBinding(descriptorSetHandle set, uint32_t binding, VkDescriptorType type, uint32_t descriptorCount, VkShaderStageFlags shaderStage, const VkSampler * immutableSamplers)
-	{
+	void VulkanPipeline::AddDescriptorSetBinding(descriptorSetHandle set, uint32_t binding, VkDescriptorType type, uint32_t descriptorCount, VkShaderStageFlags shaderStage, const VkSampler* immutableSamplers) {
 		VkDescriptorSetLayoutBinding descriptorBinding = {};
 		descriptorBinding.binding = binding;
 		descriptorBinding.descriptorCount = descriptorCount;
@@ -430,26 +416,23 @@ namespace Engine {
 		descriptorBinding.stageFlags = shaderStage;
 		descriptorBinding.pImmutableSamplers = immutableSamplers;
 
-		if (set<descriptorSets.size()) {
+		if (set < descriptorSets.size()) {
 			descriptorSets[set].descriptionSetLayoutBindings.push_back(descriptorBinding);
 		}
 	}
 
-	void VulkanPipeline::SetRenderPassInfo(VkRenderPass renderPass, uint32_t subPass)
-	{
+	void VulkanPipeline::SetRenderPassInfo(VkRenderPass renderPass, uint32_t subPass) {
 		this->renderPass = renderPass;
 		this->subPass = subPass;
 	}
 
-	VulkanPipeline::descriptorSetHandle VulkanPipeline::CreateDescriptorSet()
-	{
+	VulkanPipeline::descriptorSetHandle VulkanPipeline::CreateDescriptorSet() {
 		DescriptorSet_t set = {};
 		descriptorSets.push_back(set);
 		return descriptorSets.size() - 1;
 	}
 
-	VulkanPipeline::descriptorSetHandle VulkanPipeline::AddDescriptorSetLayout(VkDescriptorSetLayout layout)
-	{
+	VulkanPipeline::descriptorSetHandle VulkanPipeline::AddDescriptorSetLayout(VkDescriptorSetLayout layout) {
 		DescriptorSet_t set = {};
 		set.descriptorSet = layout;
 		set.external = true;
@@ -457,28 +440,23 @@ namespace Engine {
 		return descriptorSets.size() - 1;
 	}
 
-	VkDescriptorSetLayout VulkanPipeline::GetDescriptorSetLayout(descriptorSetHandle handle)
-	{
+	VkDescriptorSetLayout VulkanPipeline::GetDescriptorSetLayout(descriptorSetHandle handle) {
 		return descriptorSets[handle].descriptorSet;
 	}
 
-	VkPipeline VulkanPipeline::GetPipeline() const
-	{
+	VkPipeline VulkanPipeline::GetPipeline() const {
 		return pipeline;
 	}
 
-	VkPipelineLayout VulkanPipeline::GetPipelineLayout() const
-	{
+	VkPipelineLayout VulkanPipeline::GetPipelineLayout() const {
 		return pipelineLayout;
 	}
 
-	uint32_t VulkanPipeline::GetPipelineId() const
-	{
+	uint32_t VulkanPipeline::GetPipelineId() const {
 		return pipelineId;
 	}
 
-	void VulkanPipeline::AddPushConstantRange(VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size)
-	{
+	void VulkanPipeline::AddPushConstantRange(VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size) {
 		VkPushConstantRange range = {};
 		range.stageFlags = stageFlags;
 		range.size = size;
@@ -487,14 +465,12 @@ namespace Engine {
 		pushConstantRanges.push_back(range);
 	}
 
-	void VulkanPipeline::Clean() const
-	{
+	void VulkanPipeline::Clean() const {
 		vkDestroyPipeline(device->GetDevice(), pipeline, nullptr);
 		vkDestroyPipelineLayout(device->GetDevice(), pipelineLayout, nullptr);
 	}
 
-	void VulkanPipeline::Recreate()
-	{
+	void VulkanPipeline::Recreate() {
 		viewport = {};
 		viewport.x = 0.f;
 		viewport.y = 0.f;
@@ -525,7 +501,7 @@ namespace Engine {
 		colorBlending.blendConstants[2] = 0.0f; // Optional
 		colorBlending.blendConstants[3] = 0.0f; // Optional
 
-		eastl::vector<VkDynamicState> states;
+		std::vector<VkDynamicState> states;
 
 		states.push_back(VK_DYNAMIC_STATE_SCISSOR);
 
@@ -534,17 +510,17 @@ namespace Engine {
 		dynamicState.dynamicStateCount = static_cast<uint32_t>(states.size());
 		dynamicState.pDynamicStates = states.data();
 
-		eastl::vector<VkDescriptorSetLayout> descriptorLayouts;
+		std::vector<VkDescriptorSetLayout> descriptorLayouts;
 
-		for (int i = 0; i < static_cast<int>(descriptorSets.size()); i++) {
-			if (descriptorSets[i].descriptorSet == 0) {
+		for (DescriptorSet_t& descriptorSet : descriptorSets) {
+			if (descriptorSet.descriptorSet == nullptr) {
 				VkDescriptorSetLayoutCreateInfo createInfo = {};
 				createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-				createInfo.bindingCount = static_cast<uint32_t>(descriptorSets[i].descriptionSetLayoutBindings.size());
-				createInfo.pBindings = descriptorSets[i].descriptionSetLayoutBindings.data();
-				vkCreateDescriptorSetLayout(device->GetDevice(), &createInfo, nullptr, &descriptorSets[i].descriptorSet);
+				createInfo.bindingCount = static_cast<uint32_t>(descriptorSet.descriptionSetLayoutBindings.size());
+				createInfo.pBindings = descriptorSet.descriptionSetLayoutBindings.data();
+				vkCreateDescriptorSetLayout(device->GetDevice(), &createInfo, nullptr, &descriptorSet.descriptorSet);
 			}
-			descriptorLayouts.push_back(descriptorSets[i].descriptorSet);
+			descriptorLayouts.push_back(descriptorSet.descriptorSet);
 
 		}
 
@@ -553,11 +529,11 @@ namespace Engine {
 
 		VkResult res = vkCreatePipelineLayout(device->GetDevice(), &pipelineLayoutCreateInfo, nullptr, &pipelineLayout);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating pipeline layout failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating pipeline layout failed";
 			std::cout << s.c_str() << std::endl;
 		}
 
-		eastl::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+		std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
 
 		for (int i = 0; i < 5; i++) {
 			if (ShaderStageCreateInfo[i].sType != 0) {
@@ -585,14 +561,13 @@ namespace Engine {
 
 		res = vkCreateGraphicsPipelines(device->GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating pipeline failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating pipeline failed";
 			std::cout << s.c_str() << std::endl;
 		}
 
 	}
 
-	int VulkanPipeline::CompileShaderModule(eastl::vector<char> code, VkShaderModule * shaderModule)
-	{
+	int VulkanPipeline::CompileShaderModule(std::vector<char> code, VkShaderModule* shaderModule) {
 		VkShaderModuleCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		createInfo.codeSize = code.size();
@@ -600,7 +575,7 @@ namespace Engine {
 
 		VkResult res = vkCreateShaderModule(device->GetDevice(), &createInfo, nullptr, shaderModule);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating shader module failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating shader module failed";
 			std::cout << s.c_str() << std::endl;
 		}
 

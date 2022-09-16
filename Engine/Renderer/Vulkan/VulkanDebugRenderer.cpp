@@ -1,7 +1,7 @@
 #include "Engine/Renderer/Vulkan/VulkanDebugRenderer.hpp"
 #ifdef USING_VULKAN
 
-#include <ThirdParty/glm/glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Engine/Renderer/VulkanRenderer.hpp"
 
@@ -13,7 +13,7 @@ namespace Engine {
 		this->device = device;
 		this->descriptorPool = descriptorPool;
 
-		linePipeline = eastl::unique_ptr<VulkanPipeline>(new VulkanPipeline(device, renderer));
+		linePipeline = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(device, renderer));
 
 		linePipeline->LoadShader(VulkanPipeline::SHADER_TYPE::VERTEX_SHADER, "Line.vert.spv");
 		linePipeline->LoadShader(VulkanPipeline::SHADER_TYPE::FRAGMENT_SHADER, "Line.frag.spv");
@@ -37,15 +37,15 @@ namespace Engine {
 
 		linePipeline->Compile();
 
-		vertexBuffer = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
+		vertexBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
 			static_cast<uint32_t>(sizeof(VertexInfo_t) * 2), 
 			VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, true, renderer->GetGraphicsCommandPool()));
 
-		uniformBuffer = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
+		uniformBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
 			static_cast<uint32_t>(sizeof(Ubo_t)),
 			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, false, renderer->GetGraphicsCommandPool()));
 
-		eastl::vector<VertexInfo_t> vertexData = {
+		std::vector<VertexInfo_t> vertexData = {
 			{{0.f,0.f,0.f}},
 			{{0.f,1.f,0.f}}
 		};

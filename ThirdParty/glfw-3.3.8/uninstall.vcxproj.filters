@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\GameEngineFramework\ThirdParty\glfw-3.3.8\CMakeFiles\f07a0552982eda2d32d1641f385069ba\uninstall.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\Projects\GameEngineFramework\ThirdParty\glfw-3.3.8\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Projects\GameEngineFramework\ThirdParty\glfw-3.3.8\CMakeFiles\uninstall" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{290637E2-5099-3B20-9E21-A7ABC1423E38}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

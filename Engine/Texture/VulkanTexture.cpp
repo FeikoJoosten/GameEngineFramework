@@ -1,21 +1,19 @@
 #include "Engine/Texture/VulkanTexture.hpp"
 #include "Engine/Utility/Utility.hpp"
 #ifdef USING_VULKAN
+#include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/Renderer/VulkanRenderer.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 
-namespace Engine
-{
+namespace Engine {
 
-	VulkanTexture::VulkanTexture(const eastl::string& filename, int desiredChannels) : Texture(filename, desiredChannels)
-	{
-		eastl::string baseLocation = "Resources/Textures/";
-		baseLocation.append(filename);
-
+	VulkanTexture::VulkanTexture(const std::string& filename, int desiredChannels) : Texture(filename, desiredChannels) {
+		const std::string baseLocation = "Resources/Textures/" + filename;
+		const std::string defaultTextureLocation = (AssetManager::Get()->GetProjectRoot() + "Resources/Textures/default.png");
 		stbi_uc* textureData = stbi_load(
 			Utility::FileExists(baseLocation) ?
-			baseLocation.c_str() :
-			"Resources/Textures/default.png",
+			(AssetManager::Get()->GetProjectRoot() + baseLocation).c_str() :
+			defaultTextureLocation.c_str(),
 			&width, &height, &channels, STBI_rgb_alpha);
 
 		VulkanTexture::CreateTextureWithData(textureData, true);
@@ -24,18 +22,15 @@ namespace Engine
 	}
 
 	VulkanTexture::VulkanTexture(int width, int height) : Texture(width, height), image(0), imageView(0), sampler(0),
-	                                                      storage(false)
-	{
-	}
+		storage(false) {}
 
 	VulkanRenderer* VulkanTexture::renderer = nullptr;
-	VulkanLogicalDevice *VulkanTexture::device = nullptr;
+	VulkanLogicalDevice* VulkanTexture::device = nullptr;
 	VulkanDescriptorPool* VulkanTexture::descriptorPool = nullptr;
 	VmaAllocator VulkanTexture::allocator = VK_NULL_HANDLE;
 	VkCommandPool VulkanTexture::commandPool = VK_NULL_HANDLE;
 
-	void VulkanTexture::InitTextureSystem(VulkanRenderer* renderer, VulkanLogicalDevice * device, VulkanDescriptorPool* descriptorPool, VmaAllocator allocator, VkCommandPool commandPool)
-	{
+	void VulkanTexture::InitTextureSystem(VulkanRenderer* renderer, VulkanLogicalDevice* device, VulkanDescriptorPool* descriptorPool, VmaAllocator allocator, VkCommandPool commandPool) {
 		VulkanTexture::renderer = renderer;
 		VulkanTexture::device = device;
 		VulkanTexture::descriptorPool = descriptorPool;
@@ -43,8 +38,7 @@ namespace Engine
 		VulkanTexture::commandPool = commandPool;
 	}
 
-	VulkanTexture::~VulkanTexture()
-	{
+	VulkanTexture::~VulkanTexture() {
 		vkQueueWaitIdle(device->GetGraphicsQueue());
 
 		vkDestroySampler(device->GetDevice(), sampler, nullptr);
@@ -53,8 +47,7 @@ namespace Engine
 		vmaDestroyImage(allocator, image, allocation);
 	}
 
-	void VulkanTexture::CreateTextureWithData(stbi_uc* data, bool genMipMaps, TextureDataSize bytes, bool storage)
-	{
+	void VulkanTexture::CreateTextureWithData(stbi_uc* data, bool genMipMaps, TextureDataSize bytes, bool storage) {
 		this->dataSize = bytes;
 		this->storage = storage;
 
@@ -101,7 +94,7 @@ namespace Engine
 		void* dst;
 
 		vmaMapMemory(allocator, stagingBufferAllocation, &dst);
-		memcpy(dst, data, static_cast<size_t>(width*height * 4 * byteSize));
+		memcpy(dst, data, static_cast<size_t>(width * height * 4 * byteSize));
 		vmaUnmapMemory(allocator, stagingBufferAllocation);
 
 		VkFormat format;
@@ -280,8 +273,7 @@ namespace Engine
 
 		vkCreateSampler(device->GetDevice(), &samplerInfo, nullptr, &sampler);
 	}
-	void VulkanTexture::SetSampler(VkSamplerCreateInfo samplerInfo)
-	{
+	void VulkanTexture::SetSampler(VkSamplerCreateInfo samplerInfo) {
 		if (sampler != VK_NULL_HANDLE)
 			vkDestroySampler(device->GetDevice(), sampler, nullptr);
 		vkCreateSampler(device->GetDevice(), &samplerInfo, nullptr, &sampler);
@@ -296,8 +288,7 @@ namespace Engine
 						if (storage) {
 							type = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
 							layout = VK_IMAGE_LAYOUT_GENERAL;
-						}
-						else {
+						} else {
 							type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 							layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 						}
@@ -311,20 +302,16 @@ namespace Engine
 			}
 		}
 	}
-	VkImage VulkanTexture::GetImage() const
-	{
+	VkImage VulkanTexture::GetImage() const {
 		return image;
 	}
-	VkImageView VulkanTexture::GetImageView() const
-	{
+	VkImageView VulkanTexture::GetImageView() const {
 		return imageView;
 	}
-	VkSampler VulkanTexture::GetSampler() const
-	{
+	VkSampler VulkanTexture::GetSampler() const {
 		return sampler;
 	}
-	VkDescriptorSet VulkanTexture::CreateDescriptorSet(size_t threadID, size_t pipelineID, size_t set, VkDescriptorSetLayout layout)
-	{
+	VkDescriptorSet VulkanTexture::CreateDescriptorSet(size_t threadID, size_t pipelineID, size_t set, VkDescriptorSetLayout layout) {
 		if (descriptorSets.size() <= pipelineID) {
 			descriptorSets.resize(pipelineID + 1);
 		}
@@ -343,8 +330,7 @@ namespace Engine
 		if (storage) {
 			type = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
 			imageLayout = VK_IMAGE_LAYOUT_GENERAL;
-		}
-		else {
+		} else {
 			type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		}
@@ -355,8 +341,7 @@ namespace Engine
 
 		return descriptorSets[pipelineID][set][threadID];
 	}
-	VkDescriptorSet VulkanTexture::GetDescriptorSet(size_t threadID, size_t pipelineID, size_t set)
-	{
+	VkDescriptorSet VulkanTexture::GetDescriptorSet(size_t threadID, size_t pipelineID, size_t set) {
 		if (pipelineID >= descriptorSets.size())
 			return VK_NULL_HANDLE;
 		if (set >= descriptorSets[pipelineID].size())

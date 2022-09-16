@@ -1,9 +1,9 @@
 #pragma once
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
+#include <vulkan/vulkan.h>
 
-#include "Engine/api.hpp"
+#include "Engine/Api.hpp"
 
 namespace Engine {
 

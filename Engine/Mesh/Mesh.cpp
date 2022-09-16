@@ -1,16 +1,13 @@
 #include "Engine/Mesh/Mesh.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 
 namespace Engine
 {
-	Mesh::Mesh(eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices)
+	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned> indices)
 	{
 		//assign the relevant members
 		this->vertices = vertices;
 		this->indices = indices;
-
-		//set up the mesh - vbo, vao, ebo
-		Mesh::SetUpMesh();
 	}
 
 	void Mesh::SetUpMesh()

@@ -1,12 +1,12 @@
 #include "Engine/Material/Material.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
+#include "Engine/Resources/ResourceManager.hpp"
 
-#include <ThirdParty/stb/stb_image.h>
-
+#include <stb/stb_image.h>
 
 namespace Engine {
 
-	Material::Material(const aiScene* scene, uint32_t materialIndex, eastl::string modelName)
+	Material::Material(const aiScene* scene, uint32_t materialIndex, std::string modelName)
 	{
 		if (scene->mNumMaterials <= materialIndex)
 			return;
@@ -34,7 +34,7 @@ namespace Engine {
 		if (bumpMapTexture.expired() == false)
 			materialData_.bumpMapLoaded = 1;
 
-		missingTexture = Engine::GetEngine().lock()->GetResourceManager().lock()->CreateTexture("default.png");
+		missingTexture = ResourceManager::Get()->CreateTexture("default.png");
 		
 		aiMaterial* mat = scene->mMaterials[materialIndex];
 		aiColor3D color(0.f, 0.f, 0.f);
@@ -80,9 +80,9 @@ namespace Engine {
 	{
 	}
 
-	void Material::SetDiffuseTexture(eastl::string diffuseTextureName)
+	void Material::SetDiffuseTexture(const std::string& diffuseTextureName)
 	{
-		diffuseTexture = Engine::GetEngine().lock()->GetResourceManager().lock()->CreateTexture(diffuseTextureName);
+		diffuseTexture = ResourceManager::Get()->CreateTexture(diffuseTextureName);
 
 		if (materialData_.diffuseTextureLoaded != 1 && diffuseTexture.expired() == false)
 		{
@@ -95,22 +95,22 @@ namespace Engine {
 		}
 	}
 
-	void Material::SetDiffuseTexture(eastl::shared_ptr<Texture> diffuseTexture)
+	void Material::SetDiffuseTexture(std::shared_ptr<Texture> newDiffuseTexture)
 	{
-		this->diffuseTexture = diffuseTexture;
+		diffuseTexture = newDiffuseTexture;
 
-		if (materialData_.diffuseTextureLoaded != 1 && diffuseTexture!=nullptr) 
+		if (materialData_.diffuseTextureLoaded != 1 && newDiffuseTexture!=nullptr) 
 		{
 			materialData_.diffuseTextureLoaded = 1;
 			UpdateMaterialData();
 		}
-		else if (diffuseTexture == nullptr) {
+		else if (newDiffuseTexture == nullptr) {
 			materialData_.diffuseTextureLoaded = 0;
 			UpdateMaterialData();
 		}
 	}
 
-	eastl::weak_ptr<Texture> Material::GetDiffuseTexture()
+	std::weak_ptr<Texture> Material::GetDiffuseTexture()
 	{
 		if(diffuseTexture.expired() == false)
 			return diffuseTexture;
@@ -118,7 +118,7 @@ namespace Engine {
 		return missingTexture;
 	}
 
-	eastl::weak_ptr<Texture> Material::GetDefaultDiffuseTexture()
+	std::weak_ptr<Texture> Material::GetDefaultDiffuseTexture()
 	{
 		if(defaultDiffuseTexture.expired() == false)
 			return defaultDiffuseTexture;
@@ -131,9 +131,9 @@ namespace Engine {
 		return materialData_.diffuseTextureLoaded >= 1;
 	}
 
-	void Material::SetBumpMapTexture(eastl::string bumpMapTextureName)
+	void Material::SetBumpMapTexture(const std::string& bumpMapTextureName)
 	{
-		bumpMapTexture = Engine::GetEngine().lock()->GetResourceManager().lock()->CreateTexture(bumpMapTextureName);
+		bumpMapTexture = ResourceManager::Get()->CreateTexture(bumpMapTextureName);
 
 		if (materialData_.bumpMapLoaded != 1 && bumpMapTexture.expired() == false)
 		{
@@ -146,7 +146,7 @@ namespace Engine {
 		}
 	}
 
-	void Material::SetBumpMapTexture(eastl::shared_ptr<Texture> bumpMapTexture)
+	void Material::SetBumpMapTexture(std::shared_ptr<Texture> bumpMapTexture)
 	{
 		this->bumpMapTexture = bumpMapTexture;
 
@@ -161,7 +161,7 @@ namespace Engine {
 		}
 	}
 
-	eastl::weak_ptr<Texture> Material::GetBumpMapTexture() const
+	std::weak_ptr<Texture> Material::GetBumpMapTexture() const
 	{
 		if (bumpMapTexture.expired() == false)
 			return bumpMapTexture;
@@ -169,7 +169,7 @@ namespace Engine {
 		return missingTexture;
 	}
 
-	eastl::weak_ptr<Texture> Material::GetDefaultBumpMapTexture() const
+	std::weak_ptr<Texture> Material::GetDefaultBumpMapTexture() const
 	{
 		if (defaultBumpMapTexture.expired() == false)
 			return defaultBumpMapTexture;
@@ -182,7 +182,7 @@ namespace Engine {
 		return materialData_.bumpMapLoaded >= 1;
 	}
 
-	void Material::SetSpecularTexture(eastl::shared_ptr<Texture> specularTexture)
+	void Material::SetSpecularTexture(std::shared_ptr<Texture> specularTexture)
 	{
 		this->specularTexture = specularTexture;
 
@@ -197,12 +197,12 @@ namespace Engine {
 		}
 	}
 
-	eastl::weak_ptr<Texture> Material::GetSpecularTexture() const
+	std::weak_ptr<Texture> Material::GetSpecularTexture() const
 	{
 		return specularTexture;
 	}
 
-	eastl::weak_ptr<Texture> Material::GetDefaultSpecularTexture() const
+	std::weak_ptr<Texture> Material::GetDefaultSpecularTexture() const
 	{
 		return defaultSpecularTexture;
 	}
@@ -294,7 +294,7 @@ namespace Engine {
 	{
 	}
 
-	eastl::weak_ptr<Texture> Material::LoadTexture(const aiScene* scene, aiMaterial * material, aiTextureType textureType)
+	std::weak_ptr<Texture> Material::LoadTexture(const aiScene* scene, aiMaterial * material, aiTextureType textureType)
 	{
 		if (material->GetTextureCount(textureType) > 0) { // Textures located
 			aiString path;
@@ -302,10 +302,9 @@ namespace Engine {
 
 			if (path.data[0] == '*') { // Texture is an embedded texture
 
-				eastl::string name = modelName + eastl::string(path.C_Str());
+				std::string name = modelName + std::string(path.C_Str());
 
-				eastl::weak_ptr<Texture> ret = Engine::GetEngine().lock()->
-					GetResourceManager().lock()->GetTexture(name);
+				std::weak_ptr<Texture> ret = ResourceManager::Get()->GetTexture(name);
 
 				if (ret.expired() == false)
 					return ret;
@@ -341,23 +340,22 @@ namespace Engine {
 						channels = 4;					
 					}
 
-					return Engine::GetEngine().lock()->
-						GetResourceManager().lock()->CreateTexture(name, textureData, width, height);
+					return ResourceManager::Get()->CreateTexture(name, textureData, width, height);
 
 				}
 				else 
 				{
-					return eastl::shared_ptr<Texture>();
+					return std::shared_ptr<Texture>();
 				}
 			}
 			else 
 			{
-				return Engine::GetEngine().lock()->GetResourceManager().lock()->CreateTexture(eastl::string(path.C_Str()));
+				return ResourceManager::Get()->CreateTexture(std::string(path.C_Str()));
 			}
 		}
 		else 
 		{
-			return eastl::shared_ptr<Texture>();
+			return std::shared_ptr<Texture>();
 		}
 	}
 

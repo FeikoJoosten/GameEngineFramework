@@ -1,11 +1,10 @@
 #pragma once
 
+#include <memory>
 #include "Engine/Utility/Defines.hpp"
 #include "Engine/Texture/Texture.hpp"
 
-#include <ThirdParty/assimp/include/assimp/scene.h>
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
-#include <ThirdParty/EASTL-master/include/EASTL/shared_ptr.h>
+#include <assimp/scene.h>
 
 #ifdef USING_OPENGL
 	#include "Engine/Texture/OpenGLTexture.hpp"
@@ -29,7 +28,7 @@ namespace Engine {
 		/// <param name="scene">The scene (model) to load the material from.</param>
 		/// <param name="materialIndex">The specific material from the material array to load.</param>
 		/// <param name="modelName">The name of the model. This is used for naming any embedded textures found in the file.</param>
-		Material(const aiScene* scene, uint32_t materialIndex, eastl::string modelName);
+		Material(const aiScene* scene, uint32_t materialIndex, std::string modelName);
 		virtual ~Material();
 
 		/// <summary>
@@ -37,27 +36,27 @@ namespace Engine {
 		/// </summary>
 		/// <param name="diffuseTextureName">The texture you want to create. NOTE: The texture needs to be located under 'Resources/Textures/'. You then give the texture name + extension.
 		/// The texture can be in a subfolder of of 'Resources/Textures/'.</param>
-		virtual void SetDiffuseTexture(eastl::string diffuseTextureName);
+		virtual void SetDiffuseTexture(const std::string& diffuseTextureName);
 
 		/// <summary>
 		/// Changes the diffuse texture of the material. Pass a nullptr to clear the current texture.
 		/// </summary>
-		/// <param name="diffuseTexture">The new diffuse texture.</param>
-		virtual void SetDiffuseTexture(eastl::shared_ptr<Texture> diffuseTexture);
+		/// <param name="newDiffuseTexture">The new diffuse texture.</param>
+		virtual void SetDiffuseTexture(std::shared_ptr<Texture> newDiffuseTexture);
 
 		/// <summary>
 		/// Returns the diffuse texture of the material.
 		/// Returns nullptr if the current material doesn't have a diffuse texture.
 		/// </summary>
 		/// <returns>The diffuse texture used by the material. NOTE: Will return a temporary texture in case the default diffuse texture hasn't been assigned.</returns>
-		eastl::weak_ptr<Texture> GetDiffuseTexture();
+		std::weak_ptr<Texture> GetDiffuseTexture();
 
 		/// <summary>
 		/// Returns the diffuse texture that was defined by the model this material was created from. 
 		/// Returns nullptr if no diffuse texture was specified for the material.
 		/// </summary>
 		/// <returns>The default diffuse texture for the material. NOTE: Will return a temporary texture in case the default diffuse texture hasn't been assigned.</returns>
-		eastl::weak_ptr<Texture> GetDefaultDiffuseTexture();
+		std::weak_ptr<Texture> GetDefaultDiffuseTexture();
 
 		/// <summary>
 		/// Indicates if the material has a diffuse texture loaded or not.
@@ -70,27 +69,27 @@ namespace Engine {
 		/// </summary>
 		/// <param name="bumpMapTextureName">The texture you want to create. NOTE: The texture needs to be located under 'Resources/Textures/'. You then give the texture name + extension.
 		/// The texture can be in a subfolder of of 'Resources/Textures/'.</param>
-		virtual void SetBumpMapTexture(eastl::string bumpMapTextureName);
+		virtual void SetBumpMapTexture(const std::string& bumpMapTextureName);
 
 		/// <summary>
 		/// Changes the bump map texture of the material. Pass a nullptr to clear the current texture.
 		/// </summary>
 		/// <param name="bumpMapTexture">The new bump map texture.</param>
-		virtual void SetBumpMapTexture(eastl::shared_ptr<Texture> bumpMapTexture);
+		virtual void SetBumpMapTexture(std::shared_ptr<Texture> bumpMapTexture);
 
 		/// <summary>
 		/// Returns the bump map texture of the material.
 		/// Returns nullptr if the current material doesn't have a bump map texture.
 		/// </summary>
 		/// <returns>The bump map texture used by the material. NOTE: Will return a temporary texture in case the default bump map texture hasn't been assigned.</returns>
-		eastl::weak_ptr<Texture> GetBumpMapTexture() const;
+		std::weak_ptr<Texture> GetBumpMapTexture() const;
 
 		/// <summary>
 		/// Returns the bump map texture that was defined by the model this material was created from. 
 		/// Returns nullptr if no bump map texture was specified for the material.
 		/// </summary>
 		/// <returns>The default bump map texture for the material. NOTE: Will return a temporary texture in case the default bump map texture hasn't been assigned.</returns>
-		eastl::weak_ptr<Texture> GetDefaultBumpMapTexture() const;
+		std::weak_ptr<Texture> GetDefaultBumpMapTexture() const;
 
 		/// <summary>
 		/// Indicates if the material has a bump map texture loaded or not.
@@ -102,21 +101,21 @@ namespace Engine {
 		/// Changes the specular texture of the material. Pass a nullptr to clear the current texture.
 		/// </summary>
 		/// <param name="specularTexture">The new specular texture.</param>
-		virtual void SetSpecularTexture(eastl::shared_ptr<Texture> specularTexture);
+		virtual void SetSpecularTexture(std::shared_ptr<Texture> specularTexture);
 
 		/// <summary>
 		/// Returns the specular texture of the material.
 		/// Returns nullptr if the current material doesn't have a specular texture.
 		/// </summary>
 		/// <returns>The specular texture used by the material.</returns>
-		eastl::weak_ptr<Texture> GetSpecularTexture() const;
+		std::weak_ptr<Texture> GetSpecularTexture() const;
 
 		/// <summary>
 		/// Returns the specular texture that was defined by the model this material was created from. 
 		/// Returns nullptr if no specular texture was specified for the material.
 		/// </summary>
 		/// <returns>The default specular texture for the material.</returns>
-		eastl::weak_ptr<Texture> GetDefaultSpecularTexture() const;
+		std::weak_ptr<Texture> GetDefaultSpecularTexture() const;
 
 		/// <summary>
 		/// Indicates if the material has a specular texture loaded or not.
@@ -223,18 +222,18 @@ namespace Engine {
 		MaterialData_t materialData_;
 		MaterialData_t defaultMaterialData_;
 
-		eastl::string modelName;
+		std::string modelName;
 
-		eastl::weak_ptr<Texture> diffuseTexture;
-		eastl::weak_ptr<Texture> defaultDiffuseTexture;
-		eastl::weak_ptr<Texture> bumpMapTexture;
-		eastl::weak_ptr<Texture> defaultBumpMapTexture;
-		eastl::weak_ptr<Texture> specularTexture;
-		eastl::weak_ptr<Texture> defaultSpecularTexture;
+		std::weak_ptr<Texture> diffuseTexture;
+		std::weak_ptr<Texture> defaultDiffuseTexture;
+		std::weak_ptr<Texture> bumpMapTexture;
+		std::weak_ptr<Texture> defaultBumpMapTexture;
+		std::weak_ptr<Texture> specularTexture;
+		std::weak_ptr<Texture> defaultSpecularTexture;
 
-		eastl::weak_ptr<Texture> missingTexture;
+		std::weak_ptr<Texture> missingTexture;
 
-		eastl::weak_ptr<Texture> LoadTexture(const aiScene* scene, aiMaterial* material, aiTextureType textureType);
+		std::weak_ptr<Texture> LoadTexture(const aiScene* scene, aiMaterial* material, aiTextureType textureType);
 	};
 
 } // namespace Engine

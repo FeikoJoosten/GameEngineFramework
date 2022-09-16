@@ -4,14 +4,14 @@
 
 #include "Engine/Material/Material.hpp"
 
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
+#include <vulkan/vulkan.h>
 
 #include "Engine/Renderer/Vulkan/VulkanLogicalDevice.hpp"
 #include "Engine/Renderer/Vulkan/VulkanDescriptorPool.hpp"
 #include "Engine/Renderer/Vulkan/VulkanBuffer.hpp"
 #include "Engine/Texture/VulkanTexture.hpp"
 
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
+#include <vector>
 
 namespace Engine {
 
@@ -28,7 +28,7 @@ namespace Engine {
 		/// <returns>A VkDescriptorSetLayout object.</returns>
 		static VkDescriptorSetLayout CreateMaterialDescriptorSetLayout(VulkanLogicalDevice* device);
 
-		VulkanMaterial(const aiScene* scene, uint32_t materialIndex, eastl::string modelName);
+		VulkanMaterial(const aiScene* scene, uint32_t materialIndex, std::string modelName);
 		~VulkanMaterial();
 
 		/// <summary>
@@ -53,24 +53,24 @@ namespace Engine {
 		/// Changes the diffuse texture of the material. Pass a nullptr to clear the current texture.
 		/// </summary>
 		/// <param name="diffuseTexture">The new diffuse texture.</param>
-		virtual void SetDiffuseTexture(eastl::shared_ptr<Texture> diffuseTexture);
+		virtual void SetDiffuseTexture(std::shared_ptr<Texture> diffuseTexture);
 
 		/// <summary>
 		/// Changes the bump map texture of the material. Pass a nullptr to clear the current texture.
 		/// </summary>
 		/// <param name="diffuseTexture">The new bump map texture.</param>
-		virtual void SetBumpMapTexture(eastl::shared_ptr<Texture> bumpMapTexture);
+		virtual void SetBumpMapTexture(std::shared_ptr<Texture> bumpMapTexture);
 		
 		/// <summary>
 		/// Changes the specular texture of the material. Pass a nullptr to clear the current texture.
 		/// </summary>
 		/// <param name="specularTexture">The new specular texture.</param>
-		virtual void SetSpecularTexture(eastl::shared_ptr<Texture> specularTexture);
+		virtual void SetSpecularTexture(std::shared_ptr<Texture> specularTexture);
 
 	protected:
-		eastl::unique_ptr<VulkanBuffer> materialDataBuffer_;
+		std::unique_ptr<VulkanBuffer> materialDataBuffer_;
 
-		eastl::vector<eastl::vector<eastl::vector<VkDescriptorSet>>> materialDescriptorSets_;
+		std::vector<std::vector<std::vector<VkDescriptorSet>>> materialDescriptorSets_;
 
 		virtual void UpdateMaterialData();
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Engine/api.hpp"
-#include <ThirdParty/glm/glm/glm.hpp>
-#include <ThirdParty/stb/stb_image.h>
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
+#include "Engine/Api.hpp"
+#include <string>
+#include <glm/glm.hpp>
+#include <stb/stb_image.h>
 
 namespace Engine
 {
@@ -55,7 +55,7 @@ namespace Engine
 		/// This method allows you to retrieve the name of this texture.
 		/// </summary>
 		/// <returns>Returns the name of this texture as a std::string.</returns>
-		eastl::string GetFileName()const;
+		std::string GetFileName()const;
 
 		/// <summary>
 		/// This method allows you to create a texture from RGBA provided data.
@@ -98,7 +98,7 @@ namespace Engine
 		bool operator!=(const Texture& texture);
 	protected:
 
-		eastl::string fileName;
+		std::string fileName;
 		TextureDataSize dataSize;
 		uint64_t texture = 0;
 		int width = 0;
@@ -110,6 +110,6 @@ namespace Engine
 		/// </summary>
 		/// <param name="filename">This is the name of the texture you want to load. NOTE: The texture needs to be in the folder 'Resources/Textures/' (It can be in a subfolder, as long as it's in the Textures folder). And the extension type needs to be added as well.</param>
 		/// <param name="desiredChannels">The amount of desired channels for this texture. This value is 4 by default.</param>
-		explicit Texture(const eastl::string& filename, int desiredChannels = 4);
+		explicit Texture(const std::string& filename, int desiredChannels = 4);
 	};
 } //namespace Engine

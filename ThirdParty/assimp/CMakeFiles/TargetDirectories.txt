@@ -1,0 +1,13 @@
+D:/Projects/GameEngineFramework/ThirdParty/assimp/CMakeFiles/uninstall.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/CMakeFiles/UpdateAssimpLibsDebugSymbolsAndDLLs.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/CMakeFiles/INSTALL.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/CMakeFiles/ALL_BUILD.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/CMakeFiles/ZERO_CHECK.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/contrib/zlib/CMakeFiles/zlibstatic.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/contrib/zlib/CMakeFiles/INSTALL.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/contrib/zlib/CMakeFiles/ALL_BUILD.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/code/CMakeFiles/assimp.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/code/CMakeFiles/INSTALL.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/test/CMakeFiles/unit.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/test/CMakeFiles/INSTALL.dir
+D:/Projects/GameEngineFramework/ThirdParty/assimp/test/headercheck/CMakeFiles/INSTALL.dir

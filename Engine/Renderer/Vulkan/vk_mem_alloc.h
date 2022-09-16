@@ -735,7 +735,7 @@ Features deliberately excluded from the scope of this library:
 
 */
 
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
+#include <vulkan/vulkan.h>
 
 VK_DEFINE_HANDLE(VmaAllocator)
 

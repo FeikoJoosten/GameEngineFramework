@@ -7,8 +7,8 @@
 #include "Engine/Renderer/Vulkan/VulkanLogicalDevice.hpp"
 #include "Engine/Renderer/Vulkan/VulkanDescriptorPool.hpp"
 
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
+#include <vulkan/vulkan.h>
+#include <vector>
 
 namespace Engine
 {
@@ -42,7 +42,7 @@ namespace Engine
 	private:
 		friend class VulkanRenderer;
 
-		VulkanTexture(const eastl::string& filename, int desiredChannels = 4);
+		VulkanTexture(const std::string& filename, int desiredChannels = 4);
 
 		VkImage image;
 		VmaAllocation allocation;
@@ -54,7 +54,7 @@ namespace Engine
 
 		bool storage;
 
-		eastl::vector<eastl::vector<eastl::vector<VkDescriptorSet>>> descriptorSets;
+		std::vector<std::vector<std::vector<VkDescriptorSet>>> descriptorSets;
 
 		static VulkanRenderer* renderer;
 		static VulkanLogicalDevice* device;

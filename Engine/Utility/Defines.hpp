@@ -1,19 +1,5 @@
 #pragma once
 
-#if _WIN32 || _WIN64
-#if _WIN64
-/// <summary>
-/// This value is used to automatically use a 64 bit unsigned int.
-/// </summary>
-#define BITS uint64_t
-#else
-/// <summary>
-/// This value is used to automatically use a 32 bit unsigned int.
-/// </summary>
-#define BITS uint32_t
-#endif
-#endif
-
 #ifndef RENDERER
 /// <summary>
 /// This value determines the current graphics API.
@@ -34,4 +20,24 @@
 #elif RENDERER == Vulkan
 #undef USING_OPENGL
 #define USING_VULKAN
+#endif
+
+#ifndef CEREAL_SERIALIZE_FUNCTION_NAME
+#define CEREAL_SERIALIZE_FUNCTION_NAME Serialize
+#endif
+#ifndef CEREAL_LOAD_FUNCTION_NAME
+#define CEREAL_LOAD_FUNCTION_NAME Load
+#endif
+#ifndef CEREAL_SAVE_FUNCTION_NAME
+#define CEREAL_SAVE_FUNCTION_NAME Save
+#endif
+#ifndef CEREAL_LOAD_MINIMAL_FUNCTION_NAME
+#define CEREAL_LOAD_MINIMAL_FUNCTION_NAME LoadMinimal
+#endif
+#ifndef CEREAL_SAVE_MINIMAL_FUNCTION_NAME
+#define CEREAL_SAVE_MINIMAL_FUNCTION_NAME SaveMinimal
+#endif
+
+#ifndef GLM_FORCE_RADIANS
+#define GLM_FORCE_RADIANS
 #endif

@@ -11,9 +11,11 @@
 
 #include "Engine/Renderer/IMGUI/imgui.h"
 
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
+#include "Engine/Utility/Time.hpp"
 #include "Engine/Renderer/OpenGLRenderer.hpp"
 #include "Engine/Renderer/imgui_impl_glfw_gl3.h"
+#include "Engine/Window/Window.hpp"
 
 // GL3W/GLFW
 #ifdef _WIN32
@@ -308,7 +310,7 @@ void ImGui_ImplGlfwGL3_NewFrame()
 	//double current_time = glfwGetTime();
 	//io.DeltaTime = g_Time > 0.0 ? float(current_time - g_Time) : float(1.0f / 60.0f);
 	//g_Time = current_time;
-	io.DeltaTime = Engine::Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime();
+	io.DeltaTime = Engine::Time::Get()->GetDeltaTime();
 
     // Start the frame
     ImGui::NewFrame();

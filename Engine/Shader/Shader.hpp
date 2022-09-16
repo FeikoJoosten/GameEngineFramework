@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Engine/api.hpp"
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
-#include <ThirdParty/EASTL-master/include/EASTL/shared_ptr.h>
+#include "Engine/Api.hpp"
+
+#include <string>
+#include <vector>
 
 namespace Engine
 {
@@ -33,7 +33,7 @@ namespace Engine
 		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
 		/// <param name="fragmentFileName">The fragment shader file you want to load. 
 		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
-		Shader(const eastl::string& vertexFileName, const eastl::string& fragmentFileName);
+		Shader(const std::string& vertexFileName, const std::string& fragmentFileName);
 		//Shader(const Shader& other) = delete;
 		/// <summary>
 		/// Default deconstructor.
@@ -51,9 +51,9 @@ namespace Engine
 		/// </summary>
 		virtual void Deactivate();
 	private:
-		eastl::vector<char> vertexData;
-		eastl::vector<char> fragmentData;
+		std::vector<char> vertexData;
+		std::vector<char> fragmentData;
 	protected:
-		const char* shaderFolder = "Resources/Shaders";
+		const char* shaderFolder = "Resources/Shaders/";
 	};
 }

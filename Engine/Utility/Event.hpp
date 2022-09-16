@@ -22,9 +22,8 @@
 //#include <ThirdParty/boost_1_65_1/boost/thread/shared_mutex.hpp>
 //#endif // SHARP_EVENT_NO_BOOST
 
-#include "Engine/api.hpp"
-#include <ThirdParty/EASTL-master/include/EASTL/list.h>
-#include <ThirdParty/EASTL-master/include/EASTL/utility.h>
+#include "Engine/Api.hpp"
+#include <list>
 
 namespace Sharp    // short for SharpTools
 {
@@ -38,21 +37,26 @@ namespace Sharp    // short for SharpTools
 	   * @note : You won't create one yourself
 	   * @author Amer Saffo
 	   */
-	template<typename T>
+	template<typename... T>
 	class ENGINE_API EventHandlerImplBase
 	{
 	public:
-		EventHandlerImplBase() {}  // needed to define the constructor since we defined the destructor (compiler would otherwise object)
+		EventHandlerImplBase() = default;  // needed to define the constructor since we defined the destructor (compiler would otherwise object)
 
-		virtual ~EventHandlerImplBase() {} // destructor should be made virtual for base as we are going to delete through a base pointer
+		virtual ~EventHandlerImplBase() = default; // destructor should be made virtual for base as we are going to delete through a base pointer
+		EventHandlerImplBase(const EventHandlerImplBase& other) = delete;
+		EventHandlerImplBase(EventHandlerImplBase&& other) noexcept = delete;
 
-		virtual bool IsBindedToSameFunctionAs(EventHandlerImplBase<T>*) = 0;   // verify if both handlers are binded to the same function.
+		EventHandlerImplBase& operator=(const EventHandlerImplBase& other) = delete;
+		EventHandlerImplBase& operator=(EventHandlerImplBase&& other) noexcept = delete;
+
+		virtual bool IsBoundToSameFunctionAs(EventHandlerImplBase<T...>*) = 0;   // verify if both handlers are bound to the same function.
 
 
 
-   /** convenient function to make inheriting classes implementation of IsBindedToSameFunctionAs a little bit easier*/
+   /** convenient function to make inheriting classes implementation of IsBoundToSameFunctionAs a little bit easier*/
 
-		bool IsSametype(EventHandlerImplBase<T>* pHandler2)
+		bool IsSametype(EventHandlerImplBase<T...>* pHandler2)
 		{
 			if (!pHandler2 ||  // a null pointer can never be the same as one that points to an actual handler
 				typeid(*this) != typeid(*pHandler2))
@@ -68,11 +72,11 @@ namespace Sharp    // short for SharpTools
 	// one argument event handlers support
 	//------------------------------------
 
-	template<typename T>
-	class ENGINE_API EventHandlerImpl : public EventHandlerImplBase<T>
+	template<typename... T>
+	class ENGINE_API EventHandlerImpl : public EventHandlerImplBase<T...>
 	{
 	public:
-		virtual void OnEvent(T&) = 0;  // will be called eventually when a Event is raised
+		virtual void OnEvent(T&...) = 0;  // will be called eventually when a Event is raised
 
 	};
 
@@ -80,32 +84,30 @@ namespace Sharp    // short for SharpTools
 
 	/** A handler non-member function calls */
 
-	template<typename T>
-	class ENGINE_API EventHandlerImplForNonMemberFunction : public EventHandlerImpl<T>
+	template<typename... T>
+	class ENGINE_API EventHandlerImplForNonMemberFunction : public EventHandlerImpl<T...>
 	{
 	public:
 		/** Saves the passed function for use later when an event is raised */
-		EventHandlerImplForNonMemberFunction(void(*functionToCall)(T&))
+		EventHandlerImplForNonMemberFunction(void(*functionToCall)(T&...))
 			: m_pFunctionToCall(functionToCall)
 		{
 		}
 
 		/** will be called eventually when an Event is raised */
-		virtual void OnEvent(T& evt)
-		{
-			m_pFunctionToCall(evt);
+		virtual void OnEvent(T&... evt) override {
+			m_pFunctionToCall(evt...);
 		}
 
 		/** verify if this handler will eventually call the same function as the passed handler. */
-		virtual bool IsBindedToSameFunctionAs(EventHandlerImplBase<T>* pHandler2)
-		{
+		virtual bool IsBoundToSameFunctionAs(EventHandlerImplBase<T...>* pHandler2) override {
 			if (!IsSametype(pHandler2))
 			{
 				return false;
 			}
 
 			// they are the same type so we can safely cast to this class type
-			EventHandlerImplForNonMemberFunction<T>* pHandlerCasted = dynamic_cast<EventHandlerImplForNonMemberFunction<T>*>(pHandler2);
+			EventHandlerImplForNonMemberFunction<T...>* pHandlerCasted = dynamic_cast<EventHandlerImplForNonMemberFunction<T...>*>(pHandler2);
 			if (!pHandlerCasted)
 			{
 				// error, should never happen
@@ -116,7 +118,7 @@ namespace Sharp    // short for SharpTools
 		}
 
 	private:
-		void(*m_pFunctionToCall)(T&); // passed in the constructor. Will get called when an event is raised.
+		void(*m_pFunctionToCall)(T&...); // passed in the constructor. Will get called when an event is raised.
 
 	};
 
@@ -124,36 +126,34 @@ namespace Sharp    // short for SharpTools
 
 	/** A helper that handles member function calls */
 
-	template<typename T, typename U>
-	class ENGINE_API EventHandlerImplForMemberFunction : public EventHandlerImpl<T>
+	template<typename U, typename... T>
+	class ENGINE_API EventHandlerImplForMemberFunction : public EventHandlerImpl<T...>
 	{
 	public:
 		/** Saves the passed function for use later when an event arrive */
-		EventHandlerImplForMemberFunction(void(U::*memberFunctionToCall)(T&), U* thisPtr)
+		EventHandlerImplForMemberFunction(U* thisPtr, void(U::*memberFunctionToCall)(T...))
 			: m_pCallerInstance(thisPtr)
 			, m_pMemberFunction(memberFunctionToCall)
 		{
 		}
 
 		/** will be called eventually when an Event is raised */
-		virtual void OnEvent(T& evt)
-		{
+		virtual void OnEvent(T&... evt) override {
 			if (m_pCallerInstance)
 			{
-				(m_pCallerInstance->*m_pMemberFunction)(evt);
+				(m_pCallerInstance->*m_pMemberFunction)(evt...);
 			}
 		}
 
 		/** verify if this handler will eventually call the same function as the passed handler. */
-		virtual bool IsBindedToSameFunctionAs(EventHandlerImplBase<T>* pHandler2)
-		{
+		virtual bool IsBoundToSameFunctionAs(EventHandlerImplBase<T...>* pHandler2) override {
 			if (!IsSametype(pHandler2))
 			{
 				return false;
 			}
 
 			// they are the same type so we can safely cast to this class type
-			EventHandlerImplForMemberFunction<T, U>* pHandlerCasted = dynamic_cast<EventHandlerImplForMemberFunction<T, U>*>(pHandler2);
+			EventHandlerImplForMemberFunction<U, T...>* pHandlerCasted = dynamic_cast<EventHandlerImplForMemberFunction<U, T...>*>(pHandler2);
 			if (!pHandlerCasted)
 			{
 				// error, should never happen
@@ -166,7 +166,7 @@ namespace Sharp    // short for SharpTools
 	private:
 		U* m_pCallerInstance;  // passed in the constructor. This watcher will only be used to call a member function, so m_pCallerInstance would hold the object through which that member function is called.
 
-		void(U::*m_pMemberFunction)(T&); // passed in the constructor. This watcher will only be used to call a member function through m_pCallerInstance.
+		void(U::*m_pMemberFunction)(T...); // passed in the constructor. This watcher will only be used to call a member function through m_pCallerInstance.
 
 	};
 
@@ -207,14 +207,12 @@ namespace Sharp    // short for SharpTools
 		}
 
 		/** will be called eventually when an Event is raised */
-		virtual void OnEvent()
-		{
+		virtual void OnEvent() override {
 			m_pFunctionToCall();
 		}
 
 		/** verify if this handler will eventually call the same function as the passed handler. */
-		virtual bool IsBindedToSameFunctionAs(EventHandlerImplBase<void>* pHandler2)
-		{
+		virtual bool IsBoundToSameFunctionAs(EventHandlerImplBase<void>* pHandler2) override {
 			if (!IsSametype(pHandler2))
 			{
 				return false;
@@ -241,19 +239,18 @@ namespace Sharp    // short for SharpTools
 	/** A helper that handles void member function calls */
 
 	template<typename U>
-	class ENGINE_API EventHandlerImplForMemberFunction<void, U> : public EventHandlerImpl<void>
+	class ENGINE_API EventHandlerImplForMemberFunction<U, void> : public EventHandlerImpl<void>
 	{
 	public:
 		/** Saves the passed function for use later when an event arrive */
-		EventHandlerImplForMemberFunction(void(U::*memberFunctionToCall)(), U* thisPtr)
+		EventHandlerImplForMemberFunction(U* thisPtr, void(U::*memberFunctionToCall)())
 			: m_pCallerInstance(thisPtr)
 			, m_pMemberFunction(memberFunctionToCall)
 		{
 		}
 
 		/** will be called eventually when an Event is raised */
-		virtual void OnEvent()
-		{
+		virtual void OnEvent() override {
 			if (m_pCallerInstance)
 			{
 				(m_pCallerInstance->*m_pMemberFunction)();
@@ -261,15 +258,14 @@ namespace Sharp    // short for SharpTools
 		}
 
 		/** verify if this handler will eventually call the same function as the passed handler. */
-		virtual bool IsBindedToSameFunctionAs(EventHandlerImplBase<void>* pHandler2)
-		{
+		virtual bool IsBoundToSameFunctionAs(EventHandlerImplBase<void>* pHandler2) override {
 			if (!IsSametype(pHandler2))
 			{
 				return false;
 			}
 
 			// they are the same type so we can safely cast to this class type
-			EventHandlerImplForMemberFunction<void, U>* pHandlerCasted = dynamic_cast<EventHandlerImplForMemberFunction<void, U>*>(pHandler2);
+			EventHandlerImplForMemberFunction<U, void>* pHandlerCasted = dynamic_cast<EventHandlerImplForMemberFunction<U, void>*>(pHandler2);
 			if (!pHandlerCasted)
 			{
 				// error, should never happen
@@ -346,17 +342,17 @@ namespace Sharp    // short for SharpTools
 
 		*/
 
-		template<typename T>
-		static EventHandlerImpl<T>* Bind(void(*nonMemberFunctionToCall)(T&))
+		template<typename... T>
+		static EventHandlerImpl<T...>* Bind(void(*nonMemberFunctionToCall)(T...))
 		{
-			return new EventHandlerImplForNonMemberFunction<T>(nonMemberFunctionToCall);
+			return new EventHandlerImplForNonMemberFunction<T...>(nonMemberFunctionToCall);
 		}
 
 		/** @overload */
-		template<typename T, typename U>
-		static EventHandlerImpl<T>* Bind(void(U::*memberFunctionToCall)(T&), U* thisPtr)
+		template<typename U, typename... T>
+		static EventHandlerImpl<T...>* Bind(U* thisPtr, void(U::*memberFunctionToCall)(T...))
 		{
-			return new EventHandlerImplForMemberFunction<T, U>(memberFunctionToCall, thisPtr);
+			return new EventHandlerImplForMemberFunction<U, T...>(thisPtr, memberFunctionToCall);
 		}
 
 		//------------------------------------
@@ -371,13 +367,13 @@ namespace Sharp    // short for SharpTools
 
 		/** @overload */
 		template<typename U>
-		static EventHandlerImpl<void>* Bind(void(U::*memberFunctionToCall)(), U* thisPtr)
+		static EventHandlerImpl<void>* Bind(U* thisPtr, void(U::*memberFunctionToCall)())
 		{
-			return new EventHandlerImplForMemberFunction<void, U>(memberFunctionToCall, thisPtr);
+			return new EventHandlerImplForMemberFunction<U, void>(thisPtr, memberFunctionToCall);
 		}
 
 	private:
-		EventHandler();  // default constructor made private to prevent creating instances of this class. EventHandler only purpose is to provide Event with the Bind function
+		EventHandler() = delete;  // default constructor made private to prevent creating instances of this class. EventHandler only purpose is to provide Event with the Bind function
 
 	};
 
@@ -409,11 +405,11 @@ namespace Sharp    // short for SharpTools
 
 			 */
 
-	template<typename T>
+	template<typename... T>
 	class ENGINE_API EventBase
 	{
 	public:
-		EventBase() {}
+		EventBase() = default;
 
 		/**
 					 * it is by design that Event is the owner of the memory of all the handlers assigned to it
@@ -427,17 +423,24 @@ namespace Sharp    // short for SharpTools
 			//WriteLock handlersWriteLock(m_handlersMutex);
 //#endif // SHARP_EVENT_NO_BOOST
 
-			for (eastl::list< EventHandlerImpl<T>* >::iterator iter = m_eventHandlers.begin(); iter != m_eventHandlers.end(); ++iter)
+			for(EventHandlerImpl<T...>* handler : m_eventHandlers)
+			//for (std::list< EventHandlerImpl<T...>* >::iterator iter = m_eventHandlers.begin(); iter != m_eventHandlers.end(); ++iter)
 			{
-				EventHandlerImpl<T>* pHandler = *iter;
-				if (pHandler)
+				//EventHandlerImpl<T...>* pHandler = *iter;
+				if (handler)
 				{
-					delete pHandler;
-					pHandler = 0;  // just to be consistent
+					delete handler;
+					handler = nullptr;  // just to be consistent
 				}
 			}
 			m_eventHandlers.clear();
 		}
+
+		EventBase(const EventBase& other) = delete;
+		EventBase(EventBase&& other) noexcept = delete;
+
+		EventBase& operator=(const EventBase& other) = delete;
+		EventBase& operator=(EventBase&& other) noexcept = delete;
 
 		/**
 					 * This is how you connect a handler to this event.
@@ -452,7 +455,7 @@ namespace Sharp    // short for SharpTools
 					 *   In short, before your binded class instance is destroyed, make sure to unbind it. Otherwise, the binded event might try to make a call through your destroyed instance.
 					 * @note : For completeness, you are warned NOT to store the returned value of Eventhandler::Bind() yourself, as after this call, Event becomes the owner of the implicitly created EventHandlerImpl<T> and it later destroys it.
 					 */
-		EventBase<T>& operator += (EventHandlerImpl<T>* pHandlerToAdd)
+		EventBase<T...>& operator += (EventHandlerImpl<T...>* pHandlerToAdd)
 		{
 			// bellow is commented because we decided to let the user add the same handler multiple time and make it his responsibility to remove all those added
 				//if( FindHandlerWithSameBinding(pHandlerToAdd) != m_eventHandlers.end())
@@ -477,7 +480,7 @@ namespace Sharp    // short for SharpTools
 					 * @note : removing a handler that was already removed is harmless, as this call does nothing and simply return when it does not find the handler.
 					 *   {@code myEvent -= EventHandler::Bind(&ThisClass::OnMessage, this);}  // example of unbinding in destructor
 					 */
-		EventBase<T>& operator -= (EventHandlerImpl<T>* pHandlerToRemove)
+		EventBase<T...>& operator -= (EventHandlerImpl<T...>* pHandlerToRemove)
 		{
 			if (!pHandlerToRemove)
 			{
@@ -491,10 +494,11 @@ namespace Sharp    // short for SharpTools
 
 			// search for a handler that has the same binding as the passed one
 			// search linearly (no other way)
-			for (eastl::list< EventHandlerImpl<T>* >::iterator iter = m_eventHandlers.begin(); iter != m_eventHandlers.end(); ++iter)
+			for(auto handler : m_eventHandlers)
+			//for (std::list< EventHandlerImpl<T...>* >::iterator iter = m_eventHandlers.begin(); iter != m_eventHandlers.end(); ++iter)
 			{
-				EventHandlerImpl<T>* pHandler = *iter;
-				if (pHandlerToRemove->IsBindedToSameFunctionAs(pHandler))
+				//EventHandlerImpl<T...>* pHandler = *iter;
+				if (pHandlerToRemove->IsBoundToSameFunctionAs(handler))
 				{
 //#ifndef SHARP_EVENT_NO_BOOST
 					// found the handler, we need to get a write lock as we are going to modify the handlers list.
@@ -503,15 +507,15 @@ namespace Sharp    // short for SharpTools
 
 					// erase the memory that was created by the Bind function
 					// this memory is that of an EventHandler class and has nothing to do with the actual functions/class passed to it on Bind
-					EventHandlerImpl<T>* pFoundHandler = *iter;
-					if (pFoundHandler)
+					//EventHandlerImpl<T...>* pFoundHandler = *iter;
+					if (handler)
 					{
-						delete pFoundHandler;
-						pFoundHandler = 0;
+						delete handler;
+						handler = 0;
 					}
 
 					// remove it form the list (safe to do it here as we'll break the loop)
-					m_eventHandlers.erase(iter);
+					m_eventHandlers.remove(handler);
 					break;
 				}
 			}
@@ -526,15 +530,10 @@ namespace Sharp    // short for SharpTools
 			return *this;
 		}
 
-	private:
-		EventBase(const EventBase&);  // private to disable copying
-
-		EventBase& operator=(const EventBase&); // private to disable copying
-
 
 	protected:
 
-		eastl::list< EventHandlerImpl<T>* > m_eventHandlers;  // all handlers will be notified when operator() is called.
+		std::list< EventHandlerImpl<T...>* > m_eventHandlers;  // all handlers will be notified when operator() is called.
 
 
 
@@ -558,8 +557,8 @@ namespace Sharp    // short for SharpTools
 
 	//------------------------------------
 
-	template<typename T>
-	class ENGINE_API Event : public EventBase<T>
+	template<typename... T>
+	class ENGINE_API Event : public EventBase<T...>
 	{
 	public:
 		/**
@@ -567,7 +566,7 @@ namespace Sharp    // short for SharpTools
 		* It does so by passing the event data to all event handlers.
 		* {@code myEvent(data);}  // this how you would normally raise an event
 		*/
-		void operator()(T& eventData)
+		void operator()(T&... eventData)
 		{
 //#ifndef SHARP_EVENT_NO_BOOST
 			// this event just go through the list without modifying it, so a read lock is enough.
@@ -578,12 +577,13 @@ namespace Sharp    // short for SharpTools
 //#endif // SHARP_EVENT_NO_BOOST
 
 			// raise the event by telling all the handlers
-			for (eastl::list< EventHandlerImpl<T>* >::iterator iter = m_eventHandlers.begin(); iter != m_eventHandlers.end(); ++iter)
+			for(auto handler : m_eventHandlers)
+			//for (std::list< EventHandlerImpl<T...>* >::iterator iter = m_eventHandlers.begin(); iter != m_eventHandlers.end(); ++iter)
 			{
-				EventHandlerImpl<T>* pHandler = *iter;
-				if (pHandler)
+				//EventHandlerImpl<T...>* pHandler = *iter;
+				if (handler)
 				{
-					pHandler->OnEvent(eventData);  // this is a virtual function that will eventually call the function passed to Eventhandler::Bind() for this handler
+					handler->OnEvent(eventData...);  // this is a virtual function that will eventually call the function passed to Eventhandler::Bind() for this handler
 				}
 			}
 		}
@@ -612,7 +612,7 @@ namespace Sharp    // short for SharpTools
 //#endif // SHARP_EVENT_NO_BOOST
 
 			// raise the event by telling all the handlers
-			for (eastl::list< EventHandlerImpl<void>* >::iterator iter = m_eventHandlers.begin(); iter != m_eventHandlers.end(); ++iter)
+			for (std::list< EventHandlerImpl<void>* >::iterator iter = m_eventHandlers.begin(); iter != m_eventHandlers.end(); ++iter)
 			{
 				EventHandlerImpl<void>* pHandler = *iter;
 				if (pHandler)

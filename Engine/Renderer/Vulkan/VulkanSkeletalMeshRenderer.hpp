@@ -2,7 +2,7 @@
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
 
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
+#include <vulkan/vulkan.h>
 
 #include "Engine/Renderer/Vulkan/VulkanPipeline.hpp"
 #include "Engine/Renderer/Vulkan/VulkanLogicalDevice.hpp"
@@ -12,7 +12,7 @@
 #include "Engine/Mesh/VulkanMesh.hpp"
 #include "Engine/Animation/Skeleton.hpp"
 #include "Engine/Material/VulkanMaterial.hpp"
-#include <ThirdParty/glm/glm/glm.hpp>
+#include <glm/glm.hpp>
 
 namespace Engine {
 
@@ -43,10 +43,10 @@ namespace Engine {
 
 	protected:
 
-		eastl::unique_ptr<VulkanPipeline> skeletalMeshPipeline_;
-		eastl::unique_ptr<VulkanPipeline> shadowPipeline_;
+		std::unique_ptr<VulkanPipeline> skeletalMeshPipeline_;
+		std::unique_ptr<VulkanPipeline> shadowPipeline_;
 
-		eastl::unique_ptr<VulkanBuffer> uniformBuffer_;
+		std::unique_ptr<VulkanBuffer> uniformBuffer_;
 
 		typedef struct {
 			glm::mat4 view;
@@ -55,11 +55,11 @@ namespace Engine {
 
 		Ubo_t ubo_;
 
-		eastl::weak_ptr<VulkanTexture> defaultTexture_;
+		std::weak_ptr<VulkanTexture> defaultTexture_;
 
 		VkDescriptorSet oldBones_;
 
-		eastl::vector<VkDescriptorSet> uboDescriptors_;
+		std::vector<VkDescriptorSet> uboDescriptors_;
 
 		typedef struct {
 			glm::mat4 model;
@@ -84,7 +84,7 @@ namespace Engine {
 			bool looping;
 		};
 
-		eastl::vector<MeshData> meshes;
+		std::vector<MeshData> meshes;
 
 		VulkanRenderer* renderer_;
 		VulkanLogicalDevice* device_;

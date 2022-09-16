@@ -1,7 +1,7 @@
-#include "LightComponent.hpp"
+#include "Engine/Components/LightComponent.hpp"
 #include "Engine/Utility/Defines.hpp"
-#include "Engine/engine.hpp"
-
+#include "Engine/Engine.hpp"
+#include "Engine/Entity/Entity.hpp"
 #include "Engine/Renderer/Renderer.hpp"
 
 #ifdef USING_OPENGL
@@ -13,16 +13,9 @@
 
 namespace Engine {
 	
-	LightComponent::~LightComponent()
+	void LightComponent::SetLightName(std::string name)
 	{
-#ifdef USING_VULKAN
-		renderer.lock()->SetLightType(lightName, LightType::LIGHT_NONEXISTENT);
-#endif
-	}
-
-	void LightComponent::SetLightName(eastl::string name)
-	{
-		eastl::string oldName = lightName;
+		std::string oldName = lightName;
 		lightName = name;
 #ifdef USING_VULKAN
 		renderer.lock()->SetLightType(oldName, LightType::LIGHT_NONEXISTENT);
@@ -37,7 +30,7 @@ namespace Engine {
 #endif
 	}
 
-	eastl::string LightComponent::GetLightName() const
+	std::string LightComponent::GetLightName() const
 	{
 		return lightName;
 	}
@@ -45,7 +38,7 @@ namespace Engine {
 	void LightComponent::SetLightType(LightType type)
 	{
 #ifdef USING_VULKAN
-		if (vulkanEnabled && type != lightType && isEnabled) {
+		if (vulkanEnabled && type != lightType && GetIsEnabled()) {
 			renderer.lock()->SetLightType(lightName, type);
 			switch (type) {
 			case LightType::LIGHT_DIRECTIONAL_LIGHT:
@@ -66,7 +59,7 @@ namespace Engine {
 			lightType = type;
 		}
 #endif
-		if (!isEnabled)
+		if (GetIsEnabled() == false)
 			lightType = type;
 	}
 
@@ -153,15 +146,15 @@ namespace Engine {
 		return lightInfo.coneOuterAngle;
 	}
 
-	LightComponent::LightComponent(eastl::string name, LightType type, glm::vec3 position, glm::vec3 direction, glm::vec3 color, float radius, float attunuation, float coneInnerAngle, float coneOuterAngle) noexcept
+	LightComponent::LightComponent(std::string name, LightType type, glm::vec3 position, glm::vec3 direction, glm::vec3 color, float radius, float attunuation, float coneInnerAngle, float coneOuterAngle) noexcept
 	{
 #ifdef USING_VULKAN
 		vulkanEnabled = true;
-		renderer = Engine::GetEngine().lock()->GetRenderer<VulkanRenderer>().lock();
-		isEnabled = true;
+		renderer = Renderer::Get<VulkanRenderer>();
+		SetIsEnabled(true);
 #else
 		vulkanEnabled = false;
-		isEnabled = false;
+		SetIsEnabled(false);
 #endif// USING_VULKAN
 
 		lightName = name;
@@ -189,7 +182,7 @@ namespace Engine {
 		created = true;
 	}
 
-	LightComponent::LightComponent(eastl::string name) noexcept
+	LightComponent::LightComponent(std::string name) noexcept
 	{
 		lightName = name;
 
@@ -199,19 +192,17 @@ namespace Engine {
 		created = false;
 	}
 
-	void LightComponent::InitializeComponent()
+	void LightComponent::InitializeComponent(const std::vector<std::shared_ptr<Component>>& availableComponents)
 	{
 		if (!created) 
 		{
 #ifdef USING_VULKAN
 			vulkanEnabled = true;
-			renderer = eastl::static_pointer_cast<VulkanRenderer, Renderer>(
-				Engine::GetEngine().lock()->GetRenderer().lock()
-				);
-			isEnabled = true;
+			renderer = Renderer::Get<VulkanRenderer>();
+			SetIsEnabled(true);
 #else
 			vulkanEnabled = false;
-			isEnabled = false;
+			SetIsEnabled(false);
 #endif
 
 			if (lightName == "")
@@ -238,9 +229,9 @@ namespace Engine {
 	void LightComponent::Update()
 	{
 #ifdef USING_VULKAN
-		if (isEnabled != active) 
+		if (GetIsEnabled() != active)
 		{
-			active = isEnabled;
+			active = GetIsEnabled();
 
 			if (active == false)
 				renderer.lock()->SetLightType(lightName, LightType::LIGHT_NONEXISTENT);

@@ -1,61 +1,60 @@
 #include "Engine/Texture/OpenGLTexture.hpp"
+
 #ifdef USING_OPENGL
+#include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/Utility/Utility.hpp"
+#include "Engine/Renderer/OpenGLUtility.hpp"
 
-#include <ThirdParty/glew-2.1.0/include/GL/glew.h>
+#include <GL/glew.h>
+#include <stb/stb_image.h>
 
-namespace Engine
-{
-	OpenGLTexture::OpenGLTexture(const eastl::string& filename, int desiredChannels) : Texture(filename, desiredChannels)
-	{
-		eastl::string baseLocation = "Resources/Textures/";
-		baseLocation.append(filename);
+namespace Engine {
+	OpenGLTexture::OpenGLTexture(const std::string& filename, int desiredChannels) : Texture(filename, desiredChannels) {
+		const std::string baseLocation = "Resources/Textures/" + filename;
+		const std::string defaultTextureLocation = (AssetManager::Get()->GetProjectRoot() + "Resources/Textures/default.png");
 		stbi_uc* textureData = stbi_load(
 			Utility::FileExists(baseLocation) ?
-			baseLocation.c_str() :
-			"Resources/Textures/default.png", &width, &height, &channels, STBI_rgb_alpha);
+			(AssetManager::Get()->GetProjectRoot() + baseLocation).c_str() :
+			defaultTextureLocation.c_str(),
+			&width, &height, &channels, STBI_rgb_alpha);
 		OpenGLTexture::CreateTextureWithData(textureData, true);
 		stbi_image_free(textureData);
 	}
 
-	OpenGLTexture::OpenGLTexture(int width, int height) : Texture(width, height)
-	{
-	}
+	OpenGLTexture::OpenGLTexture(int width, int height) : Texture(width, height) {}
 
-	OpenGLTexture::~OpenGLTexture()
-	{
+	OpenGLTexture::~OpenGLTexture() {
 		GLuint textureReference = GLuint(texture);
 
 		if (texture)
 			glDeleteTextures(1, &textureReference);
 	}
 
-	void OpenGLTexture::CreateTextureWithData(stbi_uc* data, bool genMipMaps, TextureDataSize bytes, bool storage)
-	{
+	void OpenGLTexture::CreateTextureWithData(stbi_uc* data, bool genMipMaps, TextureDataSize bytes, bool storage) {
 		this->dataSize = bytes;
 		GLuint textureReference = GLuint(texture);
 		if (textureReference)
 			glDeleteTextures(1, &textureReference);
 
 		glGenTextures(1, &textureReference);									// Gen    
-		glGetError();
+		glCheckError();
 
 		glBindTexture(GL_TEXTURE_2D, textureReference);                          // Bind
-		glGetError();
+		glCheckError();
 
 		//
 		if (genMipMaps)
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);    // Minmization
 		else
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);                   // Minmization
-		glGetError();
+		glCheckError();
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);                       // Magnification
-		glGetError();
+		glCheckError();
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glGetError();
+		glCheckError();
 
 		GLenum type;
 
@@ -93,12 +92,12 @@ namespace Engine
 			GL_RGBA,							// Format (how to use)
 			type,					// Type   (how to intepret)
 			data);								// Data
-		glGetError();
+		glCheckError();
 
 		if (genMipMaps)
 			glGenerateMipmap(GL_TEXTURE_2D);
 
-		glGetError();
+		glCheckError();
 
 		texture = uint64_t(textureReference);
 	}

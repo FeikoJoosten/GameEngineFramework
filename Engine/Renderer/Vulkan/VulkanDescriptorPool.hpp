@@ -2,8 +2,8 @@
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
 
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.hpp>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
+#include <vulkan/vulkan.hpp>
+#include <vector>
 
 namespace Engine {
 
@@ -30,7 +30,7 @@ namespace Engine {
 		void DescriptorSetBindToImage(VkDescriptorSet set, VkImageLayout layout, VkImageView imageView, VkSampler sampler, uint32_t binding, uint32_t arrayElement, VkDescriptorType type, uint32_t descriptorCount) const;
 
 	private:
-		eastl::vector<VkDescriptorPoolSize> poolSizes;
+		std::vector<VkDescriptorPoolSize> poolSizes;
 
 		VkDescriptorPool pool;
 		VulkanLogicalDevice* device;

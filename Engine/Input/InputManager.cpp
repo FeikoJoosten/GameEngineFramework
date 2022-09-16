@@ -1,7 +1,8 @@
 #include "Engine/Input/InputManager.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
-#include <windows.h>
+
+#include <Windows.h>
 
 class InputCallbacks : public gainput::InputListener
 {
@@ -14,8 +15,9 @@ public:
 		char buttonName[64] = "";
 		device->GetButtonName(deviceButton, buttonName, 64);
 		ImGuiIO& io = ImGui::GetIO();
+		const std::shared_ptr<Engine::InputManager> inputManager = Engine::InputManager::Get();
 
-		if (deviceId == Engine::Engine::GetEngine().lock()->GetInputManager().lock()->GetKeyboardId())
+		if (deviceId == inputManager->GetKeyboardId())
 		{
 			io.KeysDown[deviceButton] = newValue;
 
@@ -31,19 +33,19 @@ public:
 			if (deviceButton == gainput::KeySuperL || deviceButton == gainput::KeySuperR)
 				io.KeySuper = newValue;
 		}
-		else if (deviceId == Engine::Engine::GetEngine().lock()->GetInputManager().lock()->GetMouseId())
+		else if (deviceId == inputManager->GetMouseId())
 		{
 			io.MouseDown[deviceButton] = newValue;
 
 			if (deviceButton == gainput::MouseButton3)
 			{
 				if (newValue)
-					io.MouseWheel += Engine::Engine::GetEngine().lock()->GetInputManager().lock()->GetInputDefaults().scrollSpeed;
+					io.MouseWheel += inputManager->GetInputDefaults().scrollSpeed;
 			}
 			else if (deviceButton == gainput::MouseButton4)
 			{
 				if (newValue)
-					io.MouseWheel -= Engine::Engine::GetEngine().lock()->GetInputManager().lock()->GetInputDefaults().scrollSpeed;
+					io.MouseWheel -= inputManager->GetInputDefaults().scrollSpeed;
 			}
 
 			//printf_s("(%d) Device %d (%s%d) bool button (%d/%s) changed: %d -> %d\n", index, deviceId, device->GetTypeName(), device->GetIndex(), deviceButton, buttonName, oldValue, newValue);
@@ -54,16 +56,17 @@ public:
 
 	bool OnDeviceButtonFloat(gainput::DeviceId deviceId, gainput::DeviceButtonId deviceButton, float oldValue, float newValue) override
 	{
-		if (deviceId == Engine::Engine::GetEngine().lock()->GetInputManager().lock()->GetMouseId())
+		if (deviceId == Engine::InputManager::Get()->GetMouseId())
 		{
 			ImGuiIO& io = ImGui::GetIO();
+			const std::shared_ptr<Engine::Window> window = Engine::Window::Get();
 			if (deviceButton == gainput::MouseAxisX)
 			{
-				io.MousePos.x = newValue * Engine::Engine::GetEngine().lock()->GetWindow().lock()->GetWidth();
+				io.MousePos.x = newValue * static_cast<float>(window->GetWidth());
 			}
 			else if (deviceButton == gainput::MouseAxisY)
 			{
-				io.MousePos.y = newValue * Engine::Engine::GetEngine().lock()->GetWindow().lock()->GetHeight();
+				io.MousePos.y = newValue * static_cast<float>(window->GetHeight());
 			}
 		}
 
@@ -85,7 +88,8 @@ namespace Engine
 {
 	InputManager::InputManager() noexcept : inputManager()
 	{
-		inputManager.SetDisplaySize(Engine::GetEngine().lock()->GetWindow().lock()->GetWidth(), Engine::GetEngine().lock()->GetWindow().lock()->GetHeight());
+		std::shared_ptr<Window> window = Window::Get();
+		inputManager.SetDisplaySize(window->GetWidth(), window->GetHeight());
 
 		mouseId = inputManager.CreateDevice<gainput::InputDeviceMouse>();
 		keyboardId = inputManager.CreateDevice<gainput::InputDeviceKeyboard>();
@@ -114,14 +118,18 @@ namespace Engine
 		io.KeyMap[ImGuiKey_Z] = gainput::KeyZ;
 	}
 
+	std::shared_ptr<InputManager> InputManager::Get() {
+		return Engine::GetInputManager();
+	}
+
 	gainput::InputManager& InputManager::GetInputManager()
 	{
 		return inputManager;
 	}
 
-	eastl::vector<gainput::DeviceButtonId> InputManager::GetAllKeysDown(gainput::DeviceId deviceId)
+	std::vector<gainput::DeviceButtonId> InputManager::GetAllKeysDown(gainput::DeviceId deviceId)
 	{
-		eastl::vector<gainput::DeviceButtonId> specToReturn(512, false);
+		std::vector<gainput::DeviceButtonId> specToReturn(512, false);
 
 		for (int i = 0; i < gainput::KeyCount_; ++i)
 		{
@@ -157,7 +165,7 @@ namespace Engine
 		inputManager.Update();
 
 		MSG message;
-		while (PeekMessage(&message, Engine::GetEngine().lock()->GetWindow().lock()->GetWindowHandle(), 0, 0, PM_REMOVE))
+		while (PeekMessage(&message, Window::Get()->GetWindowHandle(), 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&message);
 			DispatchMessage(&message);

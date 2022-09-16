@@ -1,153 +1,107 @@
 #include "Engine/Collision/CollisionSystem.hpp"
 
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 #include "Engine/Components/TransformComponent.hpp"
-#include "Engine/Collision/CollisionCallback.hpp"
+#include "Engine/Entity/EntitySystem.hpp"
 
 // To cast the int to void* without getting compiler warnings
 #define INT_TO_VOID_PTR(val) ((void*)(size_t) val)
 
-namespace Engine
-{
+namespace Engine {
 
-	CollisionSystem::CollisionSystem() : world_(b2Vec2(0, 0)), isRunning_(false)
-	{
-		world_.SetAllowSleeping(false);
+	CollisionSystem::CollisionSystem() {
+		entitySystem = EntitySystem::Get();
+		if (!entitySystem.expired())
+			entitySystem.lock()->OnComponentAddedToEntityEvent += Sharp::EventHandler::Bind(this, &CollisionSystem::HandleOnComponentAddedToEntityEvent);
 	}
 
-	CollisionSystem::~CollisionSystem()
-	{
+	CollisionSystem::~CollisionSystem() {
+		if (!entitySystem.expired())
+			entitySystem.lock()->OnComponentAddedToEntityEvent -= Sharp::EventHandler::Bind(this, &CollisionSystem::HandleOnComponentAddedToEntityEvent);
 	}
 
-	void CollisionSystem::AddCollisionComponent(eastl::weak_ptr<CollisionComponent> componentToAdd)
-	{
-		collisionComponents_.push_back(componentToAdd);
-
-		// Generate a Collision Body
-		componentToAdd.lock()->body = world_.CreateBody(&(componentToAdd.lock()->bodyDef));
-		componentToAdd.lock()->body->CreateFixture(&(componentToAdd.lock()->fixtureDef));
-		componentToAdd.lock()->body->GetFixtureList()->SetUserData(INT_TO_VOID_PTR(componentToAdd.lock()->GetOwner().lock()->GetID()));
+	void CollisionSystem::AddCollisionComponent(const std::weak_ptr<CollisionComponent>& componentToAdd) {
+		collisionComponents.push_back(componentToAdd);
 	}
 
-	void CollisionSystem::RemoveCollisionComponent(CollisionComponent*  componentToRemove)
-	{
-		if (world_.GetBodyCount() == 0)
-			return;
-		if (componentToRemove == nullptr)
-			return;
-		if (componentToRemove->body == nullptr)
-			return;
+	void CollisionSystem::RemoveCollisionComponent(const std::weak_ptr<CollisionComponent>& componentToRemove) {
+		if (componentToRemove.expired()) return;
 
-		world_.DestroyBody(componentToRemove->body);
+		collisionComponents.erase(
+			std::remove_if(collisionComponents.begin(), collisionComponents.end(),
+				[componentToRemove](const std::weak_ptr<CollisionComponent>& component) {
+					return !component.expired() && component.lock().get() == componentToRemove.lock().get();
+				}), collisionComponents.end());
 	}
 
-	void CollisionSystem::OnLevelLoaded()
-	{
-		if (collisionComponents_.size() > 0)
+	void CollisionSystem::OnLevelLoaded() {
+		if (!collisionComponents.empty())
 			Start();
 	}
 
-	void CollisionSystem::OnLevelUnloaded()
-	{
-		if (isRunning_ == false)
-			return;
-
+	void CollisionSystem::OnLevelUnloaded() {
 		Stop();
-		collisionComponents_.clear();
+		collisionComponents.clear();
 	}
 
-	void CollisionSystem::Stop()
-	{
+	void CollisionSystem::Stop() {
 		ClearWorld();
-		isRunning_ = false;
 	}
 
-	void CollisionSystem::Start()
-	{
+	void CollisionSystem::Start() {
 		ClearWorld();
-		isRunning_ = true;
 	}
 
-	void CollisionSystem::Update()
-	{
-		// m_isRunning = true; // Use this to remove the assert if you're not working with the collision system, just don't submit it
-		if (isRunning_ == false) 
-			return; // Call CollisionSystem::Start() before calling CollisionSystem::Update()!
-
-		world_.SetContactListener(&entityContactCallback_);
-
+	void CollisionSystem::Update() {
 		// Update World Positions with Transform Components positions
-		for (auto colComp : collisionComponents_)
-		{
-			eastl::weak_ptr<TransformComponent> transform = colComp.lock()->GetTransformComponent();
+		for (const std::weak_ptr<CollisionComponent>& colComp : collisionComponents) {
+			std::weak_ptr<TransformComponent> transform = colComp.lock()->GetTransformComponent();
 			if (transform.expired() == false) // Collision Component Requires Transform!
 				continue;
 
 			const glm::vec3 position = transform.lock()->GetPosition();
-			colComp.lock()->body->SetTransform(b2Vec2(position.x, position.y), colComp.lock()->body->GetAngle());
 		}
-
-		// Update World
-		const float deltaTime = Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime();
-		world_.Step(deltaTime, 8, 4);
 
 		// Update Transform Positions with World Positions
-		for (auto colComp : collisionComponents_)
-		{
-			eastl::weak_ptr<TransformComponent> transform = colComp.lock()->GetTransformComponent();
+		for (const std::weak_ptr<CollisionComponent>& colComp : collisionComponents) {
+			std::weak_ptr<TransformComponent> transform = colComp.lock()->GetTransformComponent();
 			if (transform.expired() == false) // Collision Component Requires Transform!
 				continue;
-
-			const glm::vec3 oldPosition = transform.lock()->GetPosition();
-			const b2Vec2& position = colComp.lock()->body->GetPosition();
-
-			transform.lock()->SetPosition(glm::vec3(position.x, position.y, oldPosition.z));
 		}
-		entityContactCallback_ = EntityContact();
 	}
 
-	eastl::weak_ptr<Entity> CollisionSystem::RayQueryFirstHit(const glm::vec2& start, const glm::vec2& end, CollisionLayer detectionLayers) const
-	{
-		RayCastClosestCallback callback;
-		callback.detectionLayers = detectionLayers;
-
+	std::weak_ptr<Entity> CollisionSystem::RayQueryFirstHit(const glm::vec2& start, const glm::vec2& end, CollisionLayer detectionLayers) const {
 		// Raycast of 0 distance causes assert error in Box2D
-		if(start == end)
-		{
-			return eastl::weak_ptr<Entity>();
+		if (start == end) {
+			return std::weak_ptr<Entity>();
 		}
 
-		world_.RayCast(&callback, b2Vec2(start.x, start.y), b2Vec2(end.x, end.y));
-
-		return callback.entity;
+		return std::weak_ptr<Entity>();
 	}
 
 	// TODO - Implementation
-	eastl::weak_ptr<Entity> CollisionSystem::RayQueryAllHit(const glm::vec2& start, const glm::vec2& end) const
-	{
-		return eastl::weak_ptr<Entity>();
+	std::weak_ptr<Entity> CollisionSystem::RayQueryAllHit(const glm::vec2& start, const glm::vec2& end) const {
+		return std::weak_ptr<Entity>();
 	}
 
-	bool CollisionSystem::IsRunning() const
-	{
-		return isRunning_;
+	bool CollisionSystem::IsRunning() const {
+		return true;
 	}
 
-	eastl::vector<eastl::weak_ptr<CollisionComponent>> CollisionSystem::GetActiveCollisionComponents() const
-	{
-		return collisionComponents_;
+	std::vector<std::weak_ptr<CollisionComponent>> CollisionSystem::GetActiveCollisionComponents() const {
+		return collisionComponents;
 	}
 
-	void CollisionSystem::ClearWorld()
-	{
-		b2Body* body = world_.GetBodyList();
+	void CollisionSystem::ClearWorld() {}
 
-		while (body != nullptr)
-		{
-			b2Body* nextBody = body->GetNext();
-			world_.DestroyBody(body);
-			body = nextBody;
-		}
+	void CollisionSystem::HandleOnComponentAddedToEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> addedComponent) {
+		const std::shared_ptr<CollisionComponent> collisionComponent = std::dynamic_pointer_cast<CollisionComponent>(addedComponent);
+		if (collisionComponent) AddCollisionComponent(collisionComponent);
+	}
+
+	void CollisionSystem::HandleOnComponentRemovedFromEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> removedComponent) {
+		const std::shared_ptr<CollisionComponent> collisionComponent = std::dynamic_pointer_cast<CollisionComponent>(removedComponent);
+		if (collisionComponent) RemoveCollisionComponent(collisionComponent);
 	}
 
 }

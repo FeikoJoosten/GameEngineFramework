@@ -4,9 +4,9 @@
 
 #ifdef USING_VULKAN
 
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
+#include <vulkan/vulkan.h>
+#include <vector>
+#include <string>
 
 namespace Engine {
 	class VulkanLogicalDevice;
@@ -20,9 +20,9 @@ namespace Engine {
 		VulkanComputePipeline(VulkanLogicalDevice* logicalDevice);
 		~VulkanComputePipeline();
 
-		void SetComputeShader(eastl::string name);
+		void SetComputeShader(std::string name);
 
-		void AddSpecializationMapEntry(uint32_t constantID, eastl::vector<uint32_t> data);
+		void AddSpecializationMapEntry(uint32_t constantID, std::vector<uint32_t> data);
 
 		void AddDescriptorSetBinding(descriptorSetHandle set, uint32_t binding, VkDescriptorType type, uint32_t descriptorCount, VkShaderStageFlags shaderStage, const VkSampler* immutableSamplers);
 
@@ -41,12 +41,12 @@ namespace Engine {
 
 	protected:
 		struct DescriptorSet {
-			eastl::vector<VkDescriptorSetLayoutBinding> descriptionSetLayoutBindings;
+			std::vector<VkDescriptorSetLayoutBinding> descriptionSetLayoutBindings;
 			VkDescriptorSetLayout descriptorSet;
 			bool external;
 		};
 
-		eastl::vector<char> computeShaderData_;
+		std::vector<char> computeShaderData_;
 
 		VkShaderModule computeShader_;
 
@@ -54,12 +54,12 @@ namespace Engine {
 
 		VkSpecializationInfo computeShaderSpecializationInfo_;
 
-		eastl::vector<VkSpecializationMapEntry> specializationMapEntries_;
-		eastl::vector<uint32_t> specializationData_;
+		std::vector<VkSpecializationMapEntry> specializationMapEntries_;
+		std::vector<uint32_t> specializationData_;
 
-		eastl::vector<DescriptorSet> descriptorSets_;
+		std::vector<DescriptorSet> descriptorSets_;
 
-		eastl::vector<VkPushConstantRange> pushConstantRanges_;
+		std::vector<VkPushConstantRange> pushConstantRanges_;
 
 		VkPipelineLayout pipelineLayout_;
 

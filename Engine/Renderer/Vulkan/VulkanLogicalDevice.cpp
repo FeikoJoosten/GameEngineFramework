@@ -3,17 +3,17 @@
 #ifdef USING_VULKAN
 
 #include <iostream>
-#include <ThirdParty/EASTL-master/include/EASTL/set.h>
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
+#include <set>
+#include <string>
+#include <vector>
 
 namespace Engine {
 	
 
-	VulkanLogicalDevice::VulkanLogicalDevice(VulkanPhysicalDevice * vulkanPhysicalDevice, bool debug, eastl::vector<const char*> extensions, VulkanDeviceFeatures_t requestedDeviceFeatures)
+	VulkanLogicalDevice::VulkanLogicalDevice(VulkanPhysicalDevice * vulkanPhysicalDevice, bool debug, std::vector<const char*> extensions, VulkanDeviceFeatures_t requestedDeviceFeatures)
 	{
-		eastl::vector<VkDeviceQueueCreateInfo> queues;
-		eastl::set<int> uniqueQueueFamilies = { vulkanPhysicalDevice->GetQueueFamilies().graphics,
+		std::vector<VkDeviceQueueCreateInfo> queues;
+		std::set<int> uniqueQueueFamilies = { vulkanPhysicalDevice->GetQueueFamilies().graphics,
 			vulkanPhysicalDevice->GetQueueFamilies().compute, 
 			vulkanPhysicalDevice->GetQueueFamilies().present };
 		float queuePriority = 1.f;
@@ -53,7 +53,7 @@ namespace Engine {
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 		createInfo.ppEnabledExtensionNames = extensions.data();
 
-		eastl::vector<const char*> layers = {
+		std::vector<const char*> layers = {
 			"VK_LAYER_LUNARG_standard_validation"
 		};
 
@@ -68,7 +68,7 @@ namespace Engine {
 		VkResult res = vkCreateDevice(vulkanPhysicalDevice->GetPhysicalDevice(), &createInfo, nullptr, &device);
 
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Logical device creation failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Logical device creation failed";
 			std::cout << s.c_str() << std::endl;
 		}
 

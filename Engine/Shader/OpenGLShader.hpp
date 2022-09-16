@@ -2,13 +2,13 @@
 
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_OPENGL
-#include "Engine/api.hpp"
+#include "Engine/Api.hpp"
 #include "Engine/Shader/Shader.hpp"
 
-#include <ThirdParty/glm/glm/glm.hpp>
-#include <ThirdParty/EASTL-master/include/EASTL/map.h>
-#include <ThirdParty/EASTL-master/include/EASTL/shared_ptr.h>
-#include <ThirdParty/glew-2.1.0/include/GL/glew.h>
+#include <map>
+#include <memory>
+#include <glm/glm.hpp>
+#include <GL/glew.h>
 
 namespace Engine
 {
@@ -30,7 +30,7 @@ namespace Engine
 		/// Check if this parameter object is valid.
 		/// </summary>
 		/// <returns>Returns true of this Shader Parameter has been properly initialized. </returns>
-		bool IsValid() const { return _location != -1; }
+		bool IsValid() const { return this != nullptr && _location != -1; }
 
 		/// <summary>
 		/// Gets the type of this parameter.
@@ -108,7 +108,7 @@ namespace Engine
 		/// <param name="type">The type of the parameter you want to load in.</param>
 		/// <param name="location">The location of the parameter you want to load in.</param>
 		/// <param name="sampler">The sampler of this parameter. -1 by default.</param>
-		ShaderParameter(OpenGLShader* shader, eastl::string name, GLenum type, GLint location, GLint sampler = -1)
+		ShaderParameter(OpenGLShader* shader, std::string name, GLenum type, GLint location, GLint sampler = -1)
 			: _shader(shader)
 			, _name(name)
 			, _type(type)
@@ -129,7 +129,7 @@ namespace Engine
 		/// <param name="type">The type of the parameter you want to load in.</param>
 		/// <param name="location">The location of the parameter you want to load in.</param>
 		/// <param name="sampler">The sampler of this parameter. -1 by default.</param>
-		void Reset(OpenGLShader* shader, eastl::string name, GLenum type, GLint location, GLint sampler = -1)
+		void Reset(OpenGLShader* shader, std::string name, GLenum type, GLint location, GLint sampler = -1)
 		{
 			this->_shader = shader;
 			this->_type = type;
@@ -158,7 +158,7 @@ namespace Engine
 		/// <summary>
 		/// Name of the shader parameter as defined in the shader file.
 		/// </summary>
-		eastl::string		_name;
+		std::string		_name;
 
 		/// <summary>
 		/// The type of the shader parameter as defined in the shader file.
@@ -190,7 +190,7 @@ namespace Engine
 		/// Check if this parameter object is valid.
 		/// </summary>
 		/// <returns>Returns true of this Shader Parameter has been properly initialized. </returns>
-		bool IsValid() const { return _location != -1; }
+		bool IsValid() const { return this != nullptr && _location != -1; }
 
 		/// <summary>
 		/// Gets the type of this parameter.
@@ -235,7 +235,7 @@ namespace Engine
 		/// <param name="name">The name of the attribute you want to load in.</param>
 		/// <param name="type">The type of the attribute you want to load in.</param>
 		/// <param name="location">The location of the attribute you want to load in.</param>
-		ShaderAttribute(OpenGLShader* shader, eastl::string name, GLenum type, GLint location) :
+		ShaderAttribute(OpenGLShader* shader, std::string name, GLenum type, GLint location) :
 			_shader(shader),
 			_name(name),
 			_type(type),
@@ -255,7 +255,7 @@ namespace Engine
 		/// <param name="name">The name of the attribute you want to load in.</param>
 		/// <param name="type">The type of the attribute you want to load in.</param>
 		/// <param name="location">The location of the attribute you want to load in.</param>
-		void Reset(OpenGLShader* shader, eastl::string name, GLenum type, GLint location)
+		void Reset(OpenGLShader* shader, std::string name, GLenum type, GLint location)
 		{
 			this->_shader = shader;
 			this->_type = type;
@@ -284,7 +284,7 @@ namespace Engine
 		/// <summary>
 		/// Name of the shader attribute as defined in the shader file.
 		/// </summary>
-		eastl::string  _name;
+		std::string  _name;
 
 		/// <summary>
 		/// The type of the shader attribute as defined in the shader file.
@@ -315,8 +315,8 @@ namespace Engine
 		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
 		/// <param name="fragmentFileName">The fragment shader file you want to load. 
 		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
-		explicit OpenGLShader(const eastl::string& vertexFileName,
-			const eastl::string& fragmentFileName);
+		explicit OpenGLShader(const std::string& vertexFileName,
+			const std::string& fragmentFileName);
 
 		///Create a shader with vertex and fragment programs
 		/// <summary>
@@ -328,9 +328,9 @@ namespace Engine
 		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
 		/// <param name="geometryFileName">The geometry shader file you want to load. This value is optional.
 		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
-		explicit OpenGLShader(const eastl::string& vertexFileName,
-			const eastl::string& fragmentFileName,
-			const eastl::string& geometryFileName);
+		explicit OpenGLShader(const std::string& vertexFileName,
+			const std::string& fragmentFileName,
+			const std::string& geometryFileName);
 
 		explicit OpenGLShader(const Shader& other) = delete;
 		OpenGLShader(OpenGLShader &&other) = delete;
@@ -347,23 +347,23 @@ namespace Engine
 		/// <param name="geometryFileName">The geometry shader file you want to load. This value is optional.
 		/// NOTE: Only use the shader name + extension. The shader file needs to be located under 'Resources/Shaders/'. It can be in a subfolder of 'Resources/Shaders/'.</param>
 		/// <returns>Returns true if the shader files have succesfully been loaded.</returns>
-		bool LoadSource(const eastl::string& vertexShader,
-			const eastl::string& fragmentShader,
-			const eastl::string& geometryShader);
+		bool LoadSource(const std::string& vertexShader,
+			const std::string& fragmentShader,
+			const std::string& geometryShader);
 
 		/// <summary>
 		/// This method will allow you to get a parameter by its name.
 		/// </summary>
 		/// <param name="name">The name of the parameter you want to get.</param>
 		/// <returns>Returns the parameter if it has been loaded. Otherwise it'll return an expired weak pointer.</returns>
-		eastl::weak_ptr<ShaderParameter> GetParameter(const eastl::string& name);
+		std::shared_ptr<ShaderParameter> GetParameter(const std::string& name);
 
 		/// <summary>
 		/// This method will allow you to get a attribute by its name.
 		/// </summary>
 		/// <param name="name">The name of the attribute you want to get.</param>
 		/// <returns>Returns the attribute if it has been loaded. Otherwise it'll return an expired weak pointer.</returns>
-		eastl::weak_ptr<ShaderAttribute> GetAttribute(const eastl::string& name);
+		std::shared_ptr<ShaderAttribute> GetAttribute(const std::string& name);
 
 		/// <summary>
 		/// This method allows you to get the program of this shader.
@@ -387,10 +387,10 @@ namespace Engine
 		bool Validate() const;
 
 		/// Store all the parameters
-		eastl::map<eastl::string, eastl::shared_ptr<ShaderParameter>> parameters;
+		std::map<std::string, std::shared_ptr<ShaderParameter>> parameters;
 
 		/// Store all the attributes
-		eastl::map<eastl::string, eastl::shared_ptr<ShaderAttribute>> attributes;
+		std::map<std::string, std::shared_ptr<ShaderAttribute>> attributes;
 
 		/// GL id (name) of the compiled program
 		GLuint program = 0;

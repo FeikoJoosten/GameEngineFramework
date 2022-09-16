@@ -5,8 +5,8 @@
 /// </summary>
 enum class CollisionShapeType
 {
-	CIRCLE,
-	BOX
+	Circle,
+	Box
 };
 
 /// <summary>
@@ -14,10 +14,7 @@ enum class CollisionShapeType
 /// </summary>
 enum class CollisionLayer
 {
-	NONE			= 0,
-	SOLID			= 1 << 0,	// 1
-	DETECTION		= 1 << 1,	// 2
-	RED_TEAM		= 1 << 2,	// 4
-	BLUE_TEAM		= 1 << 3,	// 8
-	DAMAGE			= 1 << 4	// etc
+	None			= 0,
+	Solid			= 1 << 0,	// 1
+	Detection		= 1 << 1,	// 2
 };

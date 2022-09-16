@@ -1,6 +1,6 @@
 #pragma once
-#include "Engine/api.hpp"
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
+#include "Engine/Api.hpp"
+#include <string>
 
 #ifdef _DEBUG
 #define COUT_LOGGING
@@ -13,7 +13,7 @@
 
 #define log_path "engine.log"
 
-void ENGINE_API doDebug(eastl::string Type, eastl::string debugClass, eastl::string function, eastl::string value);
+void ENGINE_API doDebug(std::string Type, std::string debugClass, std::string function, std::string value);
 
 /* example: debug_warning("ResourceManager","GetFile()","File not found"); */
 

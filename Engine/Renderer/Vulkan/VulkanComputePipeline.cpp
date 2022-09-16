@@ -1,6 +1,7 @@
 #include "Engine/Renderer/Vulkan/VulkanComputePipeline.hpp"
 #ifdef USING_VULKAN
 
+#include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/Renderer/Vulkan/VulkanLogicalDevice.hpp"
 #include "Engine/Renderer/VulkanRenderer.hpp"
 
@@ -28,13 +29,13 @@ namespace Engine {
 		vkDestroyShaderModule(device_->GetDevice(), computeShader_, nullptr);
 	}
 
-	void VulkanComputePipeline::SetComputeShader(eastl::string name)
+	void VulkanComputePipeline::SetComputeShader(std::string name)
 	{
-		eastl::string path = "Resources/Shaders/Vulkan/Compiled/" + name;
+		std::string path = AssetManager::Get()->GetProjectRoot() + "Resources/Shaders/Vulkan/Compiled/" + name;
 
 		FILE* file = fopen(path.c_str(), "rb");
 		if (!file) {
-			eastl::string s = "Opening shader file " + path + " failed";
+			std::string s = "Opening shader file " + path + " failed";
 			debug_error("VulkanComputePipeline", "SetComputeShader", s);
 			return;
 		}
@@ -53,7 +54,7 @@ namespace Engine {
 		vkCreateShaderModule(device_->GetDevice(), &createInfo, nullptr, &computeShader_);
 	}
 
-	void VulkanComputePipeline::AddSpecializationMapEntry(uint32_t constantID, eastl::vector<uint32_t> data)
+	void VulkanComputePipeline::AddSpecializationMapEntry(uint32_t constantID, std::vector<uint32_t> data)
 	{
 		VkSpecializationMapEntry entry = {};
 		entry.constantID = constantID;
@@ -128,7 +129,7 @@ namespace Engine {
 		shaderInfo.pName = "main";
 		shaderInfo.pSpecializationInfo = &computeShaderSpecializationInfo_;
 
-		eastl::vector<VkDescriptorSetLayout> descriptorLayouts;
+		std::vector<VkDescriptorSetLayout> descriptorLayouts;
 
 		for (size_t i = 0, size = descriptorSets_.size(); i < size; ++i) {
 			if (descriptorSets_[i].descriptorSet == 0) {

@@ -2,7 +2,7 @@
 
 #include "Engine/Particle System/Particle.hpp"
 
-#include "ThirdParty/glm/glm/gtc/random.hpp"
+#include "glm/gtc/random.hpp"
 
 namespace Engine {
 
@@ -47,9 +47,9 @@ namespace Engine {
 		startColorMax = colorMax;
 	}
 
-	eastl::pair<glm::vec4, glm::vec4> Particle::GetStartColor()
+	std::pair<glm::vec4, glm::vec4> Particle::GetStartColor()
 	{
-		return eastl::pair<glm::vec4, glm::vec4>(startColorMin, startColorMax);
+		return std::pair<glm::vec4, glm::vec4>(startColorMin, startColorMax);
 	}
 
 	void Particle::SetEndColor(glm::vec4 colorMin, glm::vec4 colorMax)
@@ -58,9 +58,9 @@ namespace Engine {
 		endColorMax = colorMax;
 	}
 
-	eastl::pair<glm::vec4, glm::vec4> Particle::GetEndColor()
+	std::pair<glm::vec4, glm::vec4> Particle::GetEndColor()
 	{
-		return eastl::pair<glm::vec4, glm::vec4>(endColorMin, endColorMax);
+		return std::pair<glm::vec4, glm::vec4>(endColorMin, endColorMax);
 	}
 
 	void Particle::SetColorInterpolateType(InterpolateType type)
@@ -79,9 +79,9 @@ namespace Engine {
 		this->forceMax = glm::vec4(forceMax, 0.f);
 	}
 
-	eastl::pair<glm::vec3, glm::vec3> Particle::GetForce()
+	std::pair<glm::vec3, glm::vec3> Particle::GetForce()
 	{
-		return eastl::pair<glm::vec3, glm::vec3>(forceMin.xyz, forceMax.xyz);
+		return std::pair<glm::vec3, glm::vec3>(forceMin.xyz, forceMax.xyz);
 	}
 
 	void Particle::SetLifetime(float lifetimeMin, float lifetimeMax)
@@ -90,9 +90,9 @@ namespace Engine {
 		this->lifetimeMax = lifetimeMax;
 	}
 
-	eastl::pair<float, float> Particle::GetLifetime()
+	std::pair<float, float> Particle::GetLifetime()
 	{
-		return eastl::pair<float, float>(lifetimeMin, lifetimeMax);
+		return std::pair<float, float>(lifetimeMin, lifetimeMax);
 	}
 
 	void Particle::SetSpeed(float speedMin, float speedMax)
@@ -101,9 +101,9 @@ namespace Engine {
 		this->speedMax = speedMax;
 	}
 
-	eastl::pair<float, float> Particle::GetSpeed()
+	std::pair<float, float> Particle::GetSpeed()
 	{
-		return eastl::pair<float, float>(speedMin, speedMax);
+		return std::pair<float, float>(speedMin, speedMax);
 	}
 
 	void Particle::SetMass(float massMin, float massMax)
@@ -112,9 +112,9 @@ namespace Engine {
 		this->massMax = massMax;
 	}
 
-	eastl::pair<float, float> Particle::GetMass()
+	std::pair<float, float> Particle::GetMass()
 	{
-		return eastl::pair<float, float>(massMin, massMax);
+		return std::pair<float, float>(massMin, massMax);
 	}
 
 	void Particle::SetGravityEnabled(bool gravity)
@@ -127,16 +127,16 @@ namespace Engine {
 		return gravity;
 	}
 
-	void Particle::SetTexture(eastl::weak_ptr<Texture> texture)
+	void Particle::SetTexture(std::weak_ptr<Texture> texture)
 	{
 		texture = texture;
-		if (texture.lock() != eastl::shared_ptr<Texture>(nullptr))
+		if (texture.lock() != std::shared_ptr<Texture>(nullptr))
 			textured = true;
 		else
 			textured = false;
 	}
 
-	eastl::weak_ptr<Texture> Particle::GetTexture() const
+	std::weak_ptr<Texture> Particle::GetTexture() const
 	{
 		return texture;
 	}
@@ -182,9 +182,9 @@ namespace Engine {
 		startLineThicknessMax = thicknessMax;
 	}
 
-	eastl::pair<float, float> Particle::GetLineStartThickness()
+	std::pair<float, float> Particle::GetLineStartThickness()
 	{
-		return eastl::pair<float, float>(startLineThicknessMin, startLineThicknessMax);
+		return std::pair<float, float>(startLineThicknessMin, startLineThicknessMax);
 	}
 
 	void Particle::SetLineEndthickness(float thicknessMin, float thicknessMax)
@@ -193,9 +193,9 @@ namespace Engine {
 		endLineThicknessMax = thicknessMax;
 	}
 
-	eastl::pair<float, float> Particle::GetLineEndThickness()
+	std::pair<float, float> Particle::GetLineEndThickness()
 	{
-		return eastl::pair<float, float>(endLineThicknessMin, endLineThicknessMax);
+		return std::pair<float, float>(endLineThicknessMin, endLineThicknessMax);
 	}
 
 	void Particle::SetLineThicknessInterpolateType(InterpolateType type)
@@ -214,9 +214,9 @@ namespace Engine {
 		startSizeMax = sizeMax;
 	}
 
-	eastl::pair<glm::vec2, glm::vec2> Particle::GetBillboardSizeStart()
+	std::pair<glm::vec2, glm::vec2> Particle::GetBillboardSizeStart()
 	{
-		return eastl::pair<glm::vec2, glm::vec2>(startSizeMin, startSizeMax);
+		return std::pair<glm::vec2, glm::vec2>(startSizeMin, startSizeMax);
 	}
 
 	void Particle::SetBillboardSizeEnd(glm::vec2 sizeMin, glm::vec2 sizeMax)
@@ -225,9 +225,9 @@ namespace Engine {
 		endSizeMax = sizeMax;
 	}
 
-	eastl::pair<glm::vec2, glm::vec2> Particle::GetBillboardSizeEnd()
+	std::pair<glm::vec2, glm::vec2> Particle::GetBillboardSizeEnd()
 	{
-		return eastl::pair<glm::vec2, glm::vec2>(endSizeMin, endSizeMax);
+		return std::pair<glm::vec2, glm::vec2>(endSizeMin, endSizeMax);
 	}
 
 	void Particle::SetBillboardSizeInterpolateType(InterpolateType type)
@@ -246,9 +246,9 @@ namespace Engine {
 		startRollSpeedMax = speedMax;
 	}
 
-	eastl::pair<float, float> Particle::GetBillboardRollSpeedStart()
+	std::pair<float, float> Particle::GetBillboardRollSpeedStart()
 	{
-		return eastl::pair<float, float>(startRollSpeedMin, startRollSpeedMax);
+		return std::pair<float, float>(startRollSpeedMin, startRollSpeedMax);
 	}
 
 	void Particle::SetBillboardRollSpeedEnd(float speedMin, float speedMax)
@@ -257,9 +257,9 @@ namespace Engine {
 		endRollSpeedMax = speedMax;
 	}
 
-	eastl::pair<float, float> Particle::GetBillboardRollSpeedEnd()
+	std::pair<float, float> Particle::GetBillboardRollSpeedEnd()
 	{
-		return eastl::pair<float, float>(endRollSpeedMin, endRollSpeedMax);
+		return std::pair<float, float>(endRollSpeedMin, endRollSpeedMax);
 	}
 
 	void Particle::SetBillboardRoll(float rollMin, float rollMax)
@@ -268,9 +268,9 @@ namespace Engine {
 		this->rollMax = rollMax;
 	}
 
-	eastl::pair<float, float> Particle::GetBillboardRoll()
+	std::pair<float, float> Particle::GetBillboardRoll()
 	{
-		return eastl::pair<float, float>(rollMin, rollMax);
+		return std::pair<float, float>(rollMin, rollMax);
 	}
 
 	void Particle::SetBillboardRollSpeedInterpolateType(InterpolateType type)
@@ -283,22 +283,22 @@ namespace Engine {
 		return rollSpeedInterpolateType;
 	}
 
-	void Particle::SetMesh(eastl::weak_ptr<Mesh> mesh)
+	void Particle::SetMesh(std::weak_ptr<Mesh> mesh)
 	{
 		this->mesh = mesh;
 	}
 
-	eastl::weak_ptr<Mesh> Particle::GetMesh() const
+	std::weak_ptr<Mesh> Particle::GetMesh() const
 	{
 		return mesh;
 	}
 
-	void Particle::SetMaterial(eastl::weak_ptr<Material> material)
+	void Particle::SetMaterial(std::weak_ptr<Material> material)
 	{
 		this->material = material;
 	}
 
-	eastl::weak_ptr<Material> Particle::GetMaterial() const
+	std::weak_ptr<Material> Particle::GetMaterial() const
 	{
 		return material;
 	}
@@ -309,9 +309,9 @@ namespace Engine {
 		startScaleMax = glm::vec4(scaleMax, 0.f);
 	}
 
-	eastl::pair<glm::vec3, glm::vec3> Particle::GetMeshScaleStart()
+	std::pair<glm::vec3, glm::vec3> Particle::GetMeshScaleStart()
 	{
-		return eastl::pair<glm::vec3, glm::vec3>(startScaleMin.xyz, startScaleMax.xyz);
+		return std::pair<glm::vec3, glm::vec3>(startScaleMin.xyz, startScaleMax.xyz);
 	}
 
 	void Particle::SetMeshScaleEnd(glm::vec3 scaleMin, glm::vec3 scaleMax)
@@ -320,9 +320,9 @@ namespace Engine {
 		endScaleMax = glm::vec4(scaleMax, 0.f);
 	}
 
-	eastl::pair<glm::vec3, glm::vec3> Particle::GetMeshScaleEnd()
+	std::pair<glm::vec3, glm::vec3> Particle::GetMeshScaleEnd()
 	{
-		return eastl::pair<glm::vec3, glm::vec3>(endScaleMin.xyz, endScaleMax.xyz);
+		return std::pair<glm::vec3, glm::vec3>(endScaleMin.xyz, endScaleMax.xyz);
 	}
 
 	void Particle::SetMeshScaleInterpolateType(InterpolateType type)
@@ -341,9 +341,9 @@ namespace Engine {
 		startRotationSpeedMax = glm::vec4(speedMax, 0.f);
 	}
 
-	eastl::pair<glm::vec3, glm::vec3> Particle::GetMeshRotationSpeedStart()
+	std::pair<glm::vec3, glm::vec3> Particle::GetMeshRotationSpeedStart()
 	{
-		return eastl::pair<glm::vec3, glm::vec3>(startRotationSpeedMin.xyz, startRotationSpeedMax.xyz);
+		return std::pair<glm::vec3, glm::vec3>(startRotationSpeedMin.xyz, startRotationSpeedMax.xyz);
 	}
 
 	void Particle::SetMeshRotationSpeedEnd(glm::vec3 speedMin, glm::vec3 speedMax)
@@ -352,9 +352,9 @@ namespace Engine {
 		endRotationSpeedMax = glm::vec4(speedMax, 0.f);
 	}
 
-	eastl::pair<glm::vec3, glm::vec3> Particle::GetMeshRotationSpeedEnd()
+	std::pair<glm::vec3, glm::vec3> Particle::GetMeshRotationSpeedEnd()
 	{
-		return eastl::pair<glm::vec3, glm::vec3>(endRotationSpeedMin.xyz, endRotationSpeedMax.xyz);
+		return std::pair<glm::vec3, glm::vec3>(endRotationSpeedMin.xyz, endRotationSpeedMax.xyz);
 	}
 
 	void Particle::SetMeshRotation(glm::vec3 rotationMin, glm::vec3 rotationMax)
@@ -363,9 +363,9 @@ namespace Engine {
 		this->rotationMax = glm::vec4(rotationMax, 0.f);
 	}
 
-	eastl::pair<glm::vec3, glm::vec3> Particle::GetMeshRotation()
+	std::pair<glm::vec3, glm::vec3> Particle::GetMeshRotation()
 	{
-		return eastl::pair<glm::vec3, glm::vec3>(rotationMin.xyz, rotationMax.xyz);
+		return std::pair<glm::vec3, glm::vec3>(rotationMin.xyz, rotationMax.xyz);
 	}
 
 	void Particle::SetMeshRotationSpeedInterpolateType(InterpolateType type)

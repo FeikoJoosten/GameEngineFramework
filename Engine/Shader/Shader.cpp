@@ -1,9 +1,9 @@
 #include "Engine/Shader/Shader.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 
 namespace Engine
 {
-	Shader::Shader(const eastl::string& vertexFileName, const eastl::string& fragmentFileName)
+	Shader::Shader(const std::string& vertexFileName, const std::string& fragmentFileName)
 	{
 	}
 

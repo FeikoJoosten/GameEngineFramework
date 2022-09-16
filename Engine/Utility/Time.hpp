@@ -1,7 +1,10 @@
 #pragma once
 
-#include "Engine/api.hpp"
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
+#include "Engine/Api.hpp"
+#include "Engine/Engine.hpp"
+
+#include <memory>
+#include <vector>
 
 namespace Engine
 {
@@ -10,34 +13,41 @@ namespace Engine
 	/// </summary>
 	class ENGINE_API Time
 	{
-		friend class Engine;
+		friend std::shared_ptr<Time> Engine::GetTime() noexcept;
 
 		Time();
 	public:
 		~Time() = default;
+		Time(const Time& other) = delete;
+		Time(Time&& other) noexcept = delete;
 
-		/// <summary>
+		Time& operator=(const Time& other) = delete;
+		Time& operator=(Time&& other) noexcept = delete;
+
+		static std::shared_ptr<Time> Get();
+
+			/// <summary>
 		/// This method allows you to get the current deltaTime.
 		/// </summary>
 		/// <returns>Returns the current delta time as a float.</returns>
-		float GetDeltaTime() const;
+		[[nodiscard]] float GetDeltaTime() const;
 		/// <summary>
 		/// This method is used to get the maximum amount of iterations for the previous frame rates.
 		/// </summary>
 		/// <returns>Returns the maximum amount of iterations as an int.</returns>
-		int GetMaxIterations() const;
+		[[nodiscard]] int GetMaxIterations() const;
 		/// <summary>
 		/// This method allows you to get a vector of floats from the previous frames their delta times.
 		/// </summary>
 		/// <returns>Returns the delta times from the previous frames as a vector of floats.</returns>
-		eastl::vector<float> GetPreviousFramerates() const;
+		[[nodiscard]] std::vector<float> GetPreviousFramerates() const;
 	private:
 		float deltaTime;
-		eastl::vector<float> previousFramerates;
+		std::vector<float> previousFramerates;
 		int iterations = -1;
 		int maxIterations = 100;
 
-		friend class Engine;
+		friend class Application;
 		static void OnUpdateBegin();
 		void OnUpdateEnd();
 	};

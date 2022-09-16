@@ -2,9 +2,9 @@
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
 
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
+#include <vulkan/vulkan.h>
+#include <vector>
+#include <string>
 
 #define VULKAN_PIPELINE_COMPILE_MISSING_SHADER_VERTEX 1
 #define VULKAN_PIPELINE_COMPILE_MISSING_SHADER_FRAGMENT 2
@@ -31,7 +31,7 @@ namespace Engine {
 		/*	The system automatically looks in the Shaders\Compiled folder for shaders. Currently spirv need to be true. If it's false, the function fails.
 		*	Returns false if the function fails
 		*/
-		bool LoadShader(SHADER_TYPE type, eastl::string name, bool spirv = true);
+		bool LoadShader(SHADER_TYPE type, std::string name, bool spirv = true);
 
 		/*	Returns 0 if succesfull, otherwise, an error code is returned.
 		*/
@@ -83,16 +83,16 @@ namespace Engine {
 
 	private:
 		typedef struct {
-			eastl::vector<VkDescriptorSetLayoutBinding> descriptionSetLayoutBindings;
+			std::vector<VkDescriptorSetLayoutBinding> descriptionSetLayoutBindings;
 			VkDescriptorSetLayout descriptorSet;
 			bool external;
 		}DescriptorSet_t;
 
-		eastl::vector<char> vertexShader;
-		eastl::vector<char> teslationEvaluationShader;
-		eastl::vector<char> teslationControlShader;
-		eastl::vector<char> geometryShader;
-		eastl::vector<char> fragmentShader;
+		std::vector<char> vertexShader;
+		std::vector<char> teslationEvaluationShader;
+		std::vector<char> teslationControlShader;
+		std::vector<char> geometryShader;
+		std::vector<char> fragmentShader;
 
 		VkShaderModule vertexShaderModule;
 		VkShaderModule teslationEvaluationShaderModule;
@@ -120,20 +120,20 @@ namespace Engine {
 		VkPipelineDepthStencilStateCreateInfo depthStencilStateCreateInfo;
 
 		VkPipelineMultisampleStateCreateInfo multisampling;
-		eastl::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments;
+		std::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments;
 		VkPipelineLayoutCreateInfo pipelineLayoutCreateInfo;
 
 		VkRenderPass renderPass;
 		uint32_t subPass;
 
-		eastl::vector<VkVertexInputBindingDescription> vertexInputBindingDescriptions;
-		eastl::vector<VkVertexInputAttributeDescription> vertexInputAttributeDescriptions;
+		std::vector<VkVertexInputBindingDescription> vertexInputBindingDescriptions;
+		std::vector<VkVertexInputAttributeDescription> vertexInputAttributeDescriptions;
 
-		eastl::vector<DescriptorSet_t> descriptorSets;
+		std::vector<DescriptorSet_t> descriptorSets;
 
-		eastl::vector<VkPushConstantRange> pushConstantRanges;
+		std::vector<VkPushConstantRange> pushConstantRanges;
 
-		int CompileShaderModule(eastl::vector<char> code, VkShaderModule* shaderModule);
+		int CompileShaderModule(std::vector<char> code, VkShaderModule* shaderModule);
 
 		VkPipelineShaderStageCreateInfo ShaderStageCreateInfo[5] = { {},{},{},{},{} };
 

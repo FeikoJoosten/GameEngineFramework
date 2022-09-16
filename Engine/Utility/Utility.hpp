@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Engine/api.hpp"
-#include "ThirdParty/EASTL-master/include/EASTL/vector.h"
-#include "ThirdParty/EASTL-master/include/EASTL/string.h"
+#include "Engine/Api.hpp"
+
+#include <vector>
+#include <string>
 
 namespace Engine
 {
@@ -12,7 +13,7 @@ namespace Engine
 		Utility() = default;
 		~Utility() = default;
 
-		static eastl::vector<char> ReadFile(const eastl::string& fileName, int fileOpenMode = 1);
-		static bool FileExists(const eastl::string& fileName);
+		static std::vector<char> ReadFile(const std::string& fileName, int fileOpenMode = 1);
+		static bool FileExists(const std::string& fileName);
 	};
 } // namespace Engine

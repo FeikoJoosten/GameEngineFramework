@@ -2,15 +2,15 @@
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
 
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
+#include <vulkan/vulkan.h>
 
 #include "Engine/Renderer/Vulkan/VulkanPipeline.hpp"
 #include "Engine/Renderer/Vulkan/VulkanLogicalDevice.hpp"
 #include "Engine/Texture/VulkanTexture.hpp"
 #include "Engine/Renderer/Vulkan/VulkanBuffer.hpp"
 #include "Engine/Renderer/Vulkan/VulkanDescriptorPool.hpp"
-#include <ThirdParty/glm/glm/glm.hpp>
-#include <ThirdParty/EASTL-master/include/EASTL/unique_ptr.h>
+#include <glm/glm.hpp>
+#include <memory>
 
 namespace Engine {
 
@@ -32,10 +32,10 @@ namespace Engine {
 		void Recreate();
 
 	protected:
-		eastl::unique_ptr<VulkanPipeline> linePipeline;
+		std::unique_ptr<VulkanPipeline> linePipeline;
 
-		eastl::unique_ptr<VulkanBuffer> vertexBuffer;
-		eastl::unique_ptr<VulkanBuffer> uniformBuffer;
+		std::unique_ptr<VulkanBuffer> vertexBuffer;
+		std::unique_ptr<VulkanBuffer> uniformBuffer;
 
 		typedef struct {
 			glm::vec3 position;
@@ -53,7 +53,7 @@ namespace Engine {
 			glm::vec4 color;
 		}PushConstants_t;
 
-		eastl::vector<PushConstants_t> lines;
+		std::vector<PushConstants_t> lines;
 
 		VulkanRenderer* renderer;
 		VulkanLogicalDevice* device;

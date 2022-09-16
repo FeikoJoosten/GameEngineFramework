@@ -1,12 +1,12 @@
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
 #include "Engine/Mesh/VulkanMesh.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 #include "Engine/Renderer/VulkanRenderer.hpp"
 #include "Engine/Texture/VulkanTexture.hpp"
 #include "Engine/Renderer/VulkanRenderer.hpp"
 #include "Engine/Utility/Logging.hpp"
-#include <ThirdParty/assimp/include/assimp/types.h>
+#include <assimp/types.h>
 
 namespace Engine
 {
@@ -26,7 +26,7 @@ namespace Engine
 		VulkanMesh::allocator = renderer->GetVmaAllocator();
 	}
 
-	VulkanMesh::VulkanMesh(aiMesh * mesh, eastl::shared_ptr<Skeleton> skeleton, eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices) : Mesh(vertices, indices)
+	VulkanMesh::VulkanMesh(aiMesh * mesh, std::shared_ptr<Skeleton> skeleton, std::vector<Vertex> vertices, std::vector<unsigned> indices) : Mesh(vertices, indices)
 	{
 		this->mesh = mesh;
 		this->skeleton = skeleton;
@@ -42,7 +42,7 @@ namespace Engine
 
 	void VulkanMesh::SetUpMesh()
 	{
-		//eastl::weak_ptr<VulkanRenderer> vulkanRenderer = Engine::GetRenderer<VulkanRenderer>();
+		//std::weak_ptr<VulkanRenderer> vulkanRenderer = Engine::GetRenderer<VulkanRenderer>();
 		//VkBuffer VBOBuffer, EBOBuffer, UBOBuffer;
 
 		//vulkanRenderer->CreateBuffer<Vertex>(vertices, VBOBuffer, vertexBufferMemory, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT); //Creates a vertex buffer on GPU
@@ -60,17 +60,17 @@ namespace Engine
 
 		if (mesh->HasBones() && skeleton != nullptr) {
 			//skeletal mesh, load bones
-			eastl::map<eastl::string, Skeleton::Bone_t*> boneMap = skeleton->GetBoneMap();
+			std::map<std::string, Skeleton::Bone_t*> boneMap = skeleton->GetBoneMap();
 
 			for (size_t i = 0, size = mesh->mNumBones; i < size; ++i) {
-				if (boneMap.find(eastl::string(mesh->mBones[i]->mName.C_Str())) == boneMap.end()) {
-					eastl::string s = "Mesh references bone " +
-						eastl::string(mesh->mBones[i]->mName.C_Str()) +
+				if (boneMap.find(std::string(mesh->mBones[i]->mName.C_Str())) == boneMap.end()) {
+					std::string s = "Mesh references bone " +
+						std::string(mesh->mBones[i]->mName.C_Str()) +
 						" Which isn't found in skeleton " +
 						skeleton->GetName();
 					debug_warning("VulkanMesh", "Setup Mesh", s);
 				}
-				int index = boneMap[eastl::string(mesh->mBones[i]->mName.C_Str())]->boneDataIndex;
+				int index = boneMap[std::string(mesh->mBones[i]->mName.C_Str())]->boneDataIndex;
 				aiBone* bone = mesh->mBones[i];
 
 				boneOffsets[index] = glm::mat4(bone->mOffsetMatrix.a1, bone->mOffsetMatrix.b1, bone->mOffsetMatrix.c1, bone->mOffsetMatrix.d1,
@@ -100,19 +100,19 @@ namespace Engine
 			animated = true;
 		}
 
-		vertexBuffer = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, allocator,
+		vertexBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, allocator,
 			static_cast<uint32_t>(sizeof(Vertex)*vertices.size()), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, true, commandPool));
 
-		indexBuffer = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, allocator,
+		indexBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, allocator,
 			static_cast<uint32_t>(sizeof(uint32_t)*indices.size()), VK_BUFFER_USAGE_INDEX_BUFFER_BIT, true, commandPool));
 
-		offsetBuffer = eastl::unique_ptr <VulkanBuffer>(new VulkanBuffer(device, allocator,
+		offsetBuffer = std::unique_ptr <VulkanBuffer>(new VulkanBuffer(device, allocator,
 			static_cast<uint32_t>(sizeof(glm::mat4) * 255), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, true, commandPool));
 
-		eastl::map<aiVector3D, uint32_t> positionMap;
-		eastl::map<Edge, eastl::vector<Face>> neighbors;
+		std::map<aiVector3D, uint32_t> positionMap;
+		std::map<Edge, std::vector<Face>> neighbors;
 
-		eastl::vector<Face> uniqueFaces;
+		std::vector<Face> uniqueFaces;
 
 		// Calculate adjacencies
 		for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
@@ -147,13 +147,13 @@ namespace Engine
 			neighbors[edge3].push_back(unique);
 		}
 
-		eastl::vector<uint32_t> intIndices(indices.size());
+		std::vector<uint32_t> intIndices(indices.size());
 
 		for (size_t i = 0, size = indices.size(); i < size; ++i) {
 			intIndices[i] = static_cast<uint32_t>(indices[i]);
 		}
 
-		eastl::vector<uint32_t> shadowIndices(uniqueFaces.size() * 6);
+		std::vector<uint32_t> shadowIndices(uniqueFaces.size() * 6);
 
 		shadowIndicesCount = static_cast<uint32_t>(uniqueFaces.size() * 6);
 
@@ -168,9 +168,9 @@ namespace Engine
 			Face neighbor2;
 			Face neighbor3;
 
-			eastl::vector<Face> edge1Neighbors = neighbors[edge1];
-			eastl::vector<Face> edge2Neighbors = neighbors[edge2];
-			eastl::vector<Face> edge3Neighbors = neighbors[edge3];
+			std::vector<Face> edge1Neighbors = neighbors[edge1];
+			std::vector<Face> edge2Neighbors = neighbors[edge2];
+			std::vector<Face> edge3Neighbors = neighbors[edge3];
 
 			if (edge1Neighbors.size() < 2)
 				neighbor1 = face;
@@ -207,7 +207,7 @@ namespace Engine
 				shadowIndices[i * 6 + 5] = neighbor3.FindOpposingIndex(edge3);
 		}
 
-		shadowIndexBuffer = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, allocator,
+		shadowIndexBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, allocator,
 			static_cast<uint32_t>(sizeof(uint32_t)*shadowIndicesCount),
 			VK_BUFFER_USAGE_INDEX_BUFFER_BIT, true, commandPool));
 

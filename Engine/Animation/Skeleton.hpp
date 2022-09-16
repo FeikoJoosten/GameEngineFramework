@@ -1,16 +1,15 @@
 // Written by Koen Buitenhuis
 #pragma once
 
-#include <ThirdParty/glm/glm/glm.hpp>
-#include <ThirdParty/glm/glm/gtc/quaternion.hpp>
-#include <ThirdParty/assimp/include/assimp/scene.h>
-#include <ThirdParty/assimp/include/assimp/Importer.hpp>
-
-#include <ThirdParty/EASTL-master/include/EASTL/shared_ptr.h>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
-#include <ThirdParty/EASTL-master/include/EASTL/map.h>
-
 #include "Engine/Texture/Texture.hpp"
+
+#include <map>
+#include <vector>
+#include <memory>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <assimp/scene.h>
+#include <assimp/Importer.hpp>
 
 namespace Engine {
 
@@ -21,6 +20,7 @@ namespace Engine {
 		struct AnimationNode;
 
 	public:
+		friend class Model;
 		/// <summary>
 		/// Creates a new animation data object, loading in the animation data from the provided scene.
 		/// </summary>
@@ -35,7 +35,7 @@ namespace Engine {
 		/// </summary>
 		/// <param name="scene">Scene to load additional animations from.</param>
 		/// <param name="names">The optional names of the animation sets to load.</param>
-		void LoadAnimationSet(const aiScene* scene, eastl::vector<eastl::string> names = {});
+		void LoadAnimationSet(const aiScene* scene, std::vector<std::string> names = {});
 
 		/// <summary>
 		/// Destroys the Data, cleaning up the bone tree.
@@ -46,14 +46,14 @@ namespace Engine {
 		/// Returns a list of the loaded animations as a vector of names. Use these names to load a specific animation.
 		/// </summary>
 		/// <returns>A vector containing animation names</returns>
-		eastl::vector<eastl::string> GetAnimations();
+		void GetAnimations(std::vector<std::string>& output);
 
 		/// <summary>
 		/// Sets the current animation of the mesh.
 		/// </summary>
 		/// <param name="animation">The name of the animation to use.</param>
 		/// <param name="resetTime">If the animation should be reset to the starting point.</param>
-		void SetAnimation(eastl::string animation, bool resetTime);
+		void SetAnimation(std::string animation, bool resetTime);
 
 		/// <summary>
 		/// Returns the duration of a single loop of the animation.
@@ -80,7 +80,7 @@ namespace Engine {
 		/// </summary>
 		/// <param name="animation">The name of the animation to get the data for.</param>
 		/// <returns>A shared pointer to a texture containing the data.</returns>
-		size_t GetAnimationIndex(eastl::string animation);
+		size_t GetAnimationIndex(std::string animation);
 
 		/// <summary>
 		/// Returns the number of animation ticks per second.
@@ -94,21 +94,21 @@ namespace Engine {
 		/// A structure containing information a bone.
 		/// </summary>
 		typedef struct Bone {
-			eastl::string name;
+			std::string name;
 			int boneDataIndex;
 			glm::mat4 transform;
 			glm::mat4 defaultTransform;
 			glm::mat4 offset;
 			struct Bone* parent;
 			aiNode* node;
-			eastl::vector<struct Bone*> childBones;
+			std::vector<struct Bone*> childBones;
 		}Bone_t;
 
 		/// <summary>
 		/// Returns a map that uses the name of a bone as key to return the corresponding bone.
 		/// </summary>
 		/// <returns>A map containing pointers to bones using the name as key.</returns>
-		eastl::map<eastl::string, Bone_t*> GetBoneMap();
+		std::map<std::string, Bone_t*> GetBoneMap();
 
 		/// <summary>
 		/// Returns the root bone of the skeleton.
@@ -120,24 +120,24 @@ namespace Engine {
 		/// Sets the name of the skeleton.
 		/// </summary>
 		/// <param name="name">The new name.</param>
-		void SetName(eastl::string name);
+		void SetName(std::string name);
 
 		/// <summary>
 		/// Returns the name of the skeleton (normally the path).
 		/// </summary>
 		/// <returns>The name of the skeleton.</returns>
-		eastl::string GetName();
+		std::string GetName();
 
 	protected:
 
 		bool animated;
 
 		typedef struct Animation {
-			eastl::string name;
-			eastl::vector<struct AnimationNode> nodes;
+			std::string name;
+			std::vector<struct AnimationNode> nodes;
 			float duration; // In ticks
 			float ticksPerSecond;
-			eastl::shared_ptr<Texture> texture;
+			std::shared_ptr<Texture> texture;
 		}Animation_t;
 
 		typedef struct {
@@ -161,20 +161,20 @@ namespace Engine {
 
 		typedef struct AnimationNode {
 			Bone_t* bone;
-			eastl::vector<AnimationPositionKey_t> positionKeys;
-			eastl::vector<AnimationRotationKey_t> rotationKeys;
-			eastl::vector<AnimationScalingKey_t>	scalingKeys;
+			std::vector<AnimationPositionKey_t> positionKeys;
+			std::vector<AnimationRotationKey_t> rotationKeys;
+			std::vector<AnimationScalingKey_t>	scalingKeys;
 			aiAnimBehaviour preAnimBehaviour;
 			aiAnimBehaviour postAnimBehaviour;
 		}AnimationNode_t;
 
 		Bone_t * rootBone;
 
-		eastl::vector<BoneData_t> boneData;
+		std::vector<BoneData_t> boneData;
 
-		eastl::map<eastl::string, size_t> animationMap;
+		std::map<std::string, size_t> animationMap;
 
-		eastl::vector<Animation_t*> animations;
+		std::vector<Animation_t*> animations;
 
 		const aiScene* scene;
 
@@ -190,15 +190,15 @@ namespace Engine {
 
 		bool looping;
 
-		eastl::map<eastl::string, Bone_t*> boneMap;
+		std::map<std::string, Bone_t*> boneMap;
 
-		eastl::string name;
+		std::string name;
 
 		void ReadBones(Bone_t* bone, aiNode* node);
 
 		void DestroyBone(Bone_t* bone);
 
-		void SetBoneTransform(eastl::string bone, glm::mat4 transform);
+		void SetBoneTransform(std::string bone, glm::mat4 transform);
 
 		void SetBoneTransform(Bone_t* bone, glm::mat4 transform);
 

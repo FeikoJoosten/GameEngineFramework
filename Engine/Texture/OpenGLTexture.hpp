@@ -31,7 +31,7 @@ namespace Engine
 		/// </summary>
 		/// <param name="filename">This is the name of the texture you want to load. NOTE: The texture needs to be in the folder 'Resources/Textures/' (It can be in a subfolder, as long as it's in the Textures folder). And the extension type needs to be added as well.</param>
 		/// <param name="desiredChannels">The amount of desired channels for this texture. This value is 4 by default.</param>
-		explicit OpenGLTexture(const eastl::string& filename, int desiredChannels = 4);
+		explicit OpenGLTexture(const std::string& filename, int desiredChannels = 4);
 		/// <summary>
 		/// Creates an empty texture object. You will have to add the data yourself.
 		/// </summary>

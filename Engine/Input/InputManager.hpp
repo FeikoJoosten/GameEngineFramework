@@ -1,61 +1,72 @@
 #pragma once
 
-#include "Engine/api.hpp"
+#include "Engine/Api.hpp"
+#include "Engine/Engine.hpp"
 #include "Engine/Window/Window.hpp"
 
-#include <ThirdParty/GainInput/lib/include/gainput/gainput.h>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
+#include <vector>
+#include <gainput/gainput.h>
 
-namespace Engine
-{
-	struct InputDefaults
-	{
+namespace Engine {
+	struct InputDefaults {
 		float scrollSpeed = 5;
 	};
 
 	/// <summary>
-	/// This object is a simple wrapper class regarding gainput. It also sends information to ImGUI to keep track of pressed buttons. NOTE: only the Engine class is allowed to create this object.
+	/// This object is a simple wrapper class regarding Gainput. It also sends information to ImGUI to keep track of pressed buttons. NOTE: only the Engine class is allowed to create this object.
 	/// </summary>
-	class ENGINE_API InputManager
-	{
+	class ENGINE_API InputManager {
+		friend std::shared_ptr<InputManager> Engine::GetInputManager() noexcept;
+		friend class Application;
+
+		InputManager() noexcept;
 	public:
+		InputManager(const InputManager& other) = delete;
+		InputManager(InputManager&& other) noexcept = delete;
+		~InputManager() noexcept = default;
+
+		InputManager& operator=(const InputManager& other) = delete;
+		InputManager& operator=(InputManager&& other) noexcept = delete;
+
+		static std::shared_ptr<InputManager> Get();
+
 		/// <summary>
-		/// This method allows you to get the input manager from gainput.
+		/// This method allows you to get the input manager from Gainput.
 		/// </summary>
-		/// <returns>Returns the input manager from gainput as a reference.</returns>
+		/// <returns>Returns the input manager from Gainput as a reference.</returns>
 		gainput::InputManager& GetInputManager();
 
 		/// <summary>
 		/// This method allows you to get all current keys down.
-		/// NOTE: This only works for keboards.
+		/// NOTE: This only works for keyboards.
 		/// </summary>
 		/// <param name="deviceId">The device you want to get the keys for.</param>
 		/// <returns>Returns a vector of all current pressed keyboard buttons.</returns>
-		eastl::vector<gainput::DeviceButtonId> GetAllKeysDown(gainput::DeviceId deviceId);
+		std::vector<gainput::DeviceButtonId> GetAllKeysDown(gainput::DeviceId deviceId);
 
 		/// <summary>
 		/// This method will return the device Id of the linked mouse.
 		/// </summary>
 		/// <returns>Returns the device Id of the linked mouse as a const reference</returns>
-		const gainput::DeviceId& GetMouseId() const;
+		[[nodiscard]] const gainput::DeviceId& GetMouseId() const;
 
 		/// <summary>
 		/// This method will return the device Id of the linked keyboard.
 		/// </summary>
 		/// <returns>Returns the device Id of the linked keyboard as a const reference</returns>
-		const gainput::DeviceId& GetKeyboardId() const;
+		[[nodiscard]] const gainput::DeviceId& GetKeyboardId() const;
 
 		/// <summary>
 		/// This method will return the device Id of the linked gamepad.
 		/// </summary>
 		/// <returns>Returns the device Id of the linked gamepad as a const reference</returns>
-		const gainput::DeviceId& GetGamepadId() const;
+		[[nodiscard]] const gainput::DeviceId& GetGamepadId() const;
 
 		/// <summary>
 		/// This method allows you to retrieve some predefined input defaults.
 		/// </summary>
 		/// <returns></returns>
-		InputDefaults GetInputDefaults() const;
+		[[nodiscard]] InputDefaults GetInputDefaults() const;
 	private:
 		gainput::InputManager inputManager;
 		gainput::DeviceId mouseId;
@@ -63,19 +74,8 @@ namespace Engine
 		gainput::DeviceId gamepadId;
 		InputDefaults inputDefaults;
 
-		friend class Engine;
 		void Update() noexcept;
 
-		friend void Window::OnWindowResized(GLFWwindow* window, int width, int height);
-
-		InputManager() noexcept;
-		InputManager(InputManager const &other) = delete;
-		InputManager(InputManager &&other) noexcept = delete;
-	public:
-		~InputManager() noexcept = default;
-	private:
-
-		InputManager &operator=(InputManager const &other) = delete;
-		InputManager &operator=(InputManager &&other) noexcept = delete;
+		friend void Window::OnWindowResized(GLFWwindow* glfwWindow, int width, int height);
 	};
 } //namespace Engine

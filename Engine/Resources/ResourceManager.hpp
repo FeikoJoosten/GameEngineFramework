@@ -1,12 +1,10 @@
 #pragma once
 
-#include "Engine/api.hpp"
+#include "Engine/Api.hpp"
+#include "Engine/Engine.hpp"
 #include "Engine/Model/Model.hpp"
 
-#include <ThirdParty/assimp/include/assimp/Importer.hpp>
-#include <ThirdParty/assimp/include/assimp/scene.h>
-#include <ThirdParty/EASTL-master/include/EASTL/map.h>
-#include <ThirdParty/EASTL-master/include/EASTL/shared_ptr.h>
+#include <assimp/scene.h>
 
 namespace Engine
 {
@@ -15,13 +13,24 @@ namespace Engine
 	/// </summary>
 	class ENGINE_API ResourceManager
 	{
+		friend std::shared_ptr<ResourceManager> Engine::GetResourceManager() noexcept;
+		ResourceManager() = default;
 	public:
+		~ResourceManager() = default;
+		ResourceManager(const ResourceManager& other) = delete;
+		ResourceManager(ResourceManager&& other) noexcept = delete;
+
+		ResourceManager& operator=(const ResourceManager& other) = delete;
+		ResourceManager& operator=(ResourceManager&& other) noexcept = delete;
+
+		static std::shared_ptr<ResourceManager> Get();
+
 		/// <summary>
 		/// This method allows you to get a model with a specific name.
 		/// </summary>
 		/// <param name="modelName">The model name you are looking for.</param>
 		/// <returns>Returns a shared pointer to the model is it was found. Otherwise it will return a empty shared pointer.</returns>
-		eastl::weak_ptr<Model> GetModel(eastl::string modelName);
+		std::weak_ptr<Model> GetModel(std::string modelName);
 		/// <summary>
 		/// This method will allow you to create a new model with the model name.
 		/// </summary>
@@ -32,14 +41,14 @@ namespace Engine
 		/// the same file as the model. NOTE: The skeleton needs to be located under 'Resources/Models/'
 		/// You then give the mesh name + its extension. The skeleton can be in a subfolder of 'Resources/Models/'</param>
 		/// <returns>Will return a new model, optionally with an already loaded mesh and skeleton.</returns>
-		eastl::weak_ptr<Model> CreateModel(eastl::string modelName, eastl::string meshToLoad = "", eastl::string skeleton = "");
+		std::weak_ptr<Model> CreateModel(std::string modelName, std::string meshToLoad = "", std::string skeleton = "");
 		/// <summary>
 		/// This will load the skeleton data from the file specified. NOTe: This method will not load in the skeleton again, if it's already loaded in.
 		/// </summary>
 		/// <param name="skeletonToLoad">The file to load the skeleton from. NOTE: The skeleton needs to be located under 'Resources/Models/'
 		/// You then give the mesh name + its extension. The skeleton can be in a subfolder of 'Resources/Models/'</param>
 		/// <returns>Will return a new skeleton.</returns>
-		eastl::weak_ptr<Skeleton> CreateSkeleton(eastl::string skeletonToLoad);
+		std::weak_ptr<Skeleton> CreateSkeleton(std::string skeletonToLoad);
 		/// <summary>
 		/// This method loads animations from a file, and adds them to the skeleton with the specified name.
 		/// </summary>
@@ -49,7 +58,7 @@ namespace Engine
 		/// <param name="names">A vector containing names for the animations being loaded. 
 		/// If animation n in the file has a name at position n in the vector that name will be used instead.
 		/// Leave the name at position n blank to use the name supplied by the file instead.</param>
-		void AddAnimationsToSkeleton(eastl::string skeletonName, eastl::string animationsToLoad = "", eastl::vector<eastl::string> names = {});
+		void AddAnimationsToSkeleton(std::string skeletonName, std::string animationsToLoad = "", std::vector<std::string> names = {});
 		/// <summary>
 		/// This method allows you to create a new mesh. NOTE: This method will not load in the mesh again, if it's already loaded in.
 		/// </summary>
@@ -58,21 +67,21 @@ namespace Engine
 		/// <param name="vertices">The vertices of the mesh.</param>
 		/// <param name="indices">The indices of the mesh.</param>
 		/// <returns>Returns a shared_ptr of the mesh you want to create.</returns>
-		eastl::weak_ptr<Mesh> CreateMesh(aiMesh *mesh, eastl::shared_ptr<Skeleton> skeleton, eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices);
+		std::weak_ptr<Mesh> CreateMesh(aiMesh *mesh, std::shared_ptr<Skeleton> skeleton, std::vector<Vertex> vertices, std::vector<unsigned> indices);
 		/// <summary>
 		/// This method allows you to get a texture with the defined name.
 		/// </summary>
 		/// <param name="textureName">The texture you want to find. NOTE: The texture needs to be located under 'Resources/Textures/'. You then give the texture name + extension.
 		/// The texture can be in a subfolder of 'Resources/Textures/'.</param>
 		/// <returns>Returns a shared pointer of the texture you want to get. Will return an empty shared pointer if the texture hasn't been loaded yet.</returns>
-		eastl::weak_ptr<Texture> GetTexture(eastl::string textureName);
+		std::weak_ptr<Texture> GetTexture(std::string textureName);
 		/// <summary>
 		/// This method allows you to create a new texture with the given name.
 		/// </summary>
 		/// <param name="textureName">The texture you want to create. NOTE: The texture needs to be located under 'Resources/Textures/'. You then give the texture name + extension.
 		/// The texture can be in a subfolder of of 'Resources/Textures/'.</param>
 		/// <returns>Returns a reference to the just created texture. Or if the texture was already created before, it'll return a reference to that texture.</returns>
-		eastl::weak_ptr<Texture> CreateTexture(eastl::string textureName);
+		std::weak_ptr<Texture> CreateTexture(std::string textureName);
 		/// <summary>
 		/// Creates a new texture with the given name, using the supplied data as source.
 		/// </summary>
@@ -81,27 +90,22 @@ namespace Engine
 		/// <param name="width">The width of the texture.</param>
 		/// <param name="height">The height of the texture.</param>
 		/// <returns></returns>
-		eastl::weak_ptr<Texture> CreateTexture(eastl::string textureName, stbi_uc* data, int width, int height);
-
-	private:
-		friend class Engine;
-		ResourceManager() = default;
-	public:
-		~ResourceManager() = default;
+		std::weak_ptr<Texture> CreateTexture(std::string textureName, stbi_uc* data, int width, int height);
+		
 	private:
 
 		friend class Model;
-		void AddTexture(eastl::string textureName, eastl::shared_ptr<Texture> textureToAdd);
-		eastl::weak_ptr<Mesh> GetMesh(eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices);
-		void ProcessModel(eastl::string modelName, eastl::shared_ptr<Model> modelToAddTo, aiNode* node, const aiScene* scene, eastl::shared_ptr<Skeleton> skeleton);
-		eastl::weak_ptr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene, eastl::shared_ptr<Skeleton> skeleton);
-		eastl::vector<eastl::shared_ptr<Texture>> ProcessDiffuseTextures(aiMaterial* material);
-		eastl::vector<eastl::shared_ptr<Texture>> ProcessSpecularTextures(aiMaterial* material);
-		eastl::vector<eastl::shared_ptr<Texture>> LoadMaterialTextures(aiMaterial* material, aiTextureType textureType, eastl::string typeName);
+		void AddTexture(std::string textureName, std::shared_ptr<Texture> textureToAdd);
+		std::weak_ptr<Mesh> GetMesh(std::vector<Vertex> vertices, std::vector<unsigned> indices);
+		void ProcessModel(std::string modelName, std::shared_ptr<Model> modelToAddTo, aiNode* node, const aiScene* scene, std::shared_ptr<Skeleton> skeleton);
+		std::weak_ptr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene, std::shared_ptr<Skeleton> skeleton);
+		std::vector<std::shared_ptr<Texture>> ProcessDiffuseTextures(aiMaterial* material);
+		std::vector<std::shared_ptr<Texture>> ProcessSpecularTextures(aiMaterial* material);
+		std::vector<std::shared_ptr<Texture>> LoadMaterialTextures(aiMaterial* material, aiTextureType textureType, std::string typeName);
 
-		eastl::vector<eastl::shared_ptr<Model>> loadedModels_;
-		eastl::vector<eastl::shared_ptr<Skeleton>> loadedSkeletons_;
-		eastl::vector<eastl::shared_ptr<Mesh>> loadedMeshes_;
-		eastl::map<eastl::string, eastl::shared_ptr<Texture>> loadedTextures_;
+		std::vector<std::shared_ptr<Model>> loadedModels_;
+		std::vector<std::shared_ptr<Skeleton>> loadedSkeletons_;
+		std::vector<std::shared_ptr<Mesh>> loadedMeshes_;
+		std::map<std::string, std::shared_ptr<Texture>> loadedTextures_;
 	};
 } // namespace Engine

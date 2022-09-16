@@ -2,10 +2,6 @@
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
 #include "Engine/Mesh/Mesh.hpp"
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
-#include <ThirdParty/assimp/include/assimp/Importer.hpp>
-#include <ThirdParty/assimp/include/assimp/scene.h>
-
 #include "Engine/Texture/VulkanTexture.hpp"
 #include "Engine/Renderer/Vulkan/VulkanBuffer.hpp"
 #include "Engine/Renderer/Vulkan/VulkanLogicalDevice.hpp"
@@ -13,8 +9,11 @@
 #include "Engine/Renderer/Vulkan/vk_mem_alloc.h"
 #include "Engine/Animation/Skeleton.hpp"
 
-#include <ThirdParty/EASTL-master/include/EASTL/map.h>
-#include <ThirdParty/EASTL-master/include/EASTL/tuple.h>
+#include <map>
+#include <tuple>
+#include <vulkan/vulkan.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
 
 namespace Engine
 {
@@ -95,13 +94,13 @@ namespace Engine
 		friend class ResourceManager;
 
 		VulkanMesh() = delete;
-		VulkanMesh(aiMesh* mesh, eastl::shared_ptr<Skeleton> skeleton, eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices);
+		VulkanMesh(aiMesh* mesh, std::shared_ptr<Skeleton> skeleton, std::vector<Vertex> vertices, std::vector<unsigned> indices);
 		VulkanMesh(VulkanMesh const &other) = default;
 	public:
 		~VulkanMesh();
 	private:
 
-		//eastl::vector<eastl::shared_ptr<Texture>> textures;
+		//std::vector<std::shared_ptr<Texture>> textures;
 
 		struct Edge {
 			uint32_t indices[2];
@@ -118,8 +117,8 @@ namespace Engine
 			}
 
 			bool operator<(const Edge& right) const {
-				return eastl::tie(indices[0], indices[1]) <
-					eastl::tie(right.indices[0], right.indices[1]);
+				return std::tie(indices[0], indices[1]) <
+					std::tie(right.indices[0], right.indices[1]);
 			}
 
 		};
@@ -142,19 +141,19 @@ namespace Engine
 			}
 		};
 
-		eastl::shared_ptr<Skeleton> skeleton;
+		std::shared_ptr<Skeleton> skeleton;
 
-		eastl::vector<glm::mat4> boneOffsets;
+		std::vector<glm::mat4> boneOffsets;
 
-		eastl::unique_ptr<VulkanBuffer> vertexBuffer;
-		eastl::unique_ptr<VulkanBuffer> indexBuffer;
-		eastl::unique_ptr<VulkanBuffer> offsetBuffer;
+		std::unique_ptr<VulkanBuffer> vertexBuffer;
+		std::unique_ptr<VulkanBuffer> indexBuffer;
+		std::unique_ptr<VulkanBuffer> offsetBuffer;
 
-		eastl::unique_ptr<VulkanBuffer> shadowIndexBuffer;
+		std::unique_ptr<VulkanBuffer> shadowIndexBuffer;
 
-		eastl::vector<eastl::vector<eastl::vector<VkDescriptorSet>>> offsetDescriptorSets;
+		std::vector<std::vector<std::vector<VkDescriptorSet>>> offsetDescriptorSets;
 
-		eastl::shared_ptr<VulkanTexture> diffuseMissing;
+		std::shared_ptr<VulkanTexture> diffuseMissing;
 
 		const aiScene* scene;
 		aiMesh* mesh;

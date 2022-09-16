@@ -1,11 +1,13 @@
 #include "VulkanStaticMeshRenderer.hpp"
 
+#include "Engine/Resources/ResourceManager.hpp"
+
 #ifdef USING_VULKAN
 
 #include "Engine/Renderer/VulkanRenderer.hpp"
 #include "Engine/Mesh/VulkanMesh.hpp"
 #include "Engine/Material/VulkanMaterial.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 
 namespace Engine {
 	
@@ -17,7 +19,7 @@ namespace Engine {
 		this->allocator_ = renderer->GetVmaAllocator();
 		this->commandPool_ = renderer->GetGraphicsCommandPool();
 
-		staticMeshPipeline_ = eastl::unique_ptr<VulkanPipeline>(new VulkanPipeline(device, renderer));
+		staticMeshPipeline_ = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(device, renderer));
 
 		staticMeshPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::VERTEX_SHADER, "StaticMesh.vert.spv");
 		//staticMeshPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::GEOMETRY_SHADER, "Mesh.geom.spv");
@@ -55,7 +57,7 @@ namespace Engine {
 
 		staticMeshPipeline_->Compile();
 
-		shadowPipeline_ = eastl::unique_ptr<VulkanPipeline>(new VulkanPipeline(device_, renderer_));
+		shadowPipeline_ = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(device_, renderer_));
 
 		shadowPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::VERTEX_SHADER, "StaticShadow.vert.spv");
 		shadowPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::GEOMETRY_SHADER, "ShadowVolume.geom.spv");
@@ -114,7 +116,7 @@ namespace Engine {
 
 		ubo_ = { glm::mat4(), glm::mat4() };
 
-		uniformBuffer_ = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
+		uniformBuffer_ = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
 			static_cast<uint32_t>(sizeof(ubo_)), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, false, renderer->GetGraphicsCommandPool()));
 
 		uniformBuffer_->UpdateBuffer(&ubo_, 0, static_cast<uint32_t>(sizeof(ubo_)));
@@ -131,16 +133,16 @@ namespace Engine {
 		
 		}
 
-		Engine::GetEngine().lock()->GetResourceManager().lock()->CreateTexture("default.png");
-		defaultTexture_ = eastl::dynamic_pointer_cast<VulkanTexture, Texture>(
-			Engine::GetEngine().lock()->GetResourceManager().lock()->GetTexture("default.png").lock());
+		ResourceManager::Get()->CreateTexture("default.png");
+		defaultTexture_ = std::dynamic_pointer_cast<VulkanTexture, Texture>(
+			ResourceManager::Get()->GetTexture("default.png").lock());
 	}
 
 	VulkanStaticMeshRenderer::~VulkanStaticMeshRenderer()
 	{
 
-		eastl::multimap<eastl::shared_ptr<VulkanMesh>, MeshData*>::iterator it = meshInstances_.begin();
-		eastl::multimap<eastl::shared_ptr<VulkanMesh>, MeshData*>::iterator end = meshInstances_.end();
+		std::multimap<std::shared_ptr<VulkanMesh>, MeshData*>::iterator it = meshInstances_.begin();
+		std::multimap<std::shared_ptr<VulkanMesh>, MeshData*>::iterator end = meshInstances_.end();
 
 		for (; it != end; ++it) {
 			it->second->transformBuffer.reset();
@@ -162,8 +164,8 @@ namespace Engine {
 			uniformBuffer_->UpdateBuffer(&ubo_, 0, static_cast<uint32_t>(sizeof(ubo_)));
 		}
 		
-		eastl::multimap<eastl::shared_ptr<VulkanMesh>, MeshData*>::iterator it = meshInstances_.begin();
-		eastl::multimap<eastl::shared_ptr<VulkanMesh>, MeshData*>::iterator end = meshInstances_.end();
+		std::multimap<std::shared_ptr<VulkanMesh>, MeshData*>::iterator it = meshInstances_.begin();
+		std::multimap<std::shared_ptr<VulkanMesh>, MeshData*>::iterator end = meshInstances_.end();
 
 		for (; it != end; ++it) {
 			it->second->transforms.clear();
@@ -171,11 +173,11 @@ namespace Engine {
 		}
 	}
 
-	void VulkanStaticMeshRenderer::RenderMesh(const glm::mat4x4 & modelMatrix, eastl::shared_ptr<VulkanMesh> mesh,
-		eastl::shared_ptr<VulkanMaterial> material, const glm::vec4 & mainColor)
+	void VulkanStaticMeshRenderer::RenderMesh(const glm::mat4x4 & modelMatrix, std::shared_ptr<VulkanMesh> mesh,
+		std::shared_ptr<VulkanMaterial> material, const glm::vec4 & mainColor)
 	{
-		eastl::multimap<eastl::shared_ptr<VulkanMesh>, MeshData*>::iterator it = meshInstances_.begin();
-		eastl::multimap<eastl::shared_ptr<VulkanMesh>, MeshData*>::iterator end = meshInstances_.end();
+		std::multimap<std::shared_ptr<VulkanMesh>, MeshData*>::iterator it = meshInstances_.begin();
+		std::multimap<std::shared_ptr<VulkanMesh>, MeshData*>::iterator end = meshInstances_.end();
 
 		for (; it != end; ++it) {
 			if (it->first == mesh && it->second->meshes < MAX_INSTANCE_COUNT && *(it->second->material)==*(material)) {
@@ -190,10 +192,10 @@ namespace Engine {
 			data->material = material;
 			data->transforms.push_back(modelMatrix);
 			data->meshes = 1;
-			data->transformBuffer = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(
+			data->transformBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(
 				device_, allocator_, static_cast<uint32_t>(sizeof(glm::mat4)*MAX_INSTANCE_COUNT),
 				VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, false, commandPool_));
-			meshInstances_.emplace(eastl::pair<eastl::shared_ptr<VulkanMesh>,MeshData*>(mesh, data));
+			meshInstances_.emplace(std::pair<std::shared_ptr<VulkanMesh>,MeshData*>(mesh, data));
 		}
 	}
 
@@ -225,8 +227,8 @@ namespace Engine {
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
 			staticMeshPipeline_->GetPipelineLayout(), 0, 1, &uboDescriptors_[threadID], 0, nullptr);
 
-		eastl::multimap<eastl::shared_ptr<VulkanMesh>, MeshData*>::iterator it = meshInstances_.begin();
-		eastl::multimap<eastl::shared_ptr<VulkanMesh>, MeshData*>::iterator end = meshInstances_.end();
+		std::multimap<std::shared_ptr<VulkanMesh>, MeshData*>::iterator it = meshInstances_.begin();
+		std::multimap<std::shared_ptr<VulkanMesh>, MeshData*>::iterator end = meshInstances_.end();
 
 		for (; it != end; ++it) {
 			if (it->second->meshes == 0)
@@ -240,7 +242,7 @@ namespace Engine {
 					threadID, staticMeshPipeline_->GetPipelineId(), 
 					1, staticMeshPipeline_->GetDescriptorSetLayout(1));
 
-			eastl::shared_ptr<VulkanMesh> mesh = it->first;
+			std::shared_ptr<VulkanMesh> mesh = it->first;
 
 			it->second->transformBuffer->UpdateBuffer(it->second->transforms.data(), 0,
 				static_cast<uint32_t>(sizeof(glm::mat4)*it->second->meshes));
@@ -298,14 +300,14 @@ namespace Engine {
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
 			shadowPipeline_->GetPipelineLayout(), 1, 1, &lightDescriptor, 1, &lightOffset);
 
-		eastl::multimap<eastl::shared_ptr<VulkanMesh>, MeshData*>::iterator it = meshInstances_.begin();
-		eastl::multimap<eastl::shared_ptr<VulkanMesh>, MeshData*>::iterator end = meshInstances_.end();
+		std::multimap<std::shared_ptr<VulkanMesh>, MeshData*>::iterator it = meshInstances_.begin();
+		std::multimap<std::shared_ptr<VulkanMesh>, MeshData*>::iterator end = meshInstances_.end();
 
 		for (; it != end; ++it) {
 			if (it->second->meshes == 0)
 				continue;
 
-			eastl::shared_ptr<VulkanMesh> mesh = it->first;
+			std::shared_ptr<VulkanMesh> mesh = it->first;
 			
 			VkBuffer buffers[] = { mesh->GetVertexBuffer() };
 			VkDeviceSize offsets[] = { 0 };

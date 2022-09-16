@@ -1,6 +1,7 @@
 #include "Engine/Utility/Time.hpp"
-#include "Engine/engine.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
+
+#include <GLFW/glfw3.h>
 
 namespace Engine
 {
@@ -10,6 +11,10 @@ namespace Engine
 	Time::Time() : deltaTime(0)
 	{
 		previousFramerates.resize(maxIterations);
+	}
+
+	std::shared_ptr<Time> Time::Get() {
+		return Engine::GetTime();
 	}
 
 	float Time::GetDeltaTime() const
@@ -22,20 +27,20 @@ namespace Engine
 		return maxIterations;
 	}
 
-	eastl::vector<float> Time::GetPreviousFramerates() const
+	std::vector<float> Time::GetPreviousFramerates() const
 	{
 		return previousFramerates;
 	}
 
 	void Time::OnUpdateBegin()
 	{
-		beginTime = float(glfwGetTime());
+		beginTime = static_cast<float>(glfwGetTime());
 	}
 
 	void Time::OnUpdateEnd()
 	{
-		endTime = float(glfwGetTime());
-		deltaTime = beginTime > 0.0 ? float(endTime - beginTime) : float(1.0f / 60.0f);
+		endTime = static_cast<float>(glfwGetTime());
+		deltaTime = beginTime > 0.0f ? endTime - beginTime : 1.0f / 60.0f;
 		previousFramerates[iterations + 1 >= maxIterations ? 0 : iterations + 1] = ImGui::GetIO().Framerate;
 		iterations++;
 	}

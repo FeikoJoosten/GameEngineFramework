@@ -1,21 +1,22 @@
 // Written by Koen Buitenhuis
 
 #include "Engine/Utility/Defines.hpp"
+#include "Engine/Utility/Logging.hpp"
 #ifdef USING_VULKAN
 #define VMA_IMPLEMENTATION
 #include "Engine/Renderer/VulkanRenderer.hpp"
 #include "Engine/Renderer/imgui_impl_glfw_vulkan.h"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 //#include <chrono>
 //#include <stdexcept>
 #include <cstring>
 #include <thread>
 //#include <fstream>
 //#include <set>
-#include <ThirdParty/glm/glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "Engine/Mesh/VulkanMesh.hpp"
 #include "Engine/Texture/VulkanTexture.hpp"
-#include <ThirdParty/EASTL-master/include/EASTL/shared_ptr.h>
+#include <memory>
 
 
 namespace Engine
@@ -23,7 +24,7 @@ namespace Engine
 
 	static void check_vk_result(VkResult err) {
 		if (err != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(err).c_str() + "] ImGui vulkan call failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(err).c_str() + "] ImGui vulkan call failed";
 			std::cout << s.c_str() << std::endl;
 		}
 	}
@@ -39,7 +40,7 @@ namespace Engine
 		vkWaitForFences(vulkanLogicalDevice_->GetDevice(),
 			static_cast<uint32_t>(drawingFinishedFences_.size()),
 			drawingFinishedFences_.data(),
-			VK_TRUE, eastl::numeric_limits<uint64_t>::max());
+			VK_TRUE, std::numeric_limits<uint64_t>::max());
 
 		vkDeviceWaitIdle(vulkanLogicalDevice_->GetDevice());
 
@@ -70,10 +71,10 @@ namespace Engine
 
 	void VulkanRenderer::InitializeRenderer()
 	{
-		InitializeRenderer(Engine::GetEngine().lock()->GetWindow<VulkanWindow>());
+		InitializeRenderer(Window::Get<VulkanWindow>());
 	}
 
-	void VulkanRenderer::InitializeRenderer(eastl::weak_ptr<VulkanWindow> window)
+	void VulkanRenderer::InitializeRenderer(std::weak_ptr<VulkanWindow> window)
 	{
 		if (initialized)
 			return;
@@ -84,7 +85,7 @@ namespace Engine
 
 		CreateInstance();
 
-		surface = window.lock()->CreateSurface(vulkanInstance_->GetInstance());
+		glfwCreateWindowSurface(vulkanInstance_->GetInstance(), window.lock()->window.get(), nullptr, &surface);
 
 		FindPhysicalDevice();
 
@@ -223,7 +224,7 @@ namespace Engine
 
 	void VulkanRenderer::setClearColor(glm::vec4 color)
 	{
-		clearValue.color = { color.x,color.y,color.z,color.w };
+		clearValue.color = {{color.x,color.y,color.z,color.w}};
 	}
 
 	VkRenderPass VulkanRenderer::GetRenderPass() const
@@ -267,13 +268,13 @@ namespace Engine
 	{
 		//vkDeviceWaitIdle(vulkanLogicalDevice->GetDevice());
 		uint32_t imageIndex;
-		VkResult res = vkAcquireNextImageKHR(vulkanLogicalDevice_->GetDevice(), swapChain, eastl::numeric_limits<uint64_t>::max(), imageAvailableSemaphores_[(currentImage + 1) % imageAvailableSemaphores_.size()], VK_NULL_HANDLE, &imageIndex);
+		VkResult res = vkAcquireNextImageKHR(vulkanLogicalDevice_->GetDevice(), swapChain, std::numeric_limits<uint64_t>::max(), imageAvailableSemaphores_[(currentImage + 1) % imageAvailableSemaphores_.size()], VK_NULL_HANDLE, &imageIndex);
 
 		if (res == VK_ERROR_OUT_OF_DATE_KHR) {
 			RecreateSwapChain();
 		}
 		else if (res != VK_SUCCESS && res != VK_SUBOPTIMAL_KHR) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to aquire next swap chain image";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to aquire next swap chain image";
 			std::cout << s.c_str() << std::endl;
 			return;
 		}
@@ -285,19 +286,19 @@ namespace Engine
 
 		//vkQueueWaitIdle(vulkanLogicalDevice_->GetComputeQueue());
 		VkFence fences[] = { drawingFinishedFences_[currentImage], computeFinishedFences_[currentImage] };
-		vkWaitForFences(vulkanLogicalDevice_->GetDevice(), 2, fences, true, eastl::numeric_limits<uint64_t>::max());
+		vkWaitForFences(vulkanLogicalDevice_->GetDevice(), 2, fences, true, std::numeric_limits<uint64_t>::max());
 		vkResetFences(vulkanLogicalDevice_->GetDevice(), 2, fences);
 
 		/*VkResult res = vkQueueWaitIdle(vulkanLogicalDevice->GetGraphicsQueue());
 		if (res != VK_SUCCESS) {
-		eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Queue wait idle failed";
+		std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Queue wait idle failed";
 		std::cout << s.c_str() << std::endl;
 		}*/
 
 		if (resized) {
 			VkResult res = vkQueueWaitIdle(vulkanLogicalDevice_->GetGraphicsQueue());
 			if (res != VK_SUCCESS) {
-				eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Queue wait idle failed";
+				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Queue wait idle failed";
 				std::cout << s.c_str() << std::endl;
 			}
 			RecreateSwapChain();
@@ -311,8 +312,8 @@ namespace Engine
 		vulkanStaticMeshRenderer->StartRender(view, projection);
 		vulkanSkeletalMeshRenderer->StartRender(view, projection);
 
-		glm::vec3 camPos = Engine::GetEngine().lock()->GetCamera().lock()->GetPosition();
-		scene.viewPos = glm::vec4(camPos.x, camPos.y, camPos.z, 1.f);
+		//glm::vec3 camPos = Engine::GetEngine().lock()->GetCamera().lock()->GetComponent<TransformComponent>()->GetPosition();
+		//scene.viewPos = glm::vec4(camPos.x, camPos.y, camPos.z, 1.f);
 		/*
 		Engine::GetEngine().lock()->GetResourceManager().lock()->GetModel("test")->UpdateAnimation(
 		Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime());
@@ -331,9 +332,9 @@ namespace Engine
 
 	}
 
-	void VulkanRenderer::Render(const glm::mat4x4 & modelMatrix, eastl::shared_ptr<Model> model, const glm::vec4 & mainColor)
+	void VulkanRenderer::Render(const glm::mat4x4 & modelMatrix, std::shared_ptr<Model> model, const glm::vec4 & mainColor)
 	{
-		eastl::vector<eastl::shared_ptr<Mesh>> meshes = model->GetModelMeshes();
+		std::vector<std::shared_ptr<Mesh>> meshes = model->GetModelMeshes();
 
 		for (size_t i = 0, size = meshes.size(); i < size; i++) {
 			if (meshes[i] == nullptr)
@@ -341,17 +342,17 @@ namespace Engine
 				continue;
 			}
 
-			eastl::shared_ptr<VulkanMaterial> material =
-				eastl::dynamic_pointer_cast<VulkanMaterial, Material>(model->GetMeshMaterial(meshes[i]));
+			std::shared_ptr<VulkanMaterial> material =
+				std::dynamic_pointer_cast<VulkanMaterial, Material>(model->GetMeshMaterial(meshes[i]));
 
-			bool isAnimated = eastl::dynamic_pointer_cast<VulkanMesh, Mesh>(meshes[i])->IsAnimated();
+			bool isAnimated = std::dynamic_pointer_cast<VulkanMesh, Mesh>(meshes[i])->IsAnimated();
 			size_t currentAnimationIndex = model->GetCurrentAnimationIndex();
 
 			if (!isAnimated ||
 				currentAnimationIndex == -1 ||
 				model->GetSkeleton() == nullptr) {
 				vulkanStaticMeshRenderer->RenderMesh(modelMatrix,
-					eastl::dynamic_pointer_cast<VulkanMesh, Mesh>(meshes[i]), material, mainColor);
+					std::dynamic_pointer_cast<VulkanMesh, Mesh>(meshes[i]), material, mainColor);
 			}
 			else {
 				vulkanSkeletalMeshRenderer->RenderMesh(modelMatrix,
@@ -363,11 +364,11 @@ namespace Engine
 		}
 	}
 
-	void VulkanRenderer::RenderSprite(eastl::weak_ptr<Texture> texture, glm::mat4 modelMatrix)
+	void VulkanRenderer::RenderSprite(std::weak_ptr<Texture> texture, glm::mat4 modelMatrix)
 	{
-		eastl::weak_ptr<VulkanTexture> vulkanTexture;
+		std::weak_ptr<VulkanTexture> vulkanTexture;
 
-		vulkanTexture = eastl::dynamic_pointer_cast<VulkanTexture, Texture>(texture.lock());
+		vulkanTexture = std::dynamic_pointer_cast<VulkanTexture, Texture>(texture.lock());
 
 		vulkanSpriteRenderer->RenderSprite(vulkanTexture, modelMatrix);
 	}
@@ -404,7 +405,7 @@ namespace Engine
 
 		VkResult res = vkQueueSubmit(vulkanLogicalDevice_->GetComputeQueue(), 1, &computeSubmitInfo, computeFinishedFences_[currentImage]);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to submit compute commands";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to submit compute commands";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -415,10 +416,12 @@ namespace Engine
 
 		vkBeginCommandBuffer(currentBuffer_, &beginInfo);
 
-		eastl::array<VkClearValue, static_cast<int>(GBufferAttachments::ATTACHMENT_COUNT)> gbufferClearValues = {};
-		gbufferClearValues[static_cast<int>(GBufferAttachments::ALBEDO_ATTACHMENT)].color = clearValue.color;
-		gbufferClearValues[static_cast<int>(GBufferAttachments::POSITION_ATTACHMENT)].color = { 0.f,0.f,0.f,0.f };
-		gbufferClearValues[static_cast<int>(GBufferAttachments::NORMAL_ATTACHMENT)].color = { 0.f,0.f,0.f,0.f };
+		VkClearColorValue clearColor = { 0, 0, 0, 0 };
+
+		std::array<VkClearValue, static_cast<int>(GBufferAttachments::ATTACHMENT_COUNT)> gbufferClearValues = {};
+		gbufferClearValues[static_cast<int>(GBufferAttachments::ALBEDO_ATTACHMENT)].color = clearColor;
+		gbufferClearValues[static_cast<int>(GBufferAttachments::POSITION_ATTACHMENT)].color = clearColor;
+		gbufferClearValues[static_cast<int>(GBufferAttachments::NORMAL_ATTACHMENT)].color = clearColor;
 		gbufferClearValues[static_cast<int>(GBufferAttachments::DEPTH_ATTACHMENT)].depthStencil = { 1.0f,0 };
 
 		VkRenderPassBeginInfo renderPassInfo = {};
@@ -461,13 +464,13 @@ namespace Engine
 
 		vkCmdEndRenderPass(currentBuffer_);
 
-		eastl::array<VkClearValue, static_cast<int>(RenderPassAttachments::ATTACHMENT_COUNT)> renderClearValues = {};
-		renderClearValues[static_cast<int>(RenderPassAttachments::RENDER_ATTACHMENT)].color = clearValue.color;
-		renderClearValues[static_cast<int>(RenderPassAttachments::SSAO_BLUR_ATTACHMENT)].color = { 0.f,0.f,0.f,0.f };
+		std::array<VkClearValue, static_cast<int>(RenderPassAttachments::ATTACHMENT_COUNT)> renderClearValues = {};
+		renderClearValues[static_cast<int>(RenderPassAttachments::RENDER_ATTACHMENT)].color = clearColor;
+		renderClearValues[static_cast<int>(RenderPassAttachments::SSAO_BLUR_ATTACHMENT)].color = clearColor;
 		//clearValues[SubPasses::RENDER_PASS].depthStencil = { 1.f,0 };
-		renderClearValues[static_cast<int>(RenderPassAttachments::IMGUI_ATTACHMENT)].color = clearValue.color;
+		renderClearValues[static_cast<int>(RenderPassAttachments::IMGUI_ATTACHMENT)].color = clearColor;
 		//clearValues[SubPasses::IMGUI_PASS].depthStencil = { 1.f,0 };
-		renderClearValues[static_cast<int>(RenderPassAttachments::COLOR_ATTACHMENT)].color = clearValue.color;
+		renderClearValues[static_cast<int>(RenderPassAttachments::COLOR_ATTACHMENT)].color = clearColor;
 
 		renderPassInfo = {};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -479,13 +482,6 @@ namespace Engine
 		renderPassInfo.pClearValues = renderClearValues.data();
 
 		vkCmdBeginRenderPass(currentBuffer_, &renderPassInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
-
-		StartSecondaryCommandBufferRecording(imguiCommandBuffers_[currentImage],
-			VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT | VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT,
-			renderPass, static_cast<int>(RenderSubPasses::IMGUI_PASS), framebuffers[currentImage]);
-
-		ImGui_ImplGlfwVulkan_Render(imguiCommandBuffers_[currentImage]);
-		EndSecondaryCommandBufferRecording(imguiCommandBuffers_[currentImage]);
 
 		vulkanSpriteRenderer->FinishRender();
 		vulkanDebugRenderer->FinishRender();
@@ -634,6 +630,13 @@ namespace Engine
 			vkCmdExecuteCommands(currentBuffer_, 1, &(gBufferShadowCommandBuffers_[currentImage][i]));
 		}
 
+		StartSecondaryCommandBufferRecording(imguiCommandBuffers_[currentImage],
+			VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT | VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT,
+			renderPass, static_cast<int>(RenderSubPasses::IMGUI_PASS), framebuffers[currentImage]);
+
+		ImGui_ImplGlfwVulkan_Render(imguiCommandBuffers_[currentImage]);
+		EndSecondaryCommandBufferRecording(imguiCommandBuffers_[currentImage]);
+
 		vkCmdNextSubpass(currentBuffer_, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 
 		vkCmdExecuteCommands(currentBuffer_, 1, &imguiCommandBuffers_[currentImage]);
@@ -646,7 +649,7 @@ namespace Engine
 
 		res = vkEndCommandBuffer(currentBuffer_);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to record primary command buffer";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to record primary command buffer";
 			std::cout << s.c_str() << std::endl;
 			return;
 		}
@@ -668,7 +671,7 @@ namespace Engine
 
 		res = vkQueueSubmit(vulkanLogicalDevice_->GetGraphicsQueue(), 1, &submitInfo, drawingFinishedFences_[currentImage]);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Submitting command buffer to queue failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Submitting command buffer to queue failed";
 			std::cout << s.c_str() << std::endl;
 			return;
 		}
@@ -689,7 +692,7 @@ namespace Engine
 			RecreateSwapChain();
 		}
 		else if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to present swap chain image";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to present swap chain image";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -699,7 +702,7 @@ namespace Engine
 
 	}
 
-	void VulkanRenderer::CreateLight(eastl::string name, LightType lightType,
+	void VulkanRenderer::CreateLight(std::string name, LightType lightType,
 		glm::vec3 position, glm::vec3 direction, glm::vec3 color,
 		float radius, float attunuation, float coneInnerAngle, float coneOuterAngle)
 	{
@@ -754,9 +757,9 @@ namespace Engine
 		scene.lightCount = activeLights;
 	}
 
-	void VulkanRenderer::SetLightType(eastl::string name, LightType lightType)
+	void VulkanRenderer::SetLightType(std::string name, LightType lightType)
 	{
-		eastl::map<eastl::string, LightInfo>::iterator it = lights.find(name);
+		std::map<std::string, LightInfo>::iterator it = lights.find(name);
 
 		if (it == lights.end())
 			return;
@@ -809,7 +812,7 @@ namespace Engine
 		lightDataChanged = true;
 	}
 
-	LightType VulkanRenderer::GetLightType(eastl::string name)
+	LightType VulkanRenderer::GetLightType(std::string name)
 	{
 		if (lights.count(name) > 0)
 			return lights[name].type;
@@ -817,7 +820,7 @@ namespace Engine
 			return LightType::LIGHT_NONEXISTENT;
 	}
 
-	void VulkanRenderer::SetLightPosition(eastl::string name, glm::vec3 position)
+	void VulkanRenderer::SetLightPosition(std::string name, glm::vec3 position)
 	{
 		if (lights.count(name) <= 0)
 			return;
@@ -836,7 +839,7 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	glm::vec3 VulkanRenderer::GetLightPosition(eastl::string name)
+	glm::vec3 VulkanRenderer::GetLightPosition(std::string name)
 	{
 		if (lights.count(name) <= 0)
 			return glm::vec3(0.f);
@@ -846,7 +849,7 @@ namespace Engine
 		return glm::vec3(info.light.position.x, info.light.position.y, info.light.position.z);
 	}
 
-	void VulkanRenderer::SetLightDirection(eastl::string name, glm::vec3 direction)
+	void VulkanRenderer::SetLightDirection(std::string name, glm::vec3 direction)
 	{
 		if (lights.count(name) <= 0)
 			return;
@@ -866,7 +869,7 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	glm::vec3 VulkanRenderer::GetLightDirection(eastl::string name)
+	glm::vec3 VulkanRenderer::GetLightDirection(std::string name)
 	{
 
 		if (lights.count(name) <= 0)
@@ -877,7 +880,7 @@ namespace Engine
 		return glm::vec3(info.light.direction.x, info.light.direction.y, info.light.direction.z);
 	}
 
-	void VulkanRenderer::SetLightColor(eastl::string name, glm::vec3 color)
+	void VulkanRenderer::SetLightColor(std::string name, glm::vec3 color)
 	{
 		if (lights.count(name) <= 0)
 			return;
@@ -896,7 +899,7 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	glm::vec3 VulkanRenderer::GetLightColor(eastl::string name)
+	glm::vec3 VulkanRenderer::GetLightColor(std::string name)
 	{
 		if (lights.count(name) <= 0)
 			return glm::vec3(0.f);
@@ -906,7 +909,7 @@ namespace Engine
 		return glm::vec3(info.light.color.x, info.light.color.y, info.light.color.z);
 	}
 
-	void VulkanRenderer::SetLightRadius(eastl::string name, float radius)
+	void VulkanRenderer::SetLightRadius(std::string name, float radius)
 	{
 		if (lights.count(name) <= 0)
 			return;
@@ -922,7 +925,7 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	float VulkanRenderer::GetLightRadius(eastl::string name)
+	float VulkanRenderer::GetLightRadius(std::string name)
 	{
 		if (lights.count(name) == 0)
 			return 0.0f;
@@ -930,7 +933,7 @@ namespace Engine
 		return lights[name].light.radius;
 	}
 
-	void VulkanRenderer::SetLightConeInnerAngle(eastl::string name, float angle)
+	void VulkanRenderer::SetLightConeInnerAngle(std::string name, float angle)
 	{
 		if (lights.count(name) <= 0)
 			return;
@@ -946,7 +949,7 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	float VulkanRenderer::GetLightConeInnerAngle(eastl::string name)
+	float VulkanRenderer::GetLightConeInnerAngle(std::string name)
 	{
 		if (lights.count(name) == 0)
 			return 0.0f;
@@ -954,7 +957,7 @@ namespace Engine
 		return lights[name].light.coneInnerAngle;
 	}
 
-	void VulkanRenderer::SetLightConeOuterAngle(eastl::string name, float angle)
+	void VulkanRenderer::SetLightConeOuterAngle(std::string name, float angle)
 	{
 		if (lights.count(name) <= 0)
 			return;
@@ -970,7 +973,7 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	float VulkanRenderer::GetLightConeOuterAngle(eastl::string name)
+	float VulkanRenderer::GetLightConeOuterAngle(std::string name)
 	{
 		if (lights.count(name) == 0)
 			return 0.0f;
@@ -981,7 +984,7 @@ namespace Engine
 	VkDescriptorSetLayout VulkanRenderer::CreateLightDescriptorSetLayout()
 	{
 
-		eastl::array<VkDescriptorSetLayoutBinding, 2> descriptorSetBindings;
+		std::array<VkDescriptorSetLayoutBinding, 2> descriptorSetBindings;
 
 		descriptorSetBindings[0] = {};
 		descriptorSetBindings[0].binding = 0;
@@ -1067,7 +1070,7 @@ namespace Engine
 
 	void VulkanRenderer::CreateInstance()
 	{
-		vulkanInstance_ = eastl::make_unique<VulkanInstance>(enableValidationLayers, DebugLevel::LEVEL_WARNINGS);
+		vulkanInstance_ = std::make_unique<VulkanInstance>(enableValidationLayers, DebugLevel::LEVEL_WARNINGS);
 	}
 
 	void VulkanRenderer::FindPhysicalDevice()
@@ -1089,14 +1092,14 @@ namespace Engine
 		requestedQueueFamilies.compute = true;
 		requestedQueueFamilies.present = true;
 
-		vulkanPhysicalDevice_ = eastl::unique_ptr<VulkanPhysicalDevice>(VulkanPhysicalDevice::GetBestPhysicalDevice(
+		vulkanPhysicalDevice_ = std::unique_ptr<VulkanPhysicalDevice>(VulkanPhysicalDevice::GetBestPhysicalDevice(
 			vulkanInstance_.get(), surface, { VK_KHR_SWAPCHAIN_EXTENSION_NAME }, requiredFeatures,
 			{}, requestedQueueFamilies, true));
 	}
 
 	void VulkanRenderer::CreateLogicalDevice()
 	{
-		vulkanLogicalDevice_ = eastl::unique_ptr<VulkanLogicalDevice>(new VulkanLogicalDevice(
+		vulkanLogicalDevice_ = std::unique_ptr<VulkanLogicalDevice>(new VulkanLogicalDevice(
 			vulkanPhysicalDevice_.get(),
 			enableValidationLayers,
 			{ VK_KHR_SWAPCHAIN_EXTENSION_NAME },
@@ -1150,7 +1153,7 @@ namespace Engine
 		VkResult res = vkCreateSwapchainKHR(vulkanLogicalDevice_->GetDevice(), &createInfo, nullptr, &swapChain);
 
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create new swapchain";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create new swapchain";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1188,7 +1191,7 @@ namespace Engine
 			VkResult res = vkCreateImageView(vulkanLogicalDevice_->GetDevice(), &createInfo, nullptr, &swapChainImageViews[i]);
 
 			if (res != VK_SUCCESS) {
-				eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Image view creation creation failed";
+				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Image view creation creation failed";
 				std::cout << s.c_str() << std::endl;
 			}
 		}
@@ -1203,7 +1206,7 @@ namespace Engine
 
 		VkResult res = vkCreateCommandPool(vulkanLogicalDevice_->GetDevice(), &createInfo, nullptr, &graphicsCommandPool);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Graphics command pool creation failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Graphics command pool creation failed";
 			std::cout << s.c_str() << std::endl;
 		}
 	}
@@ -1217,7 +1220,7 @@ namespace Engine
 
 		VkResult res = vkCreateCommandPool(vulkanLogicalDevice_->GetDevice(), &createInfo, nullptr, &computeCommandPool);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Graphics command pool creation failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Graphics command pool creation failed";
 			std::cout << s.c_str() << std::endl;
 		}
 	}
@@ -1236,7 +1239,7 @@ namespace Engine
 
 		VkResult res = vmaCreateAllocator(&createInfo, &vmaAllocator_);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create vulkan memory allocator";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create vulkan memory allocator";
 			std::cout << s.c_str() << std::endl;
 		}
 	}
@@ -1268,7 +1271,7 @@ namespace Engine
 
 		VkResult res = vmaCreateImage(vmaAllocator_, &imageCreateInfo, &allocInfo, &depthImage, &depthImageAllocation, &depthImageAllocationInfo);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create depth image";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create depth image";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1285,7 +1288,7 @@ namespace Engine
 
 		res = vkCreateImageView(vulkanLogicalDevice_->GetDevice(), &viewCreateInfo, nullptr, &depthImageView);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create depth image view";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create depth image view";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1367,7 +1370,7 @@ namespace Engine
 
 		VkResult res = vmaCreateImage(vmaAllocator_, &imguiImageCreateInfo, &allocInfo, &imguiImage, &imguiImageAllocation, &imguiImageAllocationInfo);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create imgui image";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create imgui image";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1384,7 +1387,7 @@ namespace Engine
 
 		res = vkCreateImageView(vulkanLogicalDevice_->GetDevice(), &imguiViewCreateInfo, nullptr, &imguiImageView);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create imgui image view";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create imgui image view";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1408,7 +1411,7 @@ namespace Engine
 
 		res = vmaCreateImage(vmaAllocator_, &renderImageCreateInfo, &allocInfo, &renderImage, &renderImageAllocation, &renderImageAllocationInfo);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create render image";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create render image";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1425,7 +1428,7 @@ namespace Engine
 
 		res = vkCreateImageView(vulkanLogicalDevice_->GetDevice(), &renderViewCreateInfo, nullptr, &renderImageView);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create render image view";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create render image view";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1449,7 +1452,7 @@ namespace Engine
 
 		res = vmaCreateImage(vmaAllocator_, &albedoImageCreateInfo, &allocInfo, &albedoImage, &albedoImageAllocation, &albedoImageAllocationInfo);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create albedo image";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create albedo image";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1466,7 +1469,7 @@ namespace Engine
 
 		res = vkCreateImageView(vulkanLogicalDevice_->GetDevice(), &albedoViewCreateInfo, nullptr, &albedoImageView);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create albedo image view";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create albedo image view";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1490,7 +1493,7 @@ namespace Engine
 
 		res = vmaCreateImage(vmaAllocator_, &positionImageCreateInfo, &allocInfo, &positionImage, &positionImageAllocation, &positionImageAllocationInfo);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create position image";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create position image";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1507,7 +1510,7 @@ namespace Engine
 
 		res = vkCreateImageView(vulkanLogicalDevice_->GetDevice(), &positionViewCreateInfo, nullptr, &positionImageView);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create position image view";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create position image view";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1531,7 +1534,7 @@ namespace Engine
 
 		res = vmaCreateImage(vmaAllocator_, &normalImageCreateInfo, &allocInfo, &normalImage, &normalImageAllocation, &normalImageAllocationInfo);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create normal image";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create normal image";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1548,7 +1551,7 @@ namespace Engine
 
 		res = vkCreateImageView(vulkanLogicalDevice_->GetDevice(), &normalViewCreateInfo, nullptr, &normalImageView);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create normal image view";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create normal image view";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1573,7 +1576,7 @@ namespace Engine
 
 		res = vmaCreateImage(vmaAllocator_, &ssaoImageCreateInfo, &allocInfo, &ssaoImage, &ssaoImageAllocation, &ssaoImageAllocationInfo);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create ssao image";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create ssao image";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1590,7 +1593,7 @@ namespace Engine
 
 		res = vkCreateImageView(vulkanLogicalDevice_->GetDevice(), &ssaoViewCreateInfo, nullptr, &ssaoImageView);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create ssao image view";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create ssao image view";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1614,7 +1617,7 @@ namespace Engine
 
 		res = vmaCreateImage(vmaAllocator_, &ssaoBlurImageCreateInfo, &allocInfo, &ssaoBlurImage, &ssaoBlurImageAllocation, &ssaoBlurImageAllocationInfo);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create ssaoBlur image";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create ssaoBlur image";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1631,7 +1634,7 @@ namespace Engine
 
 		res = vkCreateImageView(vulkanLogicalDevice_->GetDevice(), &ssaoBlurViewCreateInfo, nullptr, &ssaoBlurImageView);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create ssaoBlur image view";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create ssaoBlur image view";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -1811,7 +1814,7 @@ namespace Engine
 		gBufferPassSubPasses[static_cast<int>(GBufferSubPasses::G_BUFFER_PASS)].preserveAttachmentCount = 0;
 		gBufferPassSubPasses[static_cast<int>(GBufferSubPasses::G_BUFFER_PASS)].pPreserveAttachments = nullptr;
 
-		eastl::vector<VkSubpassDependency> gbufferDependencies = {
+		std::vector<VkSubpassDependency> gbufferDependencies = {
 			{
 				VK_SUBPASS_EXTERNAL,
 				static_cast<int>(GBufferSubPasses::G_BUFFER_PASS),
@@ -1863,7 +1866,7 @@ namespace Engine
 		ssaoPassSubPasses[static_cast<int>(SsaoSubPasses::SSAO_PASS)].preserveAttachmentCount = 0;
 		ssaoPassSubPasses[static_cast<int>(SsaoSubPasses::SSAO_PASS)].pPreserveAttachments = nullptr;
 
-		eastl::vector<VkSubpassDependency> ssaoDependencies = {
+		std::vector<VkSubpassDependency> ssaoDependencies = {
 			{
 				VK_SUBPASS_EXTERNAL,
 				static_cast<int>(SsaoSubPasses::SSAO_PASS),
@@ -1991,7 +1994,7 @@ namespace Engine
 
 
 
-		eastl::vector<VkSubpassDependency> dependecies = {
+		std::vector<VkSubpassDependency> dependecies = {
 			{
 				VK_SUBPASS_EXTERNAL,
 				static_cast<int>(RenderSubPasses::SSAO_BLUR_PASS),
@@ -2061,7 +2064,7 @@ namespace Engine
 		framebuffers.resize(swapChainImageViews.size());
 
 		for (int i = 0; i < framebuffers.size(); ++i) {
-			eastl::vector<VkImageView> attachments(static_cast<int>(RenderPassAttachments::ATTACHMENT_COUNT));
+			std::vector<VkImageView> attachments(static_cast<int>(RenderPassAttachments::ATTACHMENT_COUNT));
 			attachments[static_cast<int>(RenderPassAttachments::COLOR_ATTACHMENT)] = swapChainImageViews[i];
 			attachments[static_cast<int>(RenderPassAttachments::DEPTH_ATTACHMENT)] = depthImageView;
 			attachments[static_cast<int>(RenderPassAttachments::IMGUI_ATTACHMENT)] = imguiImageView;
@@ -2082,11 +2085,11 @@ namespace Engine
 
 			VkResult res = vkCreateFramebuffer(vulkanLogicalDevice_->GetDevice(), &createInfo, nullptr, &framebuffers[i]);
 			if (res != VK_SUCCESS) {
-				eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Framebuffer creation failed";
+				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Framebuffer creation failed";
 				std::cout << s.c_str() << std::endl;
 			}
 		}
-		eastl::vector<VkImageView> attachments(static_cast<int>(GBufferAttachments::ATTACHMENT_COUNT));
+		std::vector<VkImageView> attachments(static_cast<int>(GBufferAttachments::ATTACHMENT_COUNT));
 		attachments[static_cast<int>(GBufferAttachments::DEPTH_ATTACHMENT)] = depthImageView;
 		attachments[static_cast<int>(GBufferAttachments::ALBEDO_ATTACHMENT)] = albedoImageView;
 		attachments[static_cast<int>(GBufferAttachments::POSITION_ATTACHMENT)] = positionImageView;
@@ -2103,7 +2106,7 @@ namespace Engine
 
 		VkResult res = vkCreateFramebuffer(vulkanLogicalDevice_->GetDevice(), &createInfo, nullptr, &gBufferFrameBuffer);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Framebuffer creation failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Framebuffer creation failed";
 			std::cout << s.c_str() << std::endl;
 		}
 
@@ -2121,7 +2124,7 @@ namespace Engine
 
 		res = vkCreateFramebuffer(vulkanLogicalDevice_->GetDevice(), &createInfo, nullptr, &ssaoFrameBuffer);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Framebuffer creation failed";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Framebuffer creation failed";
 			std::cout << s.c_str() << std::endl;
 		}
 	}
@@ -2241,7 +2244,7 @@ namespace Engine
 	{
 		if (vulkanDescriptorPools_.size() == 0)
 			vulkanDescriptorPools_.resize(1);
-		vulkanDescriptorPools_[0] = eastl::shared_ptr<VulkanDescriptorPool>(new VulkanDescriptorPool(vulkanLogicalDevice_.get()));
+		vulkanDescriptorPools_[0] = std::shared_ptr<VulkanDescriptorPool>(new VulkanDescriptorPool(vulkanLogicalDevice_.get()));
 
 		vulkanDescriptorPools_[0]->AddPoolSize(VK_DESCRIPTOR_TYPE_SAMPLER, 1000);
 		vulkanDescriptorPools_[0]->AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000);
@@ -2321,17 +2324,17 @@ namespace Engine
 		for (size_t i = 0, size = framebuffers.size(); i < size; ++i) {
 			VkResult res = vkCreateSemaphore(vulkanLogicalDevice_->GetDevice(), &semaphoreInfo, nullptr, &imageAvailableSemaphores_[i]);
 			if (res != VK_SUCCESS) {
-				eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'image available' creation failed";
+				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'image available' creation failed";
 				debug_error("VulkanRenderer", "CreateSemaphores", s);
 			}
 			res = vkCreateSemaphore(vulkanLogicalDevice_->GetDevice(), &semaphoreInfo, nullptr, &renderFinishedSemaphores_[i]);
 			if (res != VK_SUCCESS) {
-				eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'render finished' creation failed";
+				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'render finished' creation failed";
 				debug_error("VulkanRenderer", "CreateSemaphores", s);
 			}
 			res = vkCreateSemaphore(vulkanLogicalDevice_->GetDevice(), &semaphoreInfo, nullptr, &computeFinishedSemaphores_[i]);
 			if (res != VK_SUCCESS) {
-				eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'compute finished' creation failed";
+				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'compute finished' creation failed";
 				debug_error("VulkanRenderer", "CreateSemaphores", s);
 			}
 
@@ -2341,13 +2344,13 @@ namespace Engine
 
 			res = vkCreateFence(vulkanLogicalDevice_->GetDevice(), &fenceInfo, nullptr, &drawingFinishedFences_[i]);
 			if (res != VK_SUCCESS) {
-				eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Fence 'drawing finished' creation failed";
+				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Fence 'drawing finished' creation failed";
 				debug_error("VulkanRenderer", "CreateSemaphores", s);
 			}
 
 			res = vkCreateFence(vulkanLogicalDevice_->GetDevice(), &fenceInfo, nullptr, &computeFinishedFences_[i]);
 			if (res != VK_SUCCESS) {
-				eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Fence 'compute finished' creation failed";
+				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Fence 'compute finished' creation failed";
 				debug_error("VulkanRenderer", "CreateSemaphores", s);
 			}
 
@@ -2357,7 +2360,7 @@ namespace Engine
 
 	void VulkanRenderer::CreateCompositingPipeline()
 	{
-		compositingPipeline_ = eastl::unique_ptr<VulkanPipeline>(new VulkanPipeline(vulkanLogicalDevice_.get(), this));
+		compositingPipeline_ = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(vulkanLogicalDevice_.get(), this));
 
 		compositingPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::VERTEX_SHADER, "Composite.vert.spv");
 		compositingPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::FRAGMENT_SHADER, "Composite.frag.spv");
@@ -2413,7 +2416,7 @@ namespace Engine
 
 		vkMapMemory(vulkanLogicalDevice_->GetDevice(), stagingBufferAllocationInfo.deviceMemory, stagingBufferAllocationInfo.offset, stagingBufferAllocationInfo.size, 0, &location);
 
-		eastl::vector<glm::vec4> coords = {
+		std::vector<glm::vec4> coords = {
 			{ -1.f,1.f, 0.f, 0.f },
 			{ 1.f,1.f, 1.f, 0.f },
 			{ -1.f,-1.f, 0.f, 1.f },
@@ -2464,7 +2467,7 @@ namespace Engine
 
 	void VulkanRenderer::CreateGBufferRenderPipeline()
 	{
-		gBufferRenderPipeline_ = eastl::unique_ptr<VulkanPipeline>(new VulkanPipeline(vulkanLogicalDevice_.get(), this));
+		gBufferRenderPipeline_ = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(vulkanLogicalDevice_.get(), this));
 
 		gBufferRenderPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::VERTEX_SHADER, "G-BufferRender.vert.spv");
 		gBufferRenderPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::FRAGMENT_SHADER, "G-BufferRender.frag.spv");
@@ -2518,15 +2521,15 @@ namespace Engine
 		vulkanDescriptorPools_[0]->DescriptorSetBindToImage(gBufferAttachmentDescriptorSet_, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, normalImageView, VK_NULL_HANDLE,
 			2, 0, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1);
 
-		sceneDataBuffer = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(
+		sceneDataBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(
 			vulkanLogicalDevice_.get(), vmaAllocator_, static_cast<uint32_t>(sizeof(SceneInfo)),
 			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, false, graphicsCommandPool));
 
-		lightBuffer = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(
+		lightBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(
 			vulkanLogicalDevice_.get(), vmaAllocator_, static_cast<uint32_t>(sizeof(Light)*lightData.size()),
 			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, false, graphicsCommandPool));
 
-		ambientLightPipeline_ = eastl::unique_ptr<VulkanPipeline>(new VulkanPipeline(vulkanLogicalDevice_.get(), this));
+		ambientLightPipeline_ = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(vulkanLogicalDevice_.get(), this));
 
 		ambientLightPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::VERTEX_SHADER, "G-BufferRender.vert.spv");
 		ambientLightPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::FRAGMENT_SHADER, "G-BufferRender.frag.spv");
@@ -2555,10 +2558,10 @@ namespace Engine
 
 	void VulkanRenderer::CreateRenderers()
 	{
-		vulkanSpriteRenderer = eastl::unique_ptr<VulkanSpriteRenderer>(new VulkanSpriteRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
-		vulkanDebugRenderer = eastl::unique_ptr<VulkanDebugRenderer>(new VulkanDebugRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
-		vulkanStaticMeshRenderer = eastl::unique_ptr<VulkanStaticMeshRenderer>(new VulkanStaticMeshRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
-		vulkanSkeletalMeshRenderer = eastl::unique_ptr<VulkanSkeletalMeshRenderer>(new VulkanSkeletalMeshRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
+		vulkanSpriteRenderer = std::unique_ptr<VulkanSpriteRenderer>(new VulkanSpriteRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
+		vulkanDebugRenderer = std::unique_ptr<VulkanDebugRenderer>(new VulkanDebugRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
+		vulkanStaticMeshRenderer = std::unique_ptr<VulkanStaticMeshRenderer>(new VulkanStaticMeshRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
+		vulkanSkeletalMeshRenderer = std::unique_ptr<VulkanSkeletalMeshRenderer>(new VulkanSkeletalMeshRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
 	}
 
 	void VulkanRenderer::AllocateThreads()
@@ -2576,7 +2579,7 @@ namespace Engine
 
 			vkCreateCommandPool(vulkanLogicalDevice_->GetDevice(), &info, nullptr, &(threads[i]->commandPool));
 
-			vulkanDescriptorPools_[i + 1] = eastl::shared_ptr<VulkanDescriptorPool>(new VulkanDescriptorPool(vulkanLogicalDevice_.get()));
+			vulkanDescriptorPools_[i + 1] = std::shared_ptr<VulkanDescriptorPool>(new VulkanDescriptorPool(vulkanLogicalDevice_.get()));
 
 			vulkanDescriptorPools_[i + 1]->AddPoolSize(VK_DESCRIPTOR_TYPE_SAMPLER, 1000);
 			vulkanDescriptorPools_[i + 1]->AddPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000);
@@ -2748,7 +2751,7 @@ namespace Engine
 		}
 	}
 
-	VkFormat VulkanRenderer::FindSupportedDepthFormat(const eastl::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
+	VkFormat VulkanRenderer::FindSupportedDepthFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
 	{
 		if (!vulkanPhysicalDevice_)
 			return VK_FORMAT_UNDEFINED;
@@ -2783,10 +2786,10 @@ namespace Engine
 
 	void VulkanRenderer::RestructureLights()
 	{
-		eastl::array<Light, 1024> tempData = lightData;
+		std::array<Light, 1024> tempData = lightData;
 		lightData.fill({});
-		eastl::map<eastl::string, LightInfo>::iterator it = lights.begin();
-		eastl::map<eastl::string, LightInfo>::iterator end = lights.end();
+		std::map<std::string, LightInfo>::iterator it = lights.begin();
+		std::map<std::string, LightInfo>::iterator end = lights.end();
 		for (size_t location = 0; it != end; ++it) {
 			if (it->second.active) {
 				lightData[location] = it->second.light;

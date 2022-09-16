@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Engine/api.hpp"
+#include "Engine/Api.hpp"
 #include "Engine/Texture/Texture.hpp"
 #include "Engine/Utility/Vertex.hpp"
 #include "Engine/Utility/Defines.hpp"
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
+#include <vector>
 
 namespace Engine
 {
@@ -17,11 +17,11 @@ namespace Engine
 		/// <summary>
 		/// The vertices of this mesh.
 		/// </summary>
-		eastl::vector<Vertex> vertices;
+		std::vector<Vertex> vertices;
 		/// <summary>
 		/// The indices of this mesh.
 		/// </summary>
-		eastl::vector<unsigned> indices;
+		std::vector<unsigned> indices;
 
 		/// <summary>
 		/// This method allows you to get the VAO of this mesh.
@@ -74,7 +74,7 @@ namespace Engine
 		/// <summary>
 		/// The name of this mesh.
 		/// </summary>
-		eastl::string name;
+		std::string name;
 
 		/// <summary>
 		/// This method allows you to compare a mesh with another mesh.
@@ -100,7 +100,7 @@ namespace Engine
 #endif
 
 		Mesh() = delete;
-		Mesh(eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices);
+		Mesh(std::vector<Vertex> vertices, std::vector<unsigned> indices);
 		virtual ~Mesh() noexcept;
 
 		//render data

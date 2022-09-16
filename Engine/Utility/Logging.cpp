@@ -9,7 +9,7 @@
 
 std::ofstream log_file;
 
-void doDebug(eastl::string Type, eastl::string debugClass, eastl::string function, eastl::string value)
+void doDebug(std::string Type, std::string debugClass, std::string function, std::string value)
 {
 	if (log_file.is_open() == false)
 	{
@@ -29,9 +29,10 @@ void doDebug(eastl::string Type, eastl::string debugClass, eastl::string functio
 	asctime_s(str, sizeof str, &buff);
 
 	//pass on time string
-	eastl::string timeString = eastl::string(str).substr(0, 24);
-	eastl::string logString = "[" + timeString + "] " + Type + " [" + debugClass + "::" + function + "]: " + value + "\n";
+	std::string timeString = std::string(str).substr(0, 24);
+	std::string logString = "[" + timeString + "] " + Type + " [" + debugClass + "::" + function + "]: " + value + "\n";
 	log_file << logString.c_str();
+	log_file.close();
 #ifdef COUT_LOGGING
 	std::cout << logString.c_str() << std::endl;
 #endif

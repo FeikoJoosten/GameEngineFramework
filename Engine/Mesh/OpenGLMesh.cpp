@@ -1,11 +1,14 @@
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_OPENGL
 #include "Engine/Mesh/OpenGLMesh.hpp"
-#include <ThirdParty/glew-2.1.0/include/GL/glew.h>
+#include "Engine/Renderer/OpenGLUtility.hpp"
+
+#include <iostream>
+#include <GL/glew.h>
 
 namespace Engine
 {
-	OpenGLMesh::OpenGLMesh(eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices) : Mesh(vertices, indices)
+	OpenGLMesh::OpenGLMesh(std::vector<Vertex> vertices, std::vector<unsigned> indices) : Mesh(vertices, indices)
 	{
 		OpenGLMesh::SetUpMesh();
 	}
@@ -16,17 +19,17 @@ namespace Engine
 		// Allocate one buffer
 		unsigned int uVBO = unsigned int(vbo);
 		glGenBuffers(1, &uVBO);
-		glGetError();
+		glCheckError();
 
 		// Array buffer contains the attribute data
 		glBindBuffer(GL_ARRAY_BUFFER, uVBO);
-		glGetError();
+		glCheckError();
 
 		// Copy into VBO
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
-		glGetError();
+		glCheckError();
 		glBindBuffer(GL_ARRAY_BUFFER, 0); // Unbind buffer
-		glGetError();
+		glCheckError();
 		//--
 
 		vbo = uint64_t(uVBO);
@@ -34,17 +37,17 @@ namespace Engine
 		unsigned int uEBO = unsigned int(ebo);
 		// Allocate one buffer
 		glGenBuffers(1, &uEBO);
-		glGetError();
+		glCheckError();
 
 		// Element array buffer contains the indices.
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, uEBO);
-		glGetError();
+		glCheckError();
 
 		// Copy into VBO
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), &indices[0], GL_STATIC_DRAW);
-		glGetError();
+		glCheckError();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 1); // Unbind buffer
-		glGetError();
+		glCheckError();
 
 		ebo = uint64_t(uEBO);
 

@@ -24,13 +24,13 @@ namespace Engine {
 			return;
 	}
 
-	void Emitter::SetParticle(eastl::shared_ptr<Particle> particle)
+	void Emitter::SetParticle(std::shared_ptr<Particle> particle)
 	{
 		if (!compiled)
 			particle = particle;
 	}
 
-	eastl::weak_ptr<Particle> Emitter::GetParticle() const
+	std::weak_ptr<Particle> Emitter::GetParticle() const
 	{
 		return particle;
 	}
@@ -92,9 +92,9 @@ namespace Engine {
 		burstDurationMax = durationMax;
 	}
 
-	eastl::pair<float, float> Emitter::GetBurstDuration()
+	std::pair<float, float> Emitter::GetBurstDuration()
 	{
-		return eastl::pair<float, float>(burstDurationMin, burstDurationMax);
+		return std::pair<float, float>(burstDurationMin, burstDurationMax);
 	}
 
 	void Emitter::SetBurstParticleCount(float particlesMin, float particlesMax)
@@ -103,9 +103,9 @@ namespace Engine {
 		burstParticleCountMax = particlesMax;
 	}
 
-	eastl::pair<float, float> Emitter::GetBurstParticleCount()
+	std::pair<float, float> Emitter::GetBurstParticleCount()
 	{
-		return eastl::pair<float, float>(burstParticleCountMin, burstParticleCountMax);
+		return std::pair<float, float>(burstParticleCountMin, burstParticleCountMax);
 	}
 
 	void Emitter::SetParticlesPerSecond(float particles)
@@ -152,9 +152,9 @@ namespace Engine {
 
 	}
 
-	eastl::pair<glm::vec3, glm::vec3> Emitter::GetEmitterBox()
+	std::pair<glm::vec3, glm::vec3> Emitter::GetEmitterBox()
 	{
-		return eastl::pair<glm::vec3, glm::vec3>(boxCorner1, boxCorner2);
+		return std::pair<glm::vec3, glm::vec3>(boxCorner1, boxCorner2);
 	}
 
 	void Emitter::SetEmitterLine(glm::vec3 start, glm::vec3 end)
@@ -163,9 +163,9 @@ namespace Engine {
 		lineEnd = end;
 	}
 
-	eastl::pair<glm::vec3, glm::vec3> Emitter::GetEmitterLine()
+	std::pair<glm::vec3, glm::vec3> Emitter::GetEmitterLine()
 	{
-		return eastl::pair<glm::vec3, glm::vec3>(lineStart, lineEnd);
+		return std::pair<glm::vec3, glm::vec3>(lineStart, lineEnd);
 	}
 
 	void Emitter::SetEmitterPointLocation(glm::vec3 point)

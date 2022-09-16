@@ -1,73 +1,42 @@
 #include "Engine/Components/Component.hpp"
 #include "Engine/Entity/Entity.hpp"
 
-#include <ThirdParty/cereal/include/cereal/archives/binary.hpp>
-#include <ThirdParty/cereal/include/cereal/archives/json.hpp>
-
-namespace Engine
-{
-	eastl::weak_ptr<Entity> Component::GetOwner() const
-	{
+namespace Engine {
+	std::weak_ptr<Entity> Component::GetOwner() const {
 		return owner;
 	}
 
-	Component::Component() : isEnabled(true)
-	{
+	bool Component::GetIsEnabled() const {
+		return isEnabled;
 	}
 
-	void Component::InitializeComponent()
-	{
+	void Component::SetIsEnabled(const bool newIsEnabled) {
+		isEnabled = newIsEnabled;
 	}
 
-	void Component::Update()
-	{
-	}
+	void Component::InitializeComponent(const std::vector<std::shared_ptr<Component>>& availableComponents) {}
 
-	void Component::OnComponentAdded(eastl::weak_ptr<Component> addedComponent)
-	{
-	}
+	void Component::Update() {}
 
-	void Component::OnComponentRemoved(eastl::weak_ptr<Component> removedComponent)
-	{
-	}
+	void Component::OnComponentAdded(const std::shared_ptr<Component> addedComponent) {}
 
-	eastl::vector<eastl::shared_ptr<Component>> Component::GetAllComponents() const
-	{
+	void Component::OnComponentRemoved(const std::shared_ptr<Component> removedComponent) {}
+
+	std::vector<std::shared_ptr<Component>> Component::GetAllComponents() const {
+		if (owner.expired()) return {};
 		return owner.lock()->GetAllComponents();
 	}
 
-	void Component::OnBeginContact(eastl::weak_ptr<Entity> entity)
-	{
+	void Component::OnBeginContact(const std::shared_ptr<Entity> entity) {}
+
+	void Component::OnEndContact(const std::shared_ptr<Entity> entity) {}
+
+	void Component::SetOwner(const std::shared_ptr<Entity> newOwner) {
+		owner = newOwner;
 	}
 
-	void Component::OnEndContact(eastl::weak_ptr<Entity> entity)
-	{
-	}
-
-	eastl::weak_ptr<Component> Component::GetPointerRefence() const
-	{
-		return pointerReference;
-	}
-
-	void Component::SetOwner(eastl::weak_ptr<Entity> owner)
-	{
-		this->owner = owner;
-	}
-
-	void Component::SetPointerReference(eastl::weak_ptr<Component> pointerReference)
-	{
-		this->pointerReference = pointerReference;
-	}
-
-	template <typename archive>
-	void Component::SaveBaseComponent(archive ar)
-	{
-		ar(CEREAL_NVP(this->isEnabled));
-	}
-
-	template <typename archive>
-	void Component::LoadBaseComponent(archive ar)
-	{
-		ar(this->isEnabled);
+	template<class Archive>
+	void Component::Serialize(Archive& archive) {
+		archive(CEREAL_NVP(isEnabled));
 	}
 } // namespace Engine

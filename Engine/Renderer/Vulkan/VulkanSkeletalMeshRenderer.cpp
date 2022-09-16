@@ -1,7 +1,9 @@
 #include "VulkanSkeletalMeshRenderer.hpp"
+
+#include "Engine/Resources/ResourceManager.hpp"
 #ifdef USING_VULKAN
 #include "Engine/Renderer/VulkanRenderer.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 #include "Engine/Material/VulkanMaterial.hpp"
 
 namespace Engine {
@@ -14,7 +16,7 @@ namespace Engine {
 		this->commandPool_ = renderer->GetGraphicsCommandPool();
 		this->allocator_ = renderer->GetVmaAllocator();
 
-		skeletalMeshPipeline_ = eastl::unique_ptr<VulkanPipeline>(new VulkanPipeline(device, renderer));
+		skeletalMeshPipeline_ = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(device, renderer));
 
 		skeletalMeshPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::VERTEX_SHADER, "SkeletonMesh.vert.spv");
 		//skeletalMeshPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::GEOMETRY_SHADER, "Mesh.geom.spv");
@@ -52,7 +54,7 @@ namespace Engine {
 
 		skeletalMeshPipeline_->Compile();
 
-		shadowPipeline_ = eastl::unique_ptr<VulkanPipeline>(new VulkanPipeline(device_, renderer_));
+		shadowPipeline_ = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(device_, renderer_));
 
 		shadowPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::VERTEX_SHADER, "SkeletonShadow.vert.spv");
 		shadowPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::GEOMETRY_SHADER, "ShadowVolume.geom.spv");
@@ -113,7 +115,7 @@ namespace Engine {
 
 		ubo_ = { glm::mat4(), glm::mat4() };
 		
-		uniformBuffer_ = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
+		uniformBuffer_ = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
 			static_cast<uint32_t>(sizeof(ubo_)), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, false, renderer->GetGraphicsCommandPool()));
 
 		uniformBuffer_->UpdateBuffer(&ubo_, 0, static_cast<uint32_t>(sizeof(ubo_)));
@@ -129,9 +131,9 @@ namespace Engine {
 				0, static_cast<VkDeviceSize>(sizeof(ubo_)), 0, 0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
 		}
 
-		Engine::GetEngine().lock()->GetResourceManager().lock()->CreateTexture("default.png");
-		defaultTexture_ = eastl::dynamic_pointer_cast<VulkanTexture, Texture>(
-			Engine::GetEngine().lock()->GetResourceManager().lock()->GetTexture("default.png").lock());
+		ResourceManager::Get()->CreateTexture("default.png");
+		defaultTexture_ = std::dynamic_pointer_cast<VulkanTexture, Texture>(
+			ResourceManager::Get()->GetTexture("default.png").lock());
 	}
 
 

@@ -2,9 +2,7 @@
 #include "Engine/Components/Component.hpp"
 #include "Engine/Collision/CollisionTypes.hpp"
 
-#include <ThirdParty/Box2D/Box2D/Box2D.h>
-#include <ThirdParty/glm/glm/detail/type_vec2.hpp>
-#include <ThirdParty/EASTL-master/include/EASTL/shared_ptr.h>
+#include <glm/detail/type_vec2.hpp>
 
 namespace Engine
 {
@@ -17,35 +15,19 @@ namespace Engine
 	class ENGINE_API CollisionComponent : public Component
 	{
 		// Shortcuts
-		typedef eastl::shared_ptr<CollisionComponent> CollPtr;
+		typedef std::shared_ptr<CollisionComponent> CollPtr;
 		friend class CollisionSystem;
 
 		CollisionComponent();
 		CollisionComponent(CollisionComponent& collisionComponent);
-		CollisionComponent(CollisionShapeType objectType, b2BodyType bodyType);
 
-		void InitializeComponent() override;
+		virtual void OnComponentAdded(std::shared_ptr<Component> addedComponent) override;
 
-		~CollisionComponent();
+		virtual void OnComponentRemoved(std::shared_ptr<Component> removedComponent) override;
 
-		void OnComponentAdded(eastl::weak_ptr<Component> addedComponent) override;
-		void OnComponentRemoved(eastl::weak_ptr<Component> removedComponent) override;
-
-		eastl::weak_ptr<TransformComponent> GetTransformComponent() const;
+		std::weak_ptr<TransformComponent> GetTransformComponent() const;
 
 		public:
-		// Type
-		/// <summary>
-		/// Sets the Body Type (Static, Dynamic, Kinematic) for the collision body.
-		/// </summary>
-		/// <param name="bodyType">The body type the component will assume</param>
-		void SetBodyType(b2BodyType bodyType);
-
-		/// <summary>
-		/// Gets the Body Type (Static, Dynamic, Kinematic) of the collision body.
-		/// </summary>
-		/// <returns>b2BodyType representing the body type</returns>
-		b2BodyType GetBodyType() const;
 
 		// Shapes
 		/// <summary>
@@ -139,16 +121,7 @@ namespace Engine
 		template<typename archive>
 		void LoadComponent(archive ar);
 	private:
-		// Body Construction Data
-		b2BodyDef bodyDef;			/// Stores Body Definition data
-		b2FixtureDef fixtureDef;		/// Stores Fixture Definition data
-		b2CircleShape circleShape;		/// Stores the Circle shape Data
-		b2PolygonShape boxShape;			/// Stores the Box shape Data
-		// Body Data
-		b2Body* body;				/// Points to collision body used in the b2World, only used when collision system has been started
 		CollisionShapeType shapeType;			/// The Shape Type, AABB or Circle
-		b2Vec2 boxSize;			/// Variable that is in use when the shape is a box
-
-		eastl::weak_ptr<TransformComponent> transformComponent;
+		std::weak_ptr<TransformComponent> transformComponent;
 	};
 }

@@ -1,13 +1,10 @@
 #pragma once
 
-#include <ThirdParty/glm/glm/glm.hpp>
-
 #include "Engine/Mesh/Mesh.hpp"
 #include "Engine/Material/Material.hpp"
 #include "Engine/Texture/Texture.hpp"
 
-#include <ThirdParty/EASTL-master/include/EASTL/map.h>
-#include <ThirdParty/EASTL-master/include/EASTL/shared_ptr.h>
+#include <glm/glm.hpp>
 
 namespace Engine {
 
@@ -79,7 +76,7 @@ namespace Engine {
 		/// Returns a pair containing the range of possible start colors of the particle.
 		/// </summary>
 		/// <returns>An eastl pair containing the range of colors.</returns>
-		eastl::pair<glm::vec4, glm::vec4> GetStartColor();
+		std::pair<glm::vec4, glm::vec4> GetStartColor();
 
 		/// <summary>
 		/// Sets the range of possible end colors of the particle.
@@ -92,7 +89,7 @@ namespace Engine {
 		/// Returns a pair containing the range of possible end colors of the particle.
 		/// </summary>
 		/// <returns>An eastl pair containing the range of colors.</returns>
-		eastl::pair<glm::vec4, glm::vec4> GetEndColor();
+		std::pair<glm::vec4, glm::vec4> GetEndColor();
 
 		/// <summary>
 		/// Sets the interpolation type used for the color.
@@ -117,7 +114,7 @@ namespace Engine {
 		/// Returns a pair containing the range of possible forces that can be applied on the particle.
 		/// </summary>
 		/// <returns>A pair containing a range of forces.</returns>
-		eastl::pair<glm::vec3, glm::vec3> GetForce();
+		std::pair<glm::vec3, glm::vec3> GetForce();
 
 		/// <summary>
 		/// Sets the range of possible lifetimes the particle can have.
@@ -130,7 +127,7 @@ namespace Engine {
 		/// Returns the range of possible lifetimes the particle can have.
 		/// </summary>
 		/// <returns>A pair containing a range of lifetimes.</returns>
-		eastl::pair<float, float> GetLifetime();
+		std::pair<float, float> GetLifetime();
 
 		/// <summary>
 		/// Sets the range of possible speeds the particle can be created with.
@@ -143,7 +140,7 @@ namespace Engine {
 		/// Returns the range of possible speeds the particle can be created with.
 		/// </summary>
 		/// <returns>A pair containing a range of speeds.</returns>
-		eastl::pair<float, float> GetSpeed();
+		std::pair<float, float> GetSpeed();
 
 		/// <summary>
 		/// Sets the range of masses a particle can be created with. 
@@ -158,7 +155,7 @@ namespace Engine {
 		/// Returns the range of possible masses the particle can be created with.
 		/// </summary>
 		/// <returns>A pair containing a range of masses.</returns>
-		eastl::pair<float, float> GetMass();
+		std::pair<float, float> GetMass();
 
 		/// <summary>
 		/// Turns gravity on and off for the particle. Gravitic constant will be 9.81. If you want different gravities, turn this off and instead specify a force for the particle.
@@ -176,13 +173,13 @@ namespace Engine {
 		/// Sets the texture of the particle. Only applies to lines and billboards. Can be left empty to use just the particle color.
 		/// </summary>
 		/// <param name="texture">A weak pointer to the texture.</param>
-		void SetTexture(eastl::weak_ptr<Texture> texture);
+		void SetTexture(std::weak_ptr<Texture> texture);
 
 		/// <summary>
 		/// Returns the texture used by the particle.
 		/// </summary>
 		/// <returns>A weak pointer to a texture.</returns>
-		eastl::weak_ptr<Texture> GetTexture() const;
+		std::weak_ptr<Texture> GetTexture() const;
 
 		/// <summary>
 		/// Returns whether or not the particle has a texture.
@@ -237,7 +234,7 @@ namespace Engine {
 		/// Returns the range of thicknesses a line can start with.
 		/// </summary>
 		/// <returns>A pair of floats containing the range.</returns>
-		eastl::pair<float, float> GetLineStartThickness();
+		std::pair<float, float> GetLineStartThickness();
 
 		/// <summary>
 		/// Sets the range of thicknesses a line can end with (interpolation is based on lifetime, not segment count).
@@ -250,7 +247,7 @@ namespace Engine {
 		/// Returns the range of thicknesses a line can end with.
 		/// </summary>
 		/// <returns>A pair of floats containing the range.</returns>
-		eastl::pair<float, float> GetLineEndThickness();
+		std::pair<float, float> GetLineEndThickness();
 
 		/// <summary>
 		/// Sets the interpolation type of the line thickness.
@@ -275,7 +272,7 @@ namespace Engine {
 		/// Returns the range of start sizes for the billboard.
 		/// </summary>
 		/// <returns>A pair of vec2s containing the size.</returns>
-		eastl::pair<glm::vec2, glm::vec2> GetBillboardSizeStart();
+		std::pair<glm::vec2, glm::vec2> GetBillboardSizeStart();
 
 		/// <summary>
 		/// Sets the range for the end size of the billboard.
@@ -288,7 +285,7 @@ namespace Engine {
 		/// Returns the range of end sizes for the billboard.
 		/// </summary>
 		/// <returns>A pair of vec2s containing the range of sizes.</returns>
-		eastl::pair<glm::vec2, glm::vec2> GetBillboardSizeEnd();
+		std::pair<glm::vec2, glm::vec2> GetBillboardSizeEnd();
 
 		/// <summary>
 		/// Sets the interpolation type for the billboard size.
@@ -313,7 +310,7 @@ namespace Engine {
 		/// Returns the angle of roll rotation speeds the billboard can start with.
 		/// </summary>
 		/// <returns>A pair of floats containing the range of speeds.</returns>
-		eastl::pair<float, float> GetBillboardRollSpeedStart();
+		std::pair<float, float> GetBillboardRollSpeedStart();
 
 		/// <summary>
 		/// Sets the range of roll rotation speeds the billboard can end with.
@@ -326,7 +323,7 @@ namespace Engine {
 		/// Returns the angle of roll rotation speeds the billboard can end with.
 		/// </summary>
 		/// <returns>A pair of floats containing the range of speeds.</returns>
-		eastl::pair<float, float> GetBillboardRollSpeedEnd();
+		std::pair<float, float> GetBillboardRollSpeedEnd();
 
 		/// <summary>
 		/// Sets the range of roll rotations the billboard can start with.
@@ -339,7 +336,7 @@ namespace Engine {
 		/// Returns the range of roll rotations the billboard can start with.
 		/// </summary>
 		/// <returns>A pair of floats containing the range.</returns>
-		eastl::pair<float, float> GetBillboardRoll();
+		std::pair<float, float> GetBillboardRoll();
 
 		/// <summary>
 		/// Sets the interpolation type for the roll speed.
@@ -357,25 +354,25 @@ namespace Engine {
 		/// Sets the mesh used for mesh particles.
 		/// </summary>
 		/// <param name="mesh">The new mesh.</param>
-		void SetMesh(eastl::weak_ptr<Mesh> mesh);
+		void SetMesh(std::weak_ptr<Mesh> mesh);
 
 		/// <summary>
 		/// Returns the mesh used for mesh particles.
 		/// </summary>
 		/// <returns>The mesh.</returns>
-		eastl::weak_ptr<Mesh> GetMesh() const;
+		std::weak_ptr<Mesh> GetMesh() const;
 
 		/// <summary>
 		/// Sets the material used for the mesh. Material color is overriden by the particle color.
 		/// </summary>
 		/// <param name="material">The mesh material.</param>
-		void SetMaterial(eastl::weak_ptr<Material> material);
+		void SetMaterial(std::weak_ptr<Material> material);
 
 		/// <summary>
 		/// Returns the material used for the mesh.
 		/// </summary>
 		/// <returns>The mesh material.</returns>
-		eastl::weak_ptr<Material> GetMaterial() const;
+		std::weak_ptr<Material> GetMaterial() const;
 
 		/// <summary>
 		/// Sets the range for start scale of the mesh.
@@ -388,7 +385,7 @@ namespace Engine {
 		/// Returns the range of start scales for the mesh.
 		/// </summary>
 		/// <returns>A pair of vec3s containing the scale.</returns>
-		eastl::pair<glm::vec3, glm::vec3> GetMeshScaleStart();
+		std::pair<glm::vec3, glm::vec3> GetMeshScaleStart();
 
 		/// <summary>
 		/// Sets the range for the end scale of the mesh.
@@ -401,7 +398,7 @@ namespace Engine {
 		/// Returns the range of end scales for the mesh.
 		/// </summary>
 		/// <returns>A pair of vec3s containing the range of scales.</returns>
-		eastl::pair<glm::vec3, glm::vec3> GetMeshScaleEnd();
+		std::pair<glm::vec3, glm::vec3> GetMeshScaleEnd();
 
 		/// <summary>
 		/// Sets the interpolation type for the mesh scale.
@@ -426,7 +423,7 @@ namespace Engine {
 		/// Returns the rotation speeds in euler angles the mesh can start with.
 		/// </summary>
 		/// <returns>A pair of glm::vec3s containing the range of speeds.</returns>
-		eastl::pair<glm::vec3, glm::vec3> GetMeshRotationSpeedStart();
+		std::pair<glm::vec3, glm::vec3> GetMeshRotationSpeedStart();
 
 		/// <summary>
 		/// Sets the range of rotation speeds in euler angles the mesh can end with.
@@ -439,7 +436,7 @@ namespace Engine {
 		/// Returns the rotation speeds in euler angles the mesh can end with.
 		/// </summary>
 		/// <returns>A pair of vec3s containing the range of speeds.</returns>
-		eastl::pair<glm::vec3, glm::vec3> GetMeshRotationSpeedEnd();
+		std::pair<glm::vec3, glm::vec3> GetMeshRotationSpeedEnd();
 
 		/// <summary>
 		/// Sets the range of rotations in euler angles the mesh can start with.
@@ -452,7 +449,7 @@ namespace Engine {
 		/// Returns the range of rotations in euler angles the mesh can start with.
 		/// </summary>
 		/// <returns>A pair of vec3s containing the range.</returns>
-		eastl::pair<glm::vec3, glm::vec3> GetMeshRotation();
+		std::pair<glm::vec3, glm::vec3> GetMeshRotation();
 
 		/// <summary>
 		/// Sets the interpolation type for the rotation speed.
@@ -561,7 +558,7 @@ namespace Engine {
 
 		bool gravity = false;
 
-		eastl::weak_ptr<Texture> texture;
+		std::weak_ptr<Texture> texture;
 
 		bool textured = false;
 
@@ -584,8 +581,8 @@ namespace Engine {
 
 		float rollMin, rollMax;
 
-		eastl::weak_ptr<Mesh> mesh;
-		eastl::weak_ptr<Material> material;
+		std::weak_ptr<Mesh> mesh;
+		std::weak_ptr<Material> material;
 
 		glm::vec4 startScaleMin, startScaleMax;
 		glm::vec4 endScaleMin, endScaleMax;

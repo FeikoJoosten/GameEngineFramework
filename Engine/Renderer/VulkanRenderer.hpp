@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
+#include "Engine/Engine.hpp"
 #include "Engine/Renderer/Renderer.hpp"
 #include "Engine/Window/VulkanWindow.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
@@ -24,19 +25,20 @@
 
 // Written by Koen Buitenhuis
 
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+//#define GLM_FORCE_RADIANS
+//#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 
-#include <ThirdParty/glm/glm/glm.hpp>
-#include <ThirdParty/glm/glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <future>
 #include <thread>
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
-#include <ThirdParty/EASTL-master/include/EASTL/array.h>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
-#include <ThirdParty/EASTL-master/include/EASTL/memory.h>
-#include <ThirdParty/EASTL-master/include/EASTL/chrono.h>
+#include <string>
+#include <array>
+#include <vector>
+#include <memory>
+#include <chrono>
+
 
 
 namespace Engine
@@ -52,15 +54,13 @@ namespace Engine
 	/// This is the Vulkan renderer. Allows you to render using Vulkan. NOTE: Only the Engine is allowed to create this object.
 	/// </summary>
 	class ENGINE_API VulkanRenderer : public Renderer {
-	private:
-
 		friend VulkanPipeline;
-		friend class Engine;
+		friend std::shared_ptr<Renderer> Engine::GetRenderer() noexcept;
 
 		VulkanRenderer() noexcept;
+	public:
 		VulkanRenderer(VulkanRenderer const &other) = default;
 		VulkanRenderer(VulkanRenderer &&other) noexcept = default;
-	public:
 		~VulkanRenderer();
 	private:
 
@@ -76,7 +76,7 @@ namespace Engine
 		/// Binds the renderer to a specific window, all render calls by this renderer object will only affect this window.
 		/// </summary>
 		/// <param name="window">The window to bind the renderer to.</param>
-		void InitializeRenderer(eastl::weak_ptr<VulkanWindow> window);
+		void InitializeRenderer(std::weak_ptr<VulkanWindow> window);
 
 		/// <summary>
 		/// Tell the renderer that the window it was bound too was resized, and the pipeline needs to be recreated.
@@ -154,14 +154,14 @@ namespace Engine
 		/// <param name="modelMatrix">Current transform of the model. Applies to all meshes contained by the model.</param>
 		/// <param name="model">Model to be rendered.</param>
 		/// <param name="mainColor">Color of the model. Should normally be white (glm::vec4(1.f, 1.f, 1.f, 1.f))</param>
-		virtual void Render(const glm::mat4x4& modelMatrix, eastl::shared_ptr<Model> model, const glm::vec4& mainColor = glm::vec4(1.f, 1.f, 1.f, 1.f));
+		virtual void Render(const glm::mat4x4& modelMatrix, std::shared_ptr<Model> model, const glm::vec4& mainColor = glm::vec4(1.f, 1.f, 1.f, 1.f));
 
 		/// <summary>
 		/// Renders a texture in the world. Base size of the texture is a one by one square, center of the texture is the origin.
 		/// </summary>
 		/// <param name="texture">Texture to be rendered.</param>
 		/// <param name="modelMatrix">Transform of the texture.</param>
-		virtual void RenderSprite(eastl::weak_ptr<Texture> texture, glm::mat4 modelMatrix);
+		virtual void RenderSprite(std::weak_ptr<Texture> texture, glm::mat4 modelMatrix);
 
 		/// <summary>
 		/// Renders a line from start coordinates to end coordinates in the specified color.
@@ -239,7 +239,7 @@ namespace Engine
 		/// <param name="coneOuterAngle">The angle of spot light that is the outer most angle a pixel can still recieve incoming light.
 		/// If a pixel is between the inner and outer angle the strength of the light will slowly fade depending how close to the
 		/// outer angle the pixel is. Only used for spot lights.</param>
-		void CreateLight(eastl::string name, LightType lightType,
+		void CreateLight(std::string name, LightType lightType,
 			glm::vec3 position, glm::vec3 direction, glm::vec3 color,
 			float radius, float attunuation, float coneInnerAngle, float coneOuterAngle);
 
@@ -248,98 +248,98 @@ namespace Engine
 		/// </summary>
 		/// <param name="name">The light to change.</param>
 		/// <param name="type">What type the light should become.</param>
-		void SetLightType(eastl::string name, LightType lightType);
+		void SetLightType(std::string name, LightType lightType);
 
 		/// <summary>
 		/// Returns the type of the light.
 		/// </summary>
 		/// <param name="name">The light to get the type from.</param>
 		/// <returns>The type of the light.</returns>
-		LightType GetLightType(eastl::string name);
+		LightType GetLightType(std::string name);
 
 		/// <summary>
 		/// Changes the position of the light. Does nothing if the light is a directional light.
 		/// </summary>
 		/// <param name="name">The light to change.</param>
 		/// <param name="position">The new position of the light.</param>
-		void SetLightPosition(eastl::string name, glm::vec3 position);
+		void SetLightPosition(std::string name, glm::vec3 position);
 
 		/// <summary>
 		/// Returns the position of the light. If the light can't be found a vector of 0,0,0 is returned.
 		/// </summary>
 		/// <param name="name">The light whose position to get.</param>
 		/// <returns>A glm vec3 containing the position.</returns>
-		glm::vec3 GetLightPosition(eastl::string name);
+		glm::vec3 GetLightPosition(std::string name);
 
 		/// <summary>
 		/// Sets the direction the light shines at. No effect for point lights.
 		/// </summary>
 		/// <param name="name">The light to change the direction for.</param>
 		/// <param name="direction">The new direction.</param>
-		void SetLightDirection(eastl::string name, glm::vec3 direction);
+		void SetLightDirection(std::string name, glm::vec3 direction);
 
 		/// <summary>
 		/// Returns the direction of the light. If the light can't be found a vector of 0,0,0 is returned.
 		/// </summary>
 		/// <param name="name">The light whose direction to get.</param>
 		/// <returns>A glm vec3 containing the direction.</returns>
-		glm::vec3 GetLightDirection(eastl::string name);
+		glm::vec3 GetLightDirection(std::string name);
 
 		/// <summary>
 		/// Sets the color of the light.
 		/// </summary>
 		/// <param name="name">The light to set the color for.</param>
 		/// <param name="color">The new color.</param>
-		void SetLightColor(eastl::string name, glm::vec3 color);
+		void SetLightColor(std::string name, glm::vec3 color);
 
 		/// <summary>
 		/// Returns the color of the light.
 		/// </summary>
 		/// <param name="name">The light to get the color from.</param>
 		/// <returns>A glm vec3 containing the color.</returns>
-		glm::vec3 GetLightColor(eastl::string name);
+		glm::vec3 GetLightColor(std::string name);
 
 		/// <summary>
 		/// Sets the radius of the light. Only has an effect on point and spot lights.
 		/// </summary>
 		/// <param name="name">The name of the light.</param>
 		/// <param name="radius">The new radius.</param>
-		void SetLightRadius(eastl::string name, float radius);
+		void SetLightRadius(std::string name, float radius);
 
 		/// <summary>
 		/// Returns the radius of the light.
 		/// </summary>
 		/// <param name="name">The name of the light.</param>
 		/// <returns></returns>
-		float GetLightRadius(eastl::string name);
+		float GetLightRadius(std::string name);
 
 		/// <summary>
 		/// Sets the inner angle of the light cone. Only affects spot lights.
 		/// </summary>
 		/// <param name="name">The name of the light.</param>
 		/// <param name="angle">The new inner angle in radians.</param>
-		void SetLightConeInnerAngle(eastl::string name, float angle);
+		void SetLightConeInnerAngle(std::string name, float angle);
 
 		/// <summary>
 		/// Returns the inner angle of the light cone. Only affects spot lights.
 		/// </summary>
 		/// <param name="name">The name of the light.</param>
 		/// <returns>the inner angle of the light cone in radians.</returns>
-		float GetLightConeInnerAngle(eastl::string name);
+		float GetLightConeInnerAngle(std::string name);
 
 		/// <summary>
 		/// Sets the outer angle of the light cone. Only affects spot lights.
 		/// </summary>
 		/// <param name="name">The name of the light.</param>
 		/// <param name="angle">The new outer angle in radians.</param>
-		void SetLightConeOuterAngle(eastl::string name, float angle);
+		void SetLightConeOuterAngle(std::string name, float angle);
 
 		/// <summary>
 		/// Returns the outer angle of the light cone. Only affects spot lights.
 		/// </summary>
 		/// <param name="name">The name of the light.</param>
 		/// <returns>the outer angle of the light cone in radians.</returns>
-		float GetLightConeOuterAngle(eastl::string name);
+		float GetLightConeOuterAngle(std::string name);
 
 		/// <summary>
 		/// Creates and returns a descriptor set layout matching the light and scene data.
@@ -432,12 +432,12 @@ namespace Engine
 		void DestroyRenderers();
 		void DestroyThreads();
 
-		VkFormat VulkanRenderer::FindSupportedDepthFormat(const eastl::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+		VkFormat VulkanRenderer::FindSupportedDepthFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 
-		eastl::unique_ptr<VulkanInstance> vulkanInstance_;
-		eastl::unique_ptr<VulkanPhysicalDevice> vulkanPhysicalDevice_;
-		eastl::unique_ptr<VulkanLogicalDevice> vulkanLogicalDevice_;
-		eastl::vector<eastl::shared_ptr<VulkanDescriptorPool>> vulkanDescriptorPools_;
+		std::unique_ptr<VulkanInstance> vulkanInstance_;
+		std::unique_ptr<VulkanPhysicalDevice> vulkanPhysicalDevice_;
+		std::unique_ptr<VulkanLogicalDevice> vulkanLogicalDevice_;
+		std::vector<std::shared_ptr<VulkanDescriptorPool>> vulkanDescriptorPools_;
 
 		/*
 		VulkanInstance* vulkanInstance;
@@ -445,39 +445,39 @@ namespace Engine
 		VulkanLogicalDevice* vulkanLogicalDevice;
 		VulkanDescriptorPool* vulkanDescriptorPool;*/
 
-		VulkanDeviceFeatures_t requiredFeatures;
+		VulkanDeviceFeatures_t requiredFeatures{};
 
-		eastl::weak_ptr<VulkanWindow> window;
+		std::weak_ptr<VulkanWindow> window;
 
-		VkSurfaceKHR surface;
+		VkSurfaceKHR surface{};
 
 
 
 #pragma region Swapchain
 
-		VkSwapchainKHR swapChain;
+		VkSwapchainKHR swapChain{};
 
-		uint32_t imageCount;
+		uint32_t imageCount{};
 		VkFormat swapChainImageFormat;
-		VkExtent2D swapChainImageExtent;
+		VkExtent2D swapChainImageExtent{};
 
-		uint32_t currentImage;
-		uint32_t prevImage;
+		uint32_t currentImage{};
+		uint32_t prevImage{};
 
-		VkCommandPool graphicsCommandPool;
-		VkCommandPool computeCommandPool;
+		VkCommandPool graphicsCommandPool{};
+		VkCommandPool computeCommandPool{};
 
-		eastl::vector<VkImage> swapChainImages;
-		eastl::vector<VkImageView> swapChainImageViews;
+		std::vector<VkImage> swapChainImages;
+		std::vector<VkImageView> swapChainImageViews;
 
 #pragma endregion
 
 #pragma region Depth image
 
-		VkImage depthImage;
-		VkImageView depthImageView;
-		VmaAllocation depthImageAllocation;
-		VmaAllocationInfo depthImageAllocationInfo;
+		VkImage depthImage{};
+		VkImageView depthImageView{};
+		VmaAllocation depthImageAllocation{};
+		VmaAllocationInfo depthImageAllocationInfo{};
 
 		VkFormat depthImageFormat;
 
@@ -511,98 +511,98 @@ namespace Engine
 		};
 
 
-		eastl::vector<VkAttachmentDescription> gBufferPassAttachments;
-		eastl::vector<VkSubpassDescription> gBufferPassSubPasses;
+		std::vector<VkAttachmentDescription> gBufferPassAttachments;
+		std::vector<VkSubpassDescription> gBufferPassSubPasses;
 
-		eastl::vector<VkAttachmentDescription> ssaoPassAttachments;
-		eastl::vector<VkSubpassDescription> ssaoPassSubPasses;
+		std::vector<VkAttachmentDescription> ssaoPassAttachments;
+		std::vector<VkSubpassDescription> ssaoPassSubPasses;
 
-		eastl::vector<VkAttachmentDescription> renderPassAttachments;
-		eastl::vector<VkSubpassDescription> renderPassSubPasses;
+		std::vector<VkAttachmentDescription> renderPassAttachments;
+		std::vector<VkSubpassDescription> renderPassSubPasses;
 
-		VkRenderPass gBufferPass;
-		VkRenderPass ssaoPass;
-		VkRenderPass renderPass;
+		VkRenderPass gBufferPass{};
+		VkRenderPass ssaoPass{};
+		VkRenderPass renderPass{};
 
 #pragma endregion
 
 #pragma region Attachment images
 
-		VkImage imguiImage;
-		VkImageView imguiImageView;
-		VmaAllocation imguiImageAllocation;
-		VmaAllocationInfo imguiImageAllocationInfo;
+		VkImage imguiImage{};
+		VkImageView imguiImageView{};
+		VmaAllocation imguiImageAllocation{};
+		VmaAllocationInfo imguiImageAllocationInfo{};
 
-		VkImage renderImage;
-		VkImageView renderImageView;
-		VmaAllocation renderImageAllocation;
-		VmaAllocationInfo renderImageAllocationInfo;
+		VkImage renderImage{};
+		VkImageView renderImageView{};
+		VmaAllocation renderImageAllocation{};
+		VmaAllocationInfo renderImageAllocationInfo{};
 
-		VkImage albedoImage;
-		VkImageView albedoImageView;
-		VmaAllocation albedoImageAllocation;
-		VmaAllocationInfo albedoImageAllocationInfo;
+		VkImage albedoImage{};
+		VkImageView albedoImageView{};
+		VmaAllocation albedoImageAllocation{};
+		VmaAllocationInfo albedoImageAllocationInfo{};
 
-		VkImage positionImage;
-		VkImageView positionImageView;
-		VmaAllocation positionImageAllocation;
-		VmaAllocationInfo positionImageAllocationInfo;
+		VkImage positionImage{};
+		VkImageView positionImageView{};
+		VmaAllocation positionImageAllocation{};
+		VmaAllocationInfo positionImageAllocationInfo{};
 
-		VkImage normalImage;
-		VkImageView normalImageView;
-		VmaAllocation normalImageAllocation;
-		VmaAllocationInfo normalImageAllocationInfo;
+		VkImage normalImage{};
+		VkImageView normalImageView{};
+		VmaAllocation normalImageAllocation{};
+		VmaAllocationInfo normalImageAllocationInfo{};
 
-		VkImage ssaoImage;
-		VkImageView ssaoImageView;
-		VmaAllocation ssaoImageAllocation;
-		VmaAllocationInfo ssaoImageAllocationInfo;
+		VkImage ssaoImage{};
+		VkImageView ssaoImageView{};
+		VmaAllocation ssaoImageAllocation{};
+		VmaAllocationInfo ssaoImageAllocationInfo{};
 
-		VkImage ssaoBlurImage;
-		VkImageView ssaoBlurImageView;
-		VmaAllocation ssaoBlurImageAllocation;
-		VmaAllocationInfo ssaoBlurImageAllocationInfo;
+		VkImage ssaoBlurImage{};
+		VkImageView ssaoBlurImageView{};
+		VmaAllocation ssaoBlurImageAllocation{};
+		VmaAllocationInfo ssaoBlurImageAllocationInfo{};
 
-		VkSampler sampler;
+		VkSampler sampler{};
 
 #pragma endregion
 
 #pragma region Framebuffers
 
-		eastl::vector<VkFramebuffer> framebuffers;
+		std::vector<VkFramebuffer> framebuffers;
 
-		VkFramebuffer gBufferFrameBuffer;
-		VkFramebuffer ssaoFrameBuffer;
+		VkFramebuffer gBufferFrameBuffer{};
+		VkFramebuffer ssaoFrameBuffer{};
 
 #pragma endregion
 
 #pragma region CommandBuffers
 
-		eastl::vector<VkCommandBuffer> primaryRenderCommandBuffers_;
-		eastl::vector<VkCommandBuffer> primaryComputeCommandBuffers_;
+		std::vector<VkCommandBuffer> primaryRenderCommandBuffers_;
+		std::vector<VkCommandBuffer> primaryComputeCommandBuffers_;
 
-		eastl::vector<eastl::vector<VkCommandBuffer>> staticMeshShadowCommandBuffers_;
-		eastl::vector<eastl::vector<VkCommandBuffer>> skeletalMeshShadowCommandBuffers_;
-		eastl::vector<eastl::vector<VkCommandBuffer>> gBufferShadowCommandBuffers_;
+		std::vector<std::vector<VkCommandBuffer>> staticMeshShadowCommandBuffers_;
+		std::vector<std::vector<VkCommandBuffer>> skeletalMeshShadowCommandBuffers_;
+		std::vector<std::vector<VkCommandBuffer>> gBufferShadowCommandBuffers_;
 
-		VkCommandBuffer compositeCommandBuffer_;
+		VkCommandBuffer compositeCommandBuffer_{};
 
-		VkCommandBuffer gBufferRenderCommandBuffer_;
+		VkCommandBuffer gBufferRenderCommandBuffer_{};
 
-		eastl::vector<VkCommandBuffer> imguiCommandBuffers_;
+		std::vector<VkCommandBuffer> imguiCommandBuffers_;
 
-		VkCommandBuffer currentBuffer_;
-		VkCommandBuffer currentComputeBuffer_;
+		VkCommandBuffer currentBuffer_{};
+		VkCommandBuffer currentComputeBuffer_{};
 
-		eastl::vector<VkCommandBuffer> spriteRenderCommandBuffers_;
+		std::vector<VkCommandBuffer> spriteRenderCommandBuffers_;
 
-		eastl::vector<VkCommandBuffer> debugRenderCommandBuffers_;
+		std::vector<VkCommandBuffer> debugRenderCommandBuffers_;
 
-		eastl::vector<VkCommandBuffer> staticMeshCommandBuffers_;
+		std::vector<VkCommandBuffer> staticMeshCommandBuffers_;
 
-		eastl::vector<VkCommandBuffer> skeletalMeshCommandBuffers_;
+		std::vector<VkCommandBuffer> skeletalMeshCommandBuffers_;
 
-		eastl::vector<VkCommandBuffer> clearStencilCommandBuffers_;
+		std::vector<VkCommandBuffer> clearStencilCommandBuffers_;
 
 		void GenerateSecondaryCommandBuffers(VkCommandBuffer *buffers, uint32_t count);
 		void DestroySecondaryCommandBuffers(VkCommandBuffer*buffers, uint32_t count);
@@ -611,30 +611,30 @@ namespace Engine
 
 #pragma region Pipelines
 
-		eastl::unique_ptr<VulkanPipeline> compositingPipeline_;
+		std::unique_ptr<VulkanPipeline> compositingPipeline_;
 
-		eastl::unique_ptr<VulkanPipeline> gBufferRenderPipeline_;
+		std::unique_ptr<VulkanPipeline> gBufferRenderPipeline_;
 
-		eastl::unique_ptr<VulkanPipeline> ambientLightPipeline_;
+		std::unique_ptr<VulkanPipeline> ambientLightPipeline_;
 
-		eastl::unique_ptr<VulkanPipeline> ssaoPipeline_;
-		eastl::unique_ptr<VulkanPipeline> ssaoBlurPipeline_;
+		std::unique_ptr<VulkanPipeline> ssaoPipeline_;
+		std::unique_ptr<VulkanPipeline> ssaoBlurPipeline_;
 
-		VkDescriptorSet gBufferAttachmentDescriptorSet_;
+		VkDescriptorSet gBufferAttachmentDescriptorSet_{};
 
-		VkDescriptorSet SceneInfoDescriptorSet_;
+		VkDescriptorSet SceneInfoDescriptorSet_{};
 
-		VkDescriptorSet CompositingAttachmentDescriptorSet_;
+		VkDescriptorSet CompositingAttachmentDescriptorSet_{};
 
-		VkDescriptorSet ssaoSamplerDescriptor_;
+		VkDescriptorSet ssaoSamplerDescriptor_{};
 
-		VkDescriptorSet projectionDescriptor_;
+		VkDescriptorSet projectionDescriptor_{};
 
-		VkBuffer vertexBuffer_;
-		VmaAllocation vertexBufferAllocation_;
+		VkBuffer vertexBuffer_{};
+		VmaAllocation vertexBufferAllocation_{};
 
-		eastl::unique_ptr<VulkanBuffer> ssaoKernelBuffer_;
-		eastl::unique_ptr<VulkanBuffer> projectionBuffer_;
+		std::unique_ptr<VulkanBuffer> ssaoKernelBuffer_;
+		std::unique_ptr<VulkanBuffer> projectionBuffer_;
 
 		glm::mat4 projection_;
 
@@ -642,43 +642,43 @@ namespace Engine
 
 #pragma region Renderers
 
-		eastl::unique_ptr<VulkanSpriteRenderer> vulkanSpriteRenderer;
-		eastl::unique_ptr<VulkanDebugRenderer> vulkanDebugRenderer;
-		eastl::unique_ptr<VulkanStaticMeshRenderer> vulkanStaticMeshRenderer;
-		eastl::unique_ptr<VulkanSkeletalMeshRenderer> vulkanSkeletalMeshRenderer;
+		std::unique_ptr<VulkanSpriteRenderer> vulkanSpriteRenderer;
+		std::unique_ptr<VulkanDebugRenderer> vulkanDebugRenderer;
+		std::unique_ptr<VulkanStaticMeshRenderer> vulkanStaticMeshRenderer;
+		std::unique_ptr<VulkanSkeletalMeshRenderer> vulkanSkeletalMeshRenderer;
 
 #pragma endregion
 
 #pragma region Scene
 
-		eastl::unique_ptr<VulkanBuffer> sceneDataBuffer;
-		eastl::unique_ptr<VulkanBuffer> lightBuffer;
+		std::unique_ptr<VulkanBuffer> sceneDataBuffer;
+		std::unique_ptr<VulkanBuffer> lightBuffer;
 
-		eastl::array<Light, 1024> lightData;
+		std::array<Light, 1024> lightData;
 
 		typedef struct {
 			int lightCount;
 			glm::vec4 viewPos;
 		}SceneInfo;
 
-		int activeLights;
+		int activeLights{};
 
 		SceneInfo scene;
 
 		typedef struct {
 			size_t lightDataIndex;
 			Light light;
-			eastl::string name;
+			std::string name;
 			LightType type;
 			bool active;
 		}LightInfo;
 
-		eastl::map<eastl::string, LightInfo> lights;
+		std::map<std::string, LightInfo> lights;
 
-		eastl::vector<eastl::vector<eastl::vector<VkDescriptorSet>>> lightDescriptorSets_;
+		std::vector<std::vector<std::vector<VkDescriptorSet>>> lightDescriptorSets_;
 
-		bool lightDataChanged;
-		bool lightDataRestructured;
+		bool lightDataChanged{};
+		bool lightDataRestructured{};
 
 		void RestructureLights();
 
@@ -697,7 +697,7 @@ namespace Engine
 			VkCommandPool commandPool;
 		};
 
-		eastl::vector<ThreadInfo*> threads;
+		std::vector<ThreadInfo*> threads;
 
 		ThreadInfo* GetFreeThread();
 		void JoinAllThreads();
@@ -705,22 +705,22 @@ namespace Engine
 
 #pragma endregion
 
-		VmaAllocator vmaAllocator_;
+		VmaAllocator vmaAllocator_{};
 
-		eastl::vector<VkSemaphore> imageAvailableSemaphores_;
-		eastl::vector<VkSemaphore> renderFinishedSemaphores_;
-		eastl::vector<VkSemaphore> computeFinishedSemaphores_;
+		std::vector<VkSemaphore> imageAvailableSemaphores_;
+		std::vector<VkSemaphore> renderFinishedSemaphores_;
+		std::vector<VkSemaphore> computeFinishedSemaphores_;
 
-		eastl::vector<VkFence> drawingFinishedFences_;
-		eastl::vector<VkFence> computeFinishedFences_;
+		std::vector<VkFence> drawingFinishedFences_;
+		std::vector<VkFence> computeFinishedFences_;
 
-		VkClearValue clearValue;
+		VkClearValue clearValue{};
 
 		bool initialized;
 
-		bool firstRender;
+		bool firstRender{};
 
-		bool resized;
+		bool resized{};
 
 	};
 } // namespace Engine

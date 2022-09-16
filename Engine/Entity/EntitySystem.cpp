@@ -1,13 +1,14 @@
 #include "Engine/Entity/EntitySystem.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
+
+#include <memory>
 
 namespace Engine
 {
-	size_t entityCount = 0;
+	int entityCount = 0;
 
-	EntitySystem::~EntitySystem()
-	{
-		system.clear();
+	std::shared_ptr<EntitySystem> EntitySystem::Get() {
+		return Engine::GetEntitySystem();
 	}
 
 	void EntitySystem::RemoveAllEntities()
@@ -16,50 +17,63 @@ namespace Engine
 		entityCount = 0;
 	}
 
-	eastl::weak_ptr<Entity> EntitySystem::CreateEntity(eastl::string entityName, int teamId)
+	std::weak_ptr<Entity> EntitySystem::CreateEntity(std::string entityName, int teamId)
 	{
-		AddEntity(eastl::shared_ptr<Entity>(new Entity(entityName)));
-		system.back()->InitializeEntity();
+		//AddEntity(std::make_shared<Entity>(entityName));
+		AddEntity(std::shared_ptr<Entity>(new Entity(entityName)));
 
 		return system.back();
 	}
 
-	eastl::weak_ptr<Entity> EntitySystem::GetEntity(uint64_t Id)
+	std::weak_ptr<Entity> EntitySystem::GetEntity(int id)
 	{
-		for (size_t i = 0; i < entityCount; i++)
+		for (int i = 0; i < entityCount; i++)
 		{
-			if (system[i]->GetID() == Id)
+			if (system[i]->GetId() == id)
 				return system[i];
 		}
 
-		return eastl::weak_ptr<Entity>();
+		return {};
 	}
 
-	void EntitySystem::Update()
-	{
-		for (size_t i = 0; i < entityCount; ++i)
+	void EntitySystem::Update() const {
+		for (int i = 0; i < entityCount; ++i)
 		{
 			if (system[i]->GetIsActive())
 				system[i]->Update();
 		}
 	}
 
-	void EntitySystem::AddEntity(eastl::shared_ptr<Entity> entityToAdd)
-	{
-		if (entityToAdd->GetID() == -1)
-			entityToAdd->SetID(entityCount);
+	void EntitySystem::HandleOnComponentAddedToEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> addedComponent) {
+		OnComponentAddedToEntityEvent(entity, addedComponent);
+	}
 
-		system.push_back(eastl::move(entityToAdd));
+	void EntitySystem::HandleOnComponentRemovedFromEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> removedComponent) {
+		OnComponentRemovedFromEntityEvent(entity, removedComponent);
+	}
+
+	void EntitySystem::AddEntity(std::shared_ptr<Entity> entityToAdd)
+	{
+		if (entityToAdd->GetId() == -1)
+			entityToAdd->SetId(entityCount);
+
+		entityToAdd->OnComponentAddedEvent += Sharp::EventHandler::Bind(this, &EntitySystem::HandleOnComponentAddedToEntityEvent);
+		entityToAdd->OnComponentRemovedEvent += Sharp::EventHandler::Bind(this, &EntitySystem::HandleOnComponentRemovedFromEntityEvent);
+
+		OnEntityAddedEvent(entityToAdd);
+		system.push_back(std::move(entityToAdd));
 		entityCount++;
 	}
 
-	void EntitySystem::RemoveEntity(eastl::shared_ptr<Entity> entityToRemove)
+	void EntitySystem::RemoveEntity(std::shared_ptr<Entity> entityToRemove)
 	{
-		if (system.size() == 0) return;
+		if (system.empty()) return;
 
-		eastl::shared_ptr<Entity>* it = eastl::find(system.begin(), system.end(), entityToRemove);
+		std::vector<std::shared_ptr<Entity>>::iterator it = std::find(system.begin(), system.end(), entityToRemove);
 		if (it != system.end())
 		{
+			entityToRemove->OnComponentAddedEvent -= Sharp::EventHandler::Bind(this, &EntitySystem::HandleOnComponentAddedToEntityEvent);
+			entityToRemove->OnComponentRemovedEvent -= Sharp::EventHandler::Bind(this, &EntitySystem::HandleOnComponentRemovedFromEntityEvent);
 			it->reset();
 			system.erase(it);
 		}
@@ -68,7 +82,7 @@ namespace Engine
 		entityCount--;
 	}
 
-	eastl::vector<eastl::shared_ptr<Entity>> EntitySystem::GetAllEntities() const
+	std::vector<std::shared_ptr<Entity>> EntitySystem::GetAllEntities() const
 	{
 		return system;
 	}

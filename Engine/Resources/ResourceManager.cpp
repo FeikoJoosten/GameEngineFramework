@@ -1,4 +1,6 @@
 #include "Engine/Resources/ResourceManager.hpp"
+#include "Engine/AssetManagement/AssetManager.hpp"
+#include "Engine/Engine.hpp"
 #include "Engine/Utility/Defines.hpp"
 #include "Engine/Utility/Logging.hpp"
 
@@ -12,13 +14,16 @@
 #include "Engine/Material/VulkanMaterial.hpp"
 #endif
 
-#include <ThirdParty/EASTL-master/include/EASTL/algorithm.h>
 #include <iostream>
-#include <ThirdParty/assimp/include/assimp/postprocess.h>
+#include <assimp/postprocess.h>
 
 namespace Engine
 {
-	eastl::weak_ptr<Model> ResourceManager::GetModel(eastl::string modelName)
+	std::shared_ptr<ResourceManager> ResourceManager::Get() {
+		return Engine::GetResourceManager();
+	}
+
+	std::weak_ptr<Model> ResourceManager::GetModel(std::string modelName)
 	{
 		// if already loaded
 		for (size_t i = 0, size = loadedModels_.size(); i < size; ++i)
@@ -28,14 +33,14 @@ namespace Engine
 		}
 
 		// If not (yet) loaded
-		return eastl::shared_ptr<Model>();
+		return std::shared_ptr<Model>();
 	}
 
-	eastl::weak_ptr<Model> ResourceManager::CreateModel(eastl::string modelName, eastl::string meshToLoad, eastl::string skeletonToLoad)
+	std::weak_ptr<Model> ResourceManager::CreateModel(std::string modelName, std::string meshToLoad, std::string skeletonToLoad)
 	{
 		Assimp::Importer importer;
-		eastl::string path = "Resources/Models/" + meshToLoad;
-		eastl::string skeletonPath;
+		std::string path = AssetManager::Get()->GetProjectRoot() + "Resources/Models/" + meshToLoad;
+		std::string skeletonPath;
 
 		const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices | aiProcess_ImproveCacheLocality |
 			aiProcess_OptimizeMeshes);
@@ -45,27 +50,27 @@ namespace Engine
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
 			debug_warning("ResourceManager", "CreateModel", importer.GetErrorString());
-			return eastl::shared_ptr<Model>();
+			return std::shared_ptr<Model>();
 		}
 
-		eastl::weak_ptr<Skeleton> skeleton;
+		std::weak_ptr<Skeleton> skeleton;
 		if (skeletonToLoad != "")
 			skeleton = CreateSkeleton(skeletonToLoad);
 		else
 			skeleton = CreateSkeleton(meshToLoad);
 
-		loadedModels_.push_back(eastl::shared_ptr<Model>(new Model(scene, modelName)));
-		eastl::shared_ptr<Model>modelToAddTo = loadedModels_.back();
+		loadedModels_.push_back(std::shared_ptr<Model>(new Model(scene, modelName)));
+		std::shared_ptr<Model>modelToAddTo = loadedModels_.back();
 
 		// process the nodes and extract their data
 		ProcessModel(modelName, modelToAddTo, scene->mRootNode, scene, skeleton.lock());
 		return loadedModels_.back();
 	}
 
-	eastl::weak_ptr<Skeleton> ResourceManager::CreateSkeleton(eastl::string skeletonToLoad)
+	std::weak_ptr<Skeleton> ResourceManager::CreateSkeleton(std::string skeletonToLoad)
 	{
 		Assimp::Importer importer;
-		eastl::string path = "Resources/Models/" + skeletonToLoad;
+		std::string path = AssetManager::Get()->GetProjectRoot() + "Resources/Models/" + skeletonToLoad;
 
 		for (size_t i = 0, size = loadedSkeletons_.size(); i < size; ++i) {
 			if (loadedSkeletons_[i]->GetName() == skeletonToLoad)
@@ -79,20 +84,20 @@ namespace Engine
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
 			debug_warning("ResourceManager", "CreateSkeleton", importer.GetErrorString());
-			return eastl::shared_ptr<Skeleton>();
+			return std::shared_ptr<Skeleton>();
 		}
 
-		eastl::shared_ptr<Skeleton> skeleton = eastl::shared_ptr<Skeleton>(new Skeleton(scene));
+		std::shared_ptr<Skeleton> skeleton = std::shared_ptr<Skeleton>(new Skeleton(scene));
 		skeleton->SetName(skeletonToLoad);
 
 		loadedSkeletons_.push_back(skeleton);
 		return skeleton;
 	}
 
-	void ResourceManager::AddAnimationsToSkeleton(eastl::string skeletonName, eastl::string animationsToLoad, eastl::vector<eastl::string> names)
+	void ResourceManager::AddAnimationsToSkeleton(std::string skeletonName, std::string animationsToLoad, std::vector<std::string> names)
 	{
 		Assimp::Importer importer;
-		eastl::string path = "Resources/Animations/" + animationsToLoad;
+		std::string path = AssetManager::Get()->GetProjectRoot() + "Resources/Animations/" + animationsToLoad;
 		const aiScene* scene = importer.ReadFile(path.c_str(), 0);
 
 		for (size_t i = 0, size = loadedSkeletons_.size(); i < size; ++i)
@@ -103,53 +108,53 @@ namespace Engine
 		}
 	}
 
-	eastl::weak_ptr<Mesh> ResourceManager::CreateMesh(aiMesh* mesh, eastl::shared_ptr<Skeleton> skeleton, eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices)
+	std::weak_ptr<Mesh> ResourceManager::CreateMesh(aiMesh* mesh, std::shared_ptr<Skeleton> skeleton, std::vector<Vertex> vertices, std::vector<unsigned> indices)
 	{
 		// If already loaded
-		eastl::weak_ptr<Mesh> meshToReturn = GetMesh(vertices, indices);
+		std::weak_ptr<Mesh> meshToReturn = GetMesh(vertices, indices);
 		if (meshToReturn.expired() == false && meshToReturn.lock().get() != nullptr)
 			return meshToReturn;
 
 #ifdef USING_OPENGL
-		eastl::shared_ptr<Mesh> createdMesh = eastl::shared_ptr<OpenGLMesh>(new OpenGLMesh(vertices, indices));
+		std::shared_ptr<Mesh> createdMesh = std::shared_ptr<OpenGLMesh>(new OpenGLMesh(vertices, indices));
 #endif
 #ifdef USING_VULKAN
-		eastl::shared_ptr<Mesh> createdMesh = eastl::shared_ptr<VulkanMesh>(new VulkanMesh(mesh, skeleton, vertices, indices));
+		std::shared_ptr<Mesh> createdMesh = std::shared_ptr<VulkanMesh>(new VulkanMesh(mesh, skeleton, vertices, indices));
 #endif
-		loadedMeshes_.push_back(eastl::move(createdMesh));
+		loadedMeshes_.push_back(std::move(createdMesh));
 
 		return meshToReturn;
 	}
 
-	eastl::weak_ptr<Texture> ResourceManager::GetTexture(eastl::string meshName)
+	std::weak_ptr<Texture> ResourceManager::GetTexture(std::string textureName)
 	{
 		// if not (yet) loaded
-		if (loadedTextures_.find(meshName) == loadedTextures_.end())
-			return eastl::shared_ptr<Texture>();
+		if (loadedTextures_.find(textureName) == loadedTextures_.end())
+			return std::shared_ptr<Texture>();
 
 		// if already loaded
-		return loadedTextures_[meshName];
+		return loadedTextures_[textureName];
 	}
 
-	eastl::weak_ptr<Texture> ResourceManager::CreateTexture(eastl::string textureName)
+	std::weak_ptr<Texture> ResourceManager::CreateTexture(std::string textureName)
 	{
 		// If already loaded
-		eastl::weak_ptr<Texture> textureToReturn = GetTexture(textureName);
+		std::weak_ptr<Texture> textureToReturn = GetTexture(textureName);
 		if (textureToReturn.expired() == false && textureToReturn.lock().get() != nullptr)
 			return textureToReturn;
 
 #ifdef USING_OPENGL
-		eastl::shared_ptr<Texture> createdTexture = eastl::shared_ptr<OpenGLTexture>(new OpenGLTexture(textureName));
+		std::shared_ptr<Texture> createdTexture = std::shared_ptr<OpenGLTexture>(new OpenGLTexture(textureName));
 #endif
 #ifdef USING_VULKAN
-		eastl::shared_ptr<Texture> createdTexture = eastl::shared_ptr<VulkanTexture>(new VulkanTexture(textureName));
+		std::shared_ptr<Texture> createdTexture = std::shared_ptr<VulkanTexture>(new VulkanTexture(textureName));
 #endif
-		loadedTextures_.insert(eastl::make_pair(textureName, eastl::move(createdTexture)));
+		loadedTextures_.insert(std::make_pair(textureName, std::move(createdTexture)));
 
 		return loadedTextures_[textureName];
 	}
 
-	void ResourceManager::ProcessModel(eastl::string modelName, eastl::shared_ptr<Model> modelToAddTo, aiNode* node, const aiScene* scene, eastl::shared_ptr<Skeleton> skeleton)
+	void ResourceManager::ProcessModel(std::string modelName, std::shared_ptr<Model> modelToAddTo, aiNode* node, const aiScene* scene, std::shared_ptr<Skeleton> skeleton)
 	{
 
 		if (node->mParent == nullptr)
@@ -164,18 +169,18 @@ namespace Engine
 
 			modelToAddTo->AddMesh(ProcessMesh(mesh, scene, skeleton).lock());
 
-			eastl::shared_ptr<Material> material;
+			std::shared_ptr<Material> material;
 
 #ifdef USING_VULKAN
-			material = eastl::shared_ptr<VulkanMaterial>(new VulkanMaterial(scene,
+			material = std::shared_ptr<VulkanMaterial>(new VulkanMaterial(scene,
 				static_cast<uint32_t>(mesh->mMaterialIndex), modelName));
 #endif
 #ifdef USING_OPENGL
-			material = eastl::shared_ptr<Material>(new Material(scene,
+			material = std::shared_ptr<Material>(new Material(scene,
 				static_cast<uint32_t>(mesh->mMaterialIndex), modelName));
 #endif
 
-			modelToAddTo->SetMeshMaterial(modelToAddTo->GetModelMeshes()[modelToAddTo->GetModelMeshes().size() - 1], eastl::move(material));
+			modelToAddTo->SetMeshMaterial(modelToAddTo->GetModelMeshes()[modelToAddTo->GetModelMeshes().size() - 1], std::move(material));
 		}
 
 		for (unsigned short i = 0; i < node->mNumChildren; i++)
@@ -184,12 +189,12 @@ namespace Engine
 		}
 	}
 
-	eastl::weak_ptr<Mesh> ResourceManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, eastl::shared_ptr<Skeleton> skeleton)
+	std::weak_ptr<Mesh> ResourceManager::ProcessMesh(aiMesh* mesh, const aiScene* scene, std::shared_ptr<Skeleton> skeleton)
 	{
-		eastl::vector<Vertex> vertices;
-		eastl::vector<unsigned> indices;
-		eastl::vector<eastl::shared_ptr<Texture>> diffuseTextures;
-		eastl::vector<eastl::shared_ptr<Texture>> specularTextures;
+		std::vector<Vertex> vertices;
+		std::vector<unsigned> indices;
+		std::vector<std::shared_ptr<Texture>> diffuseTextures;
+		std::vector<std::shared_ptr<Texture>> specularTextures;
 
 		//unpack vertices
 		for (unsigned i = 0; i < mesh->mNumVertices; i++)
@@ -255,39 +260,39 @@ namespace Engine
 		return CreateMesh(mesh, skeleton, vertices, indices);
 	}
 
-	eastl::weak_ptr<Texture> ResourceManager::CreateTexture(eastl::string textureName, stbi_uc * data, int width, int height)
+	std::weak_ptr<Texture> ResourceManager::CreateTexture(std::string textureName, stbi_uc * data, int width, int height)
 	{
 		// If already loaded
-		eastl::weak_ptr<Texture> textureToReturn = GetTexture(textureName);
+		std::weak_ptr<Texture> textureToReturn = GetTexture(textureName);
 		if (textureToReturn.expired() == false && textureToReturn.lock().get() != nullptr)
 			return textureToReturn;
 
 #ifdef USING_OPENGL
-		eastl::shared_ptr<Texture> createdTexture = eastl::shared_ptr<OpenGLTexture>(new OpenGLTexture(width, height));
+		std::shared_ptr<Texture> createdTexture = std::shared_ptr<OpenGLTexture>(new OpenGLTexture(width, height));
 #endif
 #ifdef USING_VULKAN
-		eastl::shared_ptr<Texture> createdTexture = eastl::shared_ptr<VulkanTexture>(new VulkanTexture(width, height));
+		std::shared_ptr<Texture> createdTexture = std::shared_ptr<VulkanTexture>(new VulkanTexture(width, height));
 #endif
 		createdTexture->CreateTextureWithData(data, false);
 
-		loadedTextures_.insert(eastl::make_pair(textureName, eastl::move(createdTexture)));
+		loadedTextures_.insert(std::make_pair(textureName, std::move(createdTexture)));
 
 		return loadedTextures_[textureName];
 	}
 
-	void ResourceManager::AddTexture(eastl::string textureName, eastl::shared_ptr<Texture> textureToAdd)
+	void ResourceManager::AddTexture(std::string textureName, std::shared_ptr<Texture> textureToAdd)
 	{
 		// If a texture with this name has already been loaded
-		eastl::weak_ptr<Texture> textureToReturn = GetTexture(textureName);
+		std::weak_ptr<Texture> textureToReturn = GetTexture(textureName);
 		if (textureToReturn.expired() == false && textureToReturn.lock().get() != nullptr)
 			return;
 
-		loadedTextures_[textureName] = eastl::move(textureToAdd);
+		loadedTextures_[textureName] = std::move(textureToAdd);
 	}
 
-	eastl::weak_ptr<Mesh> ResourceManager::GetMesh(eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices)
+	std::weak_ptr<Mesh> ResourceManager::GetMesh(std::vector<Vertex> vertices, std::vector<unsigned> indices)
 	{
-		if (loadedMeshes_.size() == 0) return eastl::shared_ptr<Mesh>();
+		if (loadedMeshes_.size() == 0) return std::shared_ptr<Mesh>();
 
 		for (size_t i = 0, size = loadedMeshes_.size(); i < size; ++i)
 		{
@@ -316,38 +321,38 @@ namespace Engine
 				return loadedMeshes_[i];
 		}
 
-		return eastl::shared_ptr<Mesh>();
+		return std::shared_ptr<Mesh>();
 	}
 
-	eastl::vector<eastl::shared_ptr<Texture>> ResourceManager::ProcessDiffuseTextures(aiMaterial* material)
+	std::vector<std::shared_ptr<Texture>> ResourceManager::ProcessDiffuseTextures(aiMaterial* material)
 	{
-		eastl::vector<eastl::shared_ptr<Texture>> textures;
+		std::vector<std::shared_ptr<Texture>> textures;
 
-		eastl::vector<eastl::shared_ptr<Texture>> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+		std::vector<std::shared_ptr<Texture>> diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
 		return textures;
 	}
 
-	eastl::vector<eastl::shared_ptr<Texture>> ResourceManager::ProcessSpecularTextures(aiMaterial* material)
+	std::vector<std::shared_ptr<Texture>> ResourceManager::ProcessSpecularTextures(aiMaterial* material)
 	{
-		eastl::vector<eastl::shared_ptr<Texture>> textures;
+		std::vector<std::shared_ptr<Texture>> textures;
 
-		eastl::vector<eastl::shared_ptr<Texture>> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+		std::vector<std::shared_ptr<Texture>> specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
 		return textures;
 	}
 
-	eastl::vector<eastl::shared_ptr<Texture>> ResourceManager::LoadMaterialTextures(aiMaterial* material,
-		aiTextureType textureType, eastl::string typeName)
+	std::vector<std::shared_ptr<Texture>> ResourceManager::LoadMaterialTextures(aiMaterial* material,
+		aiTextureType textureType, std::string typeName)
 	{
-		eastl::vector<eastl::shared_ptr<Texture>> textures;
+		std::vector<std::shared_ptr<Texture>> textures;
 		for (unsigned short i = 0; i < material->GetTextureCount(textureType); i++)
 		{
 			aiString str;
 			material->GetTexture(textureType, i, &str);
-			eastl::string fileName = eastl::string(str.C_Str());
+			std::string fileName = std::string(str.C_Str());
 
 			// check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 			bool skip = false;
@@ -367,11 +372,11 @@ namespace Engine
 				//texture.type = typeName;
 				//texture.path = str;
 
-				eastl::weak_ptr<Texture> texture = CreateTexture(fileName);
+				std::weak_ptr<Texture> texture = CreateTexture(fileName);
 				textures.push_back(texture.lock());
 
 				// store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
-				loadedTextures_.insert(eastl::make_pair(fileName, texture.lock()));
+				loadedTextures_.insert(std::make_pair(fileName, texture.lock()));
 			}
 		}
 		return textures;

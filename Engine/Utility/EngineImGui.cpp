@@ -1,9 +1,17 @@
 #include "Engine/Utility/EngineImGui.hpp"
-#include "Engine/engine.hpp"
-#include "Engine/Renderer/IMGUI/imgui.h"
 
-#include <ThirdParty/glm/glm/gtx/string_cast.hpp>
-#include <ThirdParty/glm/glm/gtc/matrix_transform.hpp>
+#include "Engine/Application/Application.hpp"
+#include "Engine/Components/Component.hpp"
+#include "Engine/Camera/CameraManager.hpp"
+#include "Engine/Camera/CameraComponent.hpp"
+#include "Engine/Entity/Entity.hpp"
+#include "Engine/Input/InputManager.hpp"
+#include "Engine/Renderer/IMGUI/imgui.h"
+#include "Engine/Renderer/Renderer.hpp"
+#include "Engine/Utility/Time.hpp"
+
+#include <gainput/gainput.h>
+#include <gainput/GainputInputMap.h>
 
 namespace Engine
 {
@@ -30,14 +38,54 @@ namespace Engine
 	float devMenuCooldown = 0.f;
 	bool showMenuBar = false;
 
+	enum CameraButtons {
+		MoveLeft,
+		MoveRight,
+		MoveForwards,
+		MoveBackwards,
+		MoveUp,
+		MoveDown,
+		RotateLeft,
+		RotateRight,
+		RotateUp,
+		RotateDown,
+		EnableMouseRotation,
+		MouseX,
+		MouseY
+	};
+
+	gainput::InputMap* map = nullptr;
+
 	EngineImGui::EngineImGui()
 	{
-		Engine::GetEngine().lock()->GetRenderer().lock()->OnRender += Sharp::EventHandler::Bind(&EngineImGui::Render, this);
+		inputManager = InputManager::Get();
+		renderer = Renderer::Get();
+		renderer.lock()->PostRenderComponentsRenderEvent += Sharp::EventHandler::Bind(this, &EngineImGui::Render);
+
+		const std::shared_ptr<InputManager> lockedInputManager = inputManager.lock();
+		const gainput::DeviceId keyboardDeviceId = lockedInputManager->GetKeyboardId();
+		const gainput::DeviceId mouseDeviceId = lockedInputManager->GetMouseId();
+
+		map = new gainput::InputMap(lockedInputManager->GetInputManager());
+		map->MapBool(MoveLeft, keyboardDeviceId, gainput::KeyA);
+		map->MapBool(MoveRight, keyboardDeviceId, gainput::KeyD);
+		map->MapBool(MoveForwards, keyboardDeviceId, gainput::KeyW);
+		map->MapBool(MoveBackwards, keyboardDeviceId, gainput::KeyS);
+		map->MapBool(MoveUp, keyboardDeviceId, gainput::KeySpace);
+		map->MapBool(MoveDown, keyboardDeviceId, gainput::KeyShiftL);
+		map->MapBool(RotateLeft, keyboardDeviceId, gainput::KeyLeft);
+		map->MapBool(RotateRight, keyboardDeviceId, gainput::KeyRight);
+		map->MapBool(RotateUp, keyboardDeviceId, gainput::KeyUp);
+		map->MapBool(RotateDown, keyboardDeviceId, gainput::KeyDown);
+		map->MapBool(EnableMouseRotation, mouseDeviceId, gainput::MouseButtonRight);
+		map->MapFloat(MouseX, mouseDeviceId, gainput::MouseAxisX);
+		map->MapFloat(MouseY, mouseDeviceId, gainput::MouseAxisY);
 	}
 
 	EngineImGui::~EngineImGui()
 	{
-		Engine::GetEngine().lock()->GetRenderer().lock()->OnRender -= Sharp::EventHandler::Bind(&EngineImGui::Render, this);
+		delete map;
+		renderer.lock()->PostRenderComponentsRenderEvent -= Sharp::EventHandler::Bind(this, &EngineImGui::Render);
 	}
 
 	void EngineImGui::Render()
@@ -45,8 +93,8 @@ namespace Engine
 		if (allowCameraMovement)
 			CameraMovement();
 
-		const gainput::InputDevice* keyboard = Engine::GetEngine().lock()->GetInputManager().lock()->GetInputManager().GetDevice(
-			Engine::GetEngine().lock()->GetInputManager().lock()->GetKeyboardId());
+		const gainput::InputDevice* keyboard = inputManager.lock()->GetInputManager().GetDevice(
+			inputManager.lock()->GetKeyboardId());
 
 		if (keyboard->GetBool(gainput::KeyCtrlL) && keyboard->GetBool(gainput::KeyShiftL) && keyboard->GetBool(gainput::KeyE))
 		{
@@ -57,7 +105,7 @@ namespace Engine
 			}
 		}
 		if (devMenuCooldown >= 0.f)
-			devMenuCooldown -= Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime();
+			devMenuCooldown -= Time::Get()->GetDeltaTime();
 
 		if (showMenuBar)
 		{
@@ -75,17 +123,11 @@ namespace Engine
 			if (ImGui::BeginMenu("Engine"))
 			{
 				if (ImGui::MenuItem("Close game"))
-				{
-					Engine::Engine::GetEngine().lock()->GetWindow().lock()->SetShouldClose(true);
-				}
+					Window::Get()->SetShouldClose(true);
 				if (ImGui::MenuItem("Toggle Camera Movement"))
-				{
 					allowCameraMovement = !allowCameraMovement;
-				}
 				if (ImGui::MenuItem("Toggle Play/Pause mode"))
-				{
-					Engine::GetEngine().lock()->SetIsPlaying(!Engine::GetEngine().lock()->GetIsPlaying());
-				}
+					Application::SetIsPlaying(!Application::GetIsPlaying());
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenu();
@@ -97,45 +139,66 @@ namespace Engine
 		ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - 175, 0));
 		ImGui::Begin("FPS window", &open, fpsWindowFlags);
 
-		const eastl::vector<float> deltaTimes = Engine::GetEngine().lock()->GetTime().lock()->GetPreviousFramerates();
-		ImGui::PlotLines("FPS", deltaTimes.data(), Engine::GetEngine().lock()->GetTime().lock()->GetMaxIterations(), 0, std::to_string(ImGui::GetIO().Framerate).c_str());
+		const std::shared_ptr<Time> time = Time::Get();
+		const std::vector<float> deltaTimes = time->GetPreviousFramerates();
+		ImGui::PlotLines("FPS", deltaTimes.data(), time->GetMaxIterations(), 0, std::to_string(ImGui::GetIO().Framerate).c_str());
 
 		ImGui::End();
 	}
 
-	void EngineImGui::CameraMovement() const
+	void EngineImGui::CameraMovement()
 	{
-		float camMoveSpeed = 100.f;
-		eastl::weak_ptr<Camera> camera = Engine::GetEngine().lock()->GetCamera();
+		// TODO: Replace this with scene view window
+		if (ImGui::GetIO().WantTextInput) return;
 
-		const gainput::InputDevice* keyboard = Engine::GetEngine().lock()->GetInputManager().lock()->GetInputManager().GetDevice(
-			Engine::GetEngine().lock()->GetInputManager().lock()->GetKeyboardId());
+		constexpr float cameraMovementSpeed = 100.f;
+		constexpr float cameraRotationSpeed = 1.f;
+		constexpr float cameraMouseRotationSpeed = 1000.f;
 
-		if (keyboard->GetBool(gainput::KeyW) && !ImGui::GetIO().WantTextInput)
-		{
-			camera.lock()->MoveForwards(Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime() * camMoveSpeed);
+		// TODO: Replace with more efficient method of retrieving first active camera
+		// Ideally this is even replaced with an engine only camera
+		if(activeCamera.expired() || !activeCamera.lock()->GetIsEnabled()) {
+			const std::vector<std::shared_ptr<CameraComponent>> allActiveCameras = CameraManager::Get()->GetAllActiveCameras();
+			if (allActiveCameras.empty()) return;
+
+			activeCamera = allActiveCameras[0];
 		}
-		if (keyboard->GetBool(gainput::KeyS) && !ImGui::GetIO().WantTextInput)
-		{
-			camera.lock()->MoveBackwards(Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime() * camMoveSpeed);
+
+		const std::shared_ptr<CameraComponent> lockedCameraComponent = activeCamera.lock();
+		const std::shared_ptr<TransformComponent> lockedCameraTransformComponent = lockedCameraComponent->GetComponent<TransformComponent>();
+		const float deltaTime = Time::Get()->GetDeltaTime();
+		const float deltaMovementSpeed = cameraMovementSpeed * deltaTime;
+		const float deltaRotationSpeed = cameraRotationSpeed * deltaTime;
+		const float deltaMouseRotationSpeed = cameraMouseRotationSpeed * deltaTime;
+
+		if (map->GetBool(MoveForwards))
+			lockedCameraTransformComponent->Translate(0, 0, deltaMovementSpeed);
+		if (map->GetBool(MoveBackwards))
+			lockedCameraTransformComponent->Translate(0, 0, -deltaMovementSpeed);
+		if (map->GetBool(MoveLeft))
+			lockedCameraTransformComponent->Translate(deltaMovementSpeed);
+		if (map->GetBool(MoveRight))
+			lockedCameraTransformComponent->Translate(-deltaMovementSpeed);
+		if (map->GetBool(MoveUp))
+			lockedCameraTransformComponent->Translate(0, deltaMovementSpeed);
+		if (map->GetBool(MoveDown))
+			lockedCameraTransformComponent->Translate(0, -deltaMovementSpeed);
+		if (map->GetBool(RotateLeft))
+			lockedCameraTransformComponent->Rotate(glm::quat(glm::vec3(0.f, deltaRotationSpeed, 0.f)));
+		if (map->GetBool(RotateRight))
+			lockedCameraTransformComponent->Rotate(glm::quat(glm::vec3(0.f, -deltaRotationSpeed, 0.f)));
+		if (map->GetBool(RotateUp))
+			lockedCameraTransformComponent->Rotate(glm::quat(glm::vec3(-deltaRotationSpeed, 0.f, 0.f)));
+		if (map->GetBool(RotateDown))
+			lockedCameraTransformComponent->Rotate(glm::quat(glm::vec3(deltaRotationSpeed, 0.f, 0.f)));
+		if(map->GetBool(EnableMouseRotation)) {
+			lockedCameraTransformComponent->Rotate(
+				glm::quat(
+					glm::vec3(
+						// TODO: Figure out why I need to flip Y and X axis here?
+						map->GetFloatDelta(MouseY) * deltaMouseRotationSpeed,
+						-map->GetFloatDelta(MouseX) * deltaMouseRotationSpeed,
+						0.f)));
 		}
-		if (keyboard->GetBool(gainput::KeyA) && !ImGui::GetIO().WantTextInput)
-		{
-			camera.lock()->MoveLeft(Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime() * camMoveSpeed);
-		}
-		if (keyboard->GetBool(gainput::KeyD) && !ImGui::GetIO().WantTextInput)
-		{
-			camera.lock()->MoveRight(Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime() * camMoveSpeed);
-		}
-		if (keyboard->GetBool(gainput::KeyE) && !ImGui::GetIO().WantTextInput)
-		{
-			camera.lock()->SetRotation(camera.lock()->GetRotation() += glm::vec3(0, 1, 0) * Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime());
-		}
-		if (keyboard->GetBool(gainput::KeyQ) && !ImGui::GetIO().WantTextInput)
-		{
-			camera.lock()->SetRotation(camera.lock()->GetRotation() += glm::vec3(0, -1, 0) * Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime());
-		}
-		glm::vec3 target = glm::normalize(camera.lock()->GetPosition() + camera.lock()->GetRotation());
-		camera.lock()->SetView(glm::lookAt(camera.lock()->GetPosition(), camera.lock()->GetPosition() - target, camera.lock()->GetUp()));
 	}
 } //namespace Engine

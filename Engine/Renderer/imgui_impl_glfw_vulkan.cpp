@@ -7,11 +7,12 @@
 // https://github.com/ocornut/imgui
 
 #include "Engine/Utility/Defines.hpp"
+#include "Engine/Utility/Time.hpp"
 #ifdef USING_VULKAN
 
 #include "IMGUI/imgui.h"
 
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 #include "Engine/Renderer/VulkanRenderer.hpp"
 #include "imgui_impl_glfw_vulkan.h"
 
@@ -706,7 +707,7 @@ bool ImGui_ImplGlfwVulkan_Init(GLFWwindow* window, ImGui_ImplGlfwVulkan_Init_Dat
 	io.GetClipboardTextFn = ImGui_ImplGlfwVulkan_GetClipboardText;
 	io.ClipboardUserData = g_Window;
 #ifdef _WIN32
-	io.ImeWindowHandle = Engine::Engine::GetEngine().lock()->GetWindow().lock()->GetWindowHandle();
+	io.ImeWindowHandle = Engine::Window::Get()->GetWindowHandle();
 #endif
 
 	ImGui_ImplGlfwVulkan_CreateDeviceObjects();
@@ -729,7 +730,7 @@ void ImGui_ImplGlfwVulkan_NewFrame()
 	//double current_time = glfwGetTime();
 	//io.DeltaTime = g_Time > 0.0 ? float(current_time - g_Time) : float(1.0f / 60.0f);
 	//g_Time = current_time;
-	io.DeltaTime = Engine::Engine::GetEngine().lock()->GetTime().lock()->GetDeltaTime();
+	io.DeltaTime = Engine::Time::Get()->GetDeltaTime();
 
 	// Start the frame
 	ImGui::NewFrame();

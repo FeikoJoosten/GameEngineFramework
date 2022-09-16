@@ -1,19 +1,13 @@
 #include "Engine/Renderer/Vulkan/VulkanInstance.hpp"
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
 
 #ifdef USING_VULKAN
 
-#if _WIN64
-#include <ThirdParty/glfw-3.2.1/x64/include/GLFW/glfw3.h>
-#include <ThirdParty/glfw-3.2.1/x64/include/GLFW/glfw3native.h>
-#else
-#include <ThirdParty/glfw-3.2.1/x86/include/GLFW/glfw3.h>
-#include <ThirdParty/glfw-3.2.1/x86/include/GLFW/glfw3native.h>
-#endif
+#include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
 
 #include <iostream>
 #include <sstream>
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
+#include <vector>
 
 
 static VkResult CreateDebugReportCallbackEXT(VkInstance instance, const VkDebugReportCallbackCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugReportCallbackEXT* pCallback) {
@@ -41,7 +35,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL defaultDebugCallback(
 	const char* layerPrefix,
 	const char* msg,
 	void* userData) {
-	eastl::string stream;
+	std::string stream;
 	switch (flags) {
 	case VK_DEBUG_REPORT_INFORMATION_BIT_EXT:
 		stream += "[INFO] ";
@@ -92,15 +86,12 @@ namespace Engine {
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		createInfo.pApplicationInfo = &appInfo;
 
-		unsigned int glfwExtensionsCount = 0;
-		const char** glfwExtensionsConst;
-		char** glfwExtensions;
-		glfwExtensionsConst = glfwGetRequiredInstanceExtensions(&glfwExtensionsCount);
-		glfwExtensions = (char**)glfwExtensionsConst;
+		uint32_t glfwExtensionsCount = 0;
+		const char** glfwExtensionsConst = glfwGetRequiredInstanceExtensions(&glfwExtensionsCount);
 
-		eastl::vector<const char*> extensions;
+		std::vector<const char*> extensions;
 		for (unsigned int i = 0; i < glfwExtensionsCount; i++) {
-			extensions.push_back(glfwExtensions[i]);
+			extensions.push_back(glfwExtensionsConst[i]);
 		}
 		if (debugEnabled) {
 			extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
@@ -109,18 +100,24 @@ namespace Engine {
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 		createInfo.ppEnabledExtensionNames = extensions.data();
 
-		eastl::vector<const char*> layers;
+		std::vector<const char*> layers;
 		if (debugEnabled) {
-			layers.push_back("VK_LAYER_LUNARG_standard_validation");
+			//layers.push_back("VK_LAYER_LUNARG_standard_validation");
 			//layers.push_back("VK_LAYER_LUNARG_monitor");
 		}
+
+		uint32_t layerCount;
+		vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+		std::vector<VkLayerProperties> availableLayers(layerCount);
+		vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
 		createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
 		createInfo.ppEnabledLayerNames = layers.data();
 
-		VkResult res = vkCreateInstance(&createInfo, nullptr, &instance);
+		const VkResult res = vkCreateInstance(&createInfo, nullptr, &instance);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating vulkan instance failed";
+			const std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Creating vulkan instance failed";
 			std::cout << s.c_str() << std::endl;
 		}
 

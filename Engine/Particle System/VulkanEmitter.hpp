@@ -10,7 +10,7 @@
 #include "Engine/Renderer/Vulkan/VulkanComputePipeline.hpp"
 #include "Engine/Renderer/Vulkan/VulkanLogicalDevice.hpp"
 
-#include <ThirdParty/EASTL-master/include/EASTL/unique_ptr.h>
+#include <memory>
 
 namespace Engine {
 
@@ -25,15 +25,15 @@ namespace Engine {
 		void Compile() override;
 
 	protected:
-		eastl::unique_ptr<VulkanBuffer> particleBuffer;
-		eastl::unique_ptr<VulkanBuffer> stagingBuffer;
+		std::unique_ptr<VulkanBuffer> particleBuffer;
+		std::unique_ptr<VulkanBuffer> stagingBuffer;
 
 		bool bufferQueueFamilyTransitionsNeseccary;
 
 		int renderQueueFamily;
 		int computeQueueFamily;
 
-		eastl::unique_ptr<VulkanComputePipeline> pipeline;
+		std::unique_ptr<VulkanComputePipeline> pipeline;
 
 		static VulkanLogicalDevice* device;
 		static VulkanRenderer* renderer;

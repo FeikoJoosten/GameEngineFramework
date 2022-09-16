@@ -2,7 +2,7 @@
 
 namespace Engine
 {
-	Texture::Texture(const eastl::string& filename, int desiredChannels) : fileName(filename), dataSize()
+	Texture::Texture(const std::string& filename, int desiredChannels) : fileName(filename), dataSize()
 	{
 	}
 
@@ -19,7 +19,7 @@ namespace Engine
 		return texture;
 	}
 
-	eastl::string Texture::GetFileName() const
+	std::string Texture::GetFileName() const
 	{
 		return fileName;
 	}

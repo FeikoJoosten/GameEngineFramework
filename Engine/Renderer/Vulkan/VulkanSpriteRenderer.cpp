@@ -10,7 +10,7 @@ namespace Engine {
 		this->device = device;
 		this->descriptorPool = descriptorPool;
 
-		renderPassPipeline = eastl::unique_ptr<VulkanPipeline>(new VulkanPipeline(device, renderer));
+		renderPassPipeline = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(device, renderer));
 
 		renderPassPipeline->LoadShader(VulkanPipeline::SHADER_TYPE::VERTEX_SHADER, "Sprite.vert.spv");
 		renderPassPipeline->LoadShader(VulkanPipeline::SHADER_TYPE::FRAGMENT_SHADER, "Sprite.frag.spv");
@@ -41,22 +41,22 @@ namespace Engine {
 
 
 
-		vertexBuffer = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
+		vertexBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
 			static_cast<uint32_t>(sizeof(VertexInfo_t))*4, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 
 			true, renderer->GetGraphicsCommandPool()));
 
-		indexBuffer = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
+		indexBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
 			static_cast<uint32_t>(sizeof(uint32_t)) * 6, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, 
 			true, renderer->GetGraphicsCommandPool()));
 
-		uboBuffer = eastl::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
+		uboBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(device, renderer->GetVmaAllocator(),
 			static_cast<uint32_t>(sizeof(Ubo_t)), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
 			false, renderer->GetGraphicsCommandPool()));
 
 		ubo.proj = glm::mat4();
 		ubo.view = glm::scale(glm::mat4(),glm::vec3(0.f,0.f,0.f));
 
-		eastl::vector<VertexInfo_t> vertexData = {
+		std::vector<VertexInfo_t> vertexData = {
 			{glm::vec3(-0.5f,0.5f,0.0f),glm::vec2(0.f,1.f)},
 			{glm::vec3(-0.5f,-0.5f,0.0f),glm::vec2(0.f,0.f)},
 			{glm::vec3(0.5f,-0.5f,0.0f),glm::vec2(1.f,0.f)},
@@ -117,7 +117,7 @@ namespace Engine {
 		vkCmdBindIndexBuffer(renderCommandBuffer, indexBuffer->GetBuffer(), 0, VK_INDEX_TYPE_UINT32);
 	}
 
-	void VulkanSpriteRenderer::RenderSprite(eastl::weak_ptr<VulkanTexture> texture, glm::mat4 modelMatrix)
+	void VulkanSpriteRenderer::RenderSprite(std::weak_ptr<VulkanTexture> texture, glm::mat4 modelMatrix)
 	{
 		PushConstants_t constants = { modelMatrix };
 

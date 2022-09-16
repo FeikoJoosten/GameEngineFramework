@@ -3,7 +3,6 @@
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_OPENGL
 #include "Engine/Mesh/Mesh.hpp"
-#include <ThirdParty/glew-2.1.0/include/GL/glew.h>
 
 namespace Engine
 {
@@ -14,12 +13,15 @@ namespace Engine
 	{
 		friend class ResourceManager;
 
-		OpenGLMesh() = delete;
-		OpenGLMesh(eastl::vector<Vertex> vertices, eastl::vector<unsigned> indices);
-		OpenGLMesh(OpenGLMesh const &other) = default;
-		//OpenGLMesh(OpenGLMesh &&other) noexcept = default;
+		OpenGLMesh(std::vector<Vertex> vertices, std::vector<unsigned> indices);
 	public:
-		~OpenGLMesh() noexcept = default;
+		OpenGLMesh() = delete;
+		virtual ~OpenGLMesh() noexcept override = default;
+		OpenGLMesh(const OpenGLMesh&other) = delete;
+		OpenGLMesh(OpenGLMesh &&other) noexcept = delete;
+
+		OpenGLMesh& operator=(const OpenGLMesh& other) = delete;
+		OpenGLMesh& operator=(OpenGLMesh&& other) noexcept = delete;
 	private:
 
 		void SetUpMesh() override;

@@ -29,7 +29,7 @@ namespace Engine {
 			renderQueueFamily = device->GetPhysicalDevice()->GetQueueFamilies().graphics;
 		}
 
-		pipeline = eastl::unique_ptr<VulkanComputePipeline>(new VulkanComputePipeline(device));
+		pipeline = std::unique_ptr<VulkanComputePipeline>(new VulkanComputePipeline(device));
 
 		pipeline->SetComputeShader("ParticleUpdate.comp.spv");
 

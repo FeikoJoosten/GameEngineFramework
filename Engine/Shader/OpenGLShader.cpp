@@ -1,13 +1,16 @@
+
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_OPENGL
 #include "Engine/Shader/OpenGLShader.hpp"
 #include "Engine/Texture/Texture.hpp"
-#include "Engine/engine.hpp"
+#include "Engine/Engine.hpp"
 #include "Engine/Utility/Logging.hpp"
 #include "Engine/Utility/Utility.hpp"
+#include "Engine/Renderer/OpenGLUtility.hpp"
 
-#include <assert.h>
-#include <ThirdParty/glm/glm/gtc/type_ptr.hpp>
+#include <cassert>
+#include <ios>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Engine
 {
@@ -27,7 +30,7 @@ namespace Engine
 
 		*shader = glCreateShader(type);
 		glShaderSource(*shader, 1, &source, nullptr);
-		glGetError();
+		glCheckError();
 		glCompileShader(*shader);
 
 		GLint logLength = 0;
@@ -36,8 +39,8 @@ namespace Engine
 		{
 			GLchar *log = static_cast<GLchar *>(malloc(logLength));
 			glGetShaderInfoLog(*shader, logLength, &logLength, log);
-			eastl::string logInfo = log;
-			debug_info("OpenGLShader", "CompileShader", eastl::string("Shader compile log: \n " + logInfo));
+			const std::string logInfo = log;
+			debug_info("OpenGLShader", "CompileShader", std::string("Shader compile log: \n " + logInfo));
 			free(log);
 		}
 
@@ -48,7 +51,7 @@ namespace Engine
 			return false;
 		}
 
-		glGetError();
+		glCheckError();
 
 		return true;
 	}
@@ -68,8 +71,8 @@ namespace Engine
 		{
 			GLchar *log = static_cast<GLchar *>(malloc(logLength));
 			glGetProgramInfoLog(prog, logLength, &logLength, log);
-			eastl::string logInfo = log;
-			debug_info("OpenGLShader", "LinkProgram", eastl::string("Program link log: \n " + logInfo));
+			std::string logInfo = log;
+			debug_info("OpenGLShader", "LinkProgram", std::string("Program link log: \n " + logInfo));
 			free(log);
 		}
 
@@ -120,7 +123,7 @@ namespace Engine
 
 		assert(_type == GL_FLOAT);
 		glUniform1f(_location, val);
-		glGetError();
+		glCheckError();
 	}
 
 	void ShaderParameter::SetValue(int val) const
@@ -130,7 +133,7 @@ namespace Engine
 
 		assert(_type == GL_INT);
 		glUniform1i(_location, val);
-		glGetError();
+		glCheckError();
 	}
 
 	void ShaderParameter::SetValue(bool val) const
@@ -140,7 +143,7 @@ namespace Engine
 
 		assert(_type == GL_BOOL);
 		glUniform1i(_location, val);
-		glGetError();
+		glCheckError();
 	}
 
 	void ShaderParameter::SetValue(const glm::vec2& vec) const
@@ -150,7 +153,7 @@ namespace Engine
 
 		assert(_type == GL_FLOAT_VEC2);
 		glUniform2fv(_location, 1, &vec.x);
-		glGetError();
+		glCheckError();
 	}
 
 	void ShaderParameter::SetValue(const glm::vec3& vec) const
@@ -160,7 +163,7 @@ namespace Engine
 
 		assert(_type == GL_FLOAT_VEC3);
 		glUniform3fv(_location, 1, glm::value_ptr(vec));
-		glGetError();
+		glCheckError();
 	}
 
 	void ShaderParameter::SetValue(const glm::vec4& vec) const
@@ -170,7 +173,7 @@ namespace Engine
 
 		assert(_type == GL_FLOAT_VEC4);
 		glUniform4fv(_location, 1, &vec.x);
-		glGetError();
+		glCheckError();
 	}
 
 	void ShaderParameter::SetValue(const glm::mat4x4& mtx, bool transpose) const
@@ -180,7 +183,7 @@ namespace Engine
 
 		assert(_type == GL_FLOAT_MAT4);
 		glUniformMatrix4fv(_location, 1, transpose, glm::value_ptr(mtx));
-		glGetError();
+		glCheckError();
 	}
 
 	void ShaderParameter::SetValue(Texture &texture_) const
@@ -191,13 +194,13 @@ namespace Engine
 		assert(_type == GL_SAMPLER_2D);
 		// Use texture with index sampler. GL_TEXTURE1 = GL_TEXTURE10+1 is always true
 		glActiveTexture(GL_TEXTURE0 + _sampler);
-		glGetError();
+		glCheckError();
 		// Work with this texture
 		glBindTexture(GL_TEXTURE_2D, GLuint(texture_.GetTexture()));
-		glGetError();
+		glCheckError();
 		// Set the sampler
 		glUniform1i(_location, _sampler);
-		glGetError();
+		glCheckError();
 	}
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -223,10 +226,10 @@ namespace Engine
 			stride,             // no extra data between each position
 			pointer             // offset of first element
 		);
-		glGetError();
+		glCheckError();
 
 		glEnableVertexAttribArray(_location);
-		glGetError();
+		glCheckError();
 	}
 
 	void ShaderAttribute::DisableAttributePointer() const
@@ -235,7 +238,7 @@ namespace Engine
 			return;
 
 		glDisableVertexAttribArray(_location);
-		glGetError();
+		glCheckError();
 	}
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -244,41 +247,40 @@ namespace Engine
 	//
 	////////////////////////////////////////////////////////////////////////////////
 
-	GLuint LoadShader(eastl::string filePath, int shaderType)
+	GLuint LoadShader(std::string filePath, int shaderType)
 	{
 		GLuint shader;
 		CompileShader(&shader, shaderType, reinterpret_cast<char const *const>(Utility::ReadFile(filePath, std::ios::binary).data()));
 		return shader;
 	}
 
-	OpenGLShader::OpenGLShader(const eastl::string& vertexFileName, const eastl::string& fragmentFileName) :
+	OpenGLShader::OpenGLShader(const std::string& vertexFileName, const std::string& fragmentFileName) :
 		OpenGLShader(vertexFileName, fragmentFileName, "")
 	{}
 
-	OpenGLShader::OpenGLShader(const eastl::string& vertexFileName,
-		const eastl::string& fragmentFileName,
-		const eastl::string& geometryFileName)
+	OpenGLShader::OpenGLShader(const std::string& vertexFileName,
+		const std::string& fragmentFileName,
+		const std::string& geometryFileName)
 	{
 		if (!LoadSource(vertexFileName, fragmentFileName, geometryFileName))
 			return;
 	}
 
-	bool OpenGLShader::LoadSource(const eastl::string& vertexShader, const eastl::string& fragmentShader,
-		const eastl::string& geometryShader)
+	bool OpenGLShader::LoadSource(const std::string& vertexShader, const std::string& fragmentShader,
+		const std::string& geometryShader)
 	{
 		program = glCreateProgram();
-
-		eastl::string shaderPath = "Resources/Shaders/";
-		GLuint vertShader = LoadShader(shaderPath + vertexShader, GL_VERTEX_SHADER);
-		GLuint fragShader = LoadShader(shaderPath + fragmentShader, GL_FRAGMENT_SHADER);
+		
+		GLuint vertShader = LoadShader(shaderFolder + vertexShader, GL_VERTEX_SHADER);
+		GLuint fragShader = LoadShader(shaderFolder + fragmentShader, GL_FRAGMENT_SHADER);
 		GLuint geomShader = 0;
 
 		if (geometryShader.length() > 0)
-			geomShader = LoadShader(shaderPath + geometryShader, GL_GEOMETRY_SHADER);
+			geomShader = LoadShader(shaderFolder + geometryShader, GL_GEOMETRY_SHADER);
 
 		// Attach vertex shader to program
 		glAttachShader(program, vertShader);
-		glGetError();
+		glCheckError();
 
 		// Attach geometry shader to program
 		if (geomShader)
@@ -286,7 +288,7 @@ namespace Engine
 
 		// Attach fragment shader to program
 		glAttachShader(program, fragShader);
-		glGetError();
+		glCheckError();
 
 		// Link program
 		if (!LinkProgram(program))
@@ -312,7 +314,7 @@ namespace Engine
 				program = 0;
 			}
 
-			glGetError();
+			glCheckError();
 
 			// We crash here, else the logs will be flooded with repeated
 			// error messages.
@@ -322,20 +324,20 @@ namespace Engine
 		}
 
 		glDeleteShader(vertShader);
-		glGetError();
+		glCheckError();
 
 		glDeleteShader(geomShader);
-		glGetError();
+		glCheckError();
 
 		glDeleteShader(fragShader);
-		glGetError();
+		glCheckError();
 
 		LoadParameters();
 
 		return true;
 	}
 
-	eastl::weak_ptr<ShaderParameter> OpenGLShader::GetParameter(const eastl::string& name)
+	std::shared_ptr<ShaderParameter> OpenGLShader::GetParameter(const std::string& name)
 	{
 		// Try to find param
 		auto itr = parameters.find(name);
@@ -344,11 +346,11 @@ namespace Engine
 
 		// Create and return a non-valid param that is stored in collection
 		// in case it becomes valid after a reload
-		parameters[name] = eastl::shared_ptr<ShaderParameter>();
+		parameters[name] = std::shared_ptr<ShaderParameter>();
 		return parameters[name];
 	}
 
-	eastl::weak_ptr<ShaderAttribute> OpenGLShader::GetAttribute(const eastl::string& name)
+	std::shared_ptr<ShaderAttribute> OpenGLShader::GetAttribute(const std::string& name)
 	{
 		// Try to find param
 		auto itr = attributes.find(name);
@@ -357,7 +359,7 @@ namespace Engine
 
 		// Create and return a non-valid param that is stored in collection
 		// in case it becomes valid after a reload
-		attributes[name] = eastl::shared_ptr<ShaderAttribute>();
+		attributes[name] = std::shared_ptr<ShaderAttribute>();
 		return attributes[name];
 	}
 
@@ -369,7 +371,7 @@ namespace Engine
 	void OpenGLShader::Activate()
 	{
 		glUseProgram(program);
-		glGetError();
+		glCheckError();
 	}
 
 	void OpenGLShader::Deactivate()
@@ -393,7 +395,7 @@ namespace Engine
 		// Get the maximum name length
 		GLint maxUniformNameLength = 0;
 		glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformNameLength);
-		eastl::vector<GLchar> uniformNameData(maxUniformNameLength);
+		std::vector<GLchar> uniformNameData(maxUniformNameLength);
 
 		// Go over all the uniforms
 		int samplerCount = 0;
@@ -410,7 +412,7 @@ namespace Engine
 				&arraySize,
 				&type,
 				&uniformNameData[0]);
-			eastl::string name(&uniformNameData[0], actualLength);
+			std::string name(&uniformNameData[0], actualLength);
 			GLint location = glGetUniformLocation(program, name.c_str());
 
 			auto itr = parameters.find(name);
@@ -423,11 +425,11 @@ namespace Engine
 			}
 			else
 			{
-				eastl::shared_ptr<ShaderParameter> param;
+				std::shared_ptr<ShaderParameter> param;
 				if (type == GL_SAMPLER_2D || type == GL_SAMPLER_CUBE)
-					param = eastl::shared_ptr<ShaderParameter>(new ShaderParameter(this, name, type, location, samplerCount++));
+					param = std::shared_ptr<ShaderParameter>(new ShaderParameter(this, name, type, location, samplerCount++));
 				else
-					param = eastl::shared_ptr<ShaderParameter>(new ShaderParameter(this, name, type, location));
+					param = std::shared_ptr<ShaderParameter>(new ShaderParameter(this, name, type, location));
 				parameters[name] = param;
 			}
 		}
@@ -439,7 +441,7 @@ namespace Engine
 
 		GLint maxAttribNameLength = 0;
 		glGetProgramiv(program, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttribNameLength);
-		eastl::vector<GLchar> attribNameData(maxAttribNameLength);
+		std::vector<GLchar> attribNameData(maxAttribNameLength);
 
 
 		for (int attrib = 0; attrib < numActiveAttribs; ++attrib)
@@ -454,7 +456,7 @@ namespace Engine
 				&arraySize,
 				&type,
 				&attribNameData[0]);
-			eastl::string name(static_cast<char*>(&attribNameData[0]));
+			std::string name(static_cast<char*>(&attribNameData[0]));
 			GLint location = glGetAttribLocation(program, name.c_str());
 
 			auto itr = attributes.find(name);
@@ -464,7 +466,7 @@ namespace Engine
 			}
 			else
 			{
-				attributes[name] = eastl::shared_ptr<ShaderAttribute>(new ShaderAttribute(this, name, type, location));
+				attributes[name] = std::shared_ptr<ShaderAttribute>(new ShaderAttribute(this, name, type, location));
 			}
 		}
 	}
@@ -474,7 +476,7 @@ namespace Engine
 		if (!ValidateProgram(program))
 		{
 			//LOG("Failed to validate program: %d", _program);
-			glGetError();
+			glCheckError();
 			return false;
 		}
 		return true;

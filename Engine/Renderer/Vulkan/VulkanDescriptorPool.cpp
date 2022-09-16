@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "Engine/Renderer/Vulkan/VulkanLogicalDevice.hpp"
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
+#include <string>
 
 namespace Engine {
 
@@ -39,7 +39,7 @@ namespace Engine {
 
 		VkResult res = vkCreateDescriptorPool(device->GetDevice(), &createInfo, nullptr, &pool);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create descriptor pool";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to create descriptor pool";
 			std::cout << s.c_str() << std::endl;
 		}
 	}
@@ -59,7 +59,7 @@ namespace Engine {
 
 		VkResult res = vkAllocateDescriptorSets(device->GetDevice(), &allocInfo, sets);
 		if (res != VK_SUCCESS) {
-			eastl::string s = eastl::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to allocate descriptor sets";
+			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to allocate descriptor sets";
 			std::cout << s.c_str() << std::endl;
 		}
 	}

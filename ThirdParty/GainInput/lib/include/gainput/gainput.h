@@ -168,25 +168,24 @@ void DevSetHttp(bool enable);
 #define GAINPUT_VER_GET_MAJOR(ver)	(ver >> GAINPUT_VER_MAJOR_SHIFT)
 #define GAINPUT_VER_GET_MINOR(ver)	(ver & (uint32_t(-1) >> GAINPUT_VER_MAJOR_SHIFT))
 
-#include <ThirdParty/GainInput/lib/include/gainput/GainputAllocator.h>
-#include <ThirdParty/GainInput/lib/include/gainput/GainputContainers.h>
-#include <ThirdParty/GainInput/lib/include/gainput/GainputInputState.h>
-#include <ThirdParty/GainInput/lib/include/gainput/GainputInputDevice.h>
-#include <ThirdParty/GainInput/lib/include/gainput/GainputInputListener.h>
-#include <ThirdParty/GainInput/lib/include/gainput/GainputInputManager.h>
-#include <ThirdParty/GainInput/lib/include/gainput/GainputInputMap.h>
+#include <gainput/GainputAllocator.h>
+#include <gainput/GainputContainers.h>
+#include <gainput/GainputInputState.h>
+#include <gainput/GainputInputDevice.h>
+#include <gainput/GainputInputListener.h>
+#include <gainput/GainputInputManager.h>
+#include <gainput/GainputInputMap.h>
 
-#include <ThirdParty/GainInput/lib/include/gainput/GainputInputDeviceMouse.h>
-#include <ThirdParty/GainInput/lib/include/gainput/GainputInputDeviceKeyboard.h>
-#include <ThirdParty/GainInput/lib/include/gainput/GainputInputDevicePad.h>
-#include <ThirdParty/GainInput/lib/include/gainput/GainputInputDeviceTouch.h>
-#include <ThirdParty/GainInput/lib/include/gainput/GainputInputDeviceBuiltIn.h>
+#include <gainput/GainputInputDeviceMouse.h>
+#include <gainput/GainputInputDeviceKeyboard.h>
+#include <gainput/GainputInputDevicePad.h>
+#include <gainput/GainputInputDeviceTouch.h>
+#include <gainput/gestures/GainputGestures.h>
+#include <gainput/GainputInputDeviceBuiltIn.h>
 
-#include <ThirdParty/GainInput/lib/include/gainput/gestures/GainputGestures.h>
-
-#include <ThirdParty/GainInput/lib/include/gainput/recorder/GainputInputRecording.h>
-#include <ThirdParty/GainInput/lib/include/gainput/recorder/GainputInputPlayer.h>
-#include <ThirdParty/GainInput/lib/include/gainput/recorder/GainputInputRecorder.h>
+#include <gainput/recorder/GainputInputRecording.h>
+#include <gainput/recorder/GainputInputPlayer.h>
+#include <gainput/recorder/GainputInputRecorder.h>
 
 #endif
 

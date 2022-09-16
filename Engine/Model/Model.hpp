@@ -1,11 +1,8 @@
 #pragma once
-#include "Engine/api.hpp"
+#include "Engine/Api.hpp"
 #include "Engine/Mesh/Mesh.hpp"
 #include "Engine/Animation/Skeleton.hpp"
 #include "Engine/Material/Material.hpp"
-
-#include <ThirdParty/EASTL-master/include/EASTL/string.h>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
 
 namespace Engine
 {
@@ -19,15 +16,15 @@ namespace Engine
 		/// This method allows you to get a reference of all the meshes in this model.
 		/// </summary>
 		/// <returns>Returns a shared pointer vector of the meshes bound to this model.</returns>
-		eastl::vector<eastl::shared_ptr<Mesh>>& GetModelMeshes();
+		std::vector<std::shared_ptr<Mesh>>& GetModelMeshes();
 
 		/// <summary>
 		/// This method allows you to get the name of this model.
 		/// </summary>
-		/// <returns>Returns the name of this model as a eastl::string.</returns>
-		eastl::string GetName();
+		/// <returns>Returns the name of this model as a std::string.</returns>
+		std::string GetName();
 
-		void SetSkeleton(eastl::shared_ptr<Skeleton> skeleton);
+		void SetSkeleton(std::shared_ptr<Skeleton> newSkeleton);
 
 		/// <summary>
 		/// Returns the animation data of the model. 
@@ -35,20 +32,20 @@ namespace Engine
 		/// As well as the progress of the animation and a list of animation that can be used by the model.
 		/// </summary>
 		/// <returns>The animation data of this model.</returns>
-		eastl::shared_ptr<Skeleton> GetSkeleton() const;
+		std::shared_ptr<Skeleton> GetSkeleton() const;
 
 		/// <summary>
 		/// Returns a list of the loaded animations as a vector of names. Use these names to load a specific animation.
 		/// </summary>
 		/// <returns>A vector containing animation names</returns>
-		eastl::vector<eastl::string> GetAnimations();
+		void GetAnimations(std::vector<std::string>& output) const;
 
 		/// <summary>
 		/// Sets the current animation of the mesh.
 		/// </summary>
 		/// <param name="animation">The name of the animation to use.</param>
 		/// <param name="resetTime">If the animation should be reset to the starting point.</param>
-		void SetAnimation(eastl::string animation, bool resetTime);
+		void SetAnimation(std::string animation, bool resetTime);
 
 		/// <summary>
 		/// Sets the current animation to 0, returning the model to the default pose.
@@ -67,13 +64,7 @@ namespace Engine
 		/// </summary>
 		/// <param name="deltaTime">Time since last frame in seconds.</param>
 		void Update(float deltaTime);
-
-		/// <summary>
-		/// Updates animation related values, such as the progress of the animation.
-		/// </summary>
-		/// <param name="deltaTime">Time since last frame in seconds.</param>
-		void UpdateAnimation(float deltaTime);
-
+		
 		/// <summary>
 		/// Returns the current progress of the animation.
 		/// </summary>
@@ -132,7 +123,7 @@ namespace Engine
 		/// Returns the name of the currently selected animation.
 		/// </summary>
 		/// <returns>The name of the currently selected animation.</returns>
-		eastl::string GetCurrentAnimationName() const;
+		std::string GetCurrentAnimationName() const;
 
 		/// <summary>
 		/// Returns the index of the currently selected animation.
@@ -146,7 +137,7 @@ namespace Engine
 		/// </summary>
 		/// <param name="mesh">The mesh to get the material for.</param>
 		/// <returns>The material associated with the mesh.</returns>
-		eastl::shared_ptr<Material> GetMeshMaterial(eastl::shared_ptr<Mesh> mesh);
+		std::shared_ptr<Material> GetMeshMaterial(std::shared_ptr<Mesh> mesh);
 
 		/// <summary>
 		/// Associates a material with the given mesh. 
@@ -155,7 +146,7 @@ namespace Engine
 		/// <param name="mesh">The mesh to use the material for.</param>
 		/// <param name="material">The material to bind to the mesh. 
 		/// Note: If you update the material, any mesh that's associated with this material will change.</param>
-		void SetMeshMaterial(eastl::shared_ptr<Mesh> mesh, eastl::shared_ptr<Material> material);
+		void SetMeshMaterial(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material);
 
 		/// <summary>
 		/// This method allows you to compare a model against another model.
@@ -172,19 +163,21 @@ namespace Engine
 	protected:
 		//Model data
 
-		eastl::string name;
+		std::string name;
 		friend class ResourceManager;
-		explicit Model(const aiScene* scene, eastl::string name = "");
+		explicit Model(const aiScene* scene, std::string name = "");
 	public:
 		~Model() = default;
 	protected:
 
-		eastl::shared_ptr<Skeleton> skeleton;
+		void UpdateAnimation(float deltaTime);
 
-		void AddMesh(eastl::shared_ptr<Mesh> meshToAdd);
-		eastl::vector<eastl::shared_ptr<Mesh>> meshes;
+		std::shared_ptr<Skeleton> skeleton;
 
-		eastl::map<eastl::shared_ptr<Mesh>, eastl::shared_ptr<Material>> meshMaterialMap;
+		void AddMesh(std::shared_ptr<Mesh> meshToAdd);
+		std::vector<std::shared_ptr<Mesh>> meshes;
+
+		std::map<std::shared_ptr<Mesh>, std::shared_ptr<Material>> meshMaterialMap;
 
 #pragma region AnimationData
 
@@ -198,7 +191,7 @@ namespace Engine
 
 		size_t currentAnimation;
 
-		eastl::string currentAnimationName;
+		std::string currentAnimationName;
 
 #pragma endregion
 	};

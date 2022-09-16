@@ -1,17 +1,17 @@
 #pragma once
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
+#include <vulkan/vulkan.h>
 
 #include "Engine/Renderer/Vulkan/VulkanPhysicalDevice.hpp"
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
+#include <vector>
 
 namespace Engine {
 
 	class VulkanLogicalDevice
 	{
 	public:
-		VulkanLogicalDevice(VulkanPhysicalDevice* vulkanPhysicalDevice, bool debug, eastl::vector<const char*> extensions, VulkanDeviceFeatures_t requestedDeviceFeatures);
+		VulkanLogicalDevice(VulkanPhysicalDevice* vulkanPhysicalDevice, bool debug, std::vector<const char*> extensions, VulkanDeviceFeatures_t requestedDeviceFeatures);
 		~VulkanLogicalDevice();
 
 		VkDevice GetDevice() const;

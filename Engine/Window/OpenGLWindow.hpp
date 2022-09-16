@@ -2,27 +2,26 @@
 
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_OPENGL
+#include "Engine/Engine.hpp"
 #define GLEW_STATIC
-#include <ThirdParty/glew-2.1.0/include/GL/glew.h>
+#include <GL/glew.h>
 #include "Engine/Window/Window.hpp"
 
-namespace Engine
-{
+namespace Engine {
 	/// <summary>
 	/// This object stores any information regarding the created GLFW OpenGLWindow.
 	/// </summary>
-	class ENGINE_API OpenGLWindow : public Window
-	{
-		friend class Engine;
+	class ENGINE_API OpenGLWindow : public Window {
+		friend std::shared_ptr<Window> Engine::GetWindow() noexcept;
 
-		OpenGLWindow() = delete;
-		OpenGLWindow(int width, int height, const char* title) noexcept;
-		OpenGLWindow(OpenGLWindow const &other) = default;
-		OpenGLWindow(OpenGLWindow &&other) noexcept = default;
-	public :
-		~OpenGLWindow() noexcept override;
-	private:
-		eastl::shared_ptr<Window> windowReference;
+		OpenGLWindow() noexcept;
+	public:
+		OpenGLWindow(const OpenGLWindow& other) = delete;
+		OpenGLWindow(OpenGLWindow&& other) noexcept = delete;
+		virtual ~OpenGLWindow() noexcept override = default;
+
+		OpenGLWindow& operator=(const OpenGLWindow& other) = delete;
+		OpenGLWindow& operator=(OpenGLWindow&& other) noexcept = delete;
 	};
 } //namespace Engine
 #endif

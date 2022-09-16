@@ -1,5 +1,5 @@
 #pragma once
-#include <ThirdParty/glm/glm/glm.hpp>
+#include <glm/glm.hpp>
 /// <summary>
 /// This object is used to store general data for a vertex.
 /// </summary>

@@ -1,8 +1,8 @@
 #pragma once
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
-#include <ThirdParty/Vulkan/Include/vulkan/vulkan.h>
-#include <ThirdParty/EASTL-master/include/EASTL/vector.h>
+#include <vulkan/vulkan.h>
+#include <vector>
 
 namespace Engine {
 
@@ -84,25 +84,25 @@ namespace Engine {
 
 	typedef struct {
 		VkSurfaceCapabilitiesKHR capabilities;
-		eastl::vector<VkSurfaceFormatKHR> formats;
-		eastl::vector<VkPresentModeKHR> presentModes;
+		std::vector<VkSurfaceFormatKHR> formats;
+		std::vector<VkPresentModeKHR> presentModes;
 	}VulkanSwapChainSupportDetails_t;
 
 	class VulkanPhysicalDevice
 	{
 	public:
-		static VulkanPhysicalDevice* GetBestPhysicalDevice(VulkanInstance* instance, VkSurfaceKHR surface, eastl::vector<const char*> requiredExtensions,
+		static VulkanPhysicalDevice* GetBestPhysicalDevice(VulkanInstance* instance, VkSurfaceKHR surface, std::vector<const char*> requiredExtensions,
 			VulkanDeviceFeatures_t requiredFeatures = {}, VulkanDeviceFeatures_t optionalFeatures = {}, VulkanDeviceQueueRequestedFamilies_t requestedQueueFamilies = {},
 			bool GPU = true);
-		static eastl::vector<VulkanPhysicalDevice*> GetAllPhysicalDevices(VulkanInstance* instance, VkSurfaceKHR surface);
+		static std::vector<VulkanPhysicalDevice*> GetAllPhysicalDevices(VulkanInstance* instance, VkSurfaceKHR surface);
 
 		VkPhysicalDevice GetPhysicalDevice() { return device; };
 		VulkanDeviceQueueFamilies_t GetQueueFamilies();
 		VulkanSwapChainSupportDetails_t GetSwapChainSupportDetails();
 		VulkanSwapChainSupportDetails_t ReloadSwapChainSupportDetails();
 
-		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const eastl::vector<VkSurfaceFormatKHR>& availableFormats);
-		VkPresentModeKHR ChooseSwapPresentMode(const eastl::vector<VkPresentModeKHR> availablePresentModes);
+		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+		VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR> availablePresentModes);
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities, int width, int height);
 
 		~VulkanPhysicalDevice();

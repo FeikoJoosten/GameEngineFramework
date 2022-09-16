@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ThirdParty/glm/glm/glm.hpp"
-#include "Engine/api.hpp"
+#include "glm/glm.hpp"
+#include "Engine/Api.hpp"
 
 /// <summary>
 /// Enum containing the different types of lights that can be created.
