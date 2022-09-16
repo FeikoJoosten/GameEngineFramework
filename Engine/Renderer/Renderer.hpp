@@ -60,7 +60,7 @@ namespace Engine
 		/// <summary>
 		/// This event is called whenever the Renderer is ready to start rendering.
 		/// </summary>
-		Sharp::Event<void> PostRenderComponentsRenderEvent;
+		Sharp::Event<> PostRenderComponentsRenderEvent;
 
 	protected:
 		/// <summary>

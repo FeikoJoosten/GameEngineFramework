@@ -10,12 +10,12 @@
 
 ImGuiRenderer::ImGuiRenderer()
 {
-	Engine::Renderer::Get()->PostRenderComponentsRenderEvent += Sharp::EventHandler::Bind(MainMenu);
+	Engine::Renderer::Get()->PostRenderComponentsRenderEvent += Sharp::EventHandler::Bind(this, &ImGuiRenderer::MainMenu);
 }
 
 ImGuiRenderer::~ImGuiRenderer()
 {
-	Engine::Renderer::Get()->PostRenderComponentsRenderEvent -= Sharp::EventHandler::Bind(MainMenu);
+	Engine::Renderer::Get()->PostRenderComponentsRenderEvent -= Sharp::EventHandler::Bind(this, &ImGuiRenderer::MainMenu);
 }
 
 static bool openMainMenu = true;

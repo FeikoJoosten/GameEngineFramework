@@ -61,8 +61,8 @@ namespace Engine
 	}
 
 	void Renderer::HandleOnComponentAddedToEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> addedComponent) {
-		const std::shared_ptr<RenderComponent> renderComponent = std::dynamic_pointer_cast<RenderComponent>(addedComponent);
-		if (renderComponent) renderComponents.push_back(renderComponent);
+		if (const std::shared_ptr<RenderComponent> renderComponent = std::dynamic_pointer_cast<RenderComponent>(addedComponent)) 
+			renderComponents.push_back(renderComponent);
 	}
 
 	void Renderer::HandleOnComponentRemovedFromEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> removedComponent) {
