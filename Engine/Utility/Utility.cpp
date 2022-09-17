@@ -26,9 +26,9 @@ namespace Engine
 		return buffer;
 	}
 
-	bool Utility::FileExists(const std::string& fileName)
+	bool Utility::FileExists(const std::string& fileName, const bool isFullPath)
 	{
-		std::ifstream file((AssetManager::Get()->GetProjectRoot() + fileName).c_str());
+		std::ifstream file((isFullPath ? fileName : AssetManager::Get()->GetProjectRoot() + fileName).c_str());
 
 		const bool fileExists = file.is_open();
 		file.close();

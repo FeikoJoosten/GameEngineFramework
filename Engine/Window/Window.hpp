@@ -23,22 +23,12 @@ namespace Engine {
 	/// </summary>
 	class ENGINE_API Window {
 		struct WindowInitializationData {
-			/// <summary>
-			/// WindowWidth defines the width of the engine window.
-			/// Default is 640.
-			/// </summary>
 			int windowWidth = 640;
-			/// <summary>
-			/// WindowHeight defines the height of the engine window.
-			/// Default is 480.
-			/// </summary>
 			int windowHeight = 480;
-			/// <summary>
-			/// Window Title defines the title of the engine window.
-			/// Default is "".
-			/// </summary>
+			int windowXPosition = -1;
+			int windowYPosition = -1;
 			std::string windowTitle {};
-
+			
 			template <class Archive>
 			void Serialize(Archive& archive);
 		};
@@ -100,7 +90,7 @@ namespace Engine {
 		/// This method allows you to set the width of this window.
 		/// </summary>
 		/// <param name="newWidth">The new width of this window.</param>
-		void SetWidth(int newWidth);
+		void SetWidth(int newWidth) const noexcept;
 
 		/// <summary>
 		/// This method allows you to get the display width of this window.
@@ -118,7 +108,15 @@ namespace Engine {
 		/// This method allows you to set the height of this window.
 		/// </summary>
 		/// <param name="newHeight">The new height of this window.</param>
-		void SetHeight(int newHeight);
+		void SetHeight(int newHeight) const noexcept;
+
+		[[nodiscard]] int GetXPosition() const noexcept;
+
+		void SetXPosition(int newXPosition) const noexcept;
+
+		[[nodiscard]] int GetYPosition() const noexcept;
+
+		void SetYPosition(int newYPosition) const noexcept;
 
 		/// <summary>
 		/// This method allows you to get the display height of this window.
@@ -127,6 +125,7 @@ namespace Engine {
 		[[nodiscard]] int GetDisplayHeight() const noexcept;
 
 		Sharp::Event<GLFWwindow*, int, int> OnWindowResizedEvent;
+		Sharp::Event<GLFWwindow*, int, int> OnWindowRepositionedEvent;
 		Sharp::Event<std::shared_ptr<Window>> OnWindowShutdownRequestedEvent;
 
 	protected:
@@ -134,6 +133,8 @@ namespace Engine {
 		int displayWidth {};
 		int height {};
 		int displayHeight {};
+		int xPosition {};
+		int yPosition {};
 		GLFWwindow* window = nullptr;
 		std::string title {};
 
@@ -143,19 +144,25 @@ namespace Engine {
 		/// <param name="glfwWindow">This is a reference to the window pointer.</param>
 		/// <param name="newWidth">The new width.</param>
 		/// <param name="newHeight">The new height.</param>
-		virtual void OnWindowResized(GLFWwindow* glfwWindow, int newWidth, int newHeight);
+		virtual void HandleOnWindowResized(GLFWwindow* glfwWindow, int newWidth, int newHeight);
+
+		virtual void HandleOnWindowRepositioned(GLFWwindow* glfwWindow, int newXPosition, int newYPosition);
 
 		void CreateInternalWindow();
 
 	private:
 		std::string settingsPath {};
 
-		static void WindowResizeCallback(GLFWwindow* glfwWindow, const int width, const int height);
+		static void WindowResizeCallback(GLFWwindow* glfwWindow, int newWidth, int newHeight);
+
+		static void WindowRepositionCallback(GLFWwindow* glfwWindow, int newXPosition, int newYPosition);
 	};
 
 	template <class Archive> void Window::WindowInitializationData::Serialize(Archive& archive) {
 		archive(CEREAL_NVP(windowWidth),
 			CEREAL_NVP(windowHeight),
+			CEREAL_NVP(windowXPosition),
+			CEREAL_NVP(windowYPosition),
 			CEREAL_NVP(windowTitle));
 	}
 

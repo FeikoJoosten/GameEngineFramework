@@ -5,10 +5,7 @@
 #include "Engine/Renderer/IMGUI/imgui.h"
 #include "Engine/Utility/Logging.hpp"
 #include "Engine/Input/InputManager.hpp"
-#include "Engine/Utility/Utility.hpp"
 
-#include <fstream>
-#include <cereal/archives/json.hpp>
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 
@@ -20,16 +17,15 @@ namespace Engine {
 	}
 
 	Window::Window() noexcept {
-		settingsPath = Engine::ENGINE_SETTINGS_PATH + std::string { NAMEOF_TYPE(Window) } + "/" + std::string { NAMEOF_TYPE(WindowInitializationData) };
-		WindowInitializationData initializationData {};
-		if (Utility::FileExists(settingsPath)) {
-			if (std::ifstream inputStream(settingsPath); inputStream.good()) {
-				cereal::JSONInputArchive archive(inputStream);
-				archive(initializationData);
-			}
-		}
+		const std::string windowType = std::string{ NAMEOF_SHORT_TYPE(Window) };
+		const std::string windowInitializationDataType = std::string { NAMEOF_SHORT_TYPE(WindowInitializationData) };
+		settingsPath = AssetManager::Get()->GetProjectRoot() + Engine::ENGINE_SETTINGS_PATH + windowType + "/" + windowInitializationDataType + ".settings";
+		const WindowInitializationData initializationData = AssetManager::ReadDataFromPath<WindowInitializationData>(settingsPath);
+
 		width = initializationData.windowWidth;
 		height = initializationData.windowHeight;
+		xPosition = initializationData.windowXPosition;
+		yPosition = initializationData.windowYPosition;
 		title = initializationData.windowTitle;
 	}
 
@@ -39,16 +35,15 @@ namespace Engine {
 
 		if (settingsPath.length() <= 0) return;
 
-		WindowInitializationData initializationData = {
+		const WindowInitializationData initializationData = {
 			width,
 			height,
+			xPosition,
+			yPosition,
 			title
 		};
 
-		std::ofstream outputStream(settingsPath);
-		cereal::JSONOutputArchive archive(outputStream);
-
-		archive(CEREAL_NVP(initializationData));
+		AssetManager::WriteDataToPath(settingsPath, initializationData);
 	}
 
 	std::shared_ptr<Window> Window::Get() {
@@ -85,9 +80,9 @@ namespace Engine {
 		return width;
 	}
 
-	void Window::SetWidth(const int newWidth) {
-		if (window)
-			OnWindowResized(window, newWidth, height);
+	void Window::SetWidth(const int newWidth) const noexcept {
+		if(window)
+			glfwSetWindowSize(window, newWidth, height);
 	}
 
 	int Window::GetDisplayWidth() const noexcept {
@@ -98,16 +93,34 @@ namespace Engine {
 		return height;
 	}
 
-	void Window::SetHeight(const int newHeight) {
+	void Window::SetHeight(const int newHeight) const noexcept {
 		if (window)
-			OnWindowResized(window, width, newHeight);
+			glfwSetWindowSize(window, width, newHeight);
+	}
+
+	int Window::GetXPosition() const noexcept {
+		return xPosition;
+	}
+
+	void Window::SetXPosition(const int newXPosition) const noexcept {
+		if(window)
+			glfwSetWindowPos(window, newXPosition, yPosition);
+	}
+
+	int Window::GetYPosition() const noexcept {
+		return yPosition;
+	}
+
+	void Window::SetYPosition(const int newYPosition) const noexcept {
+		if(window)
+			glfwSetWindowPos(window, xPosition, newYPosition);
 	}
 
 	int Window::GetDisplayHeight() const noexcept {
 		return displayHeight;
 	}
 
-	void Window::OnWindowResized(GLFWwindow* glfwWindow, const int newWidth, const int newHeight) {
+	void Window::HandleOnWindowResized(GLFWwindow* glfwWindow, const int newWidth, const int newHeight) {
 		if (newWidth == 0 || newHeight == 0) return;
 
 		width = newWidth;
@@ -126,6 +139,13 @@ namespace Engine {
 		io.DisplayFramebufferScale = ImVec2(newWidth > 0 ? static_cast<float>(displayW) / io.DisplaySize.x : 0, newHeight > 0 ? static_cast<float>(displayH) / io.DisplaySize.y : 0);
 	}
 
+	void Window::HandleOnWindowRepositioned(GLFWwindow* glfwWindow, const int newXPosition, const int newYPosition) {
+		xPosition = newXPosition;
+		yPosition = newYPosition;
+
+		OnWindowRepositionedEvent(glfwWindow, newXPosition, newYPosition);
+	}
+
 	void Window::CreateInternalWindow() {
 		if (window) return;
 
@@ -138,6 +158,7 @@ namespace Engine {
 
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 		window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+		glfwSetWindowPos(window, xPosition, yPosition);
 
 		if (!window) {
 			glfwTerminate();
@@ -146,12 +167,18 @@ namespace Engine {
 		}
 
 		glfwSetWindowSizeCallback(window, WindowResizeCallback);
-		OnWindowResized(window, width, height);
+		glfwSetWindowPosCallback(window, WindowRepositionCallback);
+		HandleOnWindowResized(window, width, height);
 	}
 
-	void Window::WindowResizeCallback(GLFWwindow* glfwWindow, const int width, const int height) {
+	void Window::WindowResizeCallback(GLFWwindow* glfwWindow, const int newWidth, const int newHeight) {
 		const std::shared_ptr<Window> window = Get();
-		window->OnWindowResized(glfwWindow, width, height);
+		window->HandleOnWindowResized(glfwWindow, newWidth, newHeight);
+	}
+
+	void Window::WindowRepositionCallback(GLFWwindow* glfwWindow, const int newXPosition, const int newYPosition) {
+		const std::shared_ptr<Window> window = Get();
+		window->HandleOnWindowRepositioned(glfwWindow, newXPosition, newYPosition);
 	}
 
 } //namespace Engine
