@@ -37,8 +37,10 @@ namespace Engine
 
 	VulkanRenderer::~VulkanRenderer()
 	{
-		if (window)
+		if (window) {
 			window->OnWindowResizedEvent -= Sharp::EventHandler::Bind(this, &VulkanRenderer::HandleOnWindowResizedEvent);
+			window->OnWindowShutdownRequestedEvent -= Sharp::EventHandler::Bind(this, &VulkanRenderer::HandleOnWindowShutdownRequestedEvent);
+		}
 		vkWaitForFences(vulkanLogicalDevice_->GetDevice(),
 			static_cast<uint32_t>(drawingFinishedFences_.size()),
 			drawingFinishedFences_.data(),
@@ -56,7 +58,6 @@ namespace Engine
 		DestroyGBufferRenderPipeline();
 		DestroyCompositingPipeline();
 		DestroySemaphores();
-		DestroyImGui();
 		DestroyDecriptorPool();
 		DestroyFramebuffers();
 		DestroyRenderPass();
@@ -83,12 +84,13 @@ namespace Engine
 
 		this->window = window;
 		window->OnWindowResizedEvent += Sharp::EventHandler::Bind(this, &VulkanRenderer::HandleOnWindowResizedEvent);
+		window->OnWindowShutdownRequestedEvent += Sharp::EventHandler::Bind(this, &VulkanRenderer::HandleOnWindowShutdownRequestedEvent);
 
 		swapChain = VK_NULL_HANDLE;
 
 		CreateInstance();
 
-		glfwCreateWindowSurface(vulkanInstance_->GetInstance(), window->GetGlfwWindow().get(), nullptr, &surface);
+		glfwCreateWindowSurface(vulkanInstance_->GetInstance(), window->GetGlfwWindow(), nullptr, &surface);
 
 		FindPhysicalDevice();
 
@@ -192,8 +194,6 @@ namespace Engine
 		vulkanDebugRenderer->Clean();
 		vulkanStaticMeshRenderer->Clean();
 		vulkanSkeletalMeshRenderer->Clean();
-
-		DestroyImGui();
 
 		DestroyRenderPass();
 		DestroyAttachmentImages();
@@ -2278,7 +2278,7 @@ namespace Engine
 		initData.check_vk_result = check_vk_result;
 		initData.render_pass = renderPass;
 		initData.sub_pass = static_cast<int>(RenderSubPasses::IMGUI_PASS);
-		ImGui_ImplGlfwVulkan_Init(window->GetGlfwWindow().get(), &initData);
+		ImGui_ImplGlfwVulkan_Init(window->GetGlfwWindow(), &initData);
 
 		VkCommandBuffer commandBuffer;
 
@@ -2703,11 +2703,6 @@ namespace Engine
 		}
 	}
 
-	void VulkanRenderer::DestroyImGui() const
-	{
-		ImGui_ImplGlfwVulkan_Shutdown();
-	}
-
 	void VulkanRenderer::DestroySemaphores()
 	{
 		for (size_t i = 0, size = imageAvailableSemaphores_.size(); i < size; ++i) {
@@ -2756,6 +2751,11 @@ namespace Engine
 
 	void VulkanRenderer::HandleOnWindowResizedEvent(GLFWwindow* glfwWindow, const int width, const int height) {
 		Resized();
+	}
+
+	void VulkanRenderer::HandleOnWindowShutdownRequestedEvent(const std::shared_ptr<Window> windowPtr) {
+		windowPtr->OnWindowShutdownRequestedEvent -= Sharp::EventHandler::Bind(this, &VulkanRenderer::HandleOnWindowShutdownRequestedEvent);
+		ImGui_ImplGlfwVulkan_Shutdown();
 	}
 
 	VkFormat VulkanRenderer::FindSupportedDepthFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)

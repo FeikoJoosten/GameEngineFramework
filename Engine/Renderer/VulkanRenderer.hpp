@@ -425,7 +425,6 @@ namespace Engine
 		void DestroyRenderPass();
 		void DestroyFramebuffers();
 		void DestroyDecriptorPool();
-		void DestroyImGui() const;
 		void DestroySemaphores();
 		void DestroyCompositingPipeline();
 		void DestroyGBufferRenderPipeline();
@@ -434,6 +433,8 @@ namespace Engine
 		void DestroyThreads();
 
 		void HandleOnWindowResizedEvent(GLFWwindow* glfwWindow, const int width, const int height);
+
+		void HandleOnWindowShutdownRequestedEvent(const std::shared_ptr<Window> windowPtr);
 
 		VkFormat VulkanRenderer::FindSupportedDepthFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 

@@ -4,7 +4,7 @@
 /// <summary>
 /// This value determines the current graphics API.
 /// </summary>
-#define RENDERER OpenGL
+#define RENDERER Vulkan
 #endif
 
 #ifdef NDEBUG
