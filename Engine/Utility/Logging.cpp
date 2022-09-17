@@ -11,8 +11,9 @@ std::ofstream log_file;
 
 void doDebug(std::string Type, std::string debugClass, std::string function, std::string value)
 {
-	if (log_file.is_open() == false)
+	if (!log_file.is_open())
 	{
+		if (log_file.bad()) return;
 		log_file.open(log_path);
 		log_file.clear();
 	}

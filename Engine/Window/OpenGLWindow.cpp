@@ -25,16 +25,15 @@ namespace Engine
 			glDebugMessageCallback(glDebugOutput, nullptr);
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 		}
-
-		GLFWwindow* windowPointer = window.get();
-		const int major = glfwGetWindowAttrib(windowPointer, GLFW_CONTEXT_VERSION_MAJOR);
-		const int minor = glfwGetWindowAttrib(windowPointer, GLFW_CONTEXT_VERSION_MINOR);
-		const int revision = glfwGetWindowAttrib(windowPointer, GLFW_CONTEXT_REVISION);
+		
+		const int major = glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR);
+		const int minor = glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR);
+		const int revision = glfwGetWindowAttrib(window, GLFW_CONTEXT_REVISION);
 		debug_info("OpenGLWindow", "Constructor",
 		           std::string(std::string("OpenGL Version ") + std::to_string(major) + "." + std::to_string(
 			           minor) + "." + std::to_string(revision)));
 
-		glfwMakeContextCurrent(windowPointer);
+		glfwMakeContextCurrent(window);
 		//glfwSwapInterval(1);
 
 		glewExperimental = true; // Required because we use the Core profile (line 15)

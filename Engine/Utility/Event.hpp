@@ -14,6 +14,7 @@
 
 #include "Engine/Api.hpp"
 #include <list>
+#include <memory>
 
 namespace Sharp    // short for SharpTools
 {
@@ -39,10 +40,10 @@ namespace Sharp    // short for SharpTools
 		EventHandlerImplBase& operator=(const EventHandlerImplBase& other) = delete;
 		EventHandlerImplBase& operator=(EventHandlerImplBase&& other) noexcept = delete;
 
-		virtual bool IsBoundToSameFunctionAs(EventHandlerImplBase<T...>*) = 0;   // verify if both handlers are bound to the same function.
+		virtual bool IsBoundToSameFunctionAs(std::shared_ptr<EventHandlerImplBase<T...>>) = 0;   // verify if both handlers are bound to the same function.
 
 		/** convenient function to make inheriting classes implementation of IsBoundToSameFunctionAs a little bit easier*/
-		bool IsSameType(EventHandlerImplBase<T...>* pHandler2) {
+		bool IsSameType(std::shared_ptr<EventHandlerImplBase<T...>> pHandler2) {
 			if (!pHandler2 ||  // a null pointer can never be the same as one that points to an actual handler
 				typeid(*this) != typeid(*pHandler2))
 				return false;
@@ -75,12 +76,12 @@ namespace Sharp    // short for SharpTools
 		}
 
 		/** verify if this handler will eventually call the same function as the passed handler. */
-		virtual bool IsBoundToSameFunctionAs(EventHandlerImplBase<T...>*pHandler2) override {
+		virtual bool IsBoundToSameFunctionAs(std::shared_ptr<EventHandlerImplBase<T...>> pHandler2) override {
 			if (!IsSameType(pHandler2))
 				return false;
 
 			// they are the same type so we can safely cast to this class type
-			EventHandlerImplForNonMemberFunction<T...>* pHandlerCast = dynamic_cast<EventHandlerImplForNonMemberFunction<T...>*>(pHandler2);
+			std::shared_ptr<EventHandlerImplForNonMemberFunction<T...>> pHandlerCast = std::dynamic_pointer_cast<EventHandlerImplForNonMemberFunction<T...>>(pHandler2);
 			if (!pHandlerCast) {
 				// error, should never happen
 				return false;
@@ -109,12 +110,12 @@ namespace Sharp    // short for SharpTools
 		}
 
 		/** verify if this handler will eventually call the same function as the passed handler. */
-		virtual bool IsBoundToSameFunctionAs(EventHandlerImplBase<T...>*pHandler2) override {
+		virtual bool IsBoundToSameFunctionAs(std::shared_ptr<EventHandlerImplBase<T...>> pHandler2) override {
 			if (!IsSameType(pHandler2))
 				return false;
 
 			// they are the same type so we can safely cast to this class type
-			EventHandlerImplForMemberFunction<U, T...>* pHandlerCast = dynamic_cast<EventHandlerImplForMemberFunction<U, T...>*>(pHandler2);
+			std::shared_ptr<EventHandlerImplForMemberFunction<U, T...>> pHandlerCast = std::dynamic_pointer_cast<EventHandlerImplForMemberFunction<U, T...>>(pHandler2);
 			if (!pHandlerCast) {
 				// error, should never happen
 				return false;
@@ -157,14 +158,14 @@ namespace Sharp    // short for SharpTools
 		 * and so Event would destroy that memory when it no longer need it. So make sure not to keep the returned pointer yourself.
 		 */
 		template<typename... T>
-		static EventHandlerImpl<T...>* Bind(void(*nonMemberFunctionToCall)(T...)) {
-			return new EventHandlerImplForNonMemberFunction<T...>(nonMemberFunctionToCall);
+		static std::shared_ptr<EventHandlerImpl<T...>> Bind(void(*nonMemberFunctionToCall)(T...)) {
+			return std::make_shared<EventHandlerImplForNonMemberFunction<T...>>(nonMemberFunctionToCall());
 		}
 
 		/** @overload */
 		template<typename U, typename... T>
-		static EventHandlerImpl<T...>* Bind(U* thisPtr, void(U::* memberFunctionToCall)(T...)) {
-			return new EventHandlerImplForMemberFunction<U, T...>(thisPtr, memberFunctionToCall);
+		static std::shared_ptr<EventHandlerImpl<T...>> Bind(U* thisPtr, void(U::* memberFunctionToCall)(T...)) {
+			return std::make_shared<EventHandlerImplForMemberFunction<U, T...>>(thisPtr, memberFunctionToCall);
 		}
 
 		EventHandler() = delete;  // default constructor made private to prevent creating instances of this class. EventHandler only purpose is to provide Event with the Bind function
@@ -187,21 +188,23 @@ namespace Sharp    // short for SharpTools
 	class EventBase {
 	public:
 		EventBase() = default;
+		virtual ~EventBase() = default;
 
 		/**
 		 * it is by design that Event is the owner of the memory of all the handlers assigned to it
 		 * so it is the duty of the destructor to erase that memory
 		 * @see Eventhandler Bind function documentation for more details
 		 */
-		virtual ~EventBase() {
-			for (EventHandlerImpl<T...>* handler : m_eventHandlers) {
-				if (handler) {
-					delete handler;
-					handler = nullptr;  // just to be consistent
-				}
-			}
-			m_eventHandlers.clear();
-		}
+		//virtual ~EventBase() {
+		//	for (std::shared_ptr<EventHandlerImplBase<T...>> handler : m_eventHandlers) {
+		//		if (handler) {
+		//			handler.reset();
+		//			//delete handler;
+		//			//handler = nullptr;  // just to be consistent
+		//		}
+		//	}
+		//	m_eventHandlers.clear();
+		//}
 
 		EventBase(const EventBase& other) = delete;
 		EventBase(EventBase&& other) noexcept = delete;
@@ -222,7 +225,7 @@ namespace Sharp    // short for SharpTools
 		 * In short, before your bound class instance is destroyed, make sure to unbind it. Otherwise, the bound event might try to make a call through your destroyed instance.
 		 * @note : For completeness, you are warned NOT to store the returned value of Eventhandler::Bind() yourself, as after this call, Event becomes the owner of the implicitly created EventHandlerImpl<T> and it later destroys it.
 		 */
-		EventBase<T...>& operator += (EventHandlerImpl<T...>* pHandlerToAdd) {
+		void operator += (std::shared_ptr<EventHandlerImpl<T...>> pHandlerToAdd) {
 			// bellow is commented because we decided to let the user add the same handler multiple time and make it his responsibility to remove all those added
 			//if( FindHandlerWithSameBinding(pHandlerToAdd) != m_eventHandlers.end())
 
@@ -230,8 +233,6 @@ namespace Sharp    // short for SharpTools
 				// the handler added bellow along with all handlers in the list will be called later when an event is raised
 				m_eventHandlers.push_back(pHandlerToAdd);
 			}
-
-			return *this;
 		}
 
 		/**
@@ -239,19 +240,17 @@ namespace Sharp    // short for SharpTools
 		 * @note : removing a handler that was already removed is harmless, as this call does nothing and simply return when it does not find the handler.
 		 * {@code myEvent -= EventHandler::Bind(this, &ThisClass::OnMessage);}  // example of unbinding in destructor
 		 */
-		EventBase<T...>& operator -= (EventHandlerImpl<T...>* pHandlerToRemove) {
+		void operator -= (std::shared_ptr<EventHandlerImpl<T...>> pHandlerToRemove) {
 			if (!pHandlerToRemove)
-				return *this;  // a null passed, so nothing to do
+				return;  // a null passed, so nothing to do
 
 			// search for a handler that has the same binding as the passed one
-			for (EventHandlerImpl<T...>* handler : m_eventHandlers) {
+			for (std::shared_ptr<EventHandlerImpl<T...>> handler : m_eventHandlers) {
 				if (pHandlerToRemove->IsBoundToSameFunctionAs(handler)) {
 					// erase the memory that was created by the Bind function
 					// this memory is that of an EventHandler class and has nothing to do with the actual functions/class passed to it on Bind
-					if (handler) {
-						delete handler;
-						handler = 0;
-					}
+					if (handler)
+						handler.reset();
 
 					// remove it form the list (safe to do it here as we'll break the loop)
 					m_eventHandlers.remove(handler);
@@ -260,16 +259,12 @@ namespace Sharp    // short for SharpTools
 			}
 
 			// also delete the passed handler as we don't need it anymore (by design, Event always owns the memory of the handlers passed to it)
-			if (pHandlerToRemove) {
-				delete pHandlerToRemove;
-				pHandlerToRemove = 0;
-			}
-
-			return *this;
+			if (pHandlerToRemove)
+				pHandlerToRemove.reset();
 		}
 
 	protected:
-		std::list< EventHandlerImpl<T...>*> m_eventHandlers;  // all handlers will be notified when operator() is called.
+		std::list<std::shared_ptr<EventHandlerImpl<T...>>> m_eventHandlers;  // all handlers will be notified when operator() is called.
 	};
 
 	//------------------------------------
@@ -286,7 +281,7 @@ namespace Sharp    // short for SharpTools
 		*/
 		void operator()(T... eventData) {
 			// raise the event by telling all the handlers
-			for (EventHandlerImpl<T...>* handler : m_eventHandlers) {
+			for (std::shared_ptr<EventHandlerImpl<T...>> handler : m_eventHandlers) {
 				if (handler)
 					handler->OnEvent(eventData...);  // this is a virtual function that will eventually call the function passed to Eventhandler::Bind() for this handler
 			}

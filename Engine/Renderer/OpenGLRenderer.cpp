@@ -13,7 +13,7 @@ namespace Engine {
 	OpenGLRenderer::OpenGLRenderer(const std::string& vertexShader, const std::string& fragmentShader)
 	{
 		window = Window::Get();
-		ImGui_ImplGlfwGL3_Init(window->GetGlfwWindow().get());
+		ImGui_ImplGlfwGL3_Init(window->GetGlfwWindow());
 		window->OnWindowShutdownRequestedEvent += Sharp::EventHandler::Bind(this, &OpenGLRenderer::HandleOnWindowShutdownRequestedEvent);
 
 		this->shader = std::shared_ptr<OpenGLShader>(new OpenGLShader(vertexShader, fragmentShader));
@@ -100,7 +100,7 @@ namespace Engine {
 	{
 		ImGui::Render();
 		shader->Deactivate();
-		glfwSwapBuffers(Window::Get()->GetGlfwWindow().get());
+		glfwSwapBuffers(Window::Get()->GetGlfwWindow());
 	}
 
 	void OpenGLRenderer::HandleOnWindowShutdownRequestedEvent(const std::shared_ptr<Window> windowPtr) {

@@ -82,7 +82,7 @@ namespace Engine {
 		/// Allows you to get the glfw pointer.
 		/// </summary>
 		/// <returns>Returns the glfw pointer as a shared pointer.</returns>
-		[[nodiscard]] std::shared_ptr<GLFWwindow> GetGlfwWindow() const noexcept;
+		[[nodiscard]] GLFWwindow* GetGlfwWindow() const noexcept;
 
 		/// <summary>
 		/// This method allows you to get the title of this window.
@@ -134,7 +134,7 @@ namespace Engine {
 		int displayWidth {};
 		int height {};
 		int displayHeight {};
-		std::shared_ptr<GLFWwindow> window;
+		GLFWwindow* window = nullptr;
 		std::string title {};
 
 		/// <summary>

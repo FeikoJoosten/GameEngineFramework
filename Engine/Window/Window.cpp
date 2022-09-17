@@ -9,6 +9,7 @@
 
 #include <fstream>
 #include <cereal/archives/json.hpp>
+#include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 
 namespace Engine {
@@ -33,9 +34,7 @@ namespace Engine {
 	}
 
 	Window::~Window() noexcept {
-		debug_info("Window", "~Window", "Destroying Window")
-
-		glfwDestroyWindow(window.get());
+		glfwDestroyWindow(window);
 		glfwTerminate();
 
 		if (settingsPath.length() <= 0) return;
@@ -58,7 +57,7 @@ namespace Engine {
 
 	bool Window::ShouldClose() const noexcept {
 		if (window != nullptr)
-			return glfwWindowShouldClose(window.get());
+			return glfwWindowShouldClose(window);
 		return true;
 	}
 
@@ -67,14 +66,14 @@ namespace Engine {
 			OnWindowShutdownRequestedEvent(Get());
 
 		if (window != nullptr)
-			glfwSetWindowShouldClose(window.get(), static_cast<int>(value));
+			glfwSetWindowShouldClose(window, value);
 	}
 
 	HWND Window::GetWindowHandle() const noexcept {
-		return glfwGetWin32Window(window.get());
+		return glfwGetWin32Window(window);
 	}
 
-	std::shared_ptr<GLFWwindow> Window::GetGlfwWindow() const noexcept {
+	GLFWwindow* Window::GetGlfwWindow() const noexcept {
 		return window;
 	}
 
@@ -88,7 +87,7 @@ namespace Engine {
 
 	void Window::SetWidth(const int newWidth) {
 		if (window)
-			OnWindowResized(window.get(), newWidth, height);
+			OnWindowResized(window, newWidth, height);
 	}
 
 	int Window::GetDisplayWidth() const noexcept {
@@ -101,7 +100,7 @@ namespace Engine {
 
 	void Window::SetHeight(const int newHeight) {
 		if (window)
-			OnWindowResized(window.get(), width, newHeight);
+			OnWindowResized(window, width, newHeight);
 	}
 
 	int Window::GetDisplayHeight() const noexcept {
@@ -128,6 +127,8 @@ namespace Engine {
 	}
 
 	void Window::CreateInternalWindow() {
+		if (window) return;
+
 		glfwSetErrorCallback(ErrorCallback);
 		if (!glfwInit()) {
 			glfwTerminate();
@@ -136,7 +137,7 @@ namespace Engine {
 		}
 
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-		window = std::shared_ptr<GLFWwindow>(glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr));
+		window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 
 		if (!window) {
 			glfwTerminate();
@@ -144,8 +145,8 @@ namespace Engine {
 			return;
 		}
 
-		glfwSetWindowSizeCallback(window.get(), WindowResizeCallback);
-		OnWindowResized(window.get(), width, height);
+		glfwSetWindowSizeCallback(window, WindowResizeCallback);
+		OnWindowResized(window, width, height);
 	}
 
 	void Window::WindowResizeCallback(GLFWwindow* glfwWindow, const int width, const int height) {
