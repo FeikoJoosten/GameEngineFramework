@@ -13,8 +13,7 @@
 #include <gainput/gainput.h>
 #include <gainput/GainputInputMap.h>
 
-namespace Engine
-{
+namespace Engine {
 	bool open = true;
 
 	ImGuiWindowFlags menuBarWindowFlags =
@@ -56,8 +55,7 @@ namespace Engine
 
 	gainput::InputMap* map = nullptr;
 
-	EngineImGui::EngineImGui()
-	{
+	EngineImGui::EngineImGui() {
 		inputManager = InputManager::Get();
 		renderer = Renderer::Get();
 		renderer.lock()->PostRenderComponentsRenderEvent += Sharp::EventHandler::Bind(this, &EngineImGui::Render);
@@ -82,24 +80,20 @@ namespace Engine
 		map->MapFloat(MouseY, mouseDeviceId, gainput::MouseAxisY);
 	}
 
-	EngineImGui::~EngineImGui()
-	{
+	EngineImGui::~EngineImGui() {
 		delete map;
 		renderer.lock()->PostRenderComponentsRenderEvent -= Sharp::EventHandler::Bind(this, &EngineImGui::Render);
 	}
 
-	void EngineImGui::Render()
-	{
+	void EngineImGui::Render() {
 		if (allowCameraMovement)
 			CameraMovement();
 
 		const gainput::InputDevice* keyboard = inputManager.lock()->GetInputManager().GetDevice(
 			inputManager.lock()->GetKeyboardId());
 
-		if (keyboard->GetBool(gainput::KeyCtrlL) && keyboard->GetBool(gainput::KeyShiftL) && keyboard->GetBool(gainput::KeyE))
-		{
-			if (devMenuCooldown < 0.f)
-			{
+		if (keyboard->GetBool(gainput::KeyCtrlL) && keyboard->GetBool(gainput::KeyShiftL) && keyboard->GetBool(gainput::KeyE)) {
+			if (devMenuCooldown < 0.f) {
 				showMenuBar = !showMenuBar;
 				devMenuCooldown = 0.25f;
 			}
@@ -107,21 +101,15 @@ namespace Engine
 		if (devMenuCooldown >= 0.f)
 			devMenuCooldown -= Time::Get()->GetDeltaTime();
 
-		if (showMenuBar)
-		{
-			DevMenu();
-		}
+		if (showMenuBar) DevMenu();
 	}
 
-	void EngineImGui::DevMenu()
-	{
+	void EngineImGui::DevMenu() {
 		ImGui::Begin("Menubar demo", &open, menuBarWindowFlags);
 
 		ImGui::BeginMenuBar();
-		if (ImGui::BeginMenu("Menu"))
-		{
-			if (ImGui::BeginMenu("Engine"))
-			{
+		if (ImGui::BeginMenu("Menu")) {
+			if (ImGui::BeginMenu("Engine")) {
 				if (ImGui::MenuItem("Close game"))
 					Window::Get()->SetShouldClose(true);
 				if (ImGui::MenuItem("Toggle Camera Movement"))
@@ -146,8 +134,7 @@ namespace Engine
 		ImGui::End();
 	}
 
-	void EngineImGui::CameraMovement()
-	{
+	void EngineImGui::CameraMovement() {
 		// TODO: Replace this with scene view window
 		if (ImGui::GetIO().WantTextInput) return;
 
@@ -157,7 +144,7 @@ namespace Engine
 
 		// TODO: Replace with more efficient method of retrieving first active camera
 		// Ideally this is even replaced with an engine only camera
-		if(activeCamera.expired() || !activeCamera.lock()->GetIsEnabled()) {
+		if (activeCamera.expired() || !activeCamera.lock()->GetIsEnabled()) {
 			const std::vector<std::shared_ptr<CameraComponent>> allActiveCameras = CameraManager::Get()->GetAllActiveCameras();
 			if (allActiveCameras.empty()) return;
 
@@ -191,7 +178,7 @@ namespace Engine
 			lockedCameraTransformComponent->Rotate(glm::quat(glm::vec3(-deltaRotationSpeed, 0.f, 0.f)));
 		if (map->GetBool(RotateDown))
 			lockedCameraTransformComponent->Rotate(glm::quat(glm::vec3(deltaRotationSpeed, 0.f, 0.f)));
-		if(map->GetBool(EnableMouseRotation)) {
+		if (map->GetBool(EnableMouseRotation)) {
 			lockedCameraTransformComponent->Rotate(
 				glm::quat(
 					glm::vec3(
