@@ -49,7 +49,7 @@ namespace Engine
 		// or a missing root node (any successful import returns rood node)
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
-			debug_warning("ResourceManager", "CreateModel", importer.GetErrorString());
+			DEBUG_WARNING(importer.GetErrorString());
 			return std::shared_ptr<Model>();
 		}
 
@@ -83,7 +83,7 @@ namespace Engine
 		// or a missing root node (any successful import returns rood node)
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
-			debug_warning("ResourceManager", "CreateSkeleton", importer.GetErrorString());
+			DEBUG_WARNING(importer.GetErrorString());
 			return std::shared_ptr<Skeleton>();
 		}
 

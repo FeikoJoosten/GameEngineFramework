@@ -29,8 +29,7 @@ namespace Engine
 		const int major = glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR);
 		const int minor = glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR);
 		const int revision = glfwGetWindowAttrib(window, GLFW_CONTEXT_REVISION);
-		debug_info("OpenGLWindow", "Constructor",
-		           std::string(std::string("OpenGL Version ") + std::to_string(major) + "." + std::to_string(
+		DEBUG_INFO(std::string(std::string("OpenGL Version ") + std::to_string(major) + "." + std::to_string(
 			           minor) + "." + std::to_string(revision)));
 
 		glfwMakeContextCurrent(window);
@@ -39,7 +38,7 @@ namespace Engine
 		glewExperimental = true; // Required because we use the Core profile (line 15)
 		GLenum glewError = glewInit();
 		if (glewError != GLEW_OK) {
-			debug_error("OpenGLWindow", "Constructor", "Failed to initialize OpenGL context");
+			DEBUG_ERROR("Failed to initialize OpenGL context");
 			return;
 		}
 

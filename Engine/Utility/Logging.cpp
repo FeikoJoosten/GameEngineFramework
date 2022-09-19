@@ -1,40 +1,92 @@
-#include <Engine/Utility/Logging.hpp>
+#include "Engine/Utility/Logging.hpp"
+#include "Engine/AssetManagement/AssetManager.hpp"
+
+#include <chrono>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <iomanip>
-#include <ctime>
-#include <fstream>
-#ifdef COUT_LOGGING
-#include <iostream>
-#endif
+#include <sstream>
 
-std::ofstream log_file;
+static bool firstWrite = true;
+static inline char* logPath;
 
-void doDebug(std::string Type, std::string debugClass, std::string function, std::string value)
-{
-	if (!log_file.is_open())
-	{
-		if (log_file.bad()) return;
-		log_file.open(log_path);
-		log_file.clear();
+constexpr bool IsPathSep(const char c) {
+	return c == '/' || c == '\\';
+}
+
+constexpr const char* StripPath(const char* path) {
+	const char* lastname = path;
+	for (const char* p = path; *p; ++p) {
+		if (IsPathSep(*p) && *(p + 1)) lastname = p + 1;
+	}
+	return lastname;
+}
+
+struct BasenameImpl {
+	constexpr BasenameImpl(const char* begin, const char* end) : begin(begin), end(end) {}
+
+	void Write(std::ostream& os) const {
+		os.write(begin, end - begin);
 	}
 
-	//get time
-	struct tm buff;
-	time_t ltime = time(nullptr);
+	const char* const begin;
+	const char* const end;
+};
 
-	//prepare string buffer
-	char str[26];
+inline std::ostream& operator<<(std::ostream& os, const BasenameImpl& bi) {
+	bi.Write(os);
+	return os;
+}
 
-	//convert time to string
-	localtime_s(&buff, &ltime);
-	asctime_s(str, sizeof str, &buff);
+constexpr const char* LastDotOf(const char* p) {
+	const char* lastDot = nullptr;
+	for (; *p; ++p) {
+		if (*p == '.')
+			lastDot = p;
+	}
+	return lastDot ? lastDot : p;
+}
 
-	//pass on time string
-	std::string timeString = std::string(str).substr(0, 24);
-	std::string logString = "[" + timeString + "] " + Type + " [" + debugClass + "::" + function + "]: " + value + "\n";
-	log_file << logString.c_str();
-	log_file.close();
-#ifdef COUT_LOGGING
-	std::cout << logString.c_str() << std::endl;
+void DoDebug(const char* debugLevel, const char* classPath, const char* function, const int lineNumber, const std::string& value) {
+		const char* classFileName = StripPath(classPath);
+	const BasenameImpl classType = BasenameImpl(classFileName, LastDotOf(classFileName));
+	const __time64_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+	std::ostringstream outputStream;
+
+	outputStream
+#if LOGGING_INCLUDE_DATE
+		<< "[" << std::put_time(gmtime(&currentTime), LOGGING_DATE_TIME_FORMAT) << "] "
+#endif
+#if LOGGING_INCLUDE_DEBUG_LEVEL
+		<< debugLevel
+#endif
+		<< "["
+#if LOGGING_INCLUDE_CLASS_TYPE
+		<< classType << "::"
+#endif
+		<< function << "]@" << lineNumber << " " << value << std::endl;
+	const std::string outputString = outputStream.str();
+
+	if (firstWrite) {
+		std::string projectRoot = Engine::AssetManager::Get()->GetProjectRoot();
+		std::string fullLogPath = projectRoot + LOG_PATH;
+		logPath = new char[fullLogPath.size()]();
+		strcpy(logPath, fullLogPath.c_str());
+		if (std::filesystem::exists(logPath))
+			std::filesystem::rename(logPath, fullLogPath + ".old");
+		firstWrite = false;
+	}
+
+	if (logPath) {
+		std::ofstream logFile;
+		logFile.open(logPath);
+		logFile.clear();
+		logFile << outputString;
+		logFile.close();
+	}
+#if COUT_LOGGING
+	std::cout << outputString;
 #endif
 }

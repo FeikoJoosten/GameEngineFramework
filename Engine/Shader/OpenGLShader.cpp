@@ -40,7 +40,7 @@ namespace Engine
 			GLchar *log = static_cast<GLchar *>(malloc(logLength));
 			glGetShaderInfoLog(*shader, logLength, &logLength, log);
 			const std::string logInfo = log;
-			debug_info("OpenGLShader", "CompileShader", std::string("Shader compile log: \n " + logInfo));
+			DEBUG_INFO(std::string("Shader compile log: \n " + logInfo));
 			free(log);
 		}
 
@@ -72,7 +72,7 @@ namespace Engine
 			GLchar *log = static_cast<GLchar *>(malloc(logLength));
 			glGetProgramInfoLog(prog, logLength, &logLength, log);
 			std::string logInfo = log;
-			debug_info("OpenGLShader", "LinkProgram", std::string("Program link log: \n " + logInfo));
+			DEBUG_INFO(std::string("Program link log: \n " + logInfo));
 			free(log);
 		}
 

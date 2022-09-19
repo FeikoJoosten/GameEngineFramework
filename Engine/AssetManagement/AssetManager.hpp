@@ -48,7 +48,7 @@ namespace Engine {
 	template <typename T> void AssetManager::WriteDataToPath(const std::string& fullPath, T data, bool writeNameValuePairs) {
 		if (const std::string desiredDirectoryPath = GetDirectoryFromPath(fullPath); !std::filesystem::is_directory(desiredDirectoryPath)) {
 			if (!std::filesystem::create_directories(desiredDirectoryPath)) {
-				debug_error("AssetManager", " WriteDataToPath", "Failed to create directories for path: " + fullPath);
+				DEBUG_ERROR("Failed to create directories for path: " + fullPath);
 				return;
 			}
 		}

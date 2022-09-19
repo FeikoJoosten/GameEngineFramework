@@ -81,7 +81,6 @@ namespace Engine {
 	}
 
 	EngineImGui::~EngineImGui() {
-		delete map;
 		renderer.lock()->PostRenderComponentsRenderEvent -= Sharp::EventHandler::Bind(this, &EngineImGui::Render);
 	}
 

@@ -5,13 +5,13 @@ namespace Engine {
 	int Random::GenerateInt(const int& min, const int& max) {
 		//Generate a number with the passed min and max flipped if the passed min is bigger than max
 		if (min > max) {
-			debug_warning("Random", "GenerateInt", "Passed Min value is larger than passed Max, returning GenerateInt() with passed Min as Max and passed Max as Min.")
+			DEBUG_WARNING("Passed Min value is larger than passed Max, returning GenerateInt() with passed Min as Max and passed Max as Min.")
 			return GenerateInt(max, min);
 		}
 
 		//Return the passed min if the passed min and max are the same
 		if (min == max) {
-			debug_warning("Random", "GenerateInt", "Min and Max values passed have the same value, returning passed Min value.")
+			DEBUG_WARNING("Min and Max values passed have the same value, returning passed Min value.")
 			return min;
 		}
 
@@ -22,13 +22,13 @@ namespace Engine {
 	float Random::GenerateFloat(const float& min, const float& max) {
 		//Generate a number with the passed min and max flipped if the passed min is bigger than max
 		if (min > max) {
-			debug_warning("Random", "GenerateFloat", "Passed Min value is larger than passed Max, returning GenerateInt() with passed Min as Max and passed Max as Min.")
+			DEBUG_WARNING("Passed Min value is larger than passed Max, returning GenerateInt() with passed Min as Max and passed Max as Min.")
 			return GenerateFloat(max, min);
 		}
 
 		//Return the passed min if the passed min and max are the pretty much same
 		if (min - max <= 0.000001f) {
-			debug_warning("Random", "GenerateFloat", "Min and Max values passed have the same value, returning passed Min value.")
+			DEBUG_WARNING("Min and Max values passed have the same value, returning passed Min value.")
 			return min;
 		}
 

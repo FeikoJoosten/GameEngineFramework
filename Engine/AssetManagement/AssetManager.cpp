@@ -1,7 +1,6 @@
 #include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/Engine.hpp"
 
-#include <utility>
 #include <filesystem>
 
 namespace Engine {

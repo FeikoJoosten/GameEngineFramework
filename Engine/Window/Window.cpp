@@ -13,7 +13,7 @@ namespace Engine {
 
 	void ErrorCallback(int error, const char* description) {
 		const std::string errorCallback = "Error: ";
-		debug_error("Window", "Error_callback", errorCallback + description)
+		DEBUG_ERROR(errorCallback + description)
 	}
 
 	Window::Window() noexcept {
