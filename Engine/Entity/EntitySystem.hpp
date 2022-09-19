@@ -1,11 +1,13 @@
 #pragma once
 #include "Engine/Api.hpp"
 #include "Engine/Engine.hpp"
-#include "Engine/Entity/Entity.hpp"
 #include "Engine/Utility/Event.hpp"
 
 namespace Engine
 {
+	class Component;
+	class Entity;
+
 	/// <summary>
 	/// This object keeps track of all available entities. NOTE: only the Engine class is allowed to create this object.
 	/// </summary>
@@ -40,7 +42,7 @@ namespace Engine
 		/// <param name="entityName">The name of the entity you want to create, this is empty by default.</param>
 		/// <param name="teamId">The team id you want to add the entity to. Default is 0</param>
 		/// <returns>Returns the newly created entity as a weak pointer.</returns>
-		std::weak_ptr<Entity> CreateEntity(std::string entityName = "", int teamId = 0);
+		std::weak_ptr<Entity> CreateEntity(std::string entityName = "");
 
 		template<typename EntityType>
 		/// <summary>

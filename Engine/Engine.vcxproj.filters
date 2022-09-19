@@ -545,7 +545,7 @@
     <ClCompile Include="Components\RenderComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="CameraManager.cpp">
+    <ClCompile Include="Camera\CameraManager.cpp">
       <Filter>Source Files\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Application\Application.cpp">

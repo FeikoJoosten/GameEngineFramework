@@ -1,4 +1,5 @@
 #include "Engine/Entity/EntitySystem.hpp"
+#include "Engine/Entity/Entity.hpp"
 #include "Engine/Engine.hpp"
 
 #include <memory>
@@ -17,7 +18,7 @@ namespace Engine
 		entityCount = 0;
 	}
 
-	std::weak_ptr<Entity> EntitySystem::CreateEntity(std::string entityName, int teamId)
+	std::weak_ptr<Entity> EntitySystem::CreateEntity(std::string entityName)
 	{
 		//AddEntity(std::make_shared<Entity>(entityName));
 		AddEntity(std::shared_ptr<Entity>(new Entity(entityName)));

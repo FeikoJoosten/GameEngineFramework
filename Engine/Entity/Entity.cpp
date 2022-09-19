@@ -3,7 +3,7 @@
 #include "Engine/Entity/EntitySystem.hpp"
 
 namespace Engine {
-	Entity::Entity(std::string name) : name(std::move(name)), id(-1), isActive(true) {}
+	Entity::Entity(std::string name) : id(-1), name(std::move(name)), isActive(true) {}
 
 	std::vector<std::shared_ptr<Component>> Entity::GetAllComponents() const {
 		return components;
@@ -38,7 +38,10 @@ namespace Engine {
 	}
 
 	void Entity::SetIsActive(const bool newIsActive) {
+		if (newIsActive == isActive) return;
+
 		isActive = newIsActive;
+		OnActiveStateChangedEvent(GetPointer().lock(), isActive);
 	}
 
 	void Entity::SetId(const int newId) {
@@ -54,15 +57,5 @@ namespace Engine {
 	void Entity::OnComponentRemoved(const std::shared_ptr<Component> removedComponent) const {
 		for (size_t i = 0, size = components.size(); i < size; ++i)
 			components[i]->OnComponentRemoved(removedComponent);
-	}
-
-	void Entity::OnBeginContact(const std::shared_ptr<Entity> entity) const {
-		for (size_t i = 0, size = components.size(); i < size; ++i)
-			components[i]->OnBeginContact(entity);
-	}
-
-	void Entity::OnEndContact(const std::shared_ptr<Entity> entity) const {
-		for (size_t i = 0, size = components.size(); i < size; ++i)
-			components[i]->OnEndContact(entity);
 	}
 } // namespace Engine

@@ -1,6 +1,8 @@
 #pragma once
+
 #include "Engine/Api.hpp"
 #include "Engine/Components/Component.hpp"
+#include "Engine/Entity/EntitySystem.hpp"
 #include "Engine/Utility/Event.hpp"
 
 namespace Engine {
@@ -8,12 +10,25 @@ namespace Engine {
 	/// This object is a holder object for components. NOTE: only the EntitySystem is allowed to create this object.
 	/// </summary>
 	class ENGINE_API Entity {
+	protected:
+		friend std::weak_ptr<Entity> EntitySystem::CreateEntity(std::string entityName);
+		friend void EntitySystem::AddEntity(std::shared_ptr<Entity> entityToAdd);
+
+		int id {};
+		std::vector<std::shared_ptr<Component>> components {};
+
+		explicit Entity(std::string name = "");
+
 	public:
+		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentAddedEvent;
+		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentRemovedEvent;
+		Sharp::Event<std::shared_ptr<Entity>, bool> OnActiveStateChangedEvent;
+
 		virtual ~Entity() = default;
-		Entity(const Entity& other) = default;
-		Entity(Entity&& other) = default;
-		Entity& operator=(const Entity& other) = default;
-		Entity& operator=(Entity&& other) = default;
+		Entity(const Entity& other) = delete;
+		Entity(Entity&& other) = delete;
+		Entity& operator=(const Entity& other) = delete;
+		Entity& operator=(Entity&& other) = delete;
 
 		template<typename ComponentType>
 		/// <summary>
@@ -101,21 +116,9 @@ namespace Engine {
 		/// </summary>
 		/// <param name="newIsActive">This value will define if this entity will be active or not.</param>
 		void SetIsActive(bool newIsActive);
-
-		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentAddedEvent;
-		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentRemovedEvent;
-
-	protected:
-		int id{};
-		friend class EntitySystem;
-		friend class Map;
-		std::vector<std::shared_ptr<Component>> components{};
-
-		explicit Entity(std::string name = "");
-
+		
 	private:
-
-		bool isActive{};
+		bool isActive {};
 
 		void SetId(int newId);
 		
@@ -123,11 +126,6 @@ namespace Engine {
 
 		void OnComponentAdded(std::shared_ptr<Component> addedComponent) const;
 		void OnComponentRemoved(std::shared_ptr<Component> removedComponent) const;
-
-		// Allows use of OnBeginContact and OnEndContact by EntityContact Callback class
-		friend class EntityContact;
-		void OnBeginContact(std::shared_ptr<Entity> entity) const;
-		void OnEndContact(std::shared_ptr<Entity> entity) const;
 	};
 
 	template <typename ComponentType>
@@ -158,6 +156,7 @@ namespace Engine {
 
 		std::shared_ptr<Component> componentToReturn = components.back();
 		componentToReturn->SetOwner(GetPointer().lock());
+		componentToReturn->SetPointerReference(componentToReturn);
 		OnComponentAdded(componentToReturn);
 
 		for (size_t j = 0, size = components.size(); j < size; ++j)
@@ -180,6 +179,7 @@ namespace Engine {
 
 			std::shared_ptr<Component> componentToReturn = components.back();
 			componentToReturn->SetOwner(GetPointer().lock());
+			componentToReturn->SetPointerReference(componentToReturn);
 			OnComponentAdded(componentToReturn);
 
 			for (size_t j = 0, size = components.size(); j < size; ++j)

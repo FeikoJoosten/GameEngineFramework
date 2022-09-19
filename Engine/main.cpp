@@ -5,6 +5,7 @@
 #include "Engine/Components/TransformComponent.hpp"
 #include "Engine/Components/ModelComponent.hpp"
 #include "Engine/Components/LightComponent.hpp"
+#include "Engine/Entity/Entity.hpp"
 #include "Engine/Entity/EntitySystem.hpp"
 #include "Engine/Window/Window.hpp"
 #include "Engine/Utility/EngineImGui.hpp"

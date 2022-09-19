@@ -278,7 +278,7 @@
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="AssetManagement\Asset.cpp" />
     <ClCompile Include="AssetManagement\AssetManager.cpp" />
-    <ClCompile Include="CameraManager.cpp" />
+    <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Camera\CameraComponent.cpp" />
     <ClCompile Include="Camera\Frustum.cpp" />
     <ClCompile Include="Collision\CollisionSystem.cpp" />

@@ -140,11 +140,9 @@ namespace Engine {
 
 		constexpr float cameraMovementSpeed = 100.f;
 		constexpr float cameraRotationSpeed = 1.f;
-		constexpr float cameraMouseRotationSpeed = 1000.f;
+		constexpr float cameraMouseRotationSpeed = 100.f;
 
-		// TODO: Replace with more efficient method of retrieving first active camera
-		// Ideally this is even replaced with an engine only camera
-		if (activeCamera.expired() || !activeCamera.lock()->GetIsEnabled()) {
+		if (activeCamera.expired() || !activeCamera.lock()->GetIsActiveAndEnabled()) {
 			const std::vector<std::shared_ptr<CameraComponent>> allActiveCameras = CameraManager::Get()->GetAllActiveCameras();
 			if (allActiveCameras.empty()) return;
 

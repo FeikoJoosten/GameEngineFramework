@@ -4,6 +4,8 @@
 #include <vector>
 #include <cereal/cereal.hpp>
 
+#include "Engine/Utility/Event.hpp"
+
 namespace Engine {
 	class Entity;
 
@@ -15,8 +17,10 @@ namespace Engine {
 		friend class Entity;
 		friend class cereal::access;
 
+		Sharp::Event<std::shared_ptr<Component>, bool> OnEnabledStateChangedEvent;
+
 		Component() = default;
-		virtual ~Component() = default;
+		virtual ~Component();
 		Component(const Component& other) = default;
 		Component(Component&& other) = default;
 		Component& operator=(const Component& other) = default;
@@ -30,11 +34,15 @@ namespace Engine {
 
 		/// <summary></summary>
 		/// <returns>Returns the enabled state of this component.</returns> 
-		bool GetIsEnabled() const;
+		[[nodiscard]] bool GetIsEnabled() const;
 
 		/// <summary>Allows you to set the enabled state of a component.</summary>
 		///	<param name="newIsEnabled">The new enabled state of this component.</param>
 		void SetIsEnabled(bool newIsEnabled);
+
+		/// <summary>Allows you to get the enabled state of the component and the active state of the owning entity</summary>
+		/// <returns>Returns true if the component and the owner are enabled and active.</returns> 
+		[[nodiscard]] bool GetIsActiveAndEnabled() const;
 
 		template<typename ComponentType>
 		/// <summary>
@@ -86,6 +94,12 @@ namespace Engine {
 		/// </summary>
 		void RemoveAllComponents() const;
 
+		/// <summary>
+		/// This method allows you to get a direct refence to the weak pointer of this component.
+		/// </summary>
+		/// <returns>Returns the reference of this object as a weak pointer.</returns>
+		[[nodiscard]] std::weak_ptr<Component> GetPointerReference() const;
+
 	protected:
 
 		/// <summary>
@@ -111,21 +125,19 @@ namespace Engine {
 		/// <param name="removedComponent">The component that has been removed.</param>
 		virtual void OnComponentRemoved(std::shared_ptr<Component> removedComponent);
 
-		virtual void OnBeginContact(std::shared_ptr<Entity> entity);
-		virtual void OnEndContact(std::shared_ptr<Entity> entity);
-
 	private:
-		/// <summary>
-		/// Sets the owner of this components. Only callable by the Entity class.
-		/// </summary>
-		/// <param name="newOwner">The new owner of this class.</param>
+		bool isEnabled = true;
+		std::weak_ptr<Entity> owner;
+		std::weak_ptr<Component> pointerReference;
+
 		void SetOwner(std::shared_ptr<Entity> newOwner);
+
+		void SetPointerReference(std::weak_ptr<Component> newPointerReference);
+
+		void HandleOnOwnerActiveStateChangedEvent(std::shared_ptr<Entity> owningEntity, bool owningEntityIsActive);
 
 		template<class Archive>
 		void Serialize(Archive& archive);
-
-		bool isEnabled = true;
-		std::weak_ptr<Entity> owner;
 
 	};
 

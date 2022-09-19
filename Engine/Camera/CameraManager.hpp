@@ -13,7 +13,6 @@ namespace Engine {
 	class Entity;
 	class EntitySystem;
 
-	// TODO: Comments
 	class ENGINE_API CameraManager {
 		friend std::shared_ptr<CameraManager> Engine::GetCameraManager() noexcept;
 		friend class Application;
@@ -26,17 +25,19 @@ namespace Engine {
 
 		CameraManager& operator=(const CameraManager& other) = delete;
 		CameraManager& operator=(CameraManager&& other) noexcept = delete;
-		
+
 		static std::shared_ptr<CameraManager> Get();
 
-		[[nodiscard]] std::vector<std::shared_ptr<CameraComponent>> GetAllActiveCameras() const;
+		[[nodiscard]] const std::vector<std::shared_ptr<CameraComponent>>& GetAllActiveCameras() const;
 
 	private:
 		std::shared_ptr<EntitySystem> entitySystem;
 		std::vector<std::shared_ptr<CameraComponent>> allCameras;
+		std::vector<std::shared_ptr<CameraComponent>> allActiveCameras;
 
-		void HandleOnComponentAddedToEntity(std::shared_ptr<Entity> entity, std::shared_ptr<Component> addedComponent);
-		void HandleOnComponentRemovedFromEntity(const std::shared_ptr<Entity> entity, std::shared_ptr<Component> removedComponent);
+		void HandleOnComponentAddedToEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> addedComponent);
+		void HandleOnComponentRemovedFromEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> removedComponent);
+		void HandleOnCameraActiveStateChangedEvent(std::shared_ptr<Component> component, bool isEnabled);
 	};
 }
 

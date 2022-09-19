@@ -41,7 +41,7 @@ namespace Engine
 	{
 		endTime = static_cast<float>(glfwGetTime());
 		deltaTime = beginTime > 0.0f ? endTime - beginTime : 1.0f / 60.0f;
-		previousFramerates[iterations + 1 >= maxIterations ? 0 : iterations + 1] = ImGui::GetIO().Framerate;
-		iterations++;
+		if (++iterations >= maxIterations) iterations = 0;
+		previousFramerates[iterations] = ImGui::GetIO().Framerate;
 	}
 } //namespace Engine

@@ -4,7 +4,7 @@
 /// <summary>
 /// This value determines the current graphics API.
 /// </summary>
-#define RENDERER Vulkan
+#define RENDERER OpenGL
 #endif
 
 #ifdef NDEBUG
@@ -40,4 +40,8 @@
 
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
+#endif
+
+#ifndef GLM_FORCE_LEFT_HANDED
+#define GLM_FORCE_LEFT_HANDED
 #endif
