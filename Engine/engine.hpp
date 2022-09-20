@@ -1,26 +1,25 @@
 #pragma once
 
-#include "Engine/Utility/Defines.hpp"
-#include <cereal/cereal.hpp>
-#include <nameof.hpp>
+#include <memory>
+#include <string>
+#include <vector>
 
-namespace Engine
-{
+namespace Engine {
 	class AssetManager;
 	class CameraManager;
 	class CollisionSystem;
 	class CommandLineArgumentsManager;
+	class EngineAssetManager;
 	class EntitySystem;
-	class SceneManager;
 	class InputManager;
 	class Renderer;
 	class Random;
 	class ResourceManager;
+	class SceneManager;
 	class Time;
 	class Window;
 
-	class Engine
-	{
+	class Engine {
 		friend class Application;
 
 		explicit Engine() = default;
@@ -32,8 +31,6 @@ namespace Engine
 		Engine& operator=(const Engine& other) = delete;
 		Engine& operator=(Engine&& other) noexcept = delete;
 
-		inline static const std::string ENGINE_SETTINGS_PATH = "Engine/";
-
 		/// <summary>
 		/// This method allows you to get a shared pointer of the Window. 
 		/// This method will automatically create the engine for you based on the defined renderer type.
@@ -44,9 +41,9 @@ namespace Engine
 		template<typename WindowType>
 		/// <summary>
 		/// This method allows you to get a weak pointer of the Window based on the defined WindowType.
+		/// If it has not been defined yet, it'll be created for you.
 		/// </summary>
-		/// <returns>Returns a shared pointer of the defined renderer type if possible. 
-		/// Will return an shared pointer if it's not the initialized WindowType.</returns>
+		/// <returns>Returns a shared pointer of the defined renderer type if possible.</returns>
 		static std::shared_ptr<WindowType> GetWindow();
 
 		/// <summary>
@@ -101,33 +98,48 @@ namespace Engine
 		static std::shared_ptr<ResourceManager> GetResourceManager() noexcept;
 
 		/// <summary>
-		/// This method allows you to get a shared pointer of the collision system. If it has not been defined yet, it'll be created for you.
+		/// This method allows you to get a shared pointer of the collision system.
+		/// If it has not been defined yet, it'll be created for you.
 		/// </summary>
 		/// <returns>Returns a shared pointer of the collision system.</returns>
 		static std::shared_ptr<CollisionSystem> GetCollisionSystem() noexcept;
 
 		/// <summary>
 		/// this method allows you to get a shared pointer of the Random class object
+		/// If it has not been defined yet, it'll be created for you.
 		/// </summary>
 		/// <returns>Returns a shared pointer to Random class object</returns>
 		static std::shared_ptr<Random> GetRandom() noexcept;
 
 		/// <summary>
-		///	This method allows you to get a shared pointer of the SceneManager class object
+		///	This method allows you to get a shared pointer of the SceneManager
+		/// If it has not been defined yet, it'll be created for you.
 		///	</summary>
-		///	<returns>Returns a shared pointer to SceneManager class object</returns>
+		///	<returns>Returns a shared pointer to SceneManager</returns>
 		static std::shared_ptr<SceneManager> GetSceneManager() noexcept;
 
 		/// <summary>
-		///	This method allows you to get a shared pointer of the AssetManager class object
+		///	This method allows you to get a shared pointer of the AssetManager
+		/// If it has not been defined yet, it'll be created for you.
 		///	</summary>
-		///	<returns>Returns a shared pointer to AssetManager class object</returns>
+		///	<returns>Returns a shared pointer to AssetManager</returns>
 		static std::shared_ptr<AssetManager> GetAssetManager() noexcept;
 
+		/// <summary>
+		///	This method allows you to get a shared pointer of the EngineAssetManager
+		/// If it has not been defined yet, it'll be created for you.
+		///	</summary>
+		///	<returns>Returns a shared pointer to EngineAssetManager</returns>
+		static std::shared_ptr<EngineAssetManager> GetEngineAssetManager() noexcept;
+
+		/// <summary>
+		///	This method allows you to get a shared pointer of the CommandLineArgumentsManager
+		/// If it has not been defined yet, it'll be created for you.
+		///	</summary>
+		///	<returns>Returns a shared pointer to CommandLineArgumentsManager</returns>
 		static std::shared_ptr<CommandLineArgumentsManager> GetOrCreateCommandLineArgumentsManager(std::vector<std::string> commandLineArguments = {}) noexcept;
-				
+
 	private:
-		static void CreateInstance() noexcept;
 
 		static std::shared_ptr<Engine> instance;
 		std::shared_ptr<Window> window;
@@ -141,31 +153,30 @@ namespace Engine
 		std::shared_ptr<Random> random;
 		std::shared_ptr<SceneManager> sceneManager;
 		std::shared_ptr<AssetManager> assetManager;
+		std::shared_ptr<EngineAssetManager> engineAssetManager;
 		static std::shared_ptr<CommandLineArgumentsManager> commandLineArgumentsManager;
+
+		static void CreateInstance() noexcept;
 	};
 
 	template <typename WindowType>
-	std::shared_ptr<WindowType> Engine::GetWindow()
-	{
+	std::shared_ptr<WindowType> Engine::GetWindow() {
 		CreateInstance();
-		if (instance->window == nullptr)
-			GetWindow();
+		std::shared_ptr<Window> windowInstance = instance->window;
+		if (!windowInstance)
+			windowInstance = GetWindow();
 
-		if (dynamic_cast<WindowType*>(instance->window.get()))
-			return std::static_pointer_cast<WindowType>(instance->window);
-		return std::shared_ptr<WindowType>();
+		return std::dynamic_pointer_cast<WindowType>(windowInstance);
 	}
 
 	template <typename RendererType>
-	std::shared_ptr<RendererType> Engine::GetRenderer()
-	{
+	std::shared_ptr<RendererType> Engine::GetRenderer() {
 		CreateInstance();
-		if (instance->renderer == nullptr)
-			GetRenderer();
+		std::shared_ptr<Renderer> rendererInstance = instance->renderer;
+		if (!rendererInstance)
+			rendererInstance = GetRenderer();
 
-		if (dynamic_cast<RendererType*>(instance->renderer.get()))
-			return std::static_pointer_cast<RendererType>(instance->renderer);
-		return std::shared_ptr<RendererType>();
+		return std::dynamic_pointer_cast<RendererType>(rendererInstance);
 	}
 
 } //namespace Engine

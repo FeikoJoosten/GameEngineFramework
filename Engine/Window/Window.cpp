@@ -1,13 +1,13 @@
 #include "Engine/Window/Window.hpp"
 
 #include "Engine/Engine.hpp"
-#include "Engine/AssetManagement/AssetManager.hpp"
+#include "Engine/AssetManagement/EngineAssetManager.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
 #include "Engine/Utility/Logging.hpp"
-#include "Engine/Input/InputManager.hpp"
 
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
+#include <nameof.hpp>
 
 namespace Engine {
 
@@ -19,8 +19,8 @@ namespace Engine {
 	Window::Window() noexcept {
 		const std::string windowType = std::string{ NAMEOF_SHORT_TYPE(Window) };
 		const std::string windowInitializationDataType = std::string { NAMEOF_SHORT_TYPE(WindowInitializationData) };
-		settingsPath = AssetManager::Get()->GetProjectRoot() + Engine::ENGINE_SETTINGS_PATH + windowType + "/" + windowInitializationDataType + ".settings";
-		const WindowInitializationData initializationData = AssetManager::ReadDataFromPath<WindowInitializationData>(settingsPath);
+		settingsPath = windowType + "/" + windowInitializationDataType + EngineAssetManager::ENGINE_SETTINGS_FILE_TYPE;
+		const WindowInitializationData initializationData = EngineAssetManager::ReadDataFromPath<WindowInitializationData>(settingsPath);
 
 		width = initializationData.windowWidth;
 		height = initializationData.windowHeight;
@@ -43,7 +43,7 @@ namespace Engine {
 			title
 		};
 
-		AssetManager::WriteDataToPath(settingsPath, initializationData);
+		EngineAssetManager::WriteDataToPath(settingsPath, initializationData);
 	}
 
 	std::shared_ptr<Window> Window::Get() {
@@ -158,7 +158,8 @@ namespace Engine {
 
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 		window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-		glfwSetWindowPos(window, xPosition, yPosition);
+		if(xPosition > 0 || yPosition > 0) // Only assign the position if it's not the default, otherwise you cannot move the window with the cursor
+			glfwSetWindowPos(window, xPosition, yPosition);
 
 		if (!window) {
 			glfwTerminate();

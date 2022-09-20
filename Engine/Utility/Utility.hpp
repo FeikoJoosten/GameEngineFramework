@@ -12,5 +12,7 @@ namespace Engine
 	public:
 		static std::vector<char> ReadFile(const std::string& fileName, int fileOpenMode = 1);
 		static bool FileExists(const std::string& fileName, bool isFullPath = false);
+
+		static std::string GetDirectoryFromPath(const std::string& path);
 	};
 } // namespace Engine

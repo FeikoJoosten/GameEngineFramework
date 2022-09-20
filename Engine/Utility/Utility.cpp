@@ -35,4 +35,11 @@ namespace Engine
 
 		return fileExists;
 	}
+
+	std::string Utility::GetDirectoryFromPath(const std::string& path) {
+		const size_t pos = path.find_last_of("\\/");
+		return (std::string::npos == pos)
+			? std::string()
+			: path.substr(0, pos);
+	}
 } // namespace Engine

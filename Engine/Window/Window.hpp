@@ -17,6 +17,8 @@
 #include <memory>
 #include <string>
 
+#include <cereal/cereal.hpp>
+
 namespace Engine {
 	/// <summary>
 	/// This object stores any information regarding the created GLFW window.

@@ -78,6 +78,7 @@ namespace Engine {
 
 		// ImGuiRenderer handles the main menu menu's. It works standalone, but has to be cleared in the correct order.
 		//std::unique_ptr<ImGuiRenderer> imGuiRenderer = std::make_unique<ImGuiRenderer>();
+		// This should be created by the scene view window instead of here
 		const std::shared_ptr<EntitySystem> entitySystem = EntitySystem::Get();
 		const std::shared_ptr<Entity> cameraEntity = entitySystem->CreateEntity("Camera").lock();
 		cameraEntity->AddComponent<TransformComponent>(glm::vec3(0.f, 100.f, 200.f), glm::vec3(0.f, glm::radians(180.f), 0.f));

@@ -99,7 +99,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;_DEBUG;Engine_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)Engine\ThirdParty;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -122,7 +122,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;_DEBUG;Engine_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)Engine\ThirdParty;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
@@ -149,7 +149,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;NDEBUG;Engine_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)Engine\ThirdParty;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -176,7 +176,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;NDEBUG;Engine_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)Engine\ThirdParty;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -200,6 +200,7 @@
     <ClInclude Include="Application\Application.hpp" />
     <ClInclude Include="AssetManagement\Asset.hpp" />
     <ClInclude Include="AssetManagement\AssetManager.hpp" />
+    <ClInclude Include="AssetManagement\EngineAssetManager.hpp" />
     <ClInclude Include="Camera\CameraManager.hpp" />
     <ClInclude Include="Camera\CameraComponent.hpp" />
     <ClInclude Include="Camera\Frustum.hpp" />
@@ -258,6 +259,7 @@
     <ClInclude Include="Texture\OpenGLTexture.hpp" />
     <ClInclude Include="Texture\Texture.hpp" />
     <ClInclude Include="Texture\VulkanTexture.hpp" />
+    <ClInclude Include="ThirdParty\sago\PlatformFolders.hpp" />
     <ClInclude Include="Utility\EngineSettings.hpp" />
     <ClInclude Include="Utility\Light.hpp" />
     <ClInclude Include="Utility\Logging.hpp" />
@@ -278,6 +280,7 @@
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="AssetManagement\Asset.cpp" />
     <ClCompile Include="AssetManagement\AssetManager.cpp" />
+    <ClCompile Include="AssetManagement\EngineAssetManager.cpp" />
     <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Camera\CameraComponent.cpp" />
     <ClCompile Include="Camera\Frustum.cpp" />
@@ -290,7 +293,7 @@
     <ClCompile Include="Components\LightComponent.cpp" />
     <ClCompile Include="Components\ModelComponent.cpp" />
     <ClCompile Include="Components\TransformComponent.cpp" />
-    <ClCompile Include="engine.cpp" />
+    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Entity\EntitySystem.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
@@ -331,6 +334,7 @@
     <ClCompile Include="Texture\OpenGLTexture.cpp" />
     <ClCompile Include="Texture\Texture.cpp" />
     <ClCompile Include="Texture\VulkanTexture.cpp" />
+    <ClCompile Include="ThirdParty\sago\Platformfolders.cpp" />
     <ClCompile Include="Utility\EngineSettings.cpp" />
     <ClCompile Include="Utility\Logging.cpp" />
     <ClCompile Include="Utility\Random.cpp" />

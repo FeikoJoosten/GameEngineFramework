@@ -1,5 +1,6 @@
 #include "Engine/Engine.hpp"
 #include "Engine/AssetManagement/AssetManager.hpp"
+#include "Engine/AssetManagement/EngineAssetManager.hpp"
 #include "Engine/Camera/CameraManager.hpp"
 #include "Engine/Collision/CollisionSystem.hpp"
 #include "Engine/CommandLineArguments/CommandLineArgumentsManager.hpp"
@@ -9,7 +10,6 @@
 #include "Engine/Resources/ResourceManager.hpp"
 #include "Engine/Scene/SceneManager.hpp"
 #include "Engine/Utility/Defines.hpp"
-#include "Engine/Utility/EngineImGui.hpp"
 #include "Engine/Utility/Random.hpp"
 #include "Engine/Utility/Time.hpp"
 
@@ -22,16 +22,11 @@
 #include "Engine/Renderer/VulkanRenderer.hpp"
 #endif
 
-#include <fstream>
-#include <cereal/archives/json.hpp>
-
-namespace Engine
-{
+namespace Engine {
 	std::shared_ptr<Engine> Engine::instance;
 	std::shared_ptr<CommandLineArgumentsManager> Engine::commandLineArgumentsManager;
 
-	std::shared_ptr<Window> Engine::GetWindow() noexcept
-	{
+	std::shared_ptr<Window> Engine::GetWindow() noexcept {
 		CreateInstance();
 		if (instance->window == nullptr)
 #ifdef USING_OPENGL
@@ -43,19 +38,16 @@ namespace Engine
 		return instance->window;
 	}
 
-	std::shared_ptr<InputManager> Engine::GetInputManager() noexcept
-	{
+	std::shared_ptr<InputManager> Engine::GetInputManager() noexcept {
 		CreateInstance();
 		if (instance->inputManager == nullptr)
 			instance->inputManager = std::shared_ptr<InputManager>(new InputManager());
 		return instance->inputManager;
 	}
 
-	std::shared_ptr<Renderer> Engine::GetRenderer() noexcept
-	{
+	std::shared_ptr<Renderer> Engine::GetRenderer() noexcept {
 		CreateInstance();
-		if (instance->renderer == nullptr)
-		{
+		if (instance->renderer == nullptr) {
 #ifdef USING_OPENGL
 			instance->renderer = std::shared_ptr<OpenGLRenderer>(new OpenGLRenderer("Basic3D.vert", "Basic3D.frag"));
 #endif
@@ -67,59 +59,36 @@ namespace Engine
 		return instance->renderer;
 	}
 
-	std::shared_ptr<CameraManager> Engine::GetCameraManager() noexcept
-	{
+	std::shared_ptr<CameraManager> Engine::GetCameraManager() noexcept {
 		CreateInstance();
-		if(instance->cameraManager == nullptr) {
+		if (instance->cameraManager == nullptr) {
 			instance->cameraManager = std::shared_ptr<CameraManager>(new CameraManager());
-			/*if(instance->cameraEntity.expired())
-				instance->cameraEntity = GetEntitySystem()->CreateEntity("Editor Camera");
-
-			const std::shared_ptr<Entity> lockedEntity = instance->cameraEntity.lock();
-			instance->cameraManager = lockedEntity->GetComponent<CameraComponent>();
-			if(instance->cameraManager == nullptr) {
-				const std::shared_ptr<Window> lockedWindow = GetWindow();
-				instance->cameraManager = lockedEntity->AddComponent<CameraComponent>(
-					glm::vec3(0.f, 0.f, 0.f),
-					glm::vec3(0.f, 0.f, 0.f),
-					60.f,
-					static_cast<float>(lockedWindow->GetHeight()) / static_cast<float>(lockedWindow->GetWidth()),
-					0.1f,
-					1000.f);
-			}
-			const std::shared_ptr<TransformComponent> transformComponent = lockedEntity->GetComponent<TransformComponent>();
-			if(!transformComponent)
-				lockedEntity->AddComponent<TransformComponent>();*/
 		}
 		return instance->cameraManager;
 	}
 
-	std::shared_ptr<Time> Engine::GetTime() noexcept
-	{
+	std::shared_ptr<Time> Engine::GetTime() noexcept {
 		CreateInstance();
 		if (instance->time == nullptr)
 			instance->time = std::shared_ptr<Time>(new Time());
 		return instance->time;
 	}
 
-	std::shared_ptr<EntitySystem> Engine::GetEntitySystem() noexcept
-	{
+	std::shared_ptr<EntitySystem> Engine::GetEntitySystem() noexcept {
 		CreateInstance();
 		if (instance->entitySystem == nullptr)
 			instance->entitySystem = std::shared_ptr<EntitySystem>(new EntitySystem());
 		return instance->entitySystem;
 	}
 
-	std::shared_ptr<ResourceManager> Engine::GetResourceManager() noexcept
-	{
+	std::shared_ptr<ResourceManager> Engine::GetResourceManager() noexcept {
 		CreateInstance();
 		if (instance->resourceManager == nullptr)
 			instance->resourceManager = std::shared_ptr<ResourceManager>(new ResourceManager());
 		return instance->resourceManager;
 	}
 
-	std::shared_ptr<CollisionSystem> Engine::GetCollisionSystem() noexcept
-	{
+	std::shared_ptr<CollisionSystem> Engine::GetCollisionSystem() noexcept {
 		CreateInstance();
 		if (instance->collisionSystem == nullptr)
 			instance->collisionSystem = std::shared_ptr<CollisionSystem>(new CollisionSystem());
@@ -147,6 +116,13 @@ namespace Engine
 		return instance->assetManager;
 	}
 
+	std::shared_ptr<EngineAssetManager> Engine::GetEngineAssetManager() noexcept {
+		CreateInstance();
+		if (instance->engineAssetManager == nullptr)
+			instance->engineAssetManager = std::shared_ptr<EngineAssetManager>(new EngineAssetManager());
+		return instance->engineAssetManager;
+	}
+
 	std::shared_ptr<CommandLineArgumentsManager> Engine::GetOrCreateCommandLineArgumentsManager(std::vector<std::string> commandLineArguments) noexcept {
 		if (commandLineArgumentsManager == nullptr)
 			commandLineArgumentsManager = std::shared_ptr<CommandLineArgumentsManager>(new CommandLineArgumentsManager(std::move(commandLineArguments)));
@@ -154,7 +130,6 @@ namespace Engine
 	}
 
 	void Engine::CreateInstance() noexcept {
-
 		if (instance != nullptr)
 			return;
 

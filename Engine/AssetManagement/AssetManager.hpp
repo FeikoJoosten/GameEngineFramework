@@ -29,8 +29,6 @@ namespace Engine {
 
 		const std::string& GetProjectRoot();
 
-		static std::string GetDirectoryFromPath(const std::string& path);
-
 		template<typename T>
 		static void WriteDataToPath(const std::string& fullPath, T data, bool writeNameValuePairs = true);
 
@@ -46,7 +44,7 @@ namespace Engine {
 	};
 
 	template <typename T> void AssetManager::WriteDataToPath(const std::string& fullPath, T data, bool writeNameValuePairs) {
-		if (const std::string desiredDirectoryPath = GetDirectoryFromPath(fullPath); !std::filesystem::is_directory(desiredDirectoryPath)) {
+		if (const std::string desiredDirectoryPath = Utility::GetDirectoryFromPath(fullPath); !std::filesystem::is_directory(desiredDirectoryPath)) {
 			if (!std::filesystem::create_directories(desiredDirectoryPath)) {
 				DEBUG_ERROR("Failed to create directories for path: " + fullPath);
 				return;

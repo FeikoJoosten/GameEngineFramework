@@ -13,13 +13,6 @@ namespace Engine {
 		return fullExecutableDirectory;
 	}
 
-	std::string AssetManager::GetDirectoryFromPath(const std::string& path) {
-		const size_t pos = path.find_last_of("\\/");
-		return (std::string::npos == pos)
-			? std::string()
-			: path.substr(0, pos);
-	}
-
 	void AssetManager::SetExecutablePath(const std::string& executablePath) {
 		std::filesystem::path path(executablePath);
 		fullExecutablePath = path.generic_string();

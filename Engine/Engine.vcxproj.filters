@@ -139,6 +139,18 @@
     <Filter Include="Header Files\AssetManagement">
       <UniqueIdentifier>{3f226689-0844-4008-885b-a64ed2f6b0f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ThirdParty">
+      <UniqueIdentifier>{1f54af23-7002-45e0-b379-0f0bcd223d66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ThirdParty\sago">
+      <UniqueIdentifier>{0649620d-f842-4e5e-ab60-f9b2d9c8e471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ThirdParty">
+      <UniqueIdentifier>{fd02943c-2855-4adf-a74c-7d215e78f44a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ThirdParty\Sago">
+      <UniqueIdentifier>{69630f2d-69a0-4b2e-a605-7cbae2a4d962}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Api.hpp">
@@ -372,9 +384,15 @@
     <ClInclude Include="Renderer\OpenGLUtility.hpp">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="AssetManagement\EngineAssetManager.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\sago\PlatformFolders.hpp">
+      <Filter>Header Files\ThirdParty\sago</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="engine.cpp">
+    <ClCompile Include="Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Entity\Entity.cpp">
@@ -574,6 +592,12 @@
     </ClCompile>
     <ClCompile Include="CommandLineArguments\CommandLineArgumentsManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\EngineAssetManager.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\sago\Platformfolders.cpp">
+      <Filter>Source Files\ThirdParty\Sago</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
