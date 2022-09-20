@@ -81,8 +81,7 @@ void DoDebug(const char* debugLevel, const char* classPath, const char* function
 
 	if (logPath) {
 		std::ofstream logFile;
-		logFile.open(logPath);
-		logFile.clear();
+		logFile.open(logPath, std::ios_base::app);
 		logFile << outputString;
 		logFile.close();
 	}
