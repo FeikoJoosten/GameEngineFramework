@@ -2,7 +2,6 @@
 
 #include "Engine/Api.hpp"
 #include "Engine/Engine.hpp"
-#include "Engine/Utility/Utility.hpp"
 #include "Engine/Utility/Logging.hpp"
 
 #include <fstream>
@@ -27,13 +26,19 @@ namespace Engine {
 
 		static std::shared_ptr<AssetManager> Get();
 
-		const std::string& GetProjectRoot();
-
 		template<typename T>
 		static void WriteDataToPath(const std::string& fullPath, T data, bool writeNameValuePairs = true);
 
 		template<typename T>
 		static T ReadDataFromPath(const std::string& fullPath);
+
+		static bool FileExists(const std::string& fileName, bool isFullPath = false);
+
+		static std::string GetDirectoryFromPath(const std::string& path);
+
+		const std::string& GetProjectRoot();
+
+		[[nodiscard]] std::vector<char> ReadFile(const std::string& fileName, int fileOpenMode = 1) const;
 
 		// TODO: Make this private
 		void SetExecutablePath(const std::string& executablePath);
@@ -44,7 +49,7 @@ namespace Engine {
 	};
 
 	template <typename T> void AssetManager::WriteDataToPath(const std::string& fullPath, T data, bool writeNameValuePairs) {
-		if (const std::string desiredDirectoryPath = Utility::GetDirectoryFromPath(fullPath); !std::filesystem::is_directory(desiredDirectoryPath)) {
+		if (const std::string desiredDirectoryPath = GetDirectoryFromPath(fullPath); !std::filesystem::is_directory(desiredDirectoryPath)) {
 			if (!std::filesystem::create_directories(desiredDirectoryPath)) {
 				DEBUG_ERROR("Failed to create directories for path: " + fullPath);
 				return;
@@ -58,7 +63,7 @@ namespace Engine {
 	}
 
 	template <typename T> T AssetManager::ReadDataFromPath(const std::string& fullPath) {
-		if(Utility::FileExists(fullPath, true)) {
+		if(FileExists(fullPath, true)) {
 			if (std::ifstream inputStream(fullPath); inputStream.good()) {
 				cereal::JSONInputArchive archive(inputStream);
 				T output {};

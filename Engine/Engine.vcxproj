@@ -264,7 +264,6 @@
     <ClInclude Include="Utility\Light.hpp" />
     <ClInclude Include="Utility\Logging.hpp" />
     <ClInclude Include="Utility\Random.hpp" />
-    <ClInclude Include="Utility\Utility.hpp" />
     <ClInclude Include="Utility\Defines.hpp" />
     <ClInclude Include="Utility\EngineImGui.hpp" />
     <ClInclude Include="Utility\Event.hpp" />
@@ -338,7 +337,6 @@
     <ClCompile Include="Utility\EngineSettings.cpp" />
     <ClCompile Include="Utility\Logging.cpp" />
     <ClCompile Include="Utility\Random.cpp" />
-    <ClCompile Include="Utility\Utility.cpp" />
     <ClCompile Include="Utility\EngineImGui.cpp" />
     <ClCompile Include="Utility\Time.cpp" />
     <ClCompile Include="Window\OpenGLWindow.cpp" />

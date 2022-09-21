@@ -19,8 +19,7 @@
 #include <memory>
 
 
-namespace Engine
-{
+namespace Engine {
 
 	static void check_vk_result(VkResult err) {
 		if (err != VK_SUCCESS) {
@@ -29,14 +28,12 @@ namespace Engine
 		}
 	}
 
-	VulkanRenderer::VulkanRenderer() noexcept
-	{
+	VulkanRenderer::VulkanRenderer() noexcept {
 		initialized = false;
 		setClearColor(glm::vec4(0.f, 0.f, 0.f, 0.f));
 	}
 
-	VulkanRenderer::~VulkanRenderer()
-	{
+	VulkanRenderer::~VulkanRenderer() {
 		if (window) {
 			window->OnWindowResizedEvent -= Sharp::EventHandler::Bind(this, &VulkanRenderer::HandleOnWindowResizedEvent);
 			window->OnWindowShutdownRequestedEvent -= Sharp::EventHandler::Bind(this, &VulkanRenderer::HandleOnWindowShutdownRequestedEvent);
@@ -72,13 +69,11 @@ namespace Engine
 		DestroyInstance();
 	}
 
-	void VulkanRenderer::InitializeRenderer()
-	{
+	void VulkanRenderer::InitializeRenderer() {
 		InitializeRenderer(Window::Get<VulkanWindow>());
 	}
 
-	void VulkanRenderer::InitializeRenderer(std::shared_ptr<VulkanWindow> window)
-	{
+	void VulkanRenderer::InitializeRenderer(std::shared_ptr<VulkanWindow> window) {
 		if (initialized)
 			return;
 
@@ -177,13 +172,11 @@ namespace Engine
 		resized = false;
 	}
 
-	void VulkanRenderer::Resized()
-	{
+	void VulkanRenderer::Resized() {
 		resized = true;
 	}
 
-	void VulkanRenderer::RecreateSwapChain()
-	{
+	void VulkanRenderer::RecreateSwapChain() {
 		vkDeviceWaitIdle(vulkanLogicalDevice_->GetDevice());
 
 		DestroyFramebuffers();
@@ -225,58 +218,48 @@ namespace Engine
 
 	}
 
-	void VulkanRenderer::setClearColor(glm::vec4 color)
-	{
-		clearValue.color = {{color.x,color.y,color.z,color.w}};
+	void VulkanRenderer::setClearColor(glm::vec4 color) {
+		clearValue.color = { {color.x,color.y,color.z,color.w} };
 	}
 
-	VkRenderPass VulkanRenderer::GetRenderPass() const
-	{
+	VkRenderPass VulkanRenderer::GetRenderPass() const {
 		return renderPass;
 	}
 
-	VkRenderPass VulkanRenderer::GetGBufferRenderPass() const
-	{
+	VkRenderPass VulkanRenderer::GetGBufferRenderPass() const {
 		return gBufferPass;
 	}
 
-	VmaAllocator VulkanRenderer::GetVmaAllocator() const
-	{
+	VmaAllocator VulkanRenderer::GetVmaAllocator() const {
 		return vmaAllocator_;
 	}
 
-	VkCommandPool VulkanRenderer::GetGraphicsCommandPool() const
-	{
+	VkCommandPool VulkanRenderer::GetGraphicsCommandPool() const {
 		return graphicsCommandPool;
 	}
 
-	VkCommandPool VulkanRenderer::GetComputeCommandPool() const
-	{
+	VkCommandPool VulkanRenderer::GetComputeCommandPool() const {
 		return computeCommandPool;
 	}
 
-	VkExtent2D VulkanRenderer::GetSwapChainExtent() const
-	{
+	VkExtent2D VulkanRenderer::GetSwapChainExtent() const {
 		return swapChainImageExtent;
 	}
 
-	void VulkanRenderer::RendererBegin()
-	{
+	void VulkanRenderer::RendererBegin() {
 		RendererBegin(glm::mat4(), glm::perspective(75.f,
 			static_cast<float>(swapChainImageExtent.width) / static_cast<float>(swapChainImageExtent.height),
 			0.1f, 1000.f));
 	}
 
-	void VulkanRenderer::RendererBegin(const glm::mat4x4 & view, const glm::mat4x4 & projection)
-	{
+	void VulkanRenderer::RendererBegin(const glm::mat4x4& view, const glm::mat4x4& projection) {
 		//vkDeviceWaitIdle(vulkanLogicalDevice->GetDevice());
 		uint32_t imageIndex;
 		VkResult res = vkAcquireNextImageKHR(vulkanLogicalDevice_->GetDevice(), swapChain, std::numeric_limits<uint64_t>::max(), imageAvailableSemaphores_[(currentImage + 1) % imageAvailableSemaphores_.size()], VK_NULL_HANDLE, &imageIndex);
 
 		if (res == VK_ERROR_OUT_OF_DATE_KHR) {
 			RecreateSwapChain();
-		}
-		else if (res != VK_SUCCESS && res != VK_SUBOPTIMAL_KHR) {
+		} else if (res != VK_SUCCESS && res != VK_SUBOPTIMAL_KHR) {
 			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to aquire next swap chain image";
 			std::cout << s.c_str() << std::endl;
 			return;
@@ -330,18 +313,15 @@ namespace Engine
 		//RenderSprite(texture, glm::mat4());
 	}
 
-	void VulkanRenderer::Render()
-	{
+	void VulkanRenderer::Render() {
 
 	}
 
-	void VulkanRenderer::Render(const glm::mat4x4 & modelMatrix, std::shared_ptr<Model> model, const glm::vec4 & mainColor)
-	{
+	void VulkanRenderer::Render(const glm::mat4x4& modelMatrix, std::shared_ptr<Model> model, const glm::vec4& mainColor) {
 		std::vector<std::shared_ptr<Mesh>> meshes = model->GetModelMeshes();
 
 		for (size_t i = 0, size = meshes.size(); i < size; i++) {
-			if (meshes[i] == nullptr)
-			{
+			if (meshes[i] == nullptr) {
 				continue;
 			}
 
@@ -356,8 +336,7 @@ namespace Engine
 				model->GetSkeleton() == nullptr) {
 				vulkanStaticMeshRenderer->RenderMesh(modelMatrix,
 					std::dynamic_pointer_cast<VulkanMesh, Mesh>(meshes[i]), material, mainColor);
-			}
-			else {
+			} else {
 				vulkanSkeletalMeshRenderer->RenderMesh(modelMatrix,
 					static_cast<VulkanMesh*>(meshes[i].get()),
 					material.get(), model->GetSkeleton().get(), model->GetCurrentAnimationIndex(), model->GetAnimationTime(),
@@ -367,8 +346,7 @@ namespace Engine
 		}
 	}
 
-	void VulkanRenderer::RenderSprite(std::weak_ptr<Texture> texture, glm::mat4 modelMatrix)
-	{
+	void VulkanRenderer::RenderSprite(std::weak_ptr<Texture> texture, glm::mat4 modelMatrix) {
 		std::weak_ptr<VulkanTexture> vulkanTexture;
 
 		vulkanTexture = std::dynamic_pointer_cast<VulkanTexture, Texture>(texture.lock());
@@ -376,13 +354,11 @@ namespace Engine
 		vulkanSpriteRenderer->RenderSprite(vulkanTexture, modelMatrix);
 	}
 
-	void VulkanRenderer::RenderLine(glm::vec3 start, glm::vec3 end, glm::vec4 color)
-	{
+	void VulkanRenderer::RenderLine(glm::vec3 start, glm::vec3 end, glm::vec4 color) {
 		vulkanDebugRenderer->RenderLine(start, end, color);
 	}
 
-	void VulkanRenderer::RendererEnd()
-	{
+	void VulkanRenderer::RendererEnd() {
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.pInheritanceInfo = nullptr;
@@ -501,7 +477,7 @@ namespace Engine
 
 		if (size < static_cast<uint32_t>(activeLights)) {
 			staticMeshShadowCommandBuffers_[currentImage].resize(activeLights);
-			GenerateSecondaryCommandBuffers(staticMeshShadowCommandBuffers_[currentImage].data() + sizeof(VkCommandBuffer)*size,
+			GenerateSecondaryCommandBuffers(staticMeshShadowCommandBuffers_[currentImage].data() + sizeof(VkCommandBuffer) * size,
 				static_cast<uint32_t>(staticMeshShadowCommandBuffers_[currentImage].size()) - size);
 		}
 
@@ -509,7 +485,7 @@ namespace Engine
 
 		if (size < static_cast<uint32_t>(activeLights)) {
 			skeletalMeshShadowCommandBuffers_[currentImage].resize(activeLights);
-			GenerateSecondaryCommandBuffers(skeletalMeshShadowCommandBuffers_[currentImage].data() + sizeof(VkCommandBuffer)*size,
+			GenerateSecondaryCommandBuffers(skeletalMeshShadowCommandBuffers_[currentImage].data() + sizeof(VkCommandBuffer) * size,
 				static_cast<uint32_t>(skeletalMeshShadowCommandBuffers_[currentImage].size()) - size);
 		}
 
@@ -517,7 +493,7 @@ namespace Engine
 
 		if (size < static_cast<uint32_t>(activeLights)) {
 			gBufferShadowCommandBuffers_[currentImage].resize(activeLights);
-			GenerateSecondaryCommandBuffers(gBufferShadowCommandBuffers_[currentImage].data() + sizeof(VkCommandBuffer)*size,
+			GenerateSecondaryCommandBuffers(gBufferShadowCommandBuffers_[currentImage].data() + sizeof(VkCommandBuffer) * size,
 				static_cast<uint32_t>(gBufferShadowCommandBuffers_[currentImage].size()) - size);
 		}
 
@@ -693,8 +669,7 @@ namespace Engine
 		res = vkQueuePresentKHR(vulkanLogicalDevice_->GetPresentQueue(), &presentInfo);
 		if (res == VK_ERROR_OUT_OF_DATE_KHR || res == VK_SUBOPTIMAL_KHR) {
 			RecreateSwapChain();
-		}
-		else if (res != VK_SUCCESS) {
+		} else if (res != VK_SUCCESS) {
 			std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Failed to present swap chain image";
 			std::cout << s.c_str() << std::endl;
 		}
@@ -707,8 +682,7 @@ namespace Engine
 
 	void VulkanRenderer::CreateLight(std::string name, LightType lightType,
 		glm::vec3 position, glm::vec3 direction, glm::vec3 color,
-		float radius, float attunuation, float coneInnerAngle, float coneOuterAngle)
-	{
+		float radius, float attunuation, float coneInnerAngle, float coneOuterAngle) {
 		LightInfo info = {};
 		info.active = true;
 		info.name = name;
@@ -739,8 +713,8 @@ namespace Engine
 			info.light.color = glm::vec4(color.x, color.y, color.z, 1.f);
 			info.light.radius = radius;
 			info.light.attunuation = attunuation;
-			info.light.coneInnerAngle = 2.f*glm::pi<float>();
-			info.light.coneOuterAngle = 2.f*glm::pi<float>();
+			info.light.coneInnerAngle = 2.f * glm::pi<float>();
+			info.light.coneOuterAngle = 2.f * glm::pi<float>();
 			break;
 		case LightType::LIGHT_SPOT_LIGHT:
 			info.light.position = glm::vec4(position.x, position.y, position.z, 1.f);
@@ -760,8 +734,7 @@ namespace Engine
 		scene.lightCount = activeLights;
 	}
 
-	void VulkanRenderer::SetLightType(std::string name, LightType lightType)
-	{
+	void VulkanRenderer::SetLightType(std::string name, LightType lightType) {
 		std::map<std::string, LightInfo>::iterator it = lights.find(name);
 
 		if (it == lights.end())
@@ -815,16 +788,14 @@ namespace Engine
 		lightDataChanged = true;
 	}
 
-	LightType VulkanRenderer::GetLightType(std::string name)
-	{
+	LightType VulkanRenderer::GetLightType(std::string name) {
 		if (lights.count(name) > 0)
 			return lights[name].type;
 		else
 			return LightType::LIGHT_NONEXISTENT;
 	}
 
-	void VulkanRenderer::SetLightPosition(std::string name, glm::vec3 position)
-	{
+	void VulkanRenderer::SetLightPosition(std::string name, glm::vec3 position) {
 		if (lights.count(name) <= 0)
 			return;
 
@@ -842,8 +813,7 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	glm::vec3 VulkanRenderer::GetLightPosition(std::string name)
-	{
+	glm::vec3 VulkanRenderer::GetLightPosition(std::string name) {
 		if (lights.count(name) <= 0)
 			return glm::vec3(0.f);
 
@@ -852,8 +822,7 @@ namespace Engine
 		return glm::vec3(info.light.position.x, info.light.position.y, info.light.position.z);
 	}
 
-	void VulkanRenderer::SetLightDirection(std::string name, glm::vec3 direction)
-	{
+	void VulkanRenderer::SetLightDirection(std::string name, glm::vec3 direction) {
 		if (lights.count(name) <= 0)
 			return;
 
@@ -872,8 +841,7 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	glm::vec3 VulkanRenderer::GetLightDirection(std::string name)
-	{
+	glm::vec3 VulkanRenderer::GetLightDirection(std::string name) {
 
 		if (lights.count(name) <= 0)
 			return glm::vec3(0.f);
@@ -883,8 +851,7 @@ namespace Engine
 		return glm::vec3(info.light.direction.x, info.light.direction.y, info.light.direction.z);
 	}
 
-	void VulkanRenderer::SetLightColor(std::string name, glm::vec3 color)
-	{
+	void VulkanRenderer::SetLightColor(std::string name, glm::vec3 color) {
 		if (lights.count(name) <= 0)
 			return;
 
@@ -902,8 +869,7 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	glm::vec3 VulkanRenderer::GetLightColor(std::string name)
-	{
+	glm::vec3 VulkanRenderer::GetLightColor(std::string name) {
 		if (lights.count(name) <= 0)
 			return glm::vec3(0.f);
 
@@ -912,8 +878,7 @@ namespace Engine
 		return glm::vec3(info.light.color.x, info.light.color.y, info.light.color.z);
 	}
 
-	void VulkanRenderer::SetLightRadius(std::string name, float radius)
-	{
+	void VulkanRenderer::SetLightRadius(std::string name, float radius) {
 		if (lights.count(name) <= 0)
 			return;
 
@@ -928,16 +893,14 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	float VulkanRenderer::GetLightRadius(std::string name)
-	{
+	float VulkanRenderer::GetLightRadius(std::string name) {
 		if (lights.count(name) == 0)
 			return 0.0f;
 
 		return lights[name].light.radius;
 	}
 
-	void VulkanRenderer::SetLightConeInnerAngle(std::string name, float angle)
-	{
+	void VulkanRenderer::SetLightConeInnerAngle(std::string name, float angle) {
 		if (lights.count(name) <= 0)
 			return;
 
@@ -952,16 +915,14 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	float VulkanRenderer::GetLightConeInnerAngle(std::string name)
-	{
+	float VulkanRenderer::GetLightConeInnerAngle(std::string name) {
 		if (lights.count(name) == 0)
 			return 0.0f;
 
 		return lights[name].light.coneInnerAngle;
 	}
 
-	void VulkanRenderer::SetLightConeOuterAngle(std::string name, float angle)
-	{
+	void VulkanRenderer::SetLightConeOuterAngle(std::string name, float angle) {
 		if (lights.count(name) <= 0)
 			return;
 
@@ -976,16 +937,14 @@ namespace Engine
 		lights[name] = info;
 	}
 
-	float VulkanRenderer::GetLightConeOuterAngle(std::string name)
-	{
+	float VulkanRenderer::GetLightConeOuterAngle(std::string name) {
 		if (lights.count(name) == 0)
 			return 0.0f;
 
 		return lights[name].light.coneOuterAngle;
 	}
 
-	VkDescriptorSetLayout VulkanRenderer::CreateLightDescriptorSetLayout()
-	{
+	VkDescriptorSetLayout VulkanRenderer::CreateLightDescriptorSetLayout() {
 
 		std::array<VkDescriptorSetLayoutBinding, 2> descriptorSetBindings;
 
@@ -1015,8 +974,7 @@ namespace Engine
 		return layout;
 	}
 
-	VkDescriptorSet VulkanRenderer::CreateLightDescriptorSet(size_t threadID, size_t pipelineID, size_t set, VkDescriptorSetLayout layout)
-	{
+	VkDescriptorSet VulkanRenderer::CreateLightDescriptorSet(size_t threadID, size_t pipelineID, size_t set, VkDescriptorSetLayout layout) {
 		if (lightDescriptorSets_.size() <= pipelineID) {
 			lightDescriptorSets_.resize(pipelineID + 1);
 		}
@@ -1043,8 +1001,7 @@ namespace Engine
 		return lightDescriptorSets_[pipelineID][set][threadID];
 	}
 
-	VkDescriptorSet VulkanRenderer::GetLightDescriptorSet(size_t threadID, size_t pipelineID, size_t set)
-	{
+	VkDescriptorSet VulkanRenderer::GetLightDescriptorSet(size_t threadID, size_t pipelineID, size_t set) {
 		if (pipelineID >= lightDescriptorSets_.size())
 			return VK_NULL_HANDLE;
 		if (set >= lightDescriptorSets_[pipelineID].size())
@@ -1054,30 +1011,25 @@ namespace Engine
 		return lightDescriptorSets_[pipelineID][set][threadID];
 	}
 
-	VkFramebuffer VulkanRenderer::GetFrameBuffer()
-	{
+	VkFramebuffer VulkanRenderer::GetFrameBuffer() {
 		return framebuffers[currentImage];
 	}
 
-	VulkanDescriptorPool* VulkanRenderer::GetDescriptorPool(size_t thread)
-	{
+	VulkanDescriptorPool* VulkanRenderer::GetDescriptorPool(size_t thread) {
 		if (thread >= vulkanDescriptorPools_.size())
 			return nullptr;
 		return vulkanDescriptorPools_[thread].get();
 	}
 
-	size_t VulkanRenderer::GetThreadCount()
-	{
+	size_t VulkanRenderer::GetThreadCount() {
 		return threads.size() + 1;
 	}
 
-	void VulkanRenderer::CreateInstance()
-	{
+	void VulkanRenderer::CreateInstance() {
 		vulkanInstance_ = std::make_unique<VulkanInstance>(enableValidationLayers, DebugLevel::LEVEL_WARNINGS);
 	}
 
-	void VulkanRenderer::FindPhysicalDevice()
-	{
+	void VulkanRenderer::FindPhysicalDevice() {
 		requiredFeatures = {};
 		requiredFeatures.depthBiasClamp = 1.f;
 		requiredFeatures.depthBounds = 1.f;
@@ -1100,8 +1052,7 @@ namespace Engine
 			{}, requestedQueueFamilies, true));
 	}
 
-	void VulkanRenderer::CreateLogicalDevice()
-	{
+	void VulkanRenderer::CreateLogicalDevice() {
 		vulkanLogicalDevice_ = std::unique_ptr<VulkanLogicalDevice>(new VulkanLogicalDevice(
 			vulkanPhysicalDevice_.get(),
 			enableValidationLayers,
@@ -1110,8 +1061,7 @@ namespace Engine
 		int x = 8 + 8;
 	}
 
-	void VulkanRenderer::CreateSwapChain()
-	{
+	void VulkanRenderer::CreateSwapChain() {
 		VulkanSwapChainSupportDetails_t details = vulkanPhysicalDevice_->GetSwapChainSupportDetails();
 
 		VkSurfaceFormatKHR surfaceFormat = vulkanPhysicalDevice_->ChooseSwapSurfaceFormat(details.formats);
@@ -1140,8 +1090,7 @@ namespace Engine
 			createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 			createInfo.queueFamilyIndexCount = 2;
 			createInfo.pQueueFamilyIndices = queueFamilyIndices;
-		}
-		else {
+		} else {
 			createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
 			createInfo.queueFamilyIndexCount = 0;
 			createInfo.pQueueFamilyIndices = nullptr;
@@ -1164,16 +1113,14 @@ namespace Engine
 		swapChainImageExtent = extent;
 	}
 
-	void VulkanRenderer::GetSwapChainImages()
-	{
+	void VulkanRenderer::GetSwapChainImages() {
 		imageCount = 0;
 		vkGetSwapchainImagesKHR(vulkanLogicalDevice_->GetDevice(), swapChain, &imageCount, nullptr);
 		swapChainImages.resize(imageCount);
 		vkGetSwapchainImagesKHR(vulkanLogicalDevice_->GetDevice(), swapChain, &imageCount, swapChainImages.data());
 	}
 
-	void VulkanRenderer::CreateSwapChainImageViews()
-	{
+	void VulkanRenderer::CreateSwapChainImageViews() {
 		swapChainImageViews.resize(swapChainImages.size());
 		for (int i = 0; i < static_cast<int>(swapChainImages.size()); ++i) {
 			VkImageViewCreateInfo createInfo = {};
@@ -1200,8 +1147,7 @@ namespace Engine
 		}
 	}
 
-	void VulkanRenderer::CreateGraphicsCommandPool()
-	{
+	void VulkanRenderer::CreateGraphicsCommandPool() {
 		VkCommandPoolCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 		createInfo.queueFamilyIndex = vulkanPhysicalDevice_->GetQueueFamilies().graphics;
@@ -1214,8 +1160,7 @@ namespace Engine
 		}
 	}
 
-	void VulkanRenderer::CreateComputeCommandPool()
-	{
+	void VulkanRenderer::CreateComputeCommandPool() {
 		VkCommandPoolCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 		createInfo.queueFamilyIndex = vulkanPhysicalDevice_->GetQueueFamilies().compute;
@@ -1228,8 +1173,7 @@ namespace Engine
 		}
 	}
 
-	void VulkanRenderer::CreateVmaAllocator()
-	{
+	void VulkanRenderer::CreateVmaAllocator() {
 		VmaAllocatorCreateInfo createInfo = {};
 		createInfo.physicalDevice = vulkanPhysicalDevice_->GetPhysicalDevice();
 		createInfo.device = vulkanLogicalDevice_->GetDevice();
@@ -1247,8 +1191,7 @@ namespace Engine
 		}
 	}
 
-	void VulkanRenderer::CreateDepthImage()
-	{
+	void VulkanRenderer::CreateDepthImage() {
 		VkFormat depthFormat = FindSupportedDepthFormat({ VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
 			VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
 
@@ -1351,8 +1294,7 @@ namespace Engine
 
 	}
 
-	void VulkanRenderer::CreateAttachmentImages()
-	{
+	void VulkanRenderer::CreateAttachmentImages() {
 		VkImageCreateInfo imguiImageCreateInfo = {};
 		imguiImageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 		imguiImageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -1643,8 +1585,7 @@ namespace Engine
 
 	}
 
-	void VulkanRenderer::CreateRenderPass()
-	{
+	void VulkanRenderer::CreateRenderPass() {
 
 		gBufferPassAttachments.resize(static_cast<size_t>(GBufferAttachments::ATTACHMENT_COUNT));
 
@@ -2062,8 +2003,7 @@ namespace Engine
 		VkResult res = vkCreateRenderPass(vulkanLogicalDevice_->GetDevice(), &createInfo, nullptr, &renderPass);
 	}
 
-	void VulkanRenderer::CreateFramebuffers()
-	{
+	void VulkanRenderer::CreateFramebuffers() {
 		framebuffers.resize(swapChainImageViews.size());
 
 		for (int i = 0; i < framebuffers.size(); ++i) {
@@ -2132,8 +2072,7 @@ namespace Engine
 		}
 	}
 
-	void VulkanRenderer::GenerateCommandBuffers()
-	{
+	void VulkanRenderer::GenerateCommandBuffers() {
 		primaryRenderCommandBuffers_.resize(framebuffers.size());
 
 		VkCommandBufferAllocateInfo allocInfo = {};
@@ -2243,8 +2182,7 @@ namespace Engine
 
 	}
 
-	void VulkanRenderer::CreateDescriptorPool()
-	{
+	void VulkanRenderer::CreateDescriptorPool() {
 		if (vulkanDescriptorPools_.size() == 0)
 			vulkanDescriptorPools_.resize(1);
 		vulkanDescriptorPools_[0] = std::shared_ptr<VulkanDescriptorPool>(new VulkanDescriptorPool(vulkanLogicalDevice_.get()));
@@ -2264,8 +2202,7 @@ namespace Engine
 		vulkanDescriptorPools_[0]->Compile(11 * 1000);
 	}
 
-	void VulkanRenderer::InitImGui()
-	{
+	void VulkanRenderer::InitImGui() {
 		vkQueueWaitIdle(vulkanLogicalDevice_->GetGraphicsQueue());
 
 		ImGui_ImplGlfwVulkan_Init_Data initData = {};
@@ -2313,8 +2250,7 @@ namespace Engine
 
 	}
 
-	void VulkanRenderer::CreateSemaphores()
-	{
+	void VulkanRenderer::CreateSemaphores() {
 		imageAvailableSemaphores_.resize(framebuffers.size());
 		renderFinishedSemaphores_.resize(framebuffers.size());
 		computeFinishedSemaphores_.resize(framebuffers.size());
@@ -2327,18 +2263,15 @@ namespace Engine
 		for (size_t i = 0, size = framebuffers.size(); i < size; ++i) {
 			VkResult res = vkCreateSemaphore(vulkanLogicalDevice_->GetDevice(), &semaphoreInfo, nullptr, &imageAvailableSemaphores_[i]);
 			if (res != VK_SUCCESS) {
-				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'image available' creation failed";
-				debug_error("VulkanRenderer", "CreateSemaphores", s);
+				DEBUG_ERROR(std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'image available' creation failed");
 			}
 			res = vkCreateSemaphore(vulkanLogicalDevice_->GetDevice(), &semaphoreInfo, nullptr, &renderFinishedSemaphores_[i]);
 			if (res != VK_SUCCESS) {
-				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'render finished' creation failed";
-				debug_error("VulkanRenderer", "CreateSemaphores", s);
+				DEBUG_ERROR(std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'render finished' creation failed");
 			}
 			res = vkCreateSemaphore(vulkanLogicalDevice_->GetDevice(), &semaphoreInfo, nullptr, &computeFinishedSemaphores_[i]);
 			if (res != VK_SUCCESS) {
-				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'compute finished' creation failed";
-				debug_error("VulkanRenderer", "CreateSemaphores", s);
+				DEBUG_ERROR(std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Semaphore 'compute finished' creation failed");
 			}
 
 			VkFenceCreateInfo fenceInfo = {};
@@ -2347,22 +2280,17 @@ namespace Engine
 
 			res = vkCreateFence(vulkanLogicalDevice_->GetDevice(), &fenceInfo, nullptr, &drawingFinishedFences_[i]);
 			if (res != VK_SUCCESS) {
-				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Fence 'drawing finished' creation failed";
-				debug_error("VulkanRenderer", "CreateSemaphores", s);
+				DEBUG_ERROR(std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Fence 'drawing finished' creation failed");
 			}
 
 			res = vkCreateFence(vulkanLogicalDevice_->GetDevice(), &fenceInfo, nullptr, &computeFinishedFences_[i]);
 			if (res != VK_SUCCESS) {
-				std::string s = std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Fence 'compute finished' creation failed";
-				debug_error("VulkanRenderer", "CreateSemaphores", s);
+				DEBUG_ERROR(std::string("[ERROR] [CODE:") + std::to_string(res).c_str() + "] Fence 'compute finished' creation failed");
 			}
-
-
 		}
 	}
 
-	void VulkanRenderer::CreateCompositingPipeline()
-	{
+	void VulkanRenderer::CreateCompositingPipeline() {
 		compositingPipeline_ = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(vulkanLogicalDevice_.get(), this));
 
 		compositingPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::VERTEX_SHADER, "Composite.vert.spv");
@@ -2468,8 +2396,7 @@ namespace Engine
 
 	}
 
-	void VulkanRenderer::CreateGBufferRenderPipeline()
-	{
+	void VulkanRenderer::CreateGBufferRenderPipeline() {
 		gBufferRenderPipeline_ = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(vulkanLogicalDevice_.get(), this));
 
 		gBufferRenderPipeline_->LoadShader(VulkanPipeline::SHADER_TYPE::VERTEX_SHADER, "G-BufferRender.vert.spv");
@@ -2529,7 +2456,7 @@ namespace Engine
 			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, false, graphicsCommandPool));
 
 		lightBuffer = std::unique_ptr<VulkanBuffer>(new VulkanBuffer(
-			vulkanLogicalDevice_.get(), vmaAllocator_, static_cast<uint32_t>(sizeof(Light)*lightData.size()),
+			vulkanLogicalDevice_.get(), vmaAllocator_, static_cast<uint32_t>(sizeof(Light) * lightData.size()),
 			VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, false, graphicsCommandPool));
 
 		ambientLightPipeline_ = std::unique_ptr<VulkanPipeline>(new VulkanPipeline(vulkanLogicalDevice_.get(), this));
@@ -2559,16 +2486,14 @@ namespace Engine
 		ambientLightPipeline_->Compile();
 	}
 
-	void VulkanRenderer::CreateRenderers()
-	{
+	void VulkanRenderer::CreateRenderers() {
 		vulkanSpriteRenderer = std::unique_ptr<VulkanSpriteRenderer>(new VulkanSpriteRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
 		vulkanDebugRenderer = std::unique_ptr<VulkanDebugRenderer>(new VulkanDebugRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
 		vulkanStaticMeshRenderer = std::unique_ptr<VulkanStaticMeshRenderer>(new VulkanStaticMeshRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
 		vulkanSkeletalMeshRenderer = std::unique_ptr<VulkanSkeletalMeshRenderer>(new VulkanSkeletalMeshRenderer(this, vulkanLogicalDevice_.get(), vulkanDescriptorPools_[0].get()));
 	}
 
-	void VulkanRenderer::AllocateThreads()
-	{
+	void VulkanRenderer::AllocateThreads() {
 		int threadCount = std::thread::hardware_concurrency() - 1;
 		threads.resize(threadCount);
 		vulkanDescriptorPools_.resize(threadCount + 1);
@@ -2602,53 +2527,44 @@ namespace Engine
 		}
 	}
 
-	void VulkanRenderer::DestroyInstance()
-	{
+	void VulkanRenderer::DestroyInstance() {
 		vkDestroySurfaceKHR(vulkanInstance_->GetInstance(), surface, nullptr);
 		vulkanInstance_.reset();
 	}
 
-	void VulkanRenderer::DestroyLogicalDevice()
-	{
+	void VulkanRenderer::DestroyLogicalDevice() {
 		vulkanLogicalDevice_.reset();
 	}
 
-	void VulkanRenderer::DestroySwapChain()
-	{
+	void VulkanRenderer::DestroySwapChain() {
 		vkDestroySwapchainKHR(vulkanLogicalDevice_->GetDevice(), swapChain, nullptr);
 	}
 
-	void VulkanRenderer::DestroySwapChainImageViews()
-	{
+	void VulkanRenderer::DestroySwapChainImageViews() {
 		for (int i = 0; i < static_cast<int>(swapChainImageViews.size()); ++i) {
 			vkDestroyImageView(vulkanLogicalDevice_->GetDevice(), swapChainImageViews[i], nullptr);
 		}
 	}
 
-	void VulkanRenderer::DestroyGraphicsCommandPool()
-	{
+	void VulkanRenderer::DestroyGraphicsCommandPool() {
 		vkDestroyCommandPool(vulkanLogicalDevice_->GetDevice(), graphicsCommandPool, nullptr);
 	}
 
-	void VulkanRenderer::DestroyComputeCommandPool()
-	{
+	void VulkanRenderer::DestroyComputeCommandPool() {
 		vkDestroyCommandPool(vulkanLogicalDevice_->GetDevice(), computeCommandPool, nullptr);
 	}
 
-	void VulkanRenderer::DestroyVmaAllocator()
-	{
+	void VulkanRenderer::DestroyVmaAllocator() {
 		vmaDestroyAllocator(vmaAllocator_);
 	}
 
-	void VulkanRenderer::DestroyDepthImage()
-	{
+	void VulkanRenderer::DestroyDepthImage() {
 		vkDestroyImageView(vulkanLogicalDevice_->GetDevice(), depthImageView, nullptr);
 
 		vmaDestroyImage(vmaAllocator_, depthImage, depthImageAllocation);
 	}
 
-	void VulkanRenderer::DestroyAttachmentImages()
-	{
+	void VulkanRenderer::DestroyAttachmentImages() {
 		vkDestroyImageView(vulkanLogicalDevice_->GetDevice(), imguiImageView, nullptr);
 
 		vmaDestroyImage(vmaAllocator_, imguiImage, imguiImageAllocation);
@@ -2679,15 +2595,13 @@ namespace Engine
 
 	}
 
-	void VulkanRenderer::DestroyRenderPass()
-	{
+	void VulkanRenderer::DestroyRenderPass() {
 		vkDestroyRenderPass(vulkanLogicalDevice_->GetDevice(), gBufferPass, nullptr);
 		vkDestroyRenderPass(vulkanLogicalDevice_->GetDevice(), ssaoPass, nullptr);
 		vkDestroyRenderPass(vulkanLogicalDevice_->GetDevice(), renderPass, nullptr);
 	}
 
-	void VulkanRenderer::DestroyFramebuffers()
-	{
+	void VulkanRenderer::DestroyFramebuffers() {
 		for (int i = 0; i < framebuffers.size(); ++i) {
 			vkDestroyFramebuffer(vulkanLogicalDevice_->GetDevice(), framebuffers[i], nullptr);
 		}
@@ -2696,15 +2610,13 @@ namespace Engine
 
 	}
 
-	void VulkanRenderer::DestroyDecriptorPool()
-	{
+	void VulkanRenderer::DestroyDecriptorPool() {
 		for (size_t i = 0, size = vulkanDescriptorPools_.size(); i < size; ++i) {
 			vulkanDescriptorPools_[i].reset();
 		}
 	}
 
-	void VulkanRenderer::DestroySemaphores()
-	{
+	void VulkanRenderer::DestroySemaphores() {
 		for (size_t i = 0, size = imageAvailableSemaphores_.size(); i < size; ++i) {
 			vkDestroySemaphore(vulkanLogicalDevice_->GetDevice(), imageAvailableSemaphores_[i], nullptr);
 			vkDestroySemaphore(vulkanLogicalDevice_->GetDevice(), renderFinishedSemaphores_[i], nullptr);
@@ -2716,14 +2628,12 @@ namespace Engine
 
 	}
 
-	void VulkanRenderer::DestroyCompositingPipeline()
-	{
+	void VulkanRenderer::DestroyCompositingPipeline() {
 		compositingPipeline_.reset();
 		vmaDestroyBuffer(vmaAllocator_, vertexBuffer_, vertexBufferAllocation_);
 	}
 
-	void VulkanRenderer::DestroyGBufferRenderPipeline()
-	{
+	void VulkanRenderer::DestroyGBufferRenderPipeline() {
 		gBufferRenderPipeline_.reset();
 		ambientLightPipeline_.reset();
 
@@ -2731,16 +2641,14 @@ namespace Engine
 		lightBuffer.reset();
 	}
 
-	void VulkanRenderer::DestroyRenderers()
-	{
+	void VulkanRenderer::DestroyRenderers() {
 		vulkanSpriteRenderer.reset();
 		vulkanDebugRenderer.reset();
 		vulkanStaticMeshRenderer.reset();
 		vulkanSkeletalMeshRenderer.reset();
 	}
 
-	void VulkanRenderer::DestroyThreads()
-	{
+	void VulkanRenderer::DestroyThreads() {
 		for (size_t i = 0, size = threads.size(); i < size; ++i) {
 			if (threads[i]->thread.joinable())
 				threads[i]->thread.join();
@@ -2758,25 +2666,22 @@ namespace Engine
 		ImGui_ImplGlfwVulkan_Shutdown();
 	}
 
-	VkFormat VulkanRenderer::FindSupportedDepthFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
-	{
+	VkFormat VulkanRenderer::FindSupportedDepthFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
 		if (!vulkanPhysicalDevice_)
 			return VK_FORMAT_UNDEFINED;
 		for (VkFormat format : candidates) {
 			VkFormatProperties props;
 			vkGetPhysicalDeviceFormatProperties(vulkanPhysicalDevice_->GetPhysicalDevice(), format, &props);
-			if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures&features) == features) {
+			if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) {
 				return format;
-			}
-			else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures&features) == features) {
+			} else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features) {
 				return format;
 			}
 		}
 		return VK_FORMAT_UNDEFINED;
 	}
 
-	void VulkanRenderer::GenerateSecondaryCommandBuffers(VkCommandBuffer * buffers, uint32_t count)
-	{
+	void VulkanRenderer::GenerateSecondaryCommandBuffers(VkCommandBuffer* buffers, uint32_t count) {
 		VkCommandBufferAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_SECONDARY;
@@ -2786,13 +2691,11 @@ namespace Engine
 		vkAllocateCommandBuffers(vulkanLogicalDevice_->GetDevice(), &allocInfo, buffers);
 	}
 
-	void VulkanRenderer::DestroySecondaryCommandBuffers(VkCommandBuffer * buffers, uint32_t count)
-	{
+	void VulkanRenderer::DestroySecondaryCommandBuffers(VkCommandBuffer* buffers, uint32_t count) {
 		vkFreeCommandBuffers(vulkanLogicalDevice_->GetDevice(), graphicsCommandPool, count, buffers);
 	}
 
-	void VulkanRenderer::RestructureLights()
-	{
+	void VulkanRenderer::RestructureLights() {
 		std::array<Light, 1024> tempData = lightData;
 		lightData.fill({});
 		std::map<std::string, LightInfo>::iterator it = lights.begin();
@@ -2810,9 +2713,8 @@ namespace Engine
 		lightDataChanged = true;
 	}
 
-	void VulkanRenderer::UpdateLightData()
-	{
-		lightBuffer->UpdateBuffer(lightData.data(), 0, static_cast<uint32_t>(sizeof(Light)*lightData.size()));
+	void VulkanRenderer::UpdateLightData() {
+		lightBuffer->UpdateBuffer(lightData.data(), 0, static_cast<uint32_t>(sizeof(Light) * lightData.size()));
 
 		if (activeLights != scene.lightCount) {
 			scene.lightCount = activeLights;
@@ -2821,8 +2723,7 @@ namespace Engine
 		lightDataChanged = false;
 	}
 
-	VulkanRenderer::ThreadInfo * VulkanRenderer::GetFreeThread()
-	{
+	VulkanRenderer::ThreadInfo* VulkanRenderer::GetFreeThread() {
 		for (size_t i = 0, size = threads.size(); i < size; ++i) {
 			if (threads[i]->initialized == false)
 				return threads[i];
@@ -2839,23 +2740,20 @@ namespace Engine
 		return nullptr;
 	}
 
-	void VulkanRenderer::JoinAllThreads()
-	{
+	void VulkanRenderer::JoinAllThreads() {
 		for (size_t i = 0, size = threads.size(); i < size; ++i) {
 			if (threads[i]->thread.joinable())
 				threads[i]->thread.join();
 		}
 	}
 
-	void VulkanRenderer::ResetCommandPools()
-	{
+	void VulkanRenderer::ResetCommandPools() {
 		for (size_t i = 0, size = threads.size(); i < size; ++i) {
 			vkResetCommandPool(vulkanLogicalDevice_->GetDevice(), threads[i]->commandPool, 0);
 		}
 	}
 
-	void VulkanRenderer::StartSecondaryCommandBufferRecording(VkCommandBuffer buffer, VkCommandBufferUsageFlags flags, VkRenderPass renderPass, uint32_t subPass, VkFramebuffer framebuffer) const
-	{
+	void VulkanRenderer::StartSecondaryCommandBufferRecording(VkCommandBuffer buffer, VkCommandBufferUsageFlags flags, VkRenderPass renderPass, uint32_t subPass, VkFramebuffer framebuffer) const {
 		VkCommandBufferInheritanceInfo inheritence = {};
 		inheritence.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
 		inheritence.occlusionQueryEnable = VK_FALSE;
@@ -2871,8 +2769,7 @@ namespace Engine
 		vkBeginCommandBuffer(buffer, &info);
 	}
 
-	void VulkanRenderer::EndSecondaryCommandBufferRecording(VkCommandBuffer buffer) const
-	{
+	void VulkanRenderer::EndSecondaryCommandBufferRecording(VkCommandBuffer buffer) const {
 		vkEndCommandBuffer(buffer);
 	}
 

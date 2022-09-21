@@ -1,15 +1,13 @@
 
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_OPENGL
+#include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/Shader/OpenGLShader.hpp"
 #include "Engine/Texture/Texture.hpp"
-#include "Engine/Engine.hpp"
 #include "Engine/Utility/Logging.hpp"
-#include "Engine/Utility/Utility.hpp"
 #include "Engine/Renderer/OpenGLUtility.hpp"
 
 #include <cassert>
-#include <ios>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Engine
@@ -250,7 +248,7 @@ namespace Engine
 	GLuint LoadShader(std::string filePath, int shaderType)
 	{
 		GLuint shader;
-		CompileShader(&shader, shaderType, reinterpret_cast<char const *const>(Utility::ReadFile(filePath, std::ios::binary).data()));
+		CompileShader(&shader, shaderType, reinterpret_cast<char const *const>(AssetManager::Get()->ReadFile(filePath).data()));
 		return shader;
 	}
 

@@ -64,11 +64,7 @@ namespace Engine
 
 			for (size_t i = 0, size = mesh->mNumBones; i < size; ++i) {
 				if (boneMap.find(std::string(mesh->mBones[i]->mName.C_Str())) == boneMap.end()) {
-					std::string s = "Mesh references bone " +
-						std::string(mesh->mBones[i]->mName.C_Str()) +
-						" Which isn't found in skeleton " +
-						skeleton->GetName();
-					debug_warning("VulkanMesh", "Setup Mesh", s);
+					DEBUG_WARNING("Mesh references bone " + std::string(mesh->mBones[i]->mName.C_Str()) + " Which isn't found in skeleton " + skeleton->GetName());
 				}
 				int index = boneMap[std::string(mesh->mBones[i]->mName.C_Str())]->boneDataIndex;
 				aiBone* bone = mesh->mBones[i];

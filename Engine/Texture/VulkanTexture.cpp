@@ -1,5 +1,4 @@
 #include "Engine/Texture/VulkanTexture.hpp"
-#include "Engine/Utility/Utility.hpp"
 #ifdef USING_VULKAN
 #include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/Renderer/VulkanRenderer.hpp"
@@ -11,7 +10,7 @@ namespace Engine {
 		const std::string baseLocation = "Resources/Textures/" + filename;
 		const std::string defaultTextureLocation = (AssetManager::Get()->GetProjectRoot() + "Resources/Textures/default.png");
 		stbi_uc* textureData = stbi_load(
-			Utility::FileExists(baseLocation) ?
+			AssetManager::FileExists(baseLocation) ?
 			(AssetManager::Get()->GetProjectRoot() + baseLocation).c_str() :
 			defaultTextureLocation.c_str(),
 			&width, &height, &channels, STBI_rgb_alpha);

@@ -2,18 +2,17 @@
 
 #ifdef USING_OPENGL
 #include "Engine/AssetManagement/AssetManager.hpp"
-#include "Engine/Utility/Utility.hpp"
 #include "Engine/Renderer/OpenGLUtility.hpp"
 
 #include <GL/glew.h>
 #include <stb/stb_image.h>
 
 namespace Engine {
-	OpenGLTexture::OpenGLTexture(const std::string& filename, int desiredChannels) : Texture(filename, desiredChannels) {
+	OpenGLTexture::OpenGLTexture(const std::string& filename, const int desiredChannels) : Texture(filename, desiredChannels) {
 		const std::string baseLocation = "Resources/Textures/" + filename;
-		const std::string defaultTextureLocation = (AssetManager::Get()->GetProjectRoot() + "Resources/Textures/default.png");
+		const std::string defaultTextureLocation = AssetManager::Get()->GetProjectRoot() + "Resources/Textures/default.png";
 		stbi_uc* textureData = stbi_load(
-			Utility::FileExists(baseLocation) ?
+			AssetManager::FileExists(baseLocation) ?
 			(AssetManager::Get()->GetProjectRoot() + baseLocation).c_str() :
 			defaultTextureLocation.c_str(),
 			&width, &height, &channels, STBI_rgb_alpha);

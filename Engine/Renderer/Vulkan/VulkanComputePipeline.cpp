@@ -35,8 +35,7 @@ namespace Engine {
 
 		FILE* file = fopen(path.c_str(), "rb");
 		if (!file) {
-			std::string s = "Opening shader file " + path + " failed";
-			debug_error("VulkanComputePipeline", "SetComputeShader", s);
+			DEBUG_ERROR("Opening shader file " + path + " failed");
 			return;
 		}
 

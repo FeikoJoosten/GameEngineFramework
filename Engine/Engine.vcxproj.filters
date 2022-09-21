@@ -255,9 +255,6 @@
     <ClInclude Include="Utility\Time.hpp">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Utility.hpp">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\imgui_impl_glfw_gl3.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
@@ -480,9 +477,6 @@
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Utility\Time.cpp">
-      <Filter>Source Files\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\Utility.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\imgui_impl_glfw_gl3.cpp">
