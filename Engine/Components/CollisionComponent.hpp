@@ -1,8 +1,9 @@
 #pragma once
+
 #include "Engine/Components/Component.hpp"
 #include "Engine/Collision/CollisionTypes.hpp"
 
-#include <glm/detail/type_vec2.hpp>
+#include <glm/vec2.hpp>
 
 namespace Engine
 {

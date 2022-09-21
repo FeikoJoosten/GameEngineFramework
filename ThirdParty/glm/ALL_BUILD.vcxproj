@@ -1,0 +1,828 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ResolveNugetPackages>false</ResolveNugetPackages>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8A412A7A-2AF1-3AAE-B0E6-AA5EC3117AC0}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.20348.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>ALL_BUILD</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/Projects/GameEngineFramework/ThirdParty/glm/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/Projects/GameEngineFramework/ThirdParty/glm -BD:/Projects/GameEngineFramework/ThirdParty/glm --check-stamp-file D:/Projects/GameEngineFramework/ThirdParty/glm/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeCXXCompiler.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeRCCompiler.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/Projects/GameEngineFramework/ThirdParty/glm/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/Projects/GameEngineFramework/ThirdParty/glm -BD:/Projects/GameEngineFramework/ThirdParty/glm --check-stamp-file D:/Projects/GameEngineFramework/ThirdParty/glm/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeCXXCompiler.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeRCCompiler.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/Projects/GameEngineFramework/ThirdParty/glm/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/Projects/GameEngineFramework/ThirdParty/glm -BD:/Projects/GameEngineFramework/ThirdParty/glm --check-stamp-file D:/Projects/GameEngineFramework/ThirdParty/glm/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeCXXCompiler.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeRCCompiler.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/Projects/GameEngineFramework/ThirdParty/glm/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/Projects/GameEngineFramework/ThirdParty/glm -BD:/Projects/GameEngineFramework/ThirdParty/glm --check-stamp-file D:/Projects/GameEngineFramework/ThirdParty/glm/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.24\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeCXXCompiler.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeRCCompiler.cmake;D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\3.24.2\CMakeSystem.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Projects\GameEngineFramework\ThirdParty\glm\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\ZERO_CHECK.vcxproj">
+      <Project>{EA7B533A-D383-3B59-B0DF-5D4AB8A8CCEF}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\bug\test-bug_ms_vec_static.vcxproj">
+      <Project>{5BF29308-DEA1-3F25-8E58-4A5F1F78DFF3}</Project>
+      <Name>test-bug_ms_vec_static</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_cpp_constexpr.vcxproj">
+      <Project>{4582DC0B-DA93-3315-B5D9-649A848DFF25}</Project>
+      <Name>test-core_cpp_constexpr</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_cpp_defaulted_ctor.vcxproj">
+      <Project>{190D0D40-8989-3E02-A621-418C84854E4A}</Project>
+      <Name>test-core_cpp_defaulted_ctor</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_aligned_gentypes.vcxproj">
+      <Project>{4BF2E5DB-FCDF-3648-BAE0-96502B21944D}</Project>
+      <Name>test-core_force_aligned_gentypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_arch_unknown.vcxproj">
+      <Project>{B0B37A41-2B35-3EA8-BAA2-97891D10C97B}</Project>
+      <Name>test-core_force_arch_unknown</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_compiler_unknown.vcxproj">
+      <Project>{F82DB5F1-78A4-3E46-9E28-E064C25AA363}</Project>
+      <Name>test-core_force_compiler_unknown</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_ctor_init.vcxproj">
+      <Project>{197236E3-91A9-3800-833A-2E036FC9DCD5}</Project>
+      <Name>test-core_force_ctor_init</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_cxx03.vcxproj">
+      <Project>{FBA7A5E0-F2FF-3DA6-B327-B872AC1C5D3E}</Project>
+      <Name>test-core_force_cxx03</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_cxx98.vcxproj">
+      <Project>{04B90B9F-782C-3E5B-8BA9-95C4B973DC34}</Project>
+      <Name>test-core_force_cxx98</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_cxx_unknown.vcxproj">
+      <Project>{85BFFF77-05F4-3FC2-BBDA-3A3EBC71BDE8}</Project>
+      <Name>test-core_force_cxx_unknown</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_explicit_ctor.vcxproj">
+      <Project>{7BB6F80C-E4F9-3DF1-8D3E-D054A81FD819}</Project>
+      <Name>test-core_force_explicit_ctor</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_inline.vcxproj">
+      <Project>{0AAE1AB1-50FA-32B2-8F20-177CCE7BF136}</Project>
+      <Name>test-core_force_inline</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_platform_unknown.vcxproj">
+      <Project>{620C06C7-1184-3716-80E7-E4EAEBD95878}</Project>
+      <Name>test-core_force_platform_unknown</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_pure.vcxproj">
+      <Project>{08B4B5D3-A15B-37A3-B691-F6D56E0E009E}</Project>
+      <Name>test-core_force_pure</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_quat_wxyz.vcxproj">
+      <Project>{40626204-5EAF-3E67-B7DB-51F1F147219A}</Project>
+      <Name>test-core_force_quat_wxyz</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_unrestricted_gentype.vcxproj">
+      <Project>{4708BC8E-B6FF-3EBE-8A6F-7DD33BD46F60}</Project>
+      <Name>test-core_force_unrestricted_gentype</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_force_xyzw_only.vcxproj">
+      <Project>{29F2586E-16DD-30FC-BD70-FB1DB7F8E6FB}</Project>
+      <Name>test-core_force_xyzw_only</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_common.vcxproj">
+      <Project>{89F65F4A-D52F-3A04-A70F-C06D1FBE2E2A}</Project>
+      <Name>test-core_func_common</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_exponential.vcxproj">
+      <Project>{B567BBF0-B853-300C-B5BA-FD4C77AC94FD}</Project>
+      <Name>test-core_func_exponential</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_geometric.vcxproj">
+      <Project>{1D784137-9278-34FE-ACF0-E21E90B18455}</Project>
+      <Name>test-core_func_geometric</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_integer.vcxproj">
+      <Project>{298B4A3A-4B31-34C7-B9E4-C7AAD6855AD5}</Project>
+      <Name>test-core_func_integer</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_integer_bit_count.vcxproj">
+      <Project>{FF0C63E5-4B01-3D5B-984E-4D2F18A9C60A}</Project>
+      <Name>test-core_func_integer_bit_count</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_integer_find_lsb.vcxproj">
+      <Project>{EF6CA17A-426A-3EC8-85D1-2C3FF35D75F6}</Project>
+      <Name>test-core_func_integer_find_lsb</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_integer_find_msb.vcxproj">
+      <Project>{708A32BD-36F7-3519-ADD3-623D661814D2}</Project>
+      <Name>test-core_func_integer_find_msb</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_matrix.vcxproj">
+      <Project>{B6F38078-BCC6-3098-ABAF-A2F8FE5F21EF}</Project>
+      <Name>test-core_func_matrix</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_noise.vcxproj">
+      <Project>{21BCE916-DDCB-360D-B197-50FB62678008}</Project>
+      <Name>test-core_func_noise</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_packing.vcxproj">
+      <Project>{E7A45ED9-D8F7-31A3-9E7C-15AD9A6B1510}</Project>
+      <Name>test-core_func_packing</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_swizzle.vcxproj">
+      <Project>{788B4F8B-0F66-3664-B2EF-2412B0F94FDC}</Project>
+      <Name>test-core_func_swizzle</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_trigonometric.vcxproj">
+      <Project>{C8E99592-6DC7-3810-8649-5FE6D243691A}</Project>
+      <Name>test-core_func_trigonometric</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_func_vector_relational.vcxproj">
+      <Project>{3D62CE60-434A-3973-AF02-2047E7B806B0}</Project>
+      <Name>test-core_func_vector_relational</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_setup_force_cxx98.vcxproj">
+      <Project>{A36A2075-230B-366B-A9E5-D70300AA9FEA}</Project>
+      <Name>test-core_setup_force_cxx98</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_setup_force_size_t_length.vcxproj">
+      <Project>{EF113402-8C23-3881-B601-8E61B0BCC5EB}</Project>
+      <Name>test-core_setup_force_size_t_length</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_setup_message.vcxproj">
+      <Project>{6EBEEB13-2F05-3DEB-B8F5-FD109C130CAF}</Project>
+      <Name>test-core_setup_message</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_setup_platform_unknown.vcxproj">
+      <Project>{069819A9-F904-3C17-9F7A-6D59D3A72C97}</Project>
+      <Name>test-core_setup_platform_unknown</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_setup_precision.vcxproj">
+      <Project>{F59C46CF-466E-33DF-83D9-38B0FA1E7E65}</Project>
+      <Name>test-core_setup_precision</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_aligned.vcxproj">
+      <Project>{48741C7A-5899-3042-A1E2-C9F7B2926E3F}</Project>
+      <Name>test-core_type_aligned</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_cast.vcxproj">
+      <Project>{0277D694-A524-3F9F-8E12-106C3AC51E72}</Project>
+      <Name>test-core_type_cast</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_ctor.vcxproj">
+      <Project>{4698BE2D-E81D-39DB-90CE-332187F2B426}</Project>
+      <Name>test-core_type_ctor</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_int.vcxproj">
+      <Project>{1720D87E-2BEE-34F3-8189-EA03CF8879B7}</Project>
+      <Name>test-core_type_int</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_length.vcxproj">
+      <Project>{9CF4DE79-E098-31DB-AE48-E231FF65FD3B}</Project>
+      <Name>test-core_type_length</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_mat2x2.vcxproj">
+      <Project>{39F9E4B8-650E-3A9E-B4DD-306BF0C3672A}</Project>
+      <Name>test-core_type_mat2x2</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_mat2x3.vcxproj">
+      <Project>{B4BE5E1F-75CA-358F-A3EB-FD7748E7A428}</Project>
+      <Name>test-core_type_mat2x3</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_mat2x4.vcxproj">
+      <Project>{298666A4-CC5B-3949-BDF3-3205C1E8A355}</Project>
+      <Name>test-core_type_mat2x4</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_mat3x2.vcxproj">
+      <Project>{B53F16E6-D22B-32C3-B366-1215C23AD643}</Project>
+      <Name>test-core_type_mat3x2</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_mat3x3.vcxproj">
+      <Project>{832DD7E8-96B8-37BA-9F77-7B6DE0E4A0BA}</Project>
+      <Name>test-core_type_mat3x3</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_mat3x4.vcxproj">
+      <Project>{0668ABEF-B6E1-3811-B8D3-AF2C7E1A1F1A}</Project>
+      <Name>test-core_type_mat3x4</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_mat4x2.vcxproj">
+      <Project>{9F67B12B-1303-30FE-A3A5-913CC58E3172}</Project>
+      <Name>test-core_type_mat4x2</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_mat4x3.vcxproj">
+      <Project>{8572651E-A794-376C-9EBE-CCBCFC0B8F73}</Project>
+      <Name>test-core_type_mat4x3</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_mat4x4.vcxproj">
+      <Project>{09638EA7-9131-3F7A-B8A5-13BEBA919ABF}</Project>
+      <Name>test-core_type_mat4x4</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_vec1.vcxproj">
+      <Project>{C0A57E2E-8946-3C88-AFF0-166CB0A89157}</Project>
+      <Name>test-core_type_vec1</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_vec2.vcxproj">
+      <Project>{4499FE5D-D03C-3B80-A194-1CCC7B257A1E}</Project>
+      <Name>test-core_type_vec2</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_vec3.vcxproj">
+      <Project>{78376446-93F4-32DB-8918-59091B3441D7}</Project>
+      <Name>test-core_type_vec3</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\core\test-core_type_vec4.vcxproj">
+      <Project>{E469E34A-9D10-3887-98BD-47E5B7E2F7CE}</Project>
+      <Name>test-core_type_vec4</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_matrix_common.vcxproj">
+      <Project>{77519B6F-EAF6-335E-8ABC-A354F2285E3C}</Project>
+      <Name>test-ext_matrix_common</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_matrix_relational.vcxproj">
+      <Project>{D6DDF4C4-1210-33A6-AC70-DBC5FD65379A}</Project>
+      <Name>test-ext_matrix_relational</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_matrix_transform.vcxproj">
+      <Project>{8EE65AD0-D217-329B-B746-BF42600713D6}</Project>
+      <Name>test-ext_matrix_transform</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_quaternion_common.vcxproj">
+      <Project>{C2967EF3-C2EC-3AC6-ABDF-37181E7A6638}</Project>
+      <Name>test-ext_quaternion_common</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_quaternion_exponential.vcxproj">
+      <Project>{B7D232EC-E812-3D3C-81CA-AE17FEFB0408}</Project>
+      <Name>test-ext_quaternion_exponential</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_quaternion_geometric.vcxproj">
+      <Project>{0210A52F-6890-373B-8F19-48750137551B}</Project>
+      <Name>test-ext_quaternion_geometric</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_quaternion_relational.vcxproj">
+      <Project>{B7759BC4-10CC-3B37-87B5-C1D938FBAEAE}</Project>
+      <Name>test-ext_quaternion_relational</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_quaternion_transform.vcxproj">
+      <Project>{5B4C44A2-4503-3754-BE86-DBB90A660647}</Project>
+      <Name>test-ext_quaternion_transform</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_quaternion_trigonometric.vcxproj">
+      <Project>{011455C4-0E23-3A53-B822-BE2E51B45B7E}</Project>
+      <Name>test-ext_quaternion_trigonometric</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_quaternion_type.vcxproj">
+      <Project>{23B5C3DE-38C3-3A35-8B3A-116B975B1B16}</Project>
+      <Name>test-ext_quaternion_type</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_scalar_common.vcxproj">
+      <Project>{22059F9B-4F7E-3C25-AECB-971BBE3AE429}</Project>
+      <Name>test-ext_scalar_common</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_scalar_constants.vcxproj">
+      <Project>{FCCA65D8-226B-3953-A85D-FD3023E87143}</Project>
+      <Name>test-ext_scalar_constants</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_scalar_int_sized.vcxproj">
+      <Project>{75ACDA02-FB7C-32DA-A3E4-E12D04D59370}</Project>
+      <Name>test-ext_scalar_int_sized</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_scalar_integer.vcxproj">
+      <Project>{4E2B75CD-8441-3287-87BC-128EEB7096F9}</Project>
+      <Name>test-ext_scalar_integer</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_scalar_relational.vcxproj">
+      <Project>{2984D765-1C9F-3DC2-9712-4A67BF5BD026}</Project>
+      <Name>test-ext_scalar_relational</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_scalar_uint_sized.vcxproj">
+      <Project>{90166866-37A0-39E0-A39B-73FDE0EA589D}</Project>
+      <Name>test-ext_scalar_uint_sized</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_scalar_ulp.vcxproj">
+      <Project>{BA3F1770-223E-34E6-AE80-9D180F8C01A1}</Project>
+      <Name>test-ext_scalar_ulp</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_vec1.vcxproj">
+      <Project>{A75F7EDE-A2D6-3D89-9BBE-0D1482E384A1}</Project>
+      <Name>test-ext_vec1</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_vector_bool1.vcxproj">
+      <Project>{8E55BA75-6E89-32C0-930B-047E365478F6}</Project>
+      <Name>test-ext_vector_bool1</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_vector_common.vcxproj">
+      <Project>{350E4E3E-F5B7-361E-9547-4F7DF0F2077D}</Project>
+      <Name>test-ext_vector_common</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_vector_iec559.vcxproj">
+      <Project>{BC95FB64-9EEE-3E27-AEE5-423457FB2958}</Project>
+      <Name>test-ext_vector_iec559</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_vector_integer.vcxproj">
+      <Project>{65DE1C74-DC5B-38BA-B717-AE0ED06C6A0A}</Project>
+      <Name>test-ext_vector_integer</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_vector_integer_sized.vcxproj">
+      <Project>{4AEE72DA-A92B-35FB-9743-D38048B750C9}</Project>
+      <Name>test-ext_vector_integer_sized</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_vector_relational.vcxproj">
+      <Project>{8E11E85F-F17A-39C0-BBCA-15D86CDA052B}</Project>
+      <Name>test-ext_vector_relational</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\ext\test-ext_vector_ulp.vcxproj">
+      <Project>{6063347B-9B21-353B-AD1D-A2D2CDC86712}</Project>
+      <Name>test-ext_vector_ulp</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_bitfield.vcxproj">
+      <Project>{D18F7F6A-967B-3BB7-A54D-59104E0C269D}</Project>
+      <Name>test-gtc_bitfield</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_color_space.vcxproj">
+      <Project>{CE0A338C-A821-3CC5-ACC0-97D29A7A5D09}</Project>
+      <Name>test-gtc_color_space</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_constants.vcxproj">
+      <Project>{2B9FADC0-F3A1-3E17-AD87-660D74927ECB}</Project>
+      <Name>test-gtc_constants</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_epsilon.vcxproj">
+      <Project>{7CF337F6-28DB-3296-B05B-434ADF59C72B}</Project>
+      <Name>test-gtc_epsilon</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_integer.vcxproj">
+      <Project>{B5C0C34E-27F6-38D0-9403-1264C71315E3}</Project>
+      <Name>test-gtc_integer</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_matrix_access.vcxproj">
+      <Project>{C14E2405-9E46-3356-A5BB-3FFA93C9D7C7}</Project>
+      <Name>test-gtc_matrix_access</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_matrix_integer.vcxproj">
+      <Project>{ADEB19A2-10B8-32ED-A044-3F8DD9F3C416}</Project>
+      <Name>test-gtc_matrix_integer</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_matrix_inverse.vcxproj">
+      <Project>{B5BE1BB7-5FFD-3225-A727-583266054350}</Project>
+      <Name>test-gtc_matrix_inverse</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_matrix_transform.vcxproj">
+      <Project>{5C225C80-29D9-32DE-A514-D17F28C61FAB}</Project>
+      <Name>test-gtc_matrix_transform</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_noise.vcxproj">
+      <Project>{0CE3449F-0612-362C-A891-51DFED38243F}</Project>
+      <Name>test-gtc_noise</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_packing.vcxproj">
+      <Project>{6F24444E-B7E0-3084-BAC4-573C3868970C}</Project>
+      <Name>test-gtc_packing</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_quaternion.vcxproj">
+      <Project>{17F0B860-1B39-3FEA-A35B-B9F804D07514}</Project>
+      <Name>test-gtc_quaternion</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_random.vcxproj">
+      <Project>{E6E00E16-88C6-3443-8BAC-FC685C985D53}</Project>
+      <Name>test-gtc_random</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_reciprocal.vcxproj">
+      <Project>{3A11754A-1E5A-3F7B-87E7-EEC52112255E}</Project>
+      <Name>test-gtc_reciprocal</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_round.vcxproj">
+      <Project>{ED38AA95-DD83-3843-B10C-B500A65C07AE}</Project>
+      <Name>test-gtc_round</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_type_aligned.vcxproj">
+      <Project>{532290D0-ACD7-3609-8AB1-F58CE9655F30}</Project>
+      <Name>test-gtc_type_aligned</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_type_precision.vcxproj">
+      <Project>{6F6E588B-290D-3E35-A04D-861F414AB104}</Project>
+      <Name>test-gtc_type_precision</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_type_ptr.vcxproj">
+      <Project>{38DECCE6-C6BA-324C-A1FE-8E879FFB74BF}</Project>
+      <Name>test-gtc_type_ptr</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_ulp.vcxproj">
+      <Project>{27EE6A63-1957-36C9-A39D-94B7B186F6A7}</Project>
+      <Name>test-gtc_ulp</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtc\test-gtc_vec1.vcxproj">
+      <Project>{73913A0D-7E12-38A4-91C6-9130C7F39E3D}</Project>
+      <Name>test-gtc_vec1</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx.vcxproj">
+      <Project>{6CC7C825-5B4F-31F3-99DD-4E1D1EA182C2}</Project>
+      <Name>test-gtx</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_associated_min_max.vcxproj">
+      <Project>{1D2C2930-A60F-317A-8465-DF7C942D7439}</Project>
+      <Name>test-gtx_associated_min_max</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_closest_point.vcxproj">
+      <Project>{C5691697-0209-3FB3-AFB3-77962FDDCC28}</Project>
+      <Name>test-gtx_closest_point</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_color_encoding.vcxproj">
+      <Project>{5BB24238-CF6C-313A-8AEB-8934A450E1E0}</Project>
+      <Name>test-gtx_color_encoding</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_color_space.vcxproj">
+      <Project>{0FBE06B0-1E1B-32D9-B844-EE94B99F9F0D}</Project>
+      <Name>test-gtx_color_space</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_color_space_YCoCg.vcxproj">
+      <Project>{4917F2B7-1906-3EEE-8E68-853485FCD2BD}</Project>
+      <Name>test-gtx_color_space_YCoCg</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_common.vcxproj">
+      <Project>{506B8FF1-7B2F-3A8D-A701-389C7B0E4293}</Project>
+      <Name>test-gtx_common</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_compatibility.vcxproj">
+      <Project>{5629F463-A3E4-3CC0-9EA8-BEDA720A5B7B}</Project>
+      <Name>test-gtx_compatibility</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_component_wise.vcxproj">
+      <Project>{889886C1-B6E0-33EC-96AB-2D8998A9F9EC}</Project>
+      <Name>test-gtx_component_wise</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_dual_quaternion.vcxproj">
+      <Project>{238FC463-4CBA-3C8D-B0D7-C08B4EA6F518}</Project>
+      <Name>test-gtx_dual_quaternion</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_easing.vcxproj">
+      <Project>{2E81F1BA-09CE-3731-B719-DF66A2C977C5}</Project>
+      <Name>test-gtx_easing</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_euler_angle.vcxproj">
+      <Project>{34B91B85-5E8E-387A-A2EF-E0B9340F7235}</Project>
+      <Name>test-gtx_euler_angle</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_extend.vcxproj">
+      <Project>{E727FD36-9854-3BD4-9D34-1B441E6ED30E}</Project>
+      <Name>test-gtx_extend</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_extended_min_max.vcxproj">
+      <Project>{7E1D2ACE-1541-30A4-B849-86C378281560}</Project>
+      <Name>test-gtx_extended_min_max</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_exterior_product.vcxproj">
+      <Project>{57B17A19-3813-35C1-9418-951CB98B4940}</Project>
+      <Name>test-gtx_exterior_product</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_fast_exponential.vcxproj">
+      <Project>{981B4E12-F8F5-346E-AF13-48D92314B537}</Project>
+      <Name>test-gtx_fast_exponential</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_fast_square_root.vcxproj">
+      <Project>{C8D34BC5-AD1D-3A5E-91BC-66B484B630F1}</Project>
+      <Name>test-gtx_fast_square_root</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_fast_trigonometry.vcxproj">
+      <Project>{7788E45C-ACFC-313D-8DD4-6B27652CD60F}</Project>
+      <Name>test-gtx_fast_trigonometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_functions.vcxproj">
+      <Project>{5BB696DA-5CFD-3300-9441-19EE21D29FE7}</Project>
+      <Name>test-gtx_functions</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_gradient_paint.vcxproj">
+      <Project>{00392337-BD17-3598-AA81-5A229F9F56A1}</Project>
+      <Name>test-gtx_gradient_paint</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_handed_coordinate_space.vcxproj">
+      <Project>{8E8CCF75-0E31-329D-9F5F-8D89BC879D01}</Project>
+      <Name>test-gtx_handed_coordinate_space</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_integer.vcxproj">
+      <Project>{2C23C2E1-EDFD-3425-A2D0-0E8C2650B77A}</Project>
+      <Name>test-gtx_integer</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_intersect.vcxproj">
+      <Project>{70E79202-2789-3E3F-8F31-828CBCBAC7A7}</Project>
+      <Name>test-gtx_intersect</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_io.vcxproj">
+      <Project>{138B3E32-F958-350D-AB1A-168A8E353F53}</Project>
+      <Name>test-gtx_io</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_load.vcxproj">
+      <Project>{7CF5011C-0563-3731-B877-0F6E886FC59E}</Project>
+      <Name>test-gtx_load</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_log_base.vcxproj">
+      <Project>{E6680BC1-9B27-3B1C-B2D5-5CCBDC5C7C7F}</Project>
+      <Name>test-gtx_log_base</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_matrix_cross_product.vcxproj">
+      <Project>{9D24EA50-DA20-3FAB-ADE0-D8237765B1D7}</Project>
+      <Name>test-gtx_matrix_cross_product</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_matrix_decompose.vcxproj">
+      <Project>{3348A951-0750-35F0-AE23-3FD7E9FE438D}</Project>
+      <Name>test-gtx_matrix_decompose</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_matrix_factorisation.vcxproj">
+      <Project>{B379E11B-E0B6-3C86-A6CF-8D275FEF013E}</Project>
+      <Name>test-gtx_matrix_factorisation</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_matrix_interpolation.vcxproj">
+      <Project>{6A65C1AD-A5E5-35C7-92A7-3D13D517B551}</Project>
+      <Name>test-gtx_matrix_interpolation</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_matrix_major_storage.vcxproj">
+      <Project>{2360CA9F-D117-380C-8B09-B06024CB6CE3}</Project>
+      <Name>test-gtx_matrix_major_storage</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_matrix_operation.vcxproj">
+      <Project>{52BB9C4D-CC8F-3C81-A0F9-93D0F127227F}</Project>
+      <Name>test-gtx_matrix_operation</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_matrix_query.vcxproj">
+      <Project>{AFEEDFCC-3E17-3805-91B3-1617A23689CF}</Project>
+      <Name>test-gtx_matrix_query</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_matrix_transform_2d.vcxproj">
+      <Project>{28305FEC-28A7-3FD9-8D4B-D34C9BD8ADE9}</Project>
+      <Name>test-gtx_matrix_transform_2d</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_norm.vcxproj">
+      <Project>{8969C289-5ED1-3DDC-A12A-AEE9A972DD8F}</Project>
+      <Name>test-gtx_norm</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_normal.vcxproj">
+      <Project>{B6FE12AC-8123-3F15-ADA8-8BDFF134A1DB}</Project>
+      <Name>test-gtx_normal</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_normalize_dot.vcxproj">
+      <Project>{1BF5C31E-DB0D-306E-BDB7-2D9484FBF292}</Project>
+      <Name>test-gtx_normalize_dot</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_number_precision.vcxproj">
+      <Project>{305D6B07-9822-3FE6-8938-284613F4017B}</Project>
+      <Name>test-gtx_number_precision</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_optimum_pow.vcxproj">
+      <Project>{E62E39E7-B6E6-3DA9-8FB7-9DFBADCF4052}</Project>
+      <Name>test-gtx_optimum_pow</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_orthonormalize.vcxproj">
+      <Project>{FAF27B11-320B-308C-9D0F-9F97ABFCA0B8}</Project>
+      <Name>test-gtx_orthonormalize</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_perpendicular.vcxproj">
+      <Project>{8B83ACD0-F3F4-3F00-971F-8729102021F9}</Project>
+      <Name>test-gtx_perpendicular</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_polar_coordinates.vcxproj">
+      <Project>{BEA03F25-CD63-3A4E-A380-587429A1532F}</Project>
+      <Name>test-gtx_polar_coordinates</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_projection.vcxproj">
+      <Project>{E74690EC-CAA2-32B4-ADB0-6A436CD0CB0F}</Project>
+      <Name>test-gtx_projection</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_quaternion.vcxproj">
+      <Project>{5CB45B99-4F9A-325D-B7F7-849001B8797F}</Project>
+      <Name>test-gtx_quaternion</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_range.vcxproj">
+      <Project>{7850B4AA-8A9F-3D90-9912-7027A6B6A03D}</Project>
+      <Name>test-gtx_range</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_rotate_normalized_axis.vcxproj">
+      <Project>{D71CD044-B802-3278-9F1A-01DE06A52641}</Project>
+      <Name>test-gtx_rotate_normalized_axis</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_rotate_vector.vcxproj">
+      <Project>{CDE2B0E0-13A0-326B-958C-FA83BA3386F2}</Project>
+      <Name>test-gtx_rotate_vector</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_scalar_multiplication.vcxproj">
+      <Project>{33E56195-6800-3318-9635-0918E2BC379C}</Project>
+      <Name>test-gtx_scalar_multiplication</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_scalar_relational.vcxproj">
+      <Project>{EA726E8A-663B-3E15-8E70-4C6FC2A853AC}</Project>
+      <Name>test-gtx_scalar_relational</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_spline.vcxproj">
+      <Project>{55383823-3015-3E89-B34A-6329E4DA7D35}</Project>
+      <Name>test-gtx_spline</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_string_cast.vcxproj">
+      <Project>{737DB258-39B5-33DD-99BE-D3258502A84E}</Project>
+      <Name>test-gtx_string_cast</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_texture.vcxproj">
+      <Project>{34CAC064-2B46-3921-8AA4-0C92D41A1C3B}</Project>
+      <Name>test-gtx_texture</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_type_aligned.vcxproj">
+      <Project>{19BB4EDB-1459-3C0B-8046-03B7DC63AA97}</Project>
+      <Name>test-gtx_type_aligned</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_type_trait.vcxproj">
+      <Project>{F92F09A0-CBCF-3F70-ACDE-34565A95E6BD}</Project>
+      <Name>test-gtx_type_trait</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_vec_swizzle.vcxproj">
+      <Project>{917EC881-5050-328B-90F9-F2B60CD87ADC}</Project>
+      <Name>test-gtx_vec_swizzle</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_vector_angle.vcxproj">
+      <Project>{D42FE0D0-5164-3B91-9D0D-ED3C1B6AECA5}</Project>
+      <Name>test-gtx_vector_angle</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_vector_query.vcxproj">
+      <Project>{3AFD3E05-5A1D-35F8-B5E0-6429F442A465}</Project>
+      <Name>test-gtx_vector_query</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\gtx\test-gtx_wrap.vcxproj">
+      <Project>{1F382414-5A20-34D1-BEA6-9F3D5949C0CA}</Project>
+      <Name>test-gtx_wrap</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\perf\test-perf_matrix_div.vcxproj">
+      <Project>{48E3C154-26DB-31D9-ACED-4D0D48089A78}</Project>
+      <Name>test-perf_matrix_div</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\perf\test-perf_matrix_inverse.vcxproj">
+      <Project>{490ED6C4-97B6-399A-A016-DA48578EA19D}</Project>
+      <Name>test-perf_matrix_inverse</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\perf\test-perf_matrix_mul.vcxproj">
+      <Project>{3F2DCBC6-C72A-396F-9AF5-C5B0AA6AE079}</Project>
+      <Name>test-perf_matrix_mul</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\perf\test-perf_matrix_mul_vector.vcxproj">
+      <Project>{9707EB15-BF5C-3B3C-833F-623AD4D7CD9C}</Project>
+      <Name>test-perf_matrix_mul_vector</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\perf\test-perf_matrix_transpose.vcxproj">
+      <Project>{1F2ECF1C-35D1-3C37-9BCE-2A71E64D9532}</Project>
+      <Name>test-perf_matrix_transpose</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\Projects\GameEngineFramework\ThirdParty\glm\test\perf\test-perf_vector_mul_matrix.vcxproj">
+      <Project>{831AD429-9B37-3830-860D-2107FA9F6B98}</Project>
+      <Name>test-perf_vector_mul_matrix</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
