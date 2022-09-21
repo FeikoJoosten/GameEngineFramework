@@ -1,32 +1,27 @@
 #include "Engine/Entity/Entity.hpp"
-#include "Engine/Engine.hpp"
 #include "Engine/Entity/EntitySystem.hpp"
 
 namespace Engine {
-	Entity::Entity(std::string name) : id(-1), name(std::move(name)), isActive(true) {}
+	Entity::Entity(std::string name) : id(-1), isActive(true), name(std::move(name)) {}
+
+	Entity::~Entity() {
+		OnEntityDestroyedEvent(GetPointer());
+	}
 
 	std::vector<std::shared_ptr<Component>> Entity::GetAllComponents() const {
 		return components;
 	}
 
-	std::weak_ptr<Entity> Entity::GetPointer() const {
-		return EntitySystem::Get()->GetEntity(id).lock();
-	}
-
-	void Entity::Update() {
+	void Entity::Update() const {
 		if (isActive == false)
 			return;
 
-		for (size_t i = 0, size = components.size(); i < size; ++i) {
-			if (components[i]->isEnabled == false)
+		for (const std::shared_ptr<Component>& component : components) {
+			if (component->isEnabled == false)
 				continue;
 
-			components[i]->Update();
+			component->Update();
 		}
-	}
-
-	size_t Entity::ComponentCount() const {
-		return components.size();
 	}
 
 	int Entity::GetId() const {
@@ -41,21 +36,34 @@ namespace Engine {
 		if (newIsActive == isActive) return;
 
 		isActive = newIsActive;
-		OnActiveStateChangedEvent(GetPointer().lock(), isActive);
+		OnActiveStateChangedEvent(GetPointer(), isActive);
 	}
 
-	void Entity::SetId(const int newId) {
+	std::string Entity::GetName() const {
+		return name;
+	}
+
+	void Entity::SetName(const std::string& newName) {
+		name = newName;
+	}
+
+	void Entity::InitializeEntity(const std::shared_ptr<Entity>& newPointerReference, const int newId) {
+		pointerReference = newPointerReference;
 		id = newId;
 	}
 
-	void Entity::OnComponentAdded(const std::shared_ptr<Component> addedComponent) const {
+	std::shared_ptr<Entity> Entity::GetPointer() const {
+		return pointerReference.lock();
+	}
+
+	void Entity::OnComponentAdded(const std::shared_ptr<Component>& addedComponent) const {
 		// No need to inform the last added component, that has just been added.
 		for (size_t i = 0, size = components.size() - 1; i < size; ++i)
 			components[i]->OnComponentAdded(addedComponent);
 	}
 
-	void Entity::OnComponentRemoved(const std::shared_ptr<Component> removedComponent) const {
-		for (size_t i = 0, size = components.size(); i < size; ++i)
-			components[i]->OnComponentRemoved(removedComponent);
+	void Entity::OnComponentRemoved(const std::shared_ptr<Component>& removedComponent) const {
+		for (const std::shared_ptr<Component>& component : components)
+			component->OnComponentRemoved(removedComponent);
 	}
 } // namespace Engine

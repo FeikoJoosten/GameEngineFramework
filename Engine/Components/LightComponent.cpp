@@ -159,8 +159,8 @@ namespace Engine {
 
 		lightName = name;
 
-		if (name == "")
-			lightName = GetOwner().lock()->name;
+		if (name.empty())
+			lightName = GetOwner().lock()->GetName();
 
 #ifdef USING_VULKAN
 		renderer.lock()->CreateLight(lightName,
@@ -186,8 +186,8 @@ namespace Engine {
 	{
 		lightName = name;
 
-		if (name == "")
-			lightName = GetOwner().lock()->name;
+		if (name.empty())
+			lightName = GetOwner().lock()->GetName();
 
 		created = false;
 	}
@@ -205,8 +205,8 @@ namespace Engine {
 			SetIsEnabled(false);
 #endif
 
-			if (lightName == "")
-				lightName = GetOwner().lock()->name;
+			if (lightName.empty())
+				lightName = GetOwner().lock()->GetName();
 #ifdef USING_VULKAN
 			renderer.lock()->CreateLight(lightName,
 				LightType::LIGHT_NONEXISTENT,
