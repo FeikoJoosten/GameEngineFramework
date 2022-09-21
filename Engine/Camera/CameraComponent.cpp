@@ -77,12 +77,11 @@ namespace Engine {
 		}
 	}
 
-	void CameraComponent::HandleOnTransformComponentModifiedEvent() {
-		if (!GetIsEnabled() || transformComponent.expired()) return;
-
-		const std::shared_ptr<TransformComponent> transformComponentShared = transformComponent.lock();
-		const glm::vec3 position = transformComponentShared->GetPosition();
-		SetView(glm::lookAt(position, position + transformComponentShared->GetForward(), transformComponentShared->GetUp()));
+	void CameraComponent::HandleOnTransformComponentModifiedEvent(const std::shared_ptr<TransformComponent> modifiedTransformComponent) {
+		if (!GetIsEnabled() || !modifiedTransformComponent) return;
+		
+		const glm::vec3 position = modifiedTransformComponent->GetPosition();
+		SetView(glm::lookAt(position, position + modifiedTransformComponent->GetForward(), modifiedTransformComponent->GetUp()));
 	}
 
 	void CameraComponent::OnComponentAdded(const std::shared_ptr<Component> addedComponent) {
@@ -90,13 +89,11 @@ namespace Engine {
 
 		if (!transformComponent.expired()) return;
 
-		const std::shared_ptr<TransformComponent> possibleTransformComponent = std::dynamic_pointer_cast<TransformComponent>(addedComponent);
-
-		if (possibleTransformComponent) {
+		if (const std::shared_ptr<TransformComponent> possibleTransformComponent = std::dynamic_pointer_cast<TransformComponent>(addedComponent)) {
 			transformComponent = possibleTransformComponent;
 			possibleTransformComponent->OnModifiedEvent += Sharp::EventHandler::Bind(this, &CameraComponent::HandleOnTransformComponentModifiedEvent);
 			SetIsEnabled(true);
-			HandleOnTransformComponentModifiedEvent();
+			HandleOnTransformComponentModifiedEvent(possibleTransformComponent);
 		}
 	}
 

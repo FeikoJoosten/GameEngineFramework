@@ -24,17 +24,16 @@ namespace Engine {
 	TransformComponent::TransformComponent(const glm::vec3 position, const glm::quat rotation, const glm::vec3 scale) noexcept :
 		TransformComponent(position, rotation, scale, false) {}
 
-	TransformComponent::TransformComponent(const glm::vec3 position, const glm::quat rotation, const glm::vec3 scale,
-		const bool isStatic) noexcept : position(position), rotation(rotation),
-		scale(scale), isStatic(isStatic) {
-		UpdateModelMatrix();
+	TransformComponent::TransformComponent(const glm::vec3 position, const glm::quat rotation, const glm::vec3 scale, const bool isStatic) noexcept :
+	position(position), rotation(rotation), scale(scale), isStatic(isStatic) {
+		RecalculateModelMatrix();
 	}
 
 	void TransformComponent::SetPosition(const glm::vec3 newPosition) noexcept {
 		if (isStatic) return;
 
 		position = newPosition;
-		UpdateModelMatrix();
+		RecalculateModelMatrix();
 	}
 
 	void TransformComponent::SetPosition(const float x, const float y, const float z) noexcept {
@@ -45,11 +44,11 @@ namespace Engine {
 		return position;
 	}
 
-	void TransformComponent::SetRotation(const glm::vec3 newRotation) noexcept {
+	void TransformComponent::SetRotation(const glm::quat newRotation) noexcept {
 		if (isStatic) return;
 
 		rotation = newRotation;
-		UpdateModelMatrix();
+		RecalculateModelMatrix();
 	}
 
 	void TransformComponent::SetRotation(const float x, const float y, const float z) noexcept {
@@ -60,19 +59,19 @@ namespace Engine {
 		return rotation;
 	}
 
-	void TransformComponent::SetPositionAndRotation(glm::vec3 newPosition, glm::vec3 newRotation) {
+	void TransformComponent::SetPositionAndRotation(const glm::vec3 newPosition, const glm::quat newRotation) {
 		if (isStatic) return;
 
 		position = newPosition;
 		rotation = newRotation;
-		UpdateModelMatrix();
+		RecalculateModelMatrix();
 	}
 
 	void TransformComponent::SetScale(const glm::vec3 newScale) noexcept {
 		if (isStatic) return;
 
 		scale = newScale;
-		UpdateModelMatrix();
+		RecalculateModelMatrix();
 	}
 
 	void TransformComponent::SetScale(const float x, const float y, const float z) noexcept {
@@ -87,7 +86,7 @@ namespace Engine {
 		if (isStatic) return;
 
 		modelMatrix = newModelMatrix;
-		OnModifiedEvent();
+		DecomposeModelMatrix();
 	}
 
 	void TransformComponent::SetModelMatrix(float newModelMatrix[16]) noexcept {
@@ -110,6 +109,8 @@ namespace Engine {
 
 	void TransformComponent::SetIsStatic(const bool newIsStatic) noexcept {
 		isStatic = newIsStatic;
+
+		OnModifiedEvent(std::static_pointer_cast<TransformComponent>(GetPointerReference()));
 	}
 
 	bool TransformComponent::GetIsStatic() const noexcept {
@@ -120,7 +121,7 @@ namespace Engine {
 		if (isStatic) return;
 
 		position += rotation * positionToAdd;
-		UpdateModelMatrix();
+		RecalculateModelMatrix();
 	}
 
 	void TransformComponent::Translate(const float x) noexcept {
@@ -139,7 +140,7 @@ namespace Engine {
 		if (isStatic) return;
 
 		rotation *= rotationToAdd;
-		UpdateModelMatrix();
+		RecalculateModelMatrix();
 	}
 
 	void TransformComponent::AddRotation(const float x) noexcept {
@@ -158,7 +159,7 @@ namespace Engine {
 		if (isStatic) return;
 
 		scale += scaleToAdd;
-		UpdateModelMatrix();
+		RecalculateModelMatrix();
 	}
 
 	void TransformComponent::AddScale(const float x) noexcept {
@@ -192,20 +193,24 @@ namespace Engine {
 	void TransformComponent::LookAt(const glm::vec3 targetPosition) noexcept {
 		if (isStatic) return;
 
-		modelMatrix *= glm::lookAt(position, targetPosition, GetUp());
-		OnModifiedEvent();
+		modelMatrix = glm::lookAt(position, targetPosition, GetUp());
+		DecomposeModelMatrix();
 	}
 
-	void TransformComponent::RotateAround(const float angle, const glm::vec3 axis) noexcept {
-		if (isStatic) return;
-
-		const glm::mat4x4 rotationMatrix;
-		glm::rotate(rotationMatrix, angle, axis);
-		modelMatrix *= rotationMatrix;
-		OnModifiedEvent();
+	void TransformComponent::DecomposeModelMatrix() noexcept {
+		position = modelMatrix[3];
+		for (int i = 0; i < 3; i++)
+			scale[i] = glm::length(glm::vec3(modelMatrix[i]));
+		const glm::mat3 rotMtx(
+			glm::vec3(modelMatrix[0]) / scale[0],
+			glm::vec3(modelMatrix[1]) / scale[1],
+			glm::vec3(modelMatrix[2]) / scale[2]);
+		rotation = glm::quat_cast(rotMtx);
+		
+		OnModifiedEvent(std::static_pointer_cast<TransformComponent>(GetPointerReference()));
 	}
 
-	void TransformComponent::UpdateModelMatrix() noexcept {
+	void TransformComponent::RecalculateModelMatrix() noexcept {
 		const glm::mat4x4 currentModelMatrix = modelMatrix;
 		const glm::mat4x4 rotationMatrix = glm::eulerAngleYXZ(rotation.y, rotation.x, rotation.z);
 		glm::mat4x4 rotationScaleMatrix = rotationMatrix * glm::scale(rotationMatrix, scale);
@@ -214,20 +219,6 @@ namespace Engine {
 		if (currentModelMatrix == rotationScaleMatrix) return;
 
 		modelMatrix = rotationScaleMatrix;
-		OnModifiedEvent();
-	}
-
-	bool TransformComponent::operator!=(const TransformComponent& other) const {
-		if (position != other.position) return true;
-		if (rotation != other.rotation) return true;
-		if (scale != other.scale) return true;
-		return false;
-	}
-
-	bool TransformComponent::operator==(const TransformComponent& other) const {
-		if (position != other.position) return false;
-		if (rotation != other.rotation) return false;
-		if (scale != other.scale) return false;
-		return true;
+		OnModifiedEvent(std::static_pointer_cast<TransformComponent>(GetPointerReference()));
 	}
 } //namespace Engine

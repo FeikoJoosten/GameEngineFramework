@@ -168,21 +168,20 @@ namespace Engine {
 		if (map->GetBool(MoveDown))
 			lockedCameraTransformComponent->Translate(0, -deltaMovementSpeed);
 		if (map->GetBool(RotateLeft))
-			lockedCameraTransformComponent->Rotate(glm::quat(glm::vec3(0.f, deltaRotationSpeed, 0.f)));
+			lockedCameraTransformComponent->Rotate(glm::vec3(0.f, deltaRotationSpeed, 0.f));
 		if (map->GetBool(RotateRight))
-			lockedCameraTransformComponent->Rotate(glm::quat(glm::vec3(0.f, -deltaRotationSpeed, 0.f)));
+			lockedCameraTransformComponent->Rotate(glm::vec3(0.f, -deltaRotationSpeed, 0.f));
 		if (map->GetBool(RotateUp))
-			lockedCameraTransformComponent->Rotate(glm::quat(glm::vec3(-deltaRotationSpeed, 0.f, 0.f)));
+			lockedCameraTransformComponent->Rotate(glm::vec3(-deltaRotationSpeed, 0.f, 0.f));
 		if (map->GetBool(RotateDown))
-			lockedCameraTransformComponent->Rotate(glm::quat(glm::vec3(deltaRotationSpeed, 0.f, 0.f)));
+			lockedCameraTransformComponent->Rotate(glm::vec3(deltaRotationSpeed, 0.f, 0.f));
 		if (map->GetBool(EnableMouseRotation)) {
 			lockedCameraTransformComponent->Rotate(
-				glm::quat(
-					glm::vec3(
-						// TODO: Figure out why I need to flip Y and X axis here?
-						map->GetFloatDelta(MouseY) * deltaMouseRotationSpeed,
-						-map->GetFloatDelta(MouseX) * deltaMouseRotationSpeed,
-						0.f)));
+				glm::vec3(
+					// TODO: Figure out why I need to flip Y and X axis here?
+					map->GetFloatDelta(MouseY) * deltaMouseRotationSpeed,
+					-map->GetFloatDelta(MouseX) * deltaMouseRotationSpeed,
+					0.f));
 		}
 	}
 } //namespace Engine

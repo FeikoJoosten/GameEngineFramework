@@ -21,10 +21,10 @@ namespace Engine {
 
 		Component() = default;
 		virtual ~Component();
-		Component(const Component& other) = default;
-		Component(Component&& other) = default;
-		Component& operator=(const Component& other) = default;
-		Component& operator=(Component&& other) = default;
+		Component(const Component& other) = delete;
+		Component(Component&& other) = delete;
+		Component& operator=(const Component& other) = delete;
+		Component& operator=(Component&& other) = delete;
 
 		/// <summary>
 		/// This method allows you to get the entity holding this component.
@@ -94,13 +94,20 @@ namespace Engine {
 		/// </summary>
 		void RemoveAllComponents() const;
 
+	protected:
+
 		/// <summary>
-		/// This method allows you to get a direct refence to the weak pointer of this component.
+		/// This method allows you to get a direct reference to the weak pointer of this component.
 		/// </summary>
 		/// <returns>Returns the reference of this object as a weak pointer.</returns>
-		[[nodiscard]] std::weak_ptr<Component> GetPointerReference() const;
+		[[nodiscard]] std::shared_ptr<Component> GetPointerReference() const;
 
-	protected:
+		/// <summary>
+		/// This method allows you to get a direct reference to the weak pointer of this component.
+		/// </summary>
+		/// <returns>Returns the reference of this object as a weak pointer.</returns>
+		template<typename ComponentType>
+		[[nodiscard]] std::shared_ptr<ComponentType> GetPointerReference() const;
 
 		/// <summary>
 		/// This method is used to initialize components in. This method is called after the setting of the owner.
@@ -138,7 +145,6 @@ namespace Engine {
 
 		template<class Archive>
 		void Serialize(Archive& archive);
-
 	};
 
 	template <typename ComponentType>

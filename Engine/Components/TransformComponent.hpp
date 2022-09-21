@@ -6,7 +6,7 @@
 #include <glm/gtx/quaternion.hpp>
 
 namespace Engine {
-	class ENGINE_API TransformComponent final : public Component{
+	class ENGINE_API TransformComponent final : public Component {
 		friend class Entity;
 		explicit TransformComponent() noexcept;
 		explicit TransformComponent(bool isStatic) noexcept;
@@ -18,6 +18,8 @@ namespace Engine {
 		explicit TransformComponent(glm::vec3 position, glm::quat rotation, glm::vec3 scale, bool isStatic) noexcept;
 
 	public:
+		Sharp::Event<std::shared_ptr<TransformComponent>> OnModifiedEvent;
+
 		virtual ~TransformComponent() override = default;
 		TransformComponent(const TransformComponent& other) = delete;
 		TransformComponent(TransformComponent&& other) noexcept = delete;
@@ -28,11 +30,11 @@ namespace Engine {
 		void SetPosition(float x, float y, float z) noexcept;
 		[[nodiscard]] glm::vec3 GetPosition() const noexcept;
 
-		void SetRotation(glm::vec3 newRotation) noexcept;
+		void SetRotation(glm::quat newRotation) noexcept;
 		void SetRotation(float x, float y, float z) noexcept;
 		[[nodiscard]] glm::quat GetRotation() const noexcept;
 
-		void SetPositionAndRotation(glm::vec3 newPosition, glm::vec3 newRotation);
+		void SetPositionAndRotation(glm::vec3 newPosition, glm::quat newRotation);
 
 		void SetScale(glm::vec3 newScale) noexcept;
 		void SetScale(float x, float y, float z) noexcept;
@@ -67,22 +69,17 @@ namespace Engine {
 
 		void LookAt(const TransformComponent& target) noexcept;
 		void LookAt(glm::vec3 targetPosition) noexcept;
-		void RotateAround(float angle, glm::vec3 axis) noexcept;
-
-		void UpdateModelMatrix() noexcept;
-
-		bool operator!=(const TransformComponent& other) const;
-		bool operator==(const TransformComponent& other) const;
-
-		Sharp::Event<> OnModifiedEvent;
 
 	private:
-
 		glm::vec3 position;
 		glm::quat rotation;
 		glm::vec3 scale;
 		bool isStatic;
 
-		glm::mat4x4 modelMatrix;
+		glm::mat4x4 modelMatrix {};
+
+		void DecomposeModelMatrix() noexcept;
+
+		void RecalculateModelMatrix() noexcept;
 	};
 } // namespace Engine

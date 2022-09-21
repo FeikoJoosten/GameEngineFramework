@@ -23,8 +23,8 @@ namespace Engine {
 		return isEnabled && (owner.expired() || owner.lock()->GetIsActive());
 	}
 
-	std::weak_ptr<Component> Component::GetPointerReference() const {
-		return pointerReference;
+	std::shared_ptr<Component> Component::GetPointerReference() const {
+		return pointerReference.lock();
 	}
 
 	void Component::InitializeComponent(const std::vector<std::shared_ptr<Component>>& availableComponents) {}
@@ -56,6 +56,11 @@ namespace Engine {
 
 	void Component::HandleOnOwnerActiveStateChangedEvent(const std::shared_ptr<Entity> owningEntity, const bool owningEntityIsActive) {
 		OnEnabledStateChangedEvent(pointerReference.lock(), owningEntityIsActive && isEnabled);
+	}
+
+	template <typename ComponentType>
+	std::shared_ptr<ComponentType> Component::GetPointerReference() const {
+		return std::static_pointer_cast<ComponentType>(pointerReference.lock());
 	}
 
 	template<class Archive>

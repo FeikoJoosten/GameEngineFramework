@@ -38,10 +38,10 @@
 #define CEREAL_SAVE_MINIMAL_FUNCTION_NAME SaveMinimal
 #endif
 
-#ifndef GLM_FORCE_RADIANS
-#define GLM_FORCE_RADIANS
-#endif
-
 #ifndef GLM_FORCE_LEFT_HANDED
 #define GLM_FORCE_LEFT_HANDED
+#endif
+
+#ifndef GLM_CONFIG_XYZW_ONLY
+#define GLM_CONFIG_XYZW_ONLY
 #endif

@@ -94,7 +94,7 @@ namespace Engine {
 		virtual void InitializeComponent(const std::vector<std::shared_ptr<Component>>& availableComponents) override;
 
 	private:
-		void HandleOnTransformComponentModifiedEvent();
+		void HandleOnTransformComponentModifiedEvent(std::shared_ptr<TransformComponent> modifiedTransformComponent);
 
 		virtual void OnComponentAdded(std::shared_ptr<Component> addedComponent) override;
 
