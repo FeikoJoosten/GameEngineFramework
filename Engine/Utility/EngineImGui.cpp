@@ -35,7 +35,7 @@ namespace Engine {
 
 	ImGuiInputTextFlags textFlags = ImGuiInputTextFlags_AutoSelectAll;
 	float devMenuCooldown = 0.f;
-	bool showMenuBar = false;
+	bool showMenuBar = true;
 
 	enum CameraButtons {
 		MoveLeft,
@@ -59,6 +59,7 @@ namespace Engine {
 		inputManager = InputManager::Get();
 		renderer = Renderer::Get();
 		renderer.lock()->PostRenderComponentsRenderEvent += Sharp::EventHandler::Bind(this, &EngineImGui::Render);
+		previousFramerates.resize(maxIterations);
 
 		const std::shared_ptr<InputManager> lockedInputManager = inputManager.lock();
 		const gainput::DeviceId keyboardDeviceId = lockedInputManager->GetKeyboardId();
@@ -127,8 +128,14 @@ namespace Engine {
 		ImGui::Begin("FPS window", &open, fpsWindowFlags);
 
 		const std::shared_ptr<Time> time = Time::Get();
-		const std::vector<float> deltaTimes = time->GetPreviousFramerates();
-		ImGui::PlotLines("FPS", deltaTimes.data(), time->GetMaxIterations(), 0, std::to_string(ImGui::GetIO().Framerate).c_str());
+		const float frameCount = 1.f / time->GetDeltaTime();
+		if (++currentIterationIndex >= maxIterations) {
+			previousFramerates.erase(previousFramerates.begin());
+			previousFramerates.push_back(frameCount);
+		} else
+			previousFramerates[currentIterationIndex] = frameCount;
+
+		ImGui::PlotHistogram("FPS", previousFramerates.data(), maxIterations, 0, std::to_string(static_cast<int>(frameCount)).c_str());
 
 		ImGui::End();
 	}

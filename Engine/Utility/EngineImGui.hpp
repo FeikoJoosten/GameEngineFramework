@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 namespace Engine
 {
@@ -23,6 +24,9 @@ namespace Engine
 
 	private:
 		bool allowCameraMovement = false;
+		int maxIterations = 100;
+		int currentIterationIndex = -1;
+		std::vector<float> previousFramerates {};
 		std::weak_ptr<CameraComponent> activeCamera;
 		std::weak_ptr<InputManager> inputManager;
 		std::weak_ptr<Renderer> renderer;
