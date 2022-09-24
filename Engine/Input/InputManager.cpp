@@ -4,21 +4,17 @@
 
 #include <Windows.h>
 
-class InputCallbacks : public gainput::InputListener
-{
+class InputCallbacks final : public gainput::InputListener {
 public:
-	InputCallbacks(gainput::InputManager& manager, int index) : manager(manager), index(index) { }
+	explicit InputCallbacks(gainput::InputManager& manager) : manager(manager) {}
 
-	bool OnDeviceButtonBool(gainput::DeviceId deviceId, gainput::DeviceButtonId deviceButton, bool oldValue, bool newValue) override
-	{
+	virtual bool OnDeviceButtonBool(const gainput::DeviceId deviceId, const gainput::DeviceButtonId deviceButton, bool oldValue, const bool newValue) override {
 		const gainput::InputDevice* device = manager.GetDevice(deviceId);
-		char buttonName[64] = "";
-		device->GetButtonName(deviceButton, buttonName, 64);
 		ImGuiIO& io = ImGui::GetIO();
 		const std::shared_ptr<Engine::InputManager> inputManager = Engine::InputManager::Get();
+		const gainput::InputDevice::DeviceType deviceType = device->GetType();
 
-		if (deviceId == inputManager->GetKeyboardId())
-		{
+		if (deviceType == gainput::InputDevice::DT_KEYBOARD) {
 			io.KeysDown[deviceButton] = newValue;
 
 			if (deviceButton == gainput::KeyCtrlL || deviceButton == gainput::KeyCtrlR)
@@ -32,62 +28,42 @@ public:
 
 			if (deviceButton == gainput::KeySuperL || deviceButton == gainput::KeySuperR)
 				io.KeySuper = newValue;
-		}
-		else if (deviceId == inputManager->GetMouseId())
-		{
+		} else if (deviceType == gainput::InputDevice::DT_MOUSE) {
 			io.MouseDown[deviceButton] = newValue;
 
-			if (deviceButton == gainput::MouseButton3)
-			{
+			if (deviceButton == gainput::MouseButton3) {
 				if (newValue)
 					io.MouseWheel += inputManager->GetInputDefaults().scrollSpeed;
-			}
-			else if (deviceButton == gainput::MouseButton4)
-			{
+			} else if (deviceButton == gainput::MouseButton4) {
 				if (newValue)
 					io.MouseWheel -= inputManager->GetInputDefaults().scrollSpeed;
 			}
-
-			//printf_s("(%d) Device %d (%s%d) bool button (%d/%s) changed: %d -> %d\n", index, deviceId, device->GetTypeName(), device->GetIndex(), deviceButton, buttonName, oldValue, newValue);
 		}
 
 		return false;
 	}
 
-	bool OnDeviceButtonFloat(gainput::DeviceId deviceId, gainput::DeviceButtonId deviceButton, float oldValue, float newValue) override
-	{
-		if (deviceId == Engine::InputManager::Get()->GetMouseId())
-		{
+	virtual bool OnDeviceButtonFloat(const gainput::DeviceId deviceId, const gainput::DeviceButtonId deviceButton, float oldValue, const float newValue) override {
+		const gainput::InputDevice::DeviceType deviceType = manager.GetDevice(deviceId)->GetType();
+
+		if (deviceType == gainput::InputDevice::DT_MOUSE) {
 			ImGuiIO& io = ImGui::GetIO();
 			const std::shared_ptr<Engine::Window> window = Engine::Window::Get();
 			if (deviceButton == gainput::MouseAxisX)
-			{
 				io.MousePos.x = newValue * static_cast<float>(window->GetWidth());
-			}
 			else if (deviceButton == gainput::MouseAxisY)
-			{
 				io.MousePos.y = newValue * static_cast<float>(window->GetHeight());
-			}
 		}
 
-		//printf_s("(%d) Device %d (%s%d) float button (%d/%s) changed: %f -> %f\n", index, deviceId, device->GetTypeName(), device->GetIndex(), deviceButton, buttonName, oldValue, newValue);
 		return true;
-	}
-
-	int GetPriority() const override
-	{
-		return index;
 	}
 
 private:
 	gainput::InputManager& manager;
-	int index;
 };
 
-namespace Engine
-{
-	InputManager::InputManager() noexcept : inputManager()
-	{
+namespace Engine {
+	InputManager::InputManager() noexcept {
 		window = Window::Get();
 		if (window) {
 			inputManager.SetDisplaySize(window->GetWidth(), window->GetHeight());
@@ -95,10 +71,8 @@ namespace Engine
 			window->OnWindowResizedEvent += Sharp::EventHandler::Bind(this, &InputManager::HandleOnWindowResizedEvent);
 		}
 
-		mouseId = inputManager.CreateDevice<gainput::InputDeviceMouse>();
-		keyboardId = inputManager.CreateDevice<gainput::InputDeviceKeyboard>();
-		gamepadId = inputManager.CreateDevice<gainput::InputDevicePad>();
-		inputManager.AddListener(new InputCallbacks(inputManager, 1));
+		inputCallbacks = std::make_unique<InputCallbacks>(inputManager);
+		inputCallbacksListenerId = inputManager.AddListener(inputCallbacks.get());
 
 		ImGuiIO& io = ImGui::GetIO();
 		io.KeyMap[ImGuiKey_Tab] = gainput::KeyTab;                         // Keyboard mapping. ImGui will use those indices to peek into the io.KeyDown[] array.
@@ -123,7 +97,8 @@ namespace Engine
 	}
 
 	InputManager::~InputManager() noexcept {
-		if(window)
+		inputManager.RemoveListener(inputCallbacksListenerId);
+		if (window)
 			window->OnWindowResizedEvent -= Sharp::EventHandler::Bind(this, &InputManager::HandleOnWindowResizedEvent);
 	}
 
@@ -131,70 +106,69 @@ namespace Engine
 		return Engine::GetInputManager();
 	}
 
-	gainput::InputManager& InputManager::GetInputManager()
-	{
-		return inputManager;
+	std::shared_ptr<gainput::InputMap> InputManager::CreateInputMap() {
+		return std::make_shared<gainput::InputMap>(inputManager);
 	}
 
-	std::vector<gainput::DeviceButtonId> InputManager::GetAllKeysDown(gainput::DeviceId deviceId)
-	{
-		std::vector<gainput::DeviceButtonId> specToReturn(512, false);
+	gainput::DeviceId InputManager::GetOrCreateDeviceForType(const gainput::InputDevice::DeviceType deviceType, const int playerIndex) {
+		const gainput::DeviceId alreadyCreatedDeviceId = inputManager.FindDeviceId(deviceType, playerIndex);
+		if (alreadyCreatedDeviceId != gainput::InvalidDeviceId) return alreadyCreatedDeviceId;
 
-		for (int i = 0; i < gainput::KeyCount_; ++i)
-		{
-			bool value = inputManager.GetDevice(deviceId)->GetBool(i);
-			specToReturn[i] = value;
+		const gainput::InputDevice* createdInputDevice = nullptr;
+		switch (deviceType) {
+		case gainput::InputDevice::DT_MOUSE:
+			createdInputDevice = inputManager.CreateAndGetDevice<gainput::InputDeviceMouse>(playerIndex);
+			break;
+		case gainput::InputDevice::DT_KEYBOARD:
+			createdInputDevice = inputManager.CreateAndGetDevice<gainput::InputDeviceKeyboard>(playerIndex);
+			break;
+		case gainput::InputDevice::DT_PAD:
+			createdInputDevice = inputManager.CreateAndGetDevice<gainput::InputDevicePad>(playerIndex);
+			break;
+		case gainput::InputDevice::DT_TOUCH:
+			createdInputDevice = inputManager.CreateAndGetDevice<gainput::InputDeviceTouch>(playerIndex);
+			break;
+		case gainput::InputDevice::DT_BUILTIN:
+			createdInputDevice = inputManager.CreateAndGetDevice<gainput::InputDeviceBuiltIn>(playerIndex);
+			break;
+		case gainput::InputDevice::DT_REMOTE:
+		case gainput::InputDevice::DT_GESTURE:
+		case gainput::InputDevice::DT_CUSTOM:
+		case gainput::InputDevice::DT_COUNT:
+			throw std::runtime_error("Unsupported device type!");
 		}
 
-		return specToReturn;
+		if (!createdInputDevice) throw std::runtime_error("Failed to created InputDevice");
+
+		return createdInputDevice->GetDeviceId();
 	}
 
-	const gainput::DeviceId& InputManager::GetMouseId() const
-	{
-		return mouseId;
-	}
-
-	const gainput::DeviceId& InputManager::GetKeyboardId() const
-	{
-		return keyboardId;
-	}
-
-	const gainput::DeviceId& InputManager::GetGamepadId() const
-	{
-		return gamepadId;
-	}
-
-	InputDefaults InputManager::GetInputDefaults() const
-	{
+	InputDefaults InputManager::GetInputDefaults() const {
 		return inputDefaults;
 	}
 
-	void InputManager::Update() noexcept
-	{
+	void InputManager::Update() noexcept {
 		inputManager.Update();
 
 		MSG message;
-		while (PeekMessage(&message, Window::Get()->GetWindowHandle(), 0, 0, PM_REMOVE))
-		{
+		while (PeekMessage(&message, Window::Get()->GetWindowHandle(), 0, 0, PM_REMOVE)) {
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 
 			inputManager.HandleMessage(message);
 
-			if (message.message == WM_CHAR)
-			{
+			if (message.message == WM_CHAR) {
 				const WPARAM key = message.wParam;
 				if (key == 0x08 // backspace 
 					|| key == 0x0A // linefeed 
 					|| key == 0x1B // escape 
 					|| key == 0x09 // tab 
 					|| key == 0x0D // carriage return 
-					|| key > 255)
-				{
+					|| key > 255) {
 					return;
 				}
 				ImGuiIO& io = ImGui::GetIO();
-				io.AddInputCharacter(ImWchar(char(key)));
+				io.AddInputCharacter(static_cast<ImWchar>(key));
 			}
 		}
 	}

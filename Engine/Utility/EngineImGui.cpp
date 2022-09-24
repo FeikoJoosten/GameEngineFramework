@@ -4,7 +4,6 @@
 #include "Engine/Components/Component.hpp"
 #include "Engine/Camera/CameraManager.hpp"
 #include "Engine/Camera/CameraComponent.hpp"
-#include "Engine/Entity/Entity.hpp"
 #include "Engine/Input/InputManager.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
 #include "Engine/Renderer/Renderer.hpp"
@@ -49,11 +48,14 @@ namespace Engine {
 		RotateUp,
 		RotateDown,
 		EnableMouseRotation,
+		LeftCtrl,
+		LeftShift,
+		DevMenuModifier,
 		MouseX,
 		MouseY
 	};
 
-	gainput::InputMap* map = nullptr;
+	std::shared_ptr<gainput::InputMap> map {};
 
 	EngineImGui::EngineImGui() {
 		inputManager = InputManager::Get();
@@ -62,10 +64,10 @@ namespace Engine {
 		previousFramerates.resize(maxIterations);
 
 		const std::shared_ptr<InputManager> lockedInputManager = inputManager.lock();
-		const gainput::DeviceId keyboardDeviceId = lockedInputManager->GetKeyboardId();
-		const gainput::DeviceId mouseDeviceId = lockedInputManager->GetMouseId();
+		const gainput::DeviceId keyboardDeviceId = lockedInputManager->GetOrCreateDeviceForType(gainput::InputDevice::DT_KEYBOARD);
+		const gainput::DeviceId mouseDeviceId = lockedInputManager->GetOrCreateDeviceForType(gainput::InputDevice::DT_MOUSE);
 
-		map = new gainput::InputMap(lockedInputManager->GetInputManager());
+		map = lockedInputManager->CreateInputMap();
 		map->MapBool(MoveLeft, keyboardDeviceId, gainput::KeyA);
 		map->MapBool(MoveRight, keyboardDeviceId, gainput::KeyD);
 		map->MapBool(MoveForwards, keyboardDeviceId, gainput::KeyW);
@@ -77,22 +79,23 @@ namespace Engine {
 		map->MapBool(RotateUp, keyboardDeviceId, gainput::KeyUp);
 		map->MapBool(RotateDown, keyboardDeviceId, gainput::KeyDown);
 		map->MapBool(EnableMouseRotation, mouseDeviceId, gainput::MouseButtonRight);
+		map->MapBool(LeftCtrl, keyboardDeviceId, gainput::KeyCtrlL);
+		map->MapBool(LeftShift, keyboardDeviceId, gainput::KeyShiftL);
+		map->MapBool(DevMenuModifier, keyboardDeviceId, gainput::KeyE);
 		map->MapFloat(MouseX, mouseDeviceId, gainput::MouseAxisX);
 		map->MapFloat(MouseY, mouseDeviceId, gainput::MouseAxisY);
 	}
 
 	EngineImGui::~EngineImGui() {
 		renderer.lock()->PostRenderComponentsRenderEvent -= Sharp::EventHandler::Bind(this, &EngineImGui::Render);
+		map = nullptr;
 	}
 
 	void EngineImGui::Render() {
 		if (allowCameraMovement)
 			CameraMovement();
 
-		const gainput::InputDevice* keyboard = inputManager.lock()->GetInputManager().GetDevice(
-			inputManager.lock()->GetKeyboardId());
-
-		if (keyboard->GetBool(gainput::KeyCtrlL) && keyboard->GetBool(gainput::KeyShiftL) && keyboard->GetBool(gainput::KeyE)) {
+		if(map->GetBool(LeftCtrl) && map->GetBool(LeftShift) && map->GetBool(DevMenuModifier)) {
 			if (devMenuCooldown < 0.f) {
 				showMenuBar = !showMenuBar;
 				devMenuCooldown = 0.25f;
