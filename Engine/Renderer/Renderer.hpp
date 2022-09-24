@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Engine/Api.hpp"
+#include "Engine/Api/Api.hpp"
 #include "Engine/Application/Application.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine/Engine/Engine.hpp"
 #include "Engine/Utility/Event.hpp"
 #include <glm/glm.hpp>
 

@@ -1,6 +1,6 @@
 #include "Engine/Components/AnimationComponent.hpp"
 #include "Engine/Entity/Entity.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine/Engine/Engine.hpp"
 
 namespace Engine {
 	void AnimationComponent::Update()

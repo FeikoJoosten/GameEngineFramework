@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Engine/Api.hpp"
+#include "Engine/Api/Api.hpp"
 #include "Engine/AssetManagement/AssetManager.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine/Engine/Engine.hpp"
 #include "Engine/Utility/Logging.hpp"
 
 #include <fstream>
@@ -13,7 +13,7 @@
 #include <sago/PlatformFolders.hpp>
 
 namespace Engine {
-	class EngineAssetManager {
+	class ENGINE_LOCAL EngineAssetManager {
 		friend std::shared_ptr<EngineAssetManager> Engine::GetEngineAssetManager() noexcept;
 
 		EngineAssetManager() = default;

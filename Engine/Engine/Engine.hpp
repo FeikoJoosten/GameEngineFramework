@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine/Api/Api.hpp"
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -19,7 +21,7 @@ namespace Engine {
 	class Time;
 	class Window;
 
-	class Engine {
+	class ENGINE_LOCAL Engine {
 		friend class Application;
 
 		explicit Engine() = default;

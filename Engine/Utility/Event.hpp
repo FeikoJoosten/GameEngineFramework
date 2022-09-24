@@ -12,7 +12,8 @@
 
 #pragma once
 
-#include "Engine/Api.hpp"
+#include "Engine/Api/Api.hpp"
+
 #include <list>
 #include <memory>
 
@@ -29,7 +30,7 @@ namespace Sharp    // short for SharpTools
 	 * @author Amer Saffo
 	 */
 	template<typename... T>
-	class EventHandlerImplBase {
+	class ENGINE_LOCAL EventHandlerImplBase {
 	public:
 		EventHandlerImplBase() = default;  // needed to define the constructor since we defined the destructor (compiler would otherwise object)
 
@@ -57,14 +58,14 @@ namespace Sharp    // short for SharpTools
 	//------------------------------------
 
 	template<typename... T>
-	class EventHandlerImpl : public EventHandlerImplBase<T...> {
+	class ENGINE_LOCAL  EventHandlerImpl : public EventHandlerImplBase<T...> {
 	public:
 		virtual void OnEvent(T...) = 0;  // will be called eventually when a Event is raised
 	};
 
 	/** A handler non-member function calls */
 	template<typename... T>
-	class EventHandlerImplForNonMemberFunction final : public EventHandlerImpl<T...> {
+	class ENGINE_LOCAL EventHandlerImplForNonMemberFunction final : public EventHandlerImpl<T...> {
 	public:
 		/** Saves the passed function for use later when an event is raised */
 		explicit EventHandlerImplForNonMemberFunction(void(*functionToCall)(T...))
@@ -96,7 +97,7 @@ namespace Sharp    // short for SharpTools
 
 	/** A helper that handles member function calls */
 	template<typename U, typename... T>
-	class EventHandlerImplForMemberFunction final : public EventHandlerImpl<T...> {
+	class ENGINE_LOCAL EventHandlerImplForMemberFunction final : public EventHandlerImpl<T...> {
 	public:
 		/** Saves the passed function for use later when an event arrive */
 		EventHandlerImplForMemberFunction(U * thisPtr, void(U::* memberFunctionToCall)(T...))
@@ -185,7 +186,7 @@ namespace Sharp    // short for SharpTools
 	 * @author Amer Saffo
 	 */
 	template<typename... T>
-	class EventBase {
+	class ENGINE_LOCAL EventBase {
 	public:
 		EventBase() = default;
 		virtual ~EventBase() = default;

@@ -1,14 +1,13 @@
 #pragma once
 
-#include "Engine/Api.hpp"
+#include "Engine/Api/Api.hpp"
 #include <string>
 #include <glm/glm.hpp>
 #include <stb/stb_image.h>
 
 namespace Engine
 {
-
-	enum class TextureDataSize {
+	enum class ENGINE_API TextureDataSize {
 		U_CHAR = 0,
 		S_CHAR,
 		U_SHORT,

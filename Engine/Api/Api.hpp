@@ -1,5 +1,4 @@
-#ifndef ENGINE_API_HPP
-#define ENGINE_API_HPP
+#pragma once
 
 #if defined(ENGINE_DLL) || defined(ENGINE_AS_DLL)
 	#ifdef ENGINE_AS_DLL
@@ -25,5 +24,3 @@
 	#define ENGINE_API
 	#define ENGINE_LOCAL
 #endif
-
-#endif // ENGINE_API_HPP

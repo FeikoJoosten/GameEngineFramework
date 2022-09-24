@@ -1,9 +1,12 @@
 #pragma once
+
+#include "Engine/Api/Api.hpp"
+
 #include <glm/glm.hpp>
 /// <summary>
 /// This object is used to store general data for a vertex.
 /// </summary>
-class Vertex
+class ENGINE_API Vertex
 {
 public:
 	glm::vec3 position;

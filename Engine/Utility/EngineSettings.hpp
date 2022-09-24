@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Engine/Api.hpp"
+#include "Engine/Api/Api.hpp"
 #include <cereal/cereal.hpp>
 
-class ENGINE_API EngineSettings {
+class ENGINE_LOCAL EngineSettings {
 public:
 	float mouseWheelScrollSpeed = 5.f;
 

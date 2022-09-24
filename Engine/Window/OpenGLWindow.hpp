@@ -2,9 +2,8 @@
 
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_OPENGL
-#include "Engine/Engine.hpp"
+#include "Engine/Engine/Engine.hpp"
 #define GLEW_STATIC
-#include <GL/glew.h>
 #include "Engine/Window/Window.hpp"
 
 namespace Engine {

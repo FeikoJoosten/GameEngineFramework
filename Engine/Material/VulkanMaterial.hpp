@@ -2,6 +2,7 @@
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
 
+#include "Engine/Api/Api.hpp"
 #include "Engine/Material/Material.hpp"
 
 #include <vulkan/vulkan.h>
@@ -17,7 +18,7 @@ namespace Engine {
 
 	class VulkanRenderer;
 
-	class VulkanMaterial : public Material
+	class ENGINE_LOCAL VulkanMaterial : public Material
 	{
 	public:
 

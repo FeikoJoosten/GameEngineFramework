@@ -15,7 +15,7 @@
 
 namespace Engine {
 
-	class Material
+	class ENGINE_API Material
 	{
 	public:
 		Material() = default;

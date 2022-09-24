@@ -1,6 +1,6 @@
 #include "Engine/Components/LightComponent.hpp"
 #include "Engine/Utility/Defines.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine/Engine/Engine.hpp"
 #include "Engine/Entity/Entity.hpp"
 #include "Engine/Renderer/Renderer.hpp"
 

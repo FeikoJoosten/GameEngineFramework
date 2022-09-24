@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine/Api/Api.hpp"
+
 #include <memory>
 #include <vector>
 
@@ -9,7 +11,7 @@ namespace Engine
 	class InputManager;
 	class CameraComponent;
 
-	class EngineImGui
+	class ENGINE_LOCAL EngineImGui
 	{
 		friend class std::shared_ptr<EngineImGui>;
 

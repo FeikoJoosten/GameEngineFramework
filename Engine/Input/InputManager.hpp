@@ -1,17 +1,16 @@
 #pragma once
 
-#include "Engine/Api.hpp"
+#include "Engine/Api/Api.hpp"
 #include "Engine/Application/Application.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine/Engine/Engine.hpp"
 #include "Engine/Window/Window.hpp"
 
-#include <vector>
 #include <gainput/gainput.h>
 
 class InputCallbacks;
 
 namespace Engine {
-	struct InputDefaults {
+	struct ENGINE_API InputDefaults {
 		float scrollSpeed = 5;
 	};
 

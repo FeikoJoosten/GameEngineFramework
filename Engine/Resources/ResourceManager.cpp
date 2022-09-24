@@ -1,6 +1,6 @@
 #include "Engine/Resources/ResourceManager.hpp"
 #include "Engine/AssetManagement/AssetManager.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine/Engine/Engine.hpp"
 #include "Engine/Utility/Defines.hpp"
 #include "Engine/Utility/Logging.hpp"
 

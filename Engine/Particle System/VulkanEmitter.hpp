@@ -4,6 +4,7 @@
 
 #ifdef USING_VULKAN
 
+#include "Engine/Api/Api.hpp"
 #include "Engine/Particle System/Emitter.hpp"
 
 #include "Engine/Renderer/Vulkan/VulkanBuffer.hpp"
@@ -16,7 +17,7 @@ namespace Engine {
 
 	class VulkanRenderer;
 
-	class VulkanEmitter : public Emitter
+	class ENGINE_LOCAL VulkanEmitter : public Emitter
 	{
 	public:
 		VulkanEmitter();

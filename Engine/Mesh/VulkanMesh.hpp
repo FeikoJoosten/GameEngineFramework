@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
+#include "Engine/Api/Api.hpp"
 #include "Engine/Mesh/Mesh.hpp"
 #include "Engine/Texture/VulkanTexture.hpp"
 #include "Engine/Renderer/Vulkan/VulkanBuffer.hpp"
@@ -23,7 +24,7 @@ namespace Engine
 	/// <summary>
 	/// This object is used to store data regarding a mesh. NOTE: only the resource manager is allowed to create a mesh.
 	/// </summary>
-	class ENGINE_API VulkanMesh : public Mesh
+	class ENGINE_LOCAL VulkanMesh : public Mesh
 	{
 	public:
 		// Should be called from renderer

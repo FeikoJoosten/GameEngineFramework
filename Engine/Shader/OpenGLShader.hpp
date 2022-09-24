@@ -2,7 +2,7 @@
 
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_OPENGL
-#include "Engine/Api.hpp"
+#include "Engine/Api/Api.hpp"
 #include "Engine/Shader/Shader.hpp"
 
 #include <map>
@@ -20,7 +20,7 @@ namespace Engine
 	/// ShaderParameter is a representation of an shader parameter.
 	/// It has a type and it will complain if the type declared in the shader program is different.
 	/// </summary>
-	class ShaderParameter
+	class ENGINE_API ShaderParameter
 	{
 		friend class OpenGLShader;
 
@@ -180,7 +180,7 @@ namespace Engine
 	/// <summary>
 	/// ShaderAttrixbute is a representation of a vertex shader attribute.
 	/// </summary>
-	class ShaderAttribute
+	class ENGINE_API ShaderAttribute
 	{
 		friend class OpenGLShader;
 

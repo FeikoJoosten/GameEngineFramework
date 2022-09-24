@@ -2,7 +2,7 @@
 
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_OPENGL
-#include "Engine/Engine.hpp"
+#include "Engine/Engine/Engine.hpp"
 #include "Engine/Renderer/Renderer.hpp"
 #include "Engine/Shader/OpenGLShader.hpp"
 

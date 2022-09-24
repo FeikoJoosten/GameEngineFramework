@@ -1,10 +1,11 @@
 #pragma once
 
+#include "Engine/Api/Api.hpp"
 #include "Engine/Particle System/Particle.hpp"
 
 namespace Engine {
 
-	class Emitter
+	class ENGINE_API Emitter
 	{
 	public:
 		Emitter();

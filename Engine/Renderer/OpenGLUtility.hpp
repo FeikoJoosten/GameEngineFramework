@@ -4,12 +4,11 @@
 #include "Engine/Utility/Defines.hpp"
 #include <iostream>
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
 #ifndef glCheckError
 #define glCheckError() CheckOpenGLError(__FILE__, __LINE__)
 
-inline void CheckOpenGLError(const char* file, const int line) {
+ENGINE_LOCAL inline void CheckOpenGLError(const char* file, const int line) {
 	GLenum errorCode;
 	while ((errorCode = glGetError()) != GL_NO_ERROR) {
 		std::string error;
@@ -28,7 +27,7 @@ inline void CheckOpenGLError(const char* file, const int line) {
 }
 #endif
 
-inline void glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam) {
+ENGINE_LOCAL inline void glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length, const char* message, const void* userParam) {
 	// ignore non-significant error/warning codes
 	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
 

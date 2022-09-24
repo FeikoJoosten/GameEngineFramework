@@ -2,9 +2,10 @@
 
 #include "Engine/Utility/Defines.hpp"
 #ifdef USING_VULKAN
-#include "Engine/Engine.hpp"
+#include "Engine/Engine/Engine.hpp"
 #define GLFW_INCLUDE_VULKAN
 #include "Engine/Window/Window.hpp"
+
 #include <vulkan/vulkan.h>
 
 namespace Engine {

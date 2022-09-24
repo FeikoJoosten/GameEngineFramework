@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Engine/Api.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine/Api/Api.hpp"
+#include "Engine/Engine/Engine.hpp"
 #include "Engine/Utility/Logging.hpp"
 
 #include <fstream>

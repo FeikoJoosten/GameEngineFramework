@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Engine/Api/Api.hpp"
 #include "Engine/Mesh/Mesh.hpp"
 #include "Engine/Material/Material.hpp"
 #include "Engine/Texture/Texture.hpp"
@@ -8,7 +9,7 @@
 
 namespace Engine {
 
-	class Particle
+	class ENGINE_API Particle
 	{
 	public:
 		Particle();

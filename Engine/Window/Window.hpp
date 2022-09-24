@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Engine/Utility/Defines.hpp"
-#include "Engine/Api.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine/Api/Api.hpp"
+#include "Engine/Engine/Engine.hpp"
 #include "Engine/Utility/Event.hpp"
 
 #if _WIN32 || _WIN64
@@ -24,7 +24,7 @@ namespace Engine {
 	/// This object stores any information regarding the created GLFW window.
 	/// </summary>
 	class ENGINE_API Window {
-		struct WindowInitializationData {
+		struct ENGINE_LOCAL WindowInitializationData {
 			int windowWidth = 640;
 			int windowHeight = 480;
 			int windowXPosition = -1;

@@ -194,9 +194,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Animation\Animation.h" />
+    <ClInclude Include="Animation\Animation.hpp" />
     <ClInclude Include="Animation\Skeleton.hpp" />
-    <ClInclude Include="Api.hpp" />
+    <ClInclude Include="Api\Api.hpp" />
     <ClInclude Include="Application\Application.hpp" />
     <ClInclude Include="AssetManagement\Asset.hpp" />
     <ClInclude Include="AssetManagement\AssetManager.hpp" />
@@ -214,7 +214,7 @@
     <ClInclude Include="Components\LightComponent.hpp" />
     <ClInclude Include="Components\ModelComponent.hpp" />
     <ClInclude Include="Components\TransformComponent.hpp" />
-    <ClInclude Include="Engine.hpp" />
+    <ClInclude Include="Engine\Engine.hpp" />
     <ClInclude Include="Entity\Entity.hpp" />
     <ClInclude Include="Entity\EntitySystem.hpp" />
     <ClInclude Include="Input\InputManager.hpp" />
@@ -292,7 +292,7 @@
     <ClCompile Include="Components\LightComponent.cpp" />
     <ClCompile Include="Components\ModelComponent.cpp" />
     <ClCompile Include="Components\TransformComponent.cpp" />
-    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="Entity\EntitySystem.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
