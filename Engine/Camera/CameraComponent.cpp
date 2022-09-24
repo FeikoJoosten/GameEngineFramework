@@ -63,20 +63,6 @@ namespace Engine {
 		return Frustum(fieldOfVision, static_cast<float>(window->GetHeight()) / static_cast<float>(window->GetWidth()), transformComponentShared->GetPosition(), transformComponentShared->GetRotation(), clippingPlanes, right, up);
 	}
 
-	void CameraComponent::InitializeComponent(const std::vector<std::shared_ptr<Component>>& availableComponents) {
-		Component::InitializeComponent(availableComponents);
-
-		for(const std::shared_ptr<Component>& component : availableComponents) {
-			const std::shared_ptr<TransformComponent> possibleTransformComponent = std::dynamic_pointer_cast<TransformComponent>(component);
-
-			if (!possibleTransformComponent) continue;
-
-			transformComponent = possibleTransformComponent;
-			possibleTransformComponent->OnModifiedEvent += Sharp::EventHandler::Bind(this, &CameraComponent::HandleOnTransformComponentModifiedEvent);
-			break;
-		}
-	}
-
 	void CameraComponent::HandleOnTransformComponentModifiedEvent(const std::shared_ptr<TransformComponent> modifiedTransformComponent) {
 		if (!GetIsEnabled() || !modifiedTransformComponent) return;
 		

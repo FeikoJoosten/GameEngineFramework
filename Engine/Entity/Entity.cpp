@@ -1,5 +1,5 @@
 #include "Engine/Entity/Entity.hpp"
-#include "Engine/Entity/EntitySystem.hpp"
+#include "Engine/Components/Component.hpp"
 
 namespace Engine {
 	Entity::Entity(std::string name) : id(-1), isActive(true), name(std::move(name)) {}
@@ -17,7 +17,7 @@ namespace Engine {
 			return;
 
 		for (const std::shared_ptr<Component>& component : components) {
-			if (component->isEnabled == false)
+			if (!component->GetIsEnabled())
 				continue;
 
 			component->Update();
@@ -50,6 +50,15 @@ namespace Engine {
 	void Entity::InitializeEntity(const std::shared_ptr<Entity>& newPointerReference, const int newId) {
 		pointerReference = newPointerReference;
 		id = newId;
+	}
+
+	void Entity::InitializeComponent(const std::shared_ptr<Component>& componentToInitialize) const {
+		componentToInitialize->SetOwner(GetPointer());
+		componentToInitialize->SetPointerReference(componentToInitialize);
+		OnComponentAdded(componentToInitialize);
+
+		for (size_t j = 0, size = components.size() - 1; j < size; ++j)
+			componentToInitialize->OnComponentAdded(components[j]);
 	}
 
 	std::shared_ptr<Entity> Entity::GetPointer() const {

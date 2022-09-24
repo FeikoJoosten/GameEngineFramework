@@ -1,10 +1,14 @@
 #pragma once
 
 #include "Engine/Api.hpp"
-#include "Engine/Components/Component.hpp"
 #include "Engine/Utility/Event.hpp"
 
+#include <string>
+#include <vector>
+
 namespace Engine {
+	class Component;
+
 	/// <summary>
 	/// This object is a holder object for components.
 	/// </summary>
@@ -122,6 +126,8 @@ namespace Engine {
 
 		void InitializeEntity(const std::shared_ptr<Entity>& newPointerReference, int newId);
 
+		void InitializeComponent(const std::shared_ptr<Component>& componentToInitialize) const;
+
 		[[nodiscard]] std::shared_ptr<Entity> GetPointer() const;
 
 		void OnComponentAdded(const std::shared_ptr<Component>& addedComponent) const;
@@ -155,14 +161,7 @@ namespace Engine {
 		components.push_back(std::shared_ptr<ComponentType>(new ComponentType(std::forward<Args>(args)...)));
 
 		const std::shared_ptr<Component> componentToReturn = components.back();
-		componentToReturn->SetOwner(GetPointer());
-		componentToReturn->SetPointerReference(componentToReturn);
-		OnComponentAdded(componentToReturn);
-
-		for (size_t j = 0, size = components.size() - 1; j < size; ++j)
-			componentToReturn->OnComponentAdded(components[j]);
-
-		componentToReturn->InitializeComponent(components);
+		InitializeComponent(componentToReturn);
 
 		OnComponentAddedEvent(pointerReference.lock(), componentToReturn);
 		return std::static_pointer_cast<ComponentType>(componentToReturn);

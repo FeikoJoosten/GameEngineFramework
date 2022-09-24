@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "Engine/Components/Component.hpp"
 #include "Engine/Entity/Entity.hpp"
 
@@ -7,8 +9,8 @@ namespace Engine {
 			owner.lock()->OnActiveStateChangedEvent -= Sharp::EventHandler::Bind(this, &Component::HandleOnOwnerActiveStateChangedEvent);
 	}
 
-	std::weak_ptr<Entity> Component::GetOwner() const {
-		return owner;
+	std::shared_ptr<Entity> Component::GetOwner() const {
+		return owner.lock();
 	}
 
 	bool Component::GetIsEnabled() const {
@@ -26,8 +28,6 @@ namespace Engine {
 	std::shared_ptr<Component> Component::GetPointerReference() const {
 		return pointerReference.lock();
 	}
-
-	void Component::InitializeComponent(const std::vector<std::shared_ptr<Component>>& availableComponents) {}
 
 	void Component::Update() {}
 
@@ -51,7 +51,7 @@ namespace Engine {
 	}
 
 	void Component::SetPointerReference(std::weak_ptr<Component> newPointerReference) {
-		pointerReference = newPointerReference;
+		pointerReference = std::move(newPointerReference);
 	}
 
 	void Component::HandleOnOwnerActiveStateChangedEvent(const std::shared_ptr<Entity> owningEntity, const bool owningEntityIsActive) {

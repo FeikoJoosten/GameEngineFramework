@@ -40,7 +40,7 @@ namespace Engine
 			if (renderComponent.expired()) continue;
 
 			const std::shared_ptr<RenderComponent> lockedRenderComponent = renderComponent.lock();
-			if (!lockedRenderComponent->GetIsEnabled() || !lockedRenderComponent->GetOwner().lock()->GetIsActive()) continue;
+			if (!lockedRenderComponent->GetIsEnabled() || !lockedRenderComponent->GetOwner()->GetIsActive()) continue;
 			if (lockedRenderComponent->transformComponent.expired()) continue;
 			const std::shared_ptr<TransformComponent> transformComponent = lockedRenderComponent->transformComponent.lock();
 			if (!transformComponent->GetIsEnabled()) continue;

@@ -151,17 +151,12 @@ namespace Engine {
 		explicit LightComponent(std::string name) noexcept;
 
 	private:
-		friend class Entity;
-
-		virtual void InitializeComponent(const std::vector<std::shared_ptr<Component>>& availableComponents) override;
-
 		virtual void Update() override;
 
 		std::string lightName;
 
 		bool vulkanEnabled;
 		bool active;
-		bool created;
 
 #ifdef USING_OPENGL
 		std::weak_ptr<Renderer> renderer;

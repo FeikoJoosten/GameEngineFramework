@@ -1,25 +1,28 @@
 #pragma once
 
 #include "Engine/Api.hpp"
+#include "Engine/Entity/Entity.hpp"
+#include "Engine/Utility/Event.hpp"
+
 #include <vector>
 #include <cereal/cereal.hpp>
 
-#include "Engine/Utility/Event.hpp"
-
 namespace Engine {
-	class Entity;
 
 	/// <summary>
-	/// This is the base class for components. NOTE: only the Entity class is allowed to create this object.
+	/// This is the base class for components.
 	/// </summary>
 	class ENGINE_API Component {
-	public:
+		// Need to give full access to Entity class because otherwise a circular dependency is created with private friends
 		friend class Entity;
 		friend class cereal::access;
 
-		Sharp::Event<std::shared_ptr<Component>, bool> OnEnabledStateChangedEvent;
-
+	protected:
 		Component() = default;
+
+	public:
+		Sharp::Event<std::shared_ptr<Component>, bool> OnEnabledStateChangedEvent;
+		
 		virtual ~Component();
 		Component(const Component& other) = delete;
 		Component(Component&& other) = delete;
@@ -30,7 +33,7 @@ namespace Engine {
 		/// This method allows you to get the entity holding this component.
 		/// </summary>
 		/// <returns>Returns the owner of this component.</returns>
-		std::weak_ptr<Entity> GetOwner() const;
+		[[nodiscard]] std::shared_ptr<Entity> GetOwner() const;
 
 		/// <summary></summary>
 		/// <returns>Returns the enabled state of this component.</returns> 
@@ -49,20 +52,20 @@ namespace Engine {
 		/// This method allows you to get the first component of the given type.
 		/// </summary>
 		/// <returns>Returns the first component of the given type as a weak pointer.</returns>
-		std::shared_ptr<ComponentType> GetComponent();
+		[[nodiscard]] std::shared_ptr<ComponentType> GetComponent();
 
 		template<typename ComponentType>
 		/// <summary>
 		/// This method allows you to get all of the components of the given type.
 		/// </summary>
 		/// <returns>Returns the all of the components of the given type as a weak pointer.</returns>
-		std::vector<std::shared_ptr<ComponentType>> GetComponents();
+		[[nodiscard]] std::vector<std::shared_ptr<ComponentType>> GetComponents();
 
 		/// <summary>
 		/// Returns all the components of this entity.
 		/// </summary>
 		/// <returns>Returns a vector of all the components of this entity.</returns>
-		std::vector<std::shared_ptr<Component>> GetAllComponents() const;
+		[[nodiscard]] std::vector<std::shared_ptr<Component>> GetAllComponents() const;
 
 		template <class ComponentType, class... Args>
 		/// <summary>
@@ -97,23 +100,17 @@ namespace Engine {
 	protected:
 
 		/// <summary>
-		/// This method allows you to get a direct reference to the weak pointer of this component.
+		/// This method allows you to get a direct reference to the shared pointer of this component.
 		/// </summary>
-		/// <returns>Returns the reference of this object as a weak pointer.</returns>
+		/// <returns>Returns the reference of this object as a shared pointer.</returns>
 		[[nodiscard]] std::shared_ptr<Component> GetPointerReference() const;
 
 		/// <summary>
-		/// This method allows you to get a direct reference to the weak pointer of this component.
+		/// This method allows you to get a direct reference to the shared pointer of this component.
 		/// </summary>
-		/// <returns>Returns the reference of this object as a weak pointer.</returns>
+		/// <returns>Returns the reference of this object as a shared pointer.</returns>
 		template<typename ComponentType>
 		[[nodiscard]] std::shared_ptr<ComponentType> GetPointerReference() const;
-
-		/// <summary>
-		/// This method is used to initialize components in. This method is called after the setting of the owner.
-		/// </summary>
-		///	<param name="availableComponents">All components currently added onto the owning Entity. This also includes the just added component </param>
-		virtual void InitializeComponent(const std::vector<std::shared_ptr<Component>>& availableComponents);
 
 		/// <summary>
 		/// The update method of this component. NOTE: This method will not be called in case the entity is disabled.
@@ -172,7 +169,7 @@ namespace Engine {
 	}
 
 	template <typename ComponentType>
-	void Component::RemoveComponent(size_t amountToRemove) const {
+	void Component::RemoveComponent(const size_t amountToRemove) const {
 		if (owner.expired()) return {};
 		owner.lock()->RemoveComponent<ComponentType>(amountToRemove);
 	}
