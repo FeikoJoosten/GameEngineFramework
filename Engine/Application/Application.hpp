@@ -21,9 +21,6 @@ namespace Engine {
 		/// Call this method after your main loop is finished.
 		/// </summary>
 		static void Quit();
-	private:
-
-		static void Render();
 	};
 } // namespace Engine
 

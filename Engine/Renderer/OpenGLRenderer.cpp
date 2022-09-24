@@ -1,13 +1,13 @@
 #include "Engine/Utility/Defines.hpp"
-#include "Engine/Window/Window.hpp"
 
 #ifdef USING_OPENGL
+#include "Engine/Mesh/Mesh.hpp"
+#include "Engine/Model/Model.hpp"
 #include "Engine/Renderer/OpenGLRenderer.hpp"
 #include "Engine/Renderer/OpenGLUtility.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
 #include "Engine/Renderer/imgui_impl_glfw_gl3.h"
-#include "Engine/Mesh/Mesh.hpp"
-#include "Engine/Engine.hpp"
+#include "Engine/Window/Window.hpp"
 
 namespace Engine {
 	OpenGLRenderer::OpenGLRenderer(const std::string& vertexShader, const std::string& fragmentShader)

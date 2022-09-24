@@ -3,7 +3,6 @@
 #include "Engine/Api.hpp"
 #include "Engine/Components/Component.hpp"
 #include "Engine/Entity/Entity.hpp"
-#include "Engine/Renderer/Renderer.hpp"
 
 namespace Engine {
 	class Material;
@@ -13,7 +12,6 @@ namespace Engine {
 	class ENGINE_API RenderComponent : public Component {
 		template <class ComponentType, class... Args>
 		friend std::shared_ptr<ComponentType> Entity::AddComponent(Args&&... args);
-		friend void Renderer::RenderFrame(const glm::mat4x4& view, const glm::mat4x4& projection);
 
 	protected:
 		RenderComponent() = default;

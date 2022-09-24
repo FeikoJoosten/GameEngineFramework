@@ -1,12 +1,15 @@
 // Written by Koen Buitenhuis
 
 #include "Engine/Utility/Defines.hpp"
-#include "Engine/Utility/Logging.hpp"
 #ifdef USING_VULKAN
 #define VMA_IMPLEMENTATION
+#include "Engine/Mesh/VulkanMesh.hpp"
+#include "Engine/Model/Model.hpp"
 #include "Engine/Renderer/VulkanRenderer.hpp"
 #include "Engine/Renderer/imgui_impl_glfw_vulkan.h"
-#include "Engine/Engine.hpp"
+#include "Engine/Texture/VulkanTexture.hpp"
+#include "Engine/Utility/Logging.hpp"
+
 //#include <chrono>
 //#include <stdexcept>
 #include <cstring>
@@ -14,8 +17,6 @@
 //#include <fstream>
 //#include <set>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Engine/Mesh/VulkanMesh.hpp"
-#include "Engine/Texture/VulkanTexture.hpp"
 #include <memory>
 
 

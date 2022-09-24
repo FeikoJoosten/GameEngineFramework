@@ -2,8 +2,6 @@
 #include "Engine/Engine.hpp"
 #include "Engine/Resources/ResourceManager.hpp"
 
-#include <stb/stb_image.h>
-
 namespace Engine {
 
 	Material::Material(const aiScene* scene, uint32_t materialIndex, std::string modelName)
