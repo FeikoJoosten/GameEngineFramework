@@ -1,5 +1,4 @@
 #include "Engine/Components/RenderComponent.hpp"
-#include "Engine/Entity/Entity.hpp"
 #include "Engine/Components/TransformComponent.hpp"
 #include "Engine/Resources/ResourceManager.hpp"
 
@@ -17,9 +16,7 @@ namespace Engine {
 	}
 
 	void RenderComponent::SetModel(const std::string& path) {
-		const std::weak_ptr<Model> newModel = ResourceManager::Get()->CreateModel(path, path);
-
-		if (!newModel.expired()) {
+		if (const std::weak_ptr<Model> newModel = ResourceManager::Get()->CreateModel(path, path); !newModel.expired()) {
 			this->model = newModel.lock();
 		}
 	}
@@ -32,8 +29,8 @@ namespace Engine {
 		material = newMaterial;
 	}
 
-	std::weak_ptr<Material> RenderComponent::GetMaterial() const {
-		return material;
+	std::shared_ptr<Material> RenderComponent::GetMaterial() const {
+		return material.lock();
 	}
 
 	template <typename Archive>

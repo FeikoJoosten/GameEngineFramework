@@ -1,5 +1,4 @@
 #include "Engine/Components/ModelComponent.hpp"
-#include "Engine/Engine.hpp"
 #include "Engine/Utility/Time.hpp"
 
 namespace Engine
