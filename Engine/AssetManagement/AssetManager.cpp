@@ -5,6 +5,8 @@
 
 namespace Engine {
 
+	AssetManager::AssetManager(std::string projectRoot) : projectRoot(std::move(projectRoot)) {}
+
 	std::shared_ptr<AssetManager> AssetManager::Get() {
 		return Engine::GetAssetManager();
 	}
@@ -26,11 +28,11 @@ namespace Engine {
 	}
 
 	const std::string& AssetManager::GetProjectRoot() {
-		return fullExecutableDirectory;
+		return projectRoot;
 	}
 
 	std::vector<char> AssetManager::ReadFile(const std::string& fileName, const int fileOpenMode) const {
-		std::ifstream file((fullExecutableDirectory + fileName).c_str(), fileOpenMode);
+		std::ifstream file((projectRoot + fileName).c_str(), fileOpenMode);
 
 		if (!file)
 			throw std::runtime_error("Failed to find file!");
@@ -47,12 +49,5 @@ namespace Engine {
 		file.close();
 
 		return buffer;
-	}
-
-	void AssetManager::SetExecutablePath(const std::string& executablePath) {
-		std::filesystem::path path(executablePath);
-		fullExecutablePath = path.generic_string();
-		fullExecutableDirectory = path.remove_filename().generic_string();
-		std::cout << fullExecutableDirectory << std::endl;
 	}
 }

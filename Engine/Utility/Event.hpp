@@ -10,6 +10,8 @@
 // version 1.1
 //=============================================================================
 
+// Originally written by Amer Saffo, but heavily modified to fit the needs of this project
+
 #pragma once
 
 #include "Engine/Api/Api.hpp"

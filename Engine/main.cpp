@@ -8,8 +8,7 @@
 #include "Engine/Entity/Entity.hpp"
 #include "Engine/Entity/EntitySystem.hpp"
 #include "Engine/Window/Window.hpp"
-#include "Engine/Utility/EngineImGui.hpp"
-//#include "Game/ImGui/ImGuiRenderer.hpp"
+#include "Engine/Engine/EngineImGui.hpp"
 
 #if defined(_WIN32) && defined(UNICODE)
 #include <utf8.h>
@@ -66,8 +65,7 @@ namespace Engine {
 #else
 		ParseArguments(argumentCount, inArguments);
 #endif
-
-		AssetManager::Get()->SetExecutablePath(Engine::GetOrCreateCommandLineArgumentsManager()->GetAllCommandLineArguments()[0]);
+		
 		//Engine::GetWindow();
 		Engine::GetRenderer();
 		Engine::GetInputManager();

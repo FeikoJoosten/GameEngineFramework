@@ -1,13 +1,12 @@
 #include "Engine/Window/Window.hpp"
 
-#include "Engine/Engine/Engine.hpp"
 #include "Engine/AssetManagement/EngineAssetManager.hpp"
+#include "Engine/Engine/Engine.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
 #include "Engine/Utility/Logging.hpp"
 
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
-#include <nameof.hpp>
 
 namespace Engine {
 
@@ -17,10 +16,8 @@ namespace Engine {
 	}
 
 	Window::Window() noexcept {
-		const std::string windowType = std::string{ NAMEOF_SHORT_TYPE(Window) };
-		const std::string windowInitializationDataType = std::string { NAMEOF_SHORT_TYPE(WindowInitializationData) };
-		settingsPath = windowType + "/" + windowInitializationDataType + EngineAssetManager::ENGINE_SETTINGS_FILE_TYPE;
-		const WindowInitializationData initializationData = EngineAssetManager::ReadDataFromPath<WindowInitializationData>(settingsPath);
+		WindowInitializationData initializationData;
+		EngineAssetManager::TryLoadEngineData<Window>(initializationData);
 
 		width = initializationData.windowWidth;
 		height = initializationData.windowHeight;
@@ -33,8 +30,6 @@ namespace Engine {
 		glfwDestroyWindow(window);
 		glfwTerminate();
 
-		if (settingsPath.length() <= 0) return;
-
 		const WindowInitializationData initializationData = {
 			width,
 			height,
@@ -43,7 +38,7 @@ namespace Engine {
 			title
 		};
 
-		EngineAssetManager::WriteDataToPath(settingsPath, initializationData);
+		EngineAssetManager::SaveEngineData<Window>(initializationData);
 	}
 
 	std::shared_ptr<Window> Window::Get() {

@@ -16,7 +16,6 @@
 
 #include <memory>
 #include <string>
-
 #include <cereal/cereal.hpp>
 
 namespace Engine {
@@ -153,19 +152,20 @@ namespace Engine {
 		void CreateInternalWindow();
 
 	private:
-		std::string settingsPath {};
-
 		static void WindowResizeCallback(GLFWwindow* glfwWindow, int newWidth, int newHeight);
 
 		static void WindowRepositionCallback(GLFWwindow* glfwWindow, int newXPosition, int newYPosition);
 	};
 
-	template <class Archive> void Window::WindowInitializationData::Serialize(Archive& archive) {
-		archive(CEREAL_NVP(windowWidth),
+	template <class Archive>
+	void Window::WindowInitializationData::Serialize(Archive& archive) {
+		archive(
+			CEREAL_NVP(windowWidth),
 			CEREAL_NVP(windowHeight),
 			CEREAL_NVP(windowXPosition),
 			CEREAL_NVP(windowYPosition),
-			CEREAL_NVP(windowTitle));
+			CEREAL_NVP(windowTitle)
+		);
 	}
 
 	template <typename WindowType> std::shared_ptr<WindowType> Window::Get() {

@@ -1,9 +1,9 @@
-#version 330 core
+#version 330
 
 in float v_intensity;
 in vec2 v_texture;
-uniform vec4 u_mainTextColor;
 
+uniform vec4 u_mainTextColor;
 uniform sampler2D u_texture;
 
 out vec4 fragColor;

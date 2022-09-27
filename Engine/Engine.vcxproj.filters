@@ -166,6 +166,15 @@
     <Filter Include="Source Files\CommandLineArguments">
       <UniqueIdentifier>{884409a1-bd00-49a8-86e2-0cde6eefda5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ThirdParty\tinyfiledialogs">
+      <UniqueIdentifier>{39484cba-7af2-4164-bcd1-748af0bbb225}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ThirdParty\tinyfiledialogs\more_dialogs">
+      <UniqueIdentifier>{dc3d26ec-bb92-41ad-aa5f-9741b3ebd97e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ThirdParty\tinyfiledialogs">
+      <UniqueIdentifier>{61cc4514-848e-445e-95bf-0af46df6b825}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Component.hpp">
@@ -254,9 +263,6 @@
     </ClInclude>
     <ClInclude Include="Mesh\VulkanMesh.hpp">
       <Filter>Header Files\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\EngineImGui.hpp">
-      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Texture\VulkanTexture.hpp">
       <Filter>Header Files\Texture</Filter>
@@ -372,9 +378,6 @@
     <ClInclude Include="Scene\SceneManager.hpp">
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\EngineSettings.hpp">
-      <Filter>Header Files\AssetManagement</Filter>
-    </ClInclude>
     <ClInclude Include="AssetManagement\AssetManager.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
@@ -401,6 +404,15 @@
     </ClInclude>
     <ClInclude Include="CommandLineArguments\CommandLineArgumentsManager.hpp">
       <Filter>Header Files\CommandLineArguments</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EngineImGui.hpp">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\tinyfiledialogs\tinyfiledialogs.h">
+      <Filter>Header Files\ThirdParty\tinyfiledialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\tinyfiledialogs\more_dialogs\tinyfd_moredialogs.h">
+      <Filter>Header Files\ThirdParty\tinyfiledialogs\more_dialogs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -481,9 +493,6 @@
     </ClCompile>
     <ClCompile Include="Mesh\VulkanMesh.cpp">
       <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\EngineImGui.cpp">
-      <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Texture\VulkanTexture.cpp">
       <Filter>Source Files\Texture</Filter>
@@ -587,9 +596,6 @@
     <ClCompile Include="Scene\Scene.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\EngineSettings.cpp">
-      <Filter>Source Files\AssetManagement</Filter>
-    </ClCompile>
     <ClCompile Include="AssetManagement\AssetManager.cpp">
       <Filter>Source Files\AssetManagement</Filter>
     </ClCompile>
@@ -607,6 +613,12 @@
     </ClCompile>
     <ClCompile Include="CommandLineArguments\CommandLineArgumentsManager.cpp">
       <Filter>Source Files\CommandLineArguments</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EngineImGui.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdParty\tinyfiledialogs\tinyfiledialogs.c">
+      <Filter>Source Files\ThirdParty\tinyfiledialogs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

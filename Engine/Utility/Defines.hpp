@@ -7,10 +7,6 @@
 #define RENDERER OpenGL
 #endif
 
-#ifdef NDEBUG
-#define RENDERER_DEMO 1
-#endif
-
 #define OpenGL 1
 #define Vulkan 2
 

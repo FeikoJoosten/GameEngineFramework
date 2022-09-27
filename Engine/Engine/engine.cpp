@@ -22,9 +22,32 @@
 #include "Engine/Renderer/VulkanRenderer.hpp"
 #endif
 
+#include <tinyfiledialogs/tinyfiledialogs.h>
+
 namespace Engine {
 	std::shared_ptr<Engine> Engine::instance;
 	std::shared_ptr<CommandLineArgumentsManager> Engine::commandLineArgumentsManager;
+
+	Engine::Engine() {
+		EngineAssetManager::TryLoadEngineData<Engine>(engineSettings);
+		
+		if(engineSettings.lastOpenedProject.empty()) {
+			if(tinyfd_messageBox(
+				"No project detected",
+				"No last known project was detected, please select a location for a new project to be created or select the location of another project",
+				"okcancel",
+				"info",
+				0)) {
+				engineSettings.lastOpenedProject = TryGetValidProjectPath();
+				engineSettings.knownProjects.push_back(engineSettings.lastOpenedProject);
+				EngineAssetManager::SaveEngineData<Engine>(engineSettings);
+			} else exit(0);
+		}
+	}
+
+	Engine::~Engine() {
+		EngineAssetManager::SaveEngineData<Engine>(engineSettings);
+	}
 
 	std::shared_ptr<Window> Engine::GetWindow() noexcept {
 		CreateInstance();
@@ -112,7 +135,7 @@ namespace Engine {
 	std::shared_ptr<AssetManager> Engine::GetAssetManager() noexcept {
 		CreateInstance();
 		if (instance->assetManager == nullptr)
-			instance->assetManager = std::shared_ptr<AssetManager>(new AssetManager());
+			instance->assetManager = std::shared_ptr<AssetManager>(new AssetManager(instance->engineSettings.lastOpenedProject + "/"));
 		return instance->assetManager;
 	}
 
@@ -134,5 +157,22 @@ namespace Engine {
 			return;
 
 		instance = std::shared_ptr<Engine>(new Engine());
+	}
+
+	std::string Engine::TryGetValidProjectPath() {
+		const std::string pathToReturn = tinyfd_selectFolderDialog("Select Project Location", "");
+		if(pathToReturn.empty()) {
+			if(tinyfd_messageBox(
+				"No path selected",
+				"You haven't selected a path. If you wish to quit, select cancel or press OK to select another path.",
+				"okcancel",
+				"error",
+				0))
+				return TryGetValidProjectPath();
+
+			exit(0);
+		} //else if() TODO: Verify folder location, empty folder or project structure detected?
+
+		return pathToReturn;
 	}
 } // namespace Engine

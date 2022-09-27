@@ -1,10 +1,14 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
+#include "Engine/Utility/Defines.hpp"
 
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <cereal/types/string.hpp>
+#include <cereal/types/vector.hpp>
 
 namespace Engine {
 	class AssetManager;
@@ -22,13 +26,21 @@ namespace Engine {
 	class Window;
 
 	class ENGINE_LOCAL Engine {
-		friend class Application;
+		struct ENGINE_LOCAL EngineSettings {
+			std::string lastOpenedProject {};
+			std::vector<std::string> knownProjects {};
 
-		explicit Engine() = default;
+			template <class Archive>
+			void Serialize(Archive& archive);
+		};
+
+		friend class Application;
+		
+		Engine();
 	public:
 		Engine(const Engine& other) = delete;
 		Engine(Engine&& other) noexcept = delete;
-		~Engine() = default;
+		~Engine();
 
 		Engine& operator=(const Engine& other) = delete;
 		Engine& operator=(Engine&& other) noexcept = delete;
@@ -156,10 +168,21 @@ namespace Engine {
 		std::shared_ptr<SceneManager> sceneManager;
 		std::shared_ptr<AssetManager> assetManager;
 		std::shared_ptr<EngineAssetManager> engineAssetManager;
+		EngineSettings engineSettings;
 		static std::shared_ptr<CommandLineArgumentsManager> commandLineArgumentsManager;
 
 		static void CreateInstance() noexcept;
+
+		static std::string TryGetValidProjectPath();
 	};
+
+	template <class Archive>
+	void Engine::EngineSettings::Serialize(Archive& archive) {
+		archive(
+			CEREAL_NVP(lastOpenedProject),
+			CEREAL_NVP(knownProjects)
+		);
+	}
 
 	template <typename WindowType>
 	std::shared_ptr<WindowType> Engine::GetWindow() {

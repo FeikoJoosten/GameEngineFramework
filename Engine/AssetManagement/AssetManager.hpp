@@ -14,7 +14,7 @@ namespace Engine {
 	class ENGINE_API AssetManager {
 		friend std::shared_ptr<AssetManager> Engine::GetAssetManager() noexcept;
 
-		AssetManager() = default;
+		explicit AssetManager(std::string projectRoot);
 
 	public:
 		AssetManager(const AssetManager& other) = delete;
@@ -40,12 +40,8 @@ namespace Engine {
 
 		[[nodiscard]] std::vector<char> ReadFile(const std::string& fileName, int fileOpenMode = 1) const;
 
-		// TODO: Make this private
-		void SetExecutablePath(const std::string& executablePath);
-
 	private:
-		std::string fullExecutablePath {};
-		std::string fullExecutableDirectory {};
+		std::string projectRoot {};
 	};
 
 	template <typename T> void AssetManager::WriteDataToPath(const std::string& fullPath, T data, bool writeNameValuePairs) {

@@ -2,7 +2,6 @@
 
 #include "Engine/Api/Api.hpp"
 #include "Engine/AssetManagement/AssetManager.hpp"
-#include "Engine/Engine/Engine.hpp"
 #include "Engine/Utility/Logging.hpp"
 
 #include <fstream>
@@ -11,6 +10,7 @@
 #include <filesystem>
 #include <cereal/archives/json.hpp>
 #include <sago/PlatformFolders.hpp>
+#include <nameof.hpp>
 
 namespace Engine {
 	class ENGINE_LOCAL EngineAssetManager {
@@ -30,42 +30,49 @@ namespace Engine {
 
 		inline static const std::string ENGINE_SETTINGS_FILE_TYPE = ".json";
 
-		template<typename T>
-		static void WriteDataToPath(const std::string& relativePath, T data, bool writeNameValuePairs = true);
+		template<class OwnerType, class DataType>
+		static void SaveEngineData(const DataType& input, bool writeNameValuePairs = true, const std::string& fileExtension = ENGINE_SETTINGS_FILE_TYPE);
 
-		template<typename T>
-		static T ReadDataFromPath(const std::string& relativePath);
+		template<class OwnerType, class DataType>
+		static bool TryLoadEngineData(DataType& output, const std::string& fileExtension = ENGINE_SETTINGS_FILE_TYPE);
 
 	private:
 		inline static const std::string SYSTEM_CONFIG_FOLDER = sago::getConfigHome() + "/EngineFramework/";
+
+		template<class OwnerType, class DataType>
+		[[nodiscard]] static std::string MakeEngineFilePath(const std::string& fileExtension);
 	};
 
-	template <typename T> void EngineAssetManager::WriteDataToPath(const std::string& relativePath, T data, bool writeNameValuePairs) {
-		const std::string fullPath = SYSTEM_CONFIG_FOLDER + relativePath;
-		if (const std::string desiredDirectoryPath = AssetManager::GetDirectoryFromPath(fullPath);
-			!std::filesystem::is_directory(desiredDirectoryPath)) {
-			if (!std::filesystem::create_directories(desiredDirectoryPath)) {
-				DEBUG_ERROR("Failed to create directories for path: " + relativePath);
+	template <class OwnerType, class DataType>
+	void EngineAssetManager::SaveEngineData(const DataType& input, bool writeNameValuePairs, const std::string& fileExtension) {
+		const std::string filePath = MakeEngineFilePath<OwnerType, DataType>(fileExtension);
+		if(const std::string desiredDirectoryPath = AssetManager::GetDirectoryFromPath(filePath); !std::filesystem::is_directory(desiredDirectoryPath)) {
+			if(!std::filesystem::create_directories(desiredDirectoryPath)) {
+				DEBUG_ERROR("Failed to create directories for path: " + filePath);
 				return;
 			}
 		}
-		
-		std::ofstream outputStream(fullPath);
+
+		std::ofstream outputStream(filePath);
 		cereal::JSONOutputArchive archive(outputStream);
-		
-		writeNameValuePairs ? archive(CEREAL_NVP(data)) : archive(data);
+
+		writeNameValuePairs ? archive(cereal::make_nvp(static_cast<std::string>(NAMEOF_SHORT_TYPE(OwnerType)), input)) : archive(input);
 	}
 
-	template <typename T> T EngineAssetManager::ReadDataFromPath(const std::string& relativePath) {
-		const std::string fullPath = SYSTEM_CONFIG_FOLDER + relativePath;
-		if(AssetManager::FileExists(fullPath, true)) {
-			if (std::ifstream inputStream(fullPath); inputStream.good()) {
-				cereal::JSONInputArchive archive(inputStream);
-				T output {};
-				archive(output);
-				return output;
-			}
+	template <class OwnerType, class DataType>
+	bool EngineAssetManager::TryLoadEngineData(DataType& output,	const std::string& fileExtension) {
+		const std::string filePath = MakeEngineFilePath<OwnerType, DataType>(fileExtension);
+		if(std::ifstream inputStream(filePath); inputStream.good() && inputStream.is_open()) {
+			cereal::JSONInputArchive archive(inputStream);
+			output = {};
+			archive(output);
+			return true;
 		}
-		return {};
+		return false;
+	}
+
+	template <class OwnerType, class DataType>
+	std::string EngineAssetManager::MakeEngineFilePath(const std::string& fileExtension) {
+		return std::move(SYSTEM_CONFIG_FOLDER + static_cast<std::string>(NAMEOF_SHORT_TYPE(OwnerType)) + "/" + static_cast<std::string>(NAMEOF_SHORT_TYPE(DataType)) + fileExtension);
 	}
 }
