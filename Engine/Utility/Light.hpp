@@ -2,20 +2,23 @@
 
 #include "Engine/Api/Api.hpp"
 
+#include <cereal/access.hpp>
 #include <glm/glm.hpp>
 
 /// <summary>
 /// Enum containing the different types of lights that can be created.
 /// </summary>
 enum ENGINE_API LightType {
-	LIGHT_AMBIENT_LIGHT = 0,
-	LIGHT_DIRECTIONAL_LIGHT,
-	LIGHT_POINT_LIGHT,
-	LIGHT_SPOT_LIGHT,
-	LIGHT_NONEXISTENT = -1
+	LightAmbientLight = 0,
+	LightDirectionalLight,
+	LightPointLight,
+	LightSpotLight,
+	LightNonexistent = -1
 };
 
 class ENGINE_API Light {
+	friend cereal::access;
+
 public:
 	glm::vec4 position;
 	glm::vec4 direction;
@@ -25,4 +28,23 @@ public:
 	float coneInnerAngle;
 	float coneOuterAngle;
 	int padding[48];
+
+private:
+
+	template <class Archive>
+	void Serialize(Archive& archive);
 };
+
+template <class Archive>
+void Light::Serialize(Archive& archive) {
+	archive(
+		CEREAL_NVP(position),
+		CEREAL_NVP(direction),
+		CEREAL_NVP(color),
+		CEREAL_NVP(radius),
+		CEREAL_NVP(attunuation),
+		CEREAL_NVP(coneInnerAngle),
+		CEREAL_NVP(coneOuterAngle),
+		CEREAL_NVP(padding)
+	);
+}

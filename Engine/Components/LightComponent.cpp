@@ -17,7 +17,7 @@ namespace Engine {
 		std::string oldName = lightName;
 		lightName = name;
 #ifdef USING_VULKAN
-		renderer.lock()->SetLightType(oldName, LightType::LIGHT_NONEXISTENT);
+		renderer.lock()->SetLightType(oldName, LightType::LightNonexistent);
 		renderer.lock()->CreateLight(lightName, lightType,
 			glm::vec3(lightInfo.position.x, lightInfo.position.y, lightInfo.position.z),
 			glm::vec3(lightInfo.direction.x, lightInfo.direction.y, lightInfo.direction.z),
@@ -38,15 +38,15 @@ namespace Engine {
 		if (vulkanEnabled && type != lightType && GetIsEnabled()) {
 			renderer.lock()->SetLightType(lightName, type);
 			switch (type) {
-			case LightType::LIGHT_DIRECTIONAL_LIGHT:
+			case LightType::LightDirectionalLight:
 				renderer.lock()->SetLightDirection(lightName,
 					glm::vec3(lightInfo.direction.x, lightInfo.direction.y, lightInfo.direction.z));
 				break;
-			case LightType::LIGHT_POINT_LIGHT:
+			case LightType::LightPointLight:
 				renderer.lock()->SetLightPosition(lightName,
 					glm::vec3(lightInfo.position.x, lightInfo.position.y, lightInfo.position.z));
 				break;
-			case LightType::LIGHT_SPOT_LIGHT:
+			case LightType::LightSpotLight:
 				renderer.lock()->SetLightDirection(lightName,
 					glm::vec3(lightInfo.direction.x, lightInfo.direction.y, lightInfo.direction.z));
 				renderer.lock()->SetLightConeInnerAngle(lightName, lightInfo.coneInnerAngle);
@@ -182,13 +182,13 @@ namespace Engine {
 			lightName = GetOwner()->GetName();
 #ifdef USING_VULKAN
 		renderer.lock()->CreateLight(lightName,
-			LightType::LIGHT_NONEXISTENT,
+			LightType::LightNonexistent,
 			glm::vec3(),
 			glm::vec3(),
 			glm::vec3(),
 			0.f, 0.f, 0.f, 0.f);
 #endif
-		lightType = LightType::LIGHT_NONEXISTENT;
+		lightType = LightType::LightNonexistent;
 		lightInfo.position = glm::vec4();
 		lightInfo.direction = glm::vec4();
 		lightInfo.color = glm::vec4();
@@ -204,7 +204,7 @@ namespace Engine {
 			active = GetIsEnabled();
 
 			if (active == false)
-				renderer.lock()->SetLightType(lightName, LightType::LIGHT_NONEXISTENT);
+				renderer.lock()->SetLightType(lightName, LightType::LightNonexistent);
 			else
 				renderer.lock()->SetLightType(lightName, lightType);
 		}

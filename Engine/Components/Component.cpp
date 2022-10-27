@@ -62,9 +62,4 @@ namespace Engine {
 	std::shared_ptr<ComponentType> Component::GetPointerReference() const {
 		return std::static_pointer_cast<ComponentType>(pointerReference.lock());
 	}
-
-	template<class Archive>
-	void Component::Serialize(Archive& archive) {
-		archive(CEREAL_NVP(isEnabled));
-	}
 } // namespace Engine

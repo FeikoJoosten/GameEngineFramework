@@ -2,8 +2,6 @@
 #include "Engine/Components/Component.hpp"
 
 namespace Engine {
-	Entity::Entity(std::string name) : id(-1), isActive(true), name(std::move(name)) {}
-
 	Entity::~Entity() {
 		OnEntityDestroyedEvent(GetPointer());
 	}
@@ -37,14 +35,6 @@ namespace Engine {
 
 		isActive = newIsActive;
 		OnActiveStateChangedEvent(GetPointer(), isActive);
-	}
-
-	std::string Entity::GetName() const {
-		return name;
-	}
-
-	void Entity::SetName(const std::string& newName) {
-		name = newName;
 	}
 
 	void Entity::InitializeEntity(const std::shared_ptr<Entity>& newPointerReference, const int newId) {

@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
+#include "Engine/AssetManagement/Asset.hpp"
 #include "Engine/Texture/Texture.hpp"
 #include "Engine/Utility/Vertex.hpp"
 #include "Engine/Utility/Defines.hpp"
+
 #include <vector>
 
 namespace Engine
@@ -11,7 +13,7 @@ namespace Engine
 	/// <summary>
 	/// This object is used to store data regarding a mesh. NOTE: only the resource manager is allowed to create a mesh.
 	/// </summary>
-	class ENGINE_API Mesh
+	class ENGINE_API Mesh : public Asset
 	{
 	public:
 		/// <summary>
@@ -72,11 +74,6 @@ namespace Engine
 		T GetUBO();
 
 		/// <summary>
-		/// The name of this mesh.
-		/// </summary>
-		std::string name;
-
-		/// <summary>
 		/// This method allows you to compare a mesh with another mesh.
 		/// </summary>
 		/// <param name="other">The mesh you want to compare against.</param>
@@ -108,6 +105,11 @@ namespace Engine
 		virtual void SetUpMesh();
 	protected:
 		uint64_t vao, vbo, ebo, ubo;
+
+	private:
+
+		template <class Archive>
+		void Serialize(Archive& archive);
 	};
 
 	template <typename T>
@@ -132,6 +134,18 @@ namespace Engine
 	T Mesh::GetUBO()
 	{
 		return T(ubo);
+	}
+
+	template <class Archive>
+	void Mesh::Serialize(Archive& archive) {
+		archive(
+			CEREAL_NVP(vertices),
+			CEREAL_NVP(indices),
+			CEREAL_NVP(vao),
+			CEREAL_NVP(vbo),
+			CEREAL_NVP(ebo),
+			CEREAL_NVP(ubo)
+		);
 	}
 
 } // namespace Engine

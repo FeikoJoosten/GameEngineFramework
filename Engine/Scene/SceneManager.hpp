@@ -14,7 +14,7 @@ namespace Engine {
 
 	class ENGINE_API SceneManager {
 		friend std::shared_ptr<SceneManager> Engine::GetSceneManager() noexcept;
-		friend class cereal::access;
+		friend cereal::access;
 
 		SceneManager();
 

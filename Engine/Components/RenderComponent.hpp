@@ -10,26 +10,12 @@ namespace Engine {
 	class TransformComponent;
 
 	class ENGINE_API RenderComponent : public Component {
-		template <class ComponentType, class... Args>
-		friend std::shared_ptr<ComponentType> Entity::AddComponent(Args&&... args);
+		friend cereal::access;
 
 	protected:
 		RenderComponent() = default;
 
-		/// <summary>
-		/// Create a model component with the give Model.
-		/// </summary>
-		explicit RenderComponent(std::shared_ptr<Model> model) noexcept;
-
-		/// <summary>
-		/// Create a model component with the given path.
-		/// </summary>
-		/// <param name="path">This path value is used to load the default mesh for this model component.</param>
-		/// <returns></returns>
-		explicit RenderComponent(const std::string& path) noexcept;
-
 	public:
-		friend class cereal::access;
 
 		virtual ~RenderComponent() override = default;
 		RenderComponent(const RenderComponent& other) = delete;
@@ -41,13 +27,13 @@ namespace Engine {
 		/// This method allows you to change the model to render of this model component.
 		/// </summary>
 		/// <param name="newModel">The new model to use.</param>
-		void SetModel(std::shared_ptr<Model> newModel);
+		virtual void SetModel(std::shared_ptr<Model> newModel);
 
 		/// <summary>
 		/// This method allows you to change the model to render of this model component.
 		/// </summary>
 		/// <param name="path">The path of the new model to use.</param>
-		void SetModel(const std::string& path);
+		virtual void SetModel(const std::string& path);
 
 		/// <summary>
 		///	This method allows you to retrieve the currently assigned model of this render component
@@ -85,4 +71,12 @@ namespace Engine {
 		template <typename Archive>
 		void Serialize(Archive& archive);
 	};
+
+	template <typename Archive>
+	void RenderComponent::Serialize(Archive& archive) {
+		archive(
+			CEREAL_NVP(cereal::base_class<Component>(this)),
+			CEREAL_NVP(model)
+		);
+	}
 }

@@ -1,0 +1,44 @@
+{
+    "data": {
+        "polymorphic_id": 1073741824,
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "Asset": {
+                    "name": "Amazing Entity"
+                },
+                "components": [
+                    {
+                        "polymorphic_id": 2147483649,
+                        "polymorphic_name": "Engine::TransformComponent",
+                        "ptr_wrapper": {
+                            "id": 2147483650,
+                            "data": {
+                                "Component": {
+                                    "isEnabled": true
+                                },
+                                "position": {
+                                    "v.x": 0.0,
+                                    "v.y": 0.0,
+                                    "v.z": 0.0
+                                },
+                                "rotation": {
+                                    "q.x": 0.0,
+                                    "q.y": 0.0,
+                                    "q.z": 0.0,
+                                    "q.w": 0.0
+                                },
+                                "scale": {
+                                    "v.x": 1.0,
+                                    "v.y": 1.0,
+                                    "v.z": 1.0
+                                },
+                                "isStatic": false
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

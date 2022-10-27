@@ -3,7 +3,7 @@
 #include "Engine/Application/Application.hpp"
 #include "Engine/Components/Component.hpp"
 #include "Engine/Camera/CameraManager.hpp"
-#include "Engine/Camera/CameraComponent.hpp"
+#include "Engine/Components/CameraComponent.hpp"
 #include "Engine/Input/InputManager.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
 #include "Engine/Renderer/Renderer.hpp"

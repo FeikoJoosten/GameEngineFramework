@@ -17,9 +17,12 @@ namespace Engine {
 	}
 
 	std::shared_ptr<Entity> EntitySystem::CreateEntity(const std::string& entityName) {
-		AddEntity(std::shared_ptr<Entity>(new Entity(entityName)));
+		AddEntity(std::shared_ptr<Entity>(new Entity()));
 
-		return system.back();
+		std::shared_ptr<Entity> entityToReturn = system.back();
+		entityToReturn->SetName(entityName);
+
+		return entityToReturn;
 	}
 
 	std::shared_ptr<Entity> EntitySystem::GetEntity(const int id) const {

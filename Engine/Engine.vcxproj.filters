@@ -175,6 +175,9 @@
     <Filter Include="Source Files\ThirdParty\tinyfiledialogs">
       <UniqueIdentifier>{61cc4514-848e-445e-95bf-0af46df6b825}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Serialization">
+      <UniqueIdentifier>{ad088b50-3d95-4eb8-b26a-cb34c0910641}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Component.hpp">
@@ -254,9 +257,6 @@
     </ClInclude>
     <ClInclude Include="Utility\Event.hpp">
       <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera\CameraComponent.hpp">
-      <Filter>Header Files\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Camera\Frustum.hpp">
       <Filter>Header Files\Camera</Filter>
@@ -414,6 +414,24 @@
     <ClInclude Include="ThirdParty\tinyfiledialogs\more_dialogs\tinyfd_moredialogs.h">
       <Filter>Header Files\ThirdParty\tinyfiledialogs\more_dialogs</Filter>
     </ClInclude>
+    <ClInclude Include="AssetManagement\AssetImporter.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\MeshAssetImporter.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\AssetRegistry.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\ModelImporter.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="GlmSerializationHelper.hpp">
+      <Filter>Header Files\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\CameraComponent.hpp">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity\Entity.cpp">
@@ -484,9 +502,6 @@
     </ClCompile>
     <ClCompile Include="Mesh\OpenGLMesh.cpp">
       <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera\CameraComponent.cpp">
-      <Filter>Source Files\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Camera\Frustum.cpp">
       <Filter>Source Files\Camera</Filter>
@@ -619,6 +634,18 @@
     </ClCompile>
     <ClCompile Include="ThirdParty\tinyfiledialogs\tinyfiledialogs.c">
       <Filter>Source Files\ThirdParty\tinyfiledialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshAssetImporter.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelImporter.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\AssetRegistry.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\CameraComponent.cpp">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

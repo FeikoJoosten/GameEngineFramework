@@ -59,8 +59,9 @@ namespace Engine
 		else
 			skeleton = CreateSkeleton(meshToLoad);
 
-		loadedModels_.push_back(std::shared_ptr<Model>(new Model(scene, modelName)));
+		loadedModels_.push_back(std::shared_ptr<Model>(new Model()));
 		std::shared_ptr<Model>modelToAddTo = loadedModels_.back();
+		modelToAddTo->SetName(modelName);
 
 		// process the nodes and extract their data
 		ProcessModel(modelName, modelToAddTo, scene->mRootNode, scene, skeleton.lock());

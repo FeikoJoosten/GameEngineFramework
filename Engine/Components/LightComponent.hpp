@@ -16,6 +16,7 @@ namespace Engine {
 
 	class ENGINE_API LightComponent : public Component
 	{
+		friend cereal::access;
 	public:
 		virtual ~LightComponent() override = default;
 
@@ -167,6 +168,20 @@ namespace Engine {
 
 		Light lightInfo;
 		LightType lightType;
+
+		template <class Archive>
+		void Serialize(Archive& archive);
 	};
+
+	template <class Archive>
+	void LightComponent::Serialize(Archive& archive) {
+		archive(
+			CEREAL_NVP(lightName),
+			CEREAL_NVP(vulkanEnabled),
+			CEREAL_NVP(active),
+			CEREAL_NVP(lightInfo),
+			CEREAL_NVP(lightType)
+		);
+	}
 
 }

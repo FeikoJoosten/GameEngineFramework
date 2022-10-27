@@ -1,10 +1,12 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
+#include "Engine/Utility/Defines.hpp"
+#include "Engine/AssetManagement/Asset.hpp"
 #include "Engine/Utility/Event.hpp"
 
-#include <string>
-#include <vector>
+#include <cereal/access.hpp>
+#include <cereal/types/vector.hpp>
 
 namespace Engine {
 	class Component;
@@ -12,15 +14,18 @@ namespace Engine {
 	/// <summary>
 	/// This object is a holder object for components.
 	/// </summary>
-	class ENGINE_API Entity final {
+	class ENGINE_API Entity final : public Asset {
 	protected:
 		// Need to friend the entirety of EntitySystem as EntitySystem::AddEntity is a private function
 		friend class EntitySystem;
+		friend cereal::access;
 
-		int id {};
+		int id = -1;
+		bool isActive {};
 		std::vector<std::shared_ptr<Component>> components {};
+		std::weak_ptr<Entity> pointerReference {};
 
-		explicit Entity(std::string name = "");
+		Entity() = default;
 
 	public:
 		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentAddedEvent;
@@ -28,7 +33,7 @@ namespace Engine {
 		Sharp::Event<std::shared_ptr<Entity>, bool> OnActiveStateChangedEvent;
 		Sharp::Event<std::shared_ptr<Entity>> OnEntityDestroyedEvent;
 
-		~Entity();
+		virtual ~Entity() override;
 		Entity(const Entity& other) = delete;
 		Entity(Entity&& other) = delete;
 		Entity& operator=(const Entity& other) = delete;
@@ -54,22 +59,20 @@ namespace Engine {
 		/// <returns>Returns a vector of all the components of this entity.</returns>
 		[[nodiscard]] std::vector<std::shared_ptr<Component>> GetAllComponents() const;
 
-		template <class ComponentType, class... Args>
+		template <class ComponentType>
 		/// <summary>
 		/// Allows you to create a component of the given type.
 		/// </summary>
-		/// <param name="args">The arguments required to initialize the component.</param>
 		/// <returns>Returns the just created component of the given type as a shared pointer.</returns>
-		std::shared_ptr<ComponentType> AddComponent(Args&&... args);
+		std::shared_ptr<ComponentType> AddComponent();
 
-		template <class ComponentType, class... Args>
+		template <class ComponentType>
 		/// <summary>
 		/// Adds X amount of components of the given type.
 		/// </summary>
 		/// <param name="count">The amount of components you want to add of this given type.</param>
-		/// <param name="args">The arguments required to initialize the components.</param>
 		/// <returns>Returns a vector of the just created components of the given type as a vector of shared pointers.</returns>
-		std::vector<std::shared_ptr<ComponentType>> AddComponents(size_t count, Args&&... args);
+		std::vector<std::shared_ptr<ComponentType>> AddComponents(size_t count);
 
 		template <typename ComponentType>
 		/// <summary>
@@ -107,23 +110,7 @@ namespace Engine {
 		/// <param name="newIsActive">This value will define if this entity will be active or not.</param>
 		void SetIsActive(bool newIsActive);
 
-		/// <summary>
-		/// This method will return the name of this entity.
-		/// </summary>
-		/// <returns>Returns the name of this entity.</returns>
-		[[nodiscard]] std::string GetName() const;
-
-		/// <summary>
-		/// This method will allow you to change the name of this entity.
-		/// </summary>
-		/// <param name="newName">This value will define the new name of this entity.</param>
-		void SetName(const std::string& newName);
-
 	private:
-		bool isActive {};
-		std::string name {};
-		std::weak_ptr<Entity> pointerReference {};
-
 		void InitializeEntity(const std::shared_ptr<Entity>& newPointerReference, int newId);
 
 		void InitializeComponent(const std::shared_ptr<Component>& componentToInitialize) const;
@@ -133,6 +120,9 @@ namespace Engine {
 		void OnComponentAdded(const std::shared_ptr<Component>& addedComponent) const;
 
 		void OnComponentRemoved(const std::shared_ptr<Component>& removedComponent) const;
+
+		template <class Archive>
+		void Serialize(Archive& archive);
 	};
 
 	template <typename ComponentType>
@@ -156,9 +146,9 @@ namespace Engine {
 		return componentsToReturn;
 	}
 
-	template <class ComponentType, class... Args>
-	std::shared_ptr<ComponentType> Entity::AddComponent(Args&&... args) {
-		components.push_back(std::shared_ptr<ComponentType>(new ComponentType(std::forward<Args>(args)...)));
+	template <class ComponentType>
+	std::shared_ptr<ComponentType> Entity::AddComponent() {
+		components.push_back(std::shared_ptr<ComponentType>(new ComponentType()));
 
 		const std::shared_ptr<Component> componentToReturn = components.back();
 		InitializeComponent(componentToReturn);
@@ -167,12 +157,12 @@ namespace Engine {
 		return std::static_pointer_cast<ComponentType>(componentToReturn);
 	}
 
-	template <class ComponentType, class... Args>
-	std::vector<std::shared_ptr<ComponentType>> Entity::AddComponents(const size_t count, Args&&... args) {
+	template <class ComponentType>
+	std::vector<std::shared_ptr<ComponentType>> Entity::AddComponents(const size_t count) {
 		std::vector<std::shared_ptr<ComponentType>> componentsToReturn;
 
 		for (size_t i = 0; i < count; ++i)
-			componentsToReturn.push_back(AddComponent<ComponentType>(std::forward<Args>(args)...));
+			componentsToReturn.push_back(AddComponent<ComponentType>());
 		return componentsToReturn;
 	}
 
@@ -201,5 +191,13 @@ namespace Engine {
 	template <typename ComponentType>
 	void Entity::RemoveAllComponents() {
 		RemoveComponent<ComponentType>(components.size());
+	}
+
+	template <class Archive>
+	void Entity::Serialize(Archive& archive) {
+		archive(
+			cereal::make_nvp("Asset", cereal::virtual_base_class<Asset>(this)),
+			CEREAL_NVP(components)
+		);
 	}
 } // namespace Engine

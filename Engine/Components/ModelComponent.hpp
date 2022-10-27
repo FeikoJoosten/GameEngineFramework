@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
-#include "Engine/Components/Component.hpp"
 #include "Engine/Components/RenderComponent.hpp"
 #include "Engine/Model/Model.hpp"
 
@@ -15,27 +14,33 @@ namespace Engine
 	/// </summary>
 	class ENGINE_API ModelComponent : public RenderComponent
 	{
-		template <class ComponentType, class... Args>
-		friend std::shared_ptr<ComponentType> Entity::AddComponent(Args&&... args);
+		friend cereal::access;
+		template <class ComponentType>
+		friend std::shared_ptr<ComponentType> Entity::AddComponent();
 
-		/// <summary>
-		/// Create a model component with the give Model.
-		/// </summary>
-		explicit ModelComponent(std::shared_ptr<Model> model) noexcept;
+		ModelComponent() = default;
 
-		/// <summary>
-		/// Create a model component with the given path.
-		/// </summary>
-		/// <param name="path">This path value is used to load the default mesh for this model component.</param>
-		/// <returns></returns>
-		explicit ModelComponent(const std::string& path) noexcept;
-
-	public:
-		ModelComponent() = delete;
-
-	private:
 		std::weak_ptr<Time> time;
 
+	public:
+		virtual ~ModelComponent() override = default;
+		ModelComponent(const ModelComponent& other) = delete;
+		ModelComponent(ModelComponent&& other) = delete;
+		ModelComponent& operator=(const ModelComponent& other) = delete;
+		ModelComponent& operator=(ModelComponent&& other) = delete;
+
+	protected:
 		virtual void Update() override;
+
+	private:
+		template <class Archive>
+		void Serialize(Archive& archive);
 	};
+
+	template <class Archive>
+	void ModelComponent::Serialize(Archive& archive) {
+		archive(
+			CEREAL_NVP(cereal::base_class<RenderComponent>(this))
+		);
+	}
 } //namespace Engine

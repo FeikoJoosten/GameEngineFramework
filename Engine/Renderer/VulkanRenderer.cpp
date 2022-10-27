@@ -690,7 +690,7 @@ namespace Engine {
 		info.type = lightType;
 
 		switch (lightType) {
-		case LightType::LIGHT_AMBIENT_LIGHT:
+		case LightType::LightAmbientLight:
 			info.light.position = glm::vec4(position.x, position.y, position.z, 0.f);
 			info.light.direction = glm::vec4(0.f);
 			info.light.color = glm::vec4(color.x, color.y, color.z, 1.f);
@@ -699,7 +699,7 @@ namespace Engine {
 			info.light.coneInnerAngle = coneInnerAngle;
 			info.light.coneOuterAngle = coneOuterAngle;
 			break;
-		case LightType::LIGHT_DIRECTIONAL_LIGHT:
+		case LightType::LightDirectionalLight:
 			info.light.position = glm::vec4(position.x, position.y, position.z, 0.f);
 			info.light.direction = glm::vec4(-direction.x, -direction.y, direction.z, 0.f);
 			info.light.color = glm::vec4(color.x, color.y, color.z, 1.f);
@@ -708,7 +708,7 @@ namespace Engine {
 			info.light.coneInnerAngle = coneInnerAngle;
 			info.light.coneOuterAngle = coneOuterAngle;
 			break;
-		case LightType::LIGHT_POINT_LIGHT:
+		case LightType::LightPointLight:
 			info.light.position = glm::vec4(position.x, position.y, position.z, 1.f);
 			info.light.direction = glm::vec4(-direction.x, -direction.y, direction.z, 0.f);
 			info.light.color = glm::vec4(color.x, color.y, color.z, 1.f);
@@ -717,7 +717,7 @@ namespace Engine {
 			info.light.coneInnerAngle = 2.f * glm::pi<float>();
 			info.light.coneOuterAngle = 2.f * glm::pi<float>();
 			break;
-		case LightType::LIGHT_SPOT_LIGHT:
+		case LightType::LightSpotLight:
 			info.light.position = glm::vec4(position.x, position.y, position.z, 1.f);
 			info.light.direction = glm::vec4(-direction.x, -direction.y, direction.z, 0.f);
 			info.light.color = glm::vec4(color.x, color.y, color.z, 1.f);
@@ -746,13 +746,13 @@ namespace Engine {
 		if (info.type == lightType)
 			return;
 
-		if (info.type == LightType::LIGHT_NONEXISTENT) {
+		if (info.type == LightType::LightNonexistent) {
 			info.type = lightType;
 			info.active = true;
 			lightDataRestructured = true;
 		}
 
-		if (lightType == LightType::LIGHT_NONEXISTENT) {
+		if (lightType == LightType::LightNonexistent) {
 			info.type = lightType;
 			info.active = false;
 			lightDataRestructured = true;
@@ -762,19 +762,19 @@ namespace Engine {
 		info.type = lightType;
 
 		switch (lightType) {
-		case LightType::LIGHT_AMBIENT_LIGHT:
+		case LightType::LightAmbientLight:
 			info.light.position.w = 0.f;
 			info.light.direction = glm::vec4(0.f);
 			break;
-		case LightType::LIGHT_DIRECTIONAL_LIGHT:
+		case LightType::LightDirectionalLight:
 			info.light.position.w = 0.f;
 			break;
-		case LightType::LIGHT_POINT_LIGHT:
+		case LightType::LightPointLight:
 			info.light.position.w = 1.f;
 			info.light.coneInnerAngle = 2.f * glm::pi<float>();
 			info.light.coneOuterAngle = 2.f * glm::pi<float>();
 			break;
-		case LightType::LIGHT_SPOT_LIGHT:
+		case LightType::LightSpotLight:
 			info.light.position.w = 1.f;
 			info.light.coneInnerAngle = 0.f;
 			info.light.coneOuterAngle = 0.f;
@@ -793,7 +793,7 @@ namespace Engine {
 		if (lights.count(name) > 0)
 			return lights[name].type;
 		else
-			return LightType::LIGHT_NONEXISTENT;
+			return LightType::LightNonexistent;
 	}
 
 	void VulkanRenderer::SetLightPosition(std::string name, glm::vec3 position) {
@@ -806,7 +806,7 @@ namespace Engine {
 		info.light.position.y = position.y;
 		info.light.position.z = position.z;
 
-		if (info.active && (info.type == LightType::LIGHT_POINT_LIGHT || info.type == LightType::LIGHT_SPOT_LIGHT)) {
+		if (info.active && (info.type == LightType::LightPointLight || info.type == LightType::LightSpotLight)) {
 			lightData[info.lightDataIndex] = info.light;
 			lightDataChanged = true;
 		}
@@ -830,7 +830,7 @@ namespace Engine {
 		LightInfo info = lights[name];
 
 
-		if (info.active && (info.type == LightType::LIGHT_DIRECTIONAL_LIGHT || info.type == LightType::LIGHT_SPOT_LIGHT)) {
+		if (info.active && (info.type == LightType::LightDirectionalLight || info.type == LightType::LightSpotLight)) {
 			info.light.direction.x = -direction.x;
 			info.light.direction.y = -direction.y;
 			info.light.direction.z = direction.z;
@@ -885,7 +885,7 @@ namespace Engine {
 
 		LightInfo info = lights[name];
 		info.light.radius = radius;
-		if (info.type == LightType::LIGHT_SPOT_LIGHT || info.type == LightType::LIGHT_POINT_LIGHT) {
+		if (info.type == LightType::LightSpotLight || info.type == LightType::LightPointLight) {
 			if (info.active) {
 				lightData[info.lightDataIndex] = info.light;
 				lightDataChanged = true;
@@ -907,7 +907,7 @@ namespace Engine {
 
 		LightInfo info = lights[name];
 		info.light.coneInnerAngle = angle;
-		if (info.type == LightType::LIGHT_SPOT_LIGHT) {
+		if (info.type == LightType::LightSpotLight) {
 			if (info.active) {
 				lightData[info.lightDataIndex] = info.light;
 				lightDataChanged = true;
@@ -929,7 +929,7 @@ namespace Engine {
 
 		LightInfo info = lights[name];
 		info.light.coneOuterAngle = angle;
-		if (info.type == LightType::LIGHT_SPOT_LIGHT) {
+		if (info.type == LightType::LightSpotLight) {
 			if (info.active) {
 				lightData[info.lightDataIndex] = info.light;
 				lightDataChanged = true;

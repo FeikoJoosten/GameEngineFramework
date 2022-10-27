@@ -1,6 +1,6 @@
 #include "Engine/Camera/CameraManager.hpp"
 #include "Engine/Components/Component.hpp"
-#include "Engine/Camera/CameraComponent.hpp"
+#include "Engine/Components/CameraComponent.hpp"
 #include "Engine/Engine/Engine.hpp"
 #include "Engine/Entity/Entity.hpp"
 #include "Engine/Entity/EntitySystem.hpp"

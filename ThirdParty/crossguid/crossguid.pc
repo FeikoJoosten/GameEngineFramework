@@ -1,0 +1,11 @@
+prefix=C:/Program Files (x86)/CrossGuid
+exec_prefix=${prefix}
+includedir=C:/Program Files (x86)/CrossGuid/include
+libdir=C:/Program Files (x86)/CrossGuid/lib
+
+Name: crossguid
+Description: Lightweight cross platform C++ GUID/UUID library 
+URL: https://github.com/graeme-hill/crossguid
+Version: 0.2.3
+Cflags: -I${includedir}
+Libs: -L${libdir} -lcrossguid

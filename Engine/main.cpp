@@ -1,14 +1,17 @@
+// Must be included first to ensure proper defines
+#include "Engine/Utility/Defines.hpp"
+
 #include "Engine/Application/Application.hpp"
 #include "Engine/AssetManagement/AssetManager.hpp"
-#include "Engine/Camera/CameraComponent.hpp"
+#include "Engine/Components/CameraComponent.hpp"
 #include "Engine/CommandLineArguments/CommandLineArgumentsManager.hpp"
 #include "Engine/Components/TransformComponent.hpp"
 #include "Engine/Components/ModelComponent.hpp"
 #include "Engine/Components/LightComponent.hpp"
 #include "Engine/Entity/Entity.hpp"
 #include "Engine/Entity/EntitySystem.hpp"
-#include "Engine/Window/Window.hpp"
 #include "Engine/Engine/EngineImGui.hpp"
+#include "Engine/Window/Window.hpp"
 
 #if defined(_WIN32) && defined(UNICODE)
 #include <utf8.h>
@@ -79,19 +82,26 @@ namespace Engine {
 		// This should be created by the scene view window instead of here
 		const std::shared_ptr<EntitySystem> entitySystem = EntitySystem::Get();
 		const std::shared_ptr<Entity> cameraEntity = entitySystem->CreateEntity("Camera");
-		cameraEntity->AddComponent<TransformComponent>(glm::vec3(0.f, 100.f, 200.f), glm::vec3(0.f, glm::radians(180.f), 0.f));
-		cameraEntity->AddComponent<CameraComponent>(60.f, 0.1f, 1000.f);
+		const std::shared_ptr<TransformComponent> transformComponent = cameraEntity->AddComponent<TransformComponent>();
+		transformComponent->SetPositionAndRotation(glm::vec3(0.f, 100.f, 200.f), glm::vec3(0.f, glm::radians(180.f), 0.f));
+		const std::shared_ptr<CameraComponent> cameraComponent = cameraEntity->AddComponent<CameraComponent>();
+		cameraComponent->SetProjection(60.f, 0.1f, 1000.f);
 		
-		const std::shared_ptr<Entity> lockedEntity = entitySystem->CreateEntity("Amazing Entity");
-		const std::shared_ptr<Model> model = lockedEntity->AddComponent<ModelComponent>("xbot.fbx")->GetModel();
+		//const std::shared_ptr<Entity> lockedEntity = entitySystem->CreateEntity("Amazing Entity");
+		//const std::shared_ptr<Model> model = lockedEntity->AddComponent<ModelComponent>("xbot.fbx")->GetModel();
 		//std::vector<std::string> modelAnimations {};
-		if(model->HasAnimations()) {
+		//if(model->HasAnimations()) {
 			//model->GetAnimations(modelAnimations);
 			//model->SetAnimation(modelAnimations[0], true);
-			model->SetLooping(true);
-		}
-		lockedEntity->AddComponent<LightComponent>("light", LIGHT_AMBIENT_LIGHT, glm::vec3(0.f, 50.f, 0.f), glm::vec3(), glm::vec3(1.f, 1.f, 1.f), 3000.f, 100.f, 10.f, 10.f);
-		lockedEntity->AddComponent<TransformComponent>();
+			//model->SetLooping(true);
+		//}
+		//lockedEntity->AddComponent<LightComponent>("light", LightAmbientLight, glm::vec3(0.f, 50.f, 0.f), glm::vec3(), glm::vec3(1.f, 1.f, 1.f), 3000.f, 100.f, 10.f, 10.f);
+		//lockedEntity->AddComponent<TransformComponent>();
+
+		//const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
+		//const std::string entityFilePath = assetManager->GetProjectRoot() + "Resources/Entities/Amazing Entity";
+		//assetManager->WriteDataToPath(entityFilePath, lockedEntity);
+		//std::shared_ptr<Entity> lockedEntity = assetManager->ReadDataFromPath<std::shared_ptr<Entity>>(entityFilePath);
 		
 		// TODO: Let the engine update the game instead of the other way around. Maybe move the main to the engine?
 		while (!Window::Get()->ShouldClose())

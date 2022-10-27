@@ -1,14 +1,10 @@
-#include "Engine/Camera/CameraComponent.hpp"
+#include "Engine/Components/CameraComponent.hpp"
 #include "Engine/Window/Window.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 
 namespace Engine {
-	CameraComponent::CameraComponent(const float fieldOfVision, const float zNear, const float zFar) : fieldOfVision(fieldOfVision), clippingPlanes(zNear, zFar) {
-		SetProjection(fieldOfVision, zNear, zFar);
-	}
-
 	CameraComponent::~CameraComponent() {
 		if(!transformComponent.expired()) {
 			transformComponent.lock()->OnModifiedEvent -= Sharp::EventHandler::Bind(this, &CameraComponent::HandleOnTransformComponentModifiedEvent);

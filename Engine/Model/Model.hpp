@@ -9,8 +9,9 @@ namespace Engine
 	/// <summary>
 	/// This object is a storage container for meshes.
 	/// </summary>
-	class ENGINE_API Model
+	class ENGINE_API Model : public Asset
 	{
+		friend cereal::access;
 	public:
 		/// <summary>
 		/// This method allows you to get a reference of all the meshes in this model.
@@ -165,9 +166,9 @@ namespace Engine
 
 		std::string name;
 		friend class ResourceManager;
-		explicit Model(const aiScene* scene, std::string name = "");
+		Model() = default;
 	public:
-		~Model() = default;
+		virtual ~Model() override = default;
 	protected:
 
 		void UpdateAnimation(float deltaTime);
@@ -181,18 +182,37 @@ namespace Engine
 
 #pragma region AnimationData
 
-		float speed;
+		float speed = 1.f;
 
-		bool looping;
+		bool looping = false;
 
-		bool paused;
+		bool paused = false;
 
-		float time;
+		float time = 0;
 
-		size_t currentAnimation;
+		size_t currentAnimation = -1;
 
-		std::string currentAnimationName;
+		std::string currentAnimationName {};
+
+		template <class Archive>
+		void Serialize(Archive & archive);
 
 #pragma endregion
 	};
+
+	template <class Archive>
+	void Model::Serialize(Archive& archive) {
+		archive(
+			cereal::make_nvp("Asset", cereal::virtual_base_class<Asset>(this)),
+			//CEREAL_NVP(skeleton),
+			CEREAL_NVP(meshes),
+			//CEREAL_NVP(meshMaterialMap),
+			CEREAL_NVP(speed),
+			CEREAL_NVP(looping),
+			CEREAL_NVP(paused),
+			CEREAL_NVP(time),
+			CEREAL_NVP(currentAnimation),
+			CEREAL_NVP(currentAnimationName)
+		);
+	}
 } // namespace Engine

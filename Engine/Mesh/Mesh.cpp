@@ -41,7 +41,7 @@ namespace Engine
 
 	bool Mesh::operator==(Mesh& other)
 	{
-		if (name != other.name) return false;
+		if (GetName() != other.GetName()) return false;
 
 		size_t thisVerticesSize = vertices.size();
 		size_t otherVerticesSize = other.vertices.size();
@@ -70,7 +70,7 @@ namespace Engine
 
 	bool Mesh::operator!=(Mesh& other)
 	{
-		if (name != other.name) return true;
+		if (GetName() != other.GetName()) return true;
 
 		size_t thisVerticesSize = vertices.size();
 		size_t otherVerticesSize = other.vertices.size();

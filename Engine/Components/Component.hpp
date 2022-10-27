@@ -4,8 +4,7 @@
 #include "Engine/Entity/Entity.hpp"
 #include "Engine/Utility/Event.hpp"
 
-#include <vector>
-#include <cereal/cereal.hpp>
+#include <cereal/types/memory.hpp>
 
 namespace Engine {
 
@@ -15,7 +14,7 @@ namespace Engine {
 	class ENGINE_API Component {
 		// Need to give full access to Entity class because otherwise a circular dependency is created with private friends
 		friend class Entity;
-		friend class cereal::access;
+		friend cereal::access;
 
 	protected:
 		Component() = default;
@@ -178,5 +177,10 @@ namespace Engine {
 	void Component::RemoveAllComponents() const {
 		if (owner.expired()) return {};
 		owner.lock()->RemoveAllComponents<ComponentType>();
+	}
+
+	template<class Archive>
+	void Component::Serialize(Archive& archive) {
+		archive(CEREAL_NVP(isEnabled));
 	}
 } // namespace Engine

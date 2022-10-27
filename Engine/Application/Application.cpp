@@ -1,5 +1,5 @@
 #include "Engine/Application/Application.hpp"
-#include "Engine/Camera/CameraComponent.hpp"
+#include "Engine/Components/CameraComponent.hpp"
 #include "Engine/Camera/CameraManager.hpp"
 #include "Engine/Collision/CollisionSystem.hpp"
 #include "Engine/Engine/Engine.hpp"

@@ -1,21 +1,28 @@
 #pragma once
 
+#include "Engine/Utility/Defines.hpp"
 #include "Engine/Components/Component.hpp"
-#include <Engine/Utility/Event.hpp>
+#include "Engine/Utility/Event.hpp"
+#include "Engine/GlmSerializationHelper.hpp"
+
+#include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 
 namespace Engine {
 	class ENGINE_API TransformComponent final : public Component {
-		friend class Entity;
-		explicit TransformComponent() noexcept;
-		explicit TransformComponent(bool isStatic) noexcept;
-		explicit TransformComponent(glm::vec3 position) noexcept;
-		explicit TransformComponent(glm::vec3 position, bool isStatic) noexcept;
-		explicit TransformComponent(glm::vec3 position, glm::quat rotation) noexcept;
-		explicit TransformComponent(glm::vec3 position, glm::quat rotation, bool isStatic) noexcept;
-		explicit TransformComponent(glm::vec3 position, glm::quat rotation, glm::vec3 scale) noexcept;
-		explicit TransformComponent(glm::vec3 position, glm::quat rotation, glm::vec3 scale, bool isStatic) noexcept;
+		friend cereal::access;
+		template <class ComponentType>
+		friend std::shared_ptr<ComponentType> Entity::AddComponent();
+
+		glm::vec3 position {};
+		glm::quat rotation {};
+		glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f);
+		bool isStatic = false;
+
+		glm::mat4x4 modelMatrix {};
+
+		TransformComponent() = default;
 
 	public:
 		Sharp::Event<std::shared_ptr<TransformComponent>> OnModifiedEvent;
@@ -71,15 +78,26 @@ namespace Engine {
 		void LookAt(glm::vec3 targetPosition) noexcept;
 
 	private:
-		glm::vec3 position;
-		glm::quat rotation;
-		glm::vec3 scale;
-		bool isStatic;
-
-		glm::mat4x4 modelMatrix {};
 
 		void DecomposeModelMatrix() noexcept;
 
 		void RecalculateModelMatrix() noexcept;
+
+		template <class Archive>
+		void Serialize(Archive& archive);
 	};
+
+	template <class Archive>
+	void TransformComponent::Serialize(Archive& archive) {
+		archive(
+			cereal::make_nvp("Component", cereal::virtual_base_class<Component>(this)),
+			CEREAL_NVP(position),
+			CEREAL_NVP(rotation),
+			CEREAL_NVP(scale),
+			CEREAL_NVP(isStatic)
+		);
+	}
+
 } // namespace Engine
+
+CEREAL_REGISTER_TYPE(Engine::TransformComponent);

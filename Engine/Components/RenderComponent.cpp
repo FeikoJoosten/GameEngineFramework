@@ -3,14 +3,6 @@
 #include "Engine/Resources/ResourceManager.hpp"
 
 namespace Engine {
-	RenderComponent::RenderComponent(const std::shared_ptr<Model> model) noexcept {
-		SetModel(model);
-	}
-
-	RenderComponent::RenderComponent(const std::string& path) noexcept {
-		SetModel(path);
-	}
-
 	void RenderComponent::SetModel(const std::shared_ptr<Model> newModel) {
 		model = newModel;
 	}
@@ -31,14 +23,6 @@ namespace Engine {
 
 	std::shared_ptr<Material> RenderComponent::GetMaterial() const {
 		return material.lock();
-	}
-
-	template <typename Archive>
-	void RenderComponent::Serialize(Archive& archive) {
-		archive(
-			cereal::virtual_base_class<Component>(this),
-			CEREAL_NVP(model), 
-			CEREAL_NVP(transformComponent));
 	}
 
 	void RenderComponent::OnComponentAdded(const std::shared_ptr<Component> addedComponent) {

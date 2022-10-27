@@ -1,0 +1,5 @@
+D:/Projects/GameEngineFramework/ThirdParty/crossguid/CMakeFiles/crossguid.dir
+D:/Projects/GameEngineFramework/ThirdParty/crossguid/CMakeFiles/crossguid-test.dir
+D:/Projects/GameEngineFramework/ThirdParty/crossguid/CMakeFiles/INSTALL.dir
+D:/Projects/GameEngineFramework/ThirdParty/crossguid/CMakeFiles/ALL_BUILD.dir
+D:/Projects/GameEngineFramework/ThirdParty/crossguid/CMakeFiles/ZERO_CHECK.dir

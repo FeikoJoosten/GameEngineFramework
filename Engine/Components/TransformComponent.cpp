@@ -3,32 +3,6 @@
 #include <glm/gtx/euler_angles.hpp>
 
 namespace Engine {
-	TransformComponent::TransformComponent() noexcept : TransformComponent(
-		glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), false) {}
-
-	TransformComponent::TransformComponent(const bool isStatic) noexcept : TransformComponent(
-		glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), isStatic) {}
-
-	TransformComponent::TransformComponent(const glm::vec3 position) noexcept : TransformComponent(
-		position, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), false) {}
-
-	TransformComponent::TransformComponent(const glm::vec3 position, const bool isStatic) noexcept : TransformComponent(
-		position, glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), isStatic) {}
-
-	TransformComponent::TransformComponent(const glm::vec3 position, const glm::quat rotation) noexcept : TransformComponent(
-		position, rotation, glm::vec3(1, 1, 1), false) {}
-
-	TransformComponent::TransformComponent(const glm::vec3 position, const glm::quat rotation, const bool isStatic) noexcept :
-		TransformComponent(position, rotation, glm::vec3(1, 1, 1), isStatic) {}
-
-	TransformComponent::TransformComponent(const glm::vec3 position, const glm::quat rotation, const glm::vec3 scale) noexcept :
-		TransformComponent(position, rotation, scale, false) {}
-
-	TransformComponent::TransformComponent(const glm::vec3 position, const glm::quat rotation, const glm::vec3 scale, const bool isStatic) noexcept :
-	position(position), rotation(rotation), scale(scale), isStatic(isStatic) {
-		RecalculateModelMatrix();
-	}
-
 	void TransformComponent::SetPosition(const glm::vec3 newPosition) noexcept {
 		if (isStatic) return;
 

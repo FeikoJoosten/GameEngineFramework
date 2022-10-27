@@ -3,12 +3,6 @@
 
 namespace Engine
 {
-	ModelComponent::ModelComponent(std::shared_ptr<Model> model) noexcept : RenderComponent(std::move(model)), time(Time::Get()) {
-	}
-
-	ModelComponent::ModelComponent(const std::string& path) noexcept : RenderComponent(path), time(Time::Get()) {
-	}
-
 	void ModelComponent::Update()
 	{
 		if (time.expired()) return; // Should never happen, but just to be safe

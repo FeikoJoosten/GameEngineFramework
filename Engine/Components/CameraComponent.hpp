@@ -9,20 +9,13 @@ namespace Engine {
 	/// <summary>
 	/// This class is used for the creation of a camera.
 	/// </summary>
-	class ENGINE_API CameraComponent : public Component {
-		template <class ComponentType, class... Args>
-		friend std::shared_ptr<ComponentType> Entity::AddComponent(Args&&... args);
+	class ENGINE_API CameraComponent : public Component, std::enable_shared_from_this<CameraComponent> {
+		template <class ComponentType>
+		friend std::shared_ptr<ComponentType> Entity::AddComponent();
 
-		/// <summary>
-		/// Default camera initialization.
-		/// </summary>
-		/// <param name="fieldOfVision">Use this value to define the field of view of the camera.</param>
-		/// <param name="zNear">Use this value to define the minimal render distance from the camera to where it should start to render.</param>
-		/// <param name="zFar">Use this value to define the maximal render distance from the zNear value to where it should end rendering.</param>
-		CameraComponent(float fieldOfVision, float zNear, float zFar);
+		CameraComponent() = default;
 
 	public:
-		CameraComponent() = delete;
 		CameraComponent(const CameraComponent& other) = delete;
 		CameraComponent(CameraComponent&& other) noexcept = delete;
 		virtual ~CameraComponent() override;
@@ -94,11 +87,11 @@ namespace Engine {
 		[[nodiscard]] Frustum CalculateFrustum(glm::vec3 right, glm::vec3 up) const;
 
 	private:
-		float fieldOfVision;
-		glm::vec2 clippingPlanes;
-		glm::mat4x4 view{};
-		glm::mat4x4 projection{};
-		std::weak_ptr<TransformComponent> transformComponent;
+		float fieldOfVision = 60.f;
+		glm::vec2 clippingPlanes {};
+		glm::mat4x4 view {};
+		glm::mat4x4 projection {};
+		std::weak_ptr<TransformComponent> transformComponent {};
 
 		void HandleOnTransformComponentModifiedEvent(std::shared_ptr<TransformComponent> modifiedTransformComponent);
 

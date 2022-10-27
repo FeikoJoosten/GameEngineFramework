@@ -1,51 +1,44 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
+#include "Engine/AssetManagement/AssetRegistry.hpp"
 
-#include <guiddef.h>
-#include <string>
 #include <cereal/access.hpp>
-#include <cereal/cereal.hpp>
+#include <cereal/types/string.hpp>
+#include <crossguid/guid.hpp>
 
 namespace Engine {
 	class ENGINE_API Asset {
-		friend class cereal::access;
-		Asset();
+		friend cereal::access;
+		friend void AssetRegistry::RegisterAsset(const std::shared_ptr<Asset>& assetToRegister);
+
+		std::string name {};
+		xg::Guid guid {};
 
 	protected:
-		Asset(std::string name, std::string path = {});
+		explicit Asset() = default;
 
 	public:
+		virtual ~Asset() = default;
+		Asset(const Asset& other) = delete;
+		Asset(Asset&& other) = delete;
+		Asset& operator=(const Asset& other) = delete;
+		Asset& operator=(Asset&& other) = delete;
 
-		const std::string& GetName() const;
+		[[nodiscard]] const std::string& GetName() const;
 
 		void SetName(const std::string& newName);
 
-		const std::string& GetPath() const;
-
-		void SetPath(const std::string& newPath);
-
-		const GUID& GetGuid() const;
+		[[nodiscard]] const xg::Guid& GetGuid() const;
 
 	private:
-		std::string name;
-		std::string path;
-		GUID guid{};
 
 		template <class Archive>
-		void Save(Archive& archive);
-
-		template <class Archive>
-		void Load(Archive& archive);
+		void Serialize(Archive& archive);
 	};
 
 	template <class Archive>
-	void Asset::Save(Archive& archive) {
-		
-	}
-
-	template <class Archive>
-	void Asset::Load(Archive& archive) {
-		
+	void Asset::Serialize(Archive& archive) {
+		archive(CEREAL_NVP(name));
 	}
 }

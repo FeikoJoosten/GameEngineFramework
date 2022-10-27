@@ -1,11 +1,14 @@
 #include "Engine/AssetManagement/AssetManager.hpp"
+#include "Engine/AssetManagement/ModelImporter.hpp"
 #include "Engine/Engine/Engine.hpp"
 
 #include <filesystem>
 
 namespace Engine {
 
-	AssetManager::AssetManager(std::string projectRoot) : projectRoot(std::move(projectRoot)) {}
+	AssetManager::AssetManager(std::string projectRoot) : projectRoot(std::move(projectRoot)) {
+		assetImporters.push_back(std::shared_ptr<IAssetImporter>(new ModelImporter()));
+	}
 
 	std::shared_ptr<AssetManager> AssetManager::Get() {
 		return Engine::GetAssetManager();

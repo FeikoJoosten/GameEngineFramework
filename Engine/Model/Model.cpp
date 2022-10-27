@@ -4,17 +4,6 @@
 #include "Engine/Resources/ResourceManager.hpp"
 
 namespace Engine {
-	Model::Model(const aiScene* scene, std::string name) {
-		if (name.empty())
-			name = name + std::to_string(ResourceManager::Get()->loadedModels_.size());
-		this->name = name;
-		this->speed = 1.f;
-		this->paused = false;
-		this->time = 0.f;
-		this->looping = true;
-		this->currentAnimation = -1;
-	}
-
 	std::vector<std::shared_ptr<Mesh>>& Model::GetModelMeshes() {
 		return meshes;
 	}

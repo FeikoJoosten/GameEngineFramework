@@ -38,6 +38,9 @@
 #define GLM_FORCE_LEFT_HANDED
 #endif
 
-#ifndef GLM_CONFIG_XYZW_ONLY
-#define GLM_CONFIG_XYZW_ONLY
-#endif
+//#ifndef GLM_CONFIG_XYZW_ONLY
+//#define GLM_CONFIG_XYZW_ONLY
+//#endif
+
+#include <cereal/types/polymorphic.hpp>
+#include <cereal/archives/json.hpp>
