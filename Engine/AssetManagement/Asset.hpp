@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
-#include "Engine/AssetManagement/AssetRegistry.hpp"
 
 #include <cereal/access.hpp>
 #include <cereal/types/string.hpp>
@@ -10,7 +9,7 @@
 namespace Engine {
 	class ENGINE_API Asset {
 		friend cereal::access;
-		friend void AssetRegistry::RegisterAsset(const std::shared_ptr<Asset>& assetToRegister);
+		friend class AssetRegistry;
 
 		std::string name {};
 		xg::Guid guid {};
@@ -39,6 +38,9 @@ namespace Engine {
 
 	template <class Archive>
 	void Asset::Serialize(Archive& archive) {
-		archive(CEREAL_NVP(name));
+		archive(
+			CEREAL_NVP(name),
+			CEREAL_NVP(guid)
+		);
 	}
 }

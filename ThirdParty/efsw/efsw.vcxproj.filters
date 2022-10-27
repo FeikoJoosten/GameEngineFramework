@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\DirectorySnapshot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\DirectorySnapshotDiff.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\DirWatcherGeneric.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\FileInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\FileSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\FileWatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\FileWatcherCWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\FileWatcherGeneric.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\FileWatcherImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\Mutex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\String.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\System.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\Thread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\Watcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\WatcherGeneric.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\platform\win\FileSystemImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\platform\win\MutexImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\platform\win\SystemImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\platform\win\ThreadImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\FileWatcherWin32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\src\efsw\WatcherWin32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Projects\GameEngineFramework\ThirdParty\efsw\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{EDD51EEA-3CFB-32A3-9193-BFC57BCFA596}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -3,7 +3,7 @@
 #include "Engine/Utility/Defines.hpp"
 #include "Engine/Components/Component.hpp"
 #include "Engine/Utility/Event.hpp"
-#include "Engine/GlmSerializationHelper.hpp"
+#include "Engine/Serialization/GlmSerializationHelper.hpp"
 
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>

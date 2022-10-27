@@ -35,13 +35,31 @@ namespace glm {
 
     // glm matrices serialization
     template<class Archive, class T>
-    void Serialize(Archive& archive, glm::mat<2, 2, T, glm::defaultp>& m) { archive(m[0], m[1]); }
+    void Serialize(Archive& archive, glm::mat<2, 2, T, glm::defaultp>& m) {
+        archive(
+            CEREAL_NVP(m[0]),
+            CEREAL_NVP(m[1])
+        );
+    }
 
     template<class Archive, class T>
-    void Serialize(Archive& archive, glm::mat<3, 3, T, glm::defaultp>& m) { archive(m[0], m[1], m[2]); }
+    void Serialize(Archive& archive, glm::mat<3, 3, T, glm::defaultp>& m) {
+        archive(
+            CEREAL_NVP(m[0]),
+            CEREAL_NVP(m[1]),
+            CEREAL_NVP(m[2])
+        );
+    }
 
     template<class Archive, class T>
-    void Serialize(Archive& archive, glm::mat<4, 4, T, glm::defaultp>& m) { archive(m[0], m[1], m[2], m[3]); }
+    void Serialize(Archive& archive, glm::mat<4, 4, T, glm::defaultp>& m) {
+	    archive(
+            CEREAL_NVP(m[0]), 
+            CEREAL_NVP(m[1]), 
+            CEREAL_NVP(m[2]), 
+            CEREAL_NVP(m[3])
+        );
+    }
 
     template<class Archive, class T>
     void Serialize(Archive& archive, glm::qua<T, glm::defaultp>& q) {

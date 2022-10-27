@@ -426,11 +426,14 @@
     <ClInclude Include="AssetManagement\ModelImporter.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
-    <ClInclude Include="GlmSerializationHelper.hpp">
+    <ClInclude Include="Serialization\GlmSerializationHelper.hpp">
       <Filter>Header Files\Serialization</Filter>
     </ClInclude>
     <ClInclude Include="Components\CameraComponent.hpp">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\EngineProjectFileWatcher.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -646,6 +649,9 @@
     </ClCompile>
     <ClCompile Include="Components\CameraComponent.cpp">
       <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\EngineProjectFileWatcher.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

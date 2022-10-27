@@ -10,7 +10,7 @@ namespace Engine {
 	public:
 		virtual bool SupportsFileExtension(const char* fileExtension) = 0;
 
-		virtual void ProcessAsset(const char* fullSystemPath) = 0;
+		virtual std::shared_ptr<Asset> ProcessAsset(const char* fullSystemPath) = 0;
 	};
 
 	template <class AssetType>

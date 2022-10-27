@@ -6,8 +6,8 @@ namespace Engine {
 		return false;
 	}
 
-	void MeshAssetImporter::ProcessAsset(const char* fullSystemPath) {
-		
+	std::shared_ptr<Asset> MeshAssetImporter::ProcessAsset(const char* fullSystemPath) {
+		return {};
 	}
 
 	std::shared_ptr<Mesh> MeshAssetImporter::LoadAsset(xg::Guid assetId) {

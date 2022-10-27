@@ -23,7 +23,7 @@ namespace Engine {
 
 		virtual bool SupportsFileExtension(const char* fileExtension) override;
 
-		virtual void ProcessAsset(const char* fullSystemPath) override;
+		virtual std::shared_ptr<Asset> ProcessAsset(const char* fullSystemPath) override;
 
 		virtual std::shared_ptr<Model> LoadAsset(xg::Guid assetId) override;
 

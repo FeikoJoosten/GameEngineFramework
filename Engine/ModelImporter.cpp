@@ -12,7 +12,7 @@ namespace Engine {
 		return importer.IsExtensionSupported(fileExtension);
 	}
 
-	void ModelImporter::ProcessAsset(const char* fullSystemPath) {
+	std::shared_ptr<Asset> ModelImporter::ProcessAsset(const char* fullSystemPath) {
 		const aiScene* scene = importer.ReadFile(fullSystemPath, importFlags);
 
 		// check if there's a scene or flags and check if the flags show incomplete scene
@@ -20,10 +20,10 @@ namespace Engine {
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 			DEBUG_WARNING(importer.GetErrorString())
 			importer.FreeScene();
-			return;
+			return {};
 		}
 
-
+		return {};
 	}
 
 	std::shared_ptr<Model> ModelImporter::LoadAsset(xg::Guid assetId) {
