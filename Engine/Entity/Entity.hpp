@@ -21,7 +21,7 @@ namespace Engine {
 		friend cereal::access;
 
 		int id = -1;
-		bool isActive {};
+		bool isActive = true;
 		std::vector<std::shared_ptr<Component>> components {};
 		std::weak_ptr<Entity> pointerReference {};
 
