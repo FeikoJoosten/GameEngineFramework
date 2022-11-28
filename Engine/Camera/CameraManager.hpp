@@ -36,7 +36,11 @@ namespace Engine {
 		std::vector<std::shared_ptr<CameraComponent>> allActiveCameras;
 
 		void HandleOnComponentAddedToEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> addedComponent);
+
+		void HandleOnCameraAddedToEntity(const std::shared_ptr<CameraComponent>& cameraComponent);
+
 		void HandleOnComponentRemovedFromEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> removedComponent);
+
 		void HandleOnCameraActiveStateChangedEvent(std::shared_ptr<Component> component, bool isEnabled);
 	};
 }

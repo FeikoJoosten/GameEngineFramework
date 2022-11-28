@@ -1,0 +1,177 @@
+{
+    "data": {
+        "polymorphic_id": 2147483649,
+        "polymorphic_name": "Engine::Scene",
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "cereal::virtual_base_class<Asset>(this)": {
+                    "name": "Main Scene",
+                    "guid": {
+                        "bytes": {
+                            "value0": 153,
+                            "value1": 111,
+                            "value2": 143,
+                            "value3": 244,
+                            "value4": 210,
+                            "value5": 247,
+                            "value6": 74,
+                            "value7": 18,
+                            "value8": 138,
+                            "value9": 168,
+                            "value10": 24,
+                            "value11": 172,
+                            "value12": 91,
+                            "value13": 197,
+                            "value14": 62,
+                            "value15": 59
+                        }
+                    }
+                },
+                "isActive": true,
+                "entities": [
+                    {
+                        "polymorphic_id": 1073741824,
+                        "ptr_wrapper": {
+                            "id": 2147483650,
+                            "data": {
+                                "cereal::base_class<Asset>(&entity)": {
+                                    "name": "Camera",
+                                    "guid": {
+                                        "bytes": {
+                                            "value0": 37,
+                                            "value1": 164,
+                                            "value2": 116,
+                                            "value3": 234,
+                                            "value4": 167,
+                                            "value5": 113,
+                                            "value6": 67,
+                                            "value7": 53,
+                                            "value8": 167,
+                                            "value9": 73,
+                                            "value10": 175,
+                                            "value11": 6,
+                                            "value12": 10,
+                                            "value13": 121,
+                                            "value14": 66,
+                                            "value15": 61
+                                        }
+                                    }
+                                },
+                                "entity.components": [
+                                    {
+                                        "polymorphic_id": 2147483650,
+                                        "polymorphic_name": "Engine::TransformComponent",
+                                        "ptr_wrapper": {
+                                            "id": 2147483651,
+                                            "data": {
+                                                "Component": {
+                                                    "isEnabled": true
+                                                },
+                                                "position": {
+                                                    "v.x": 0.0,
+                                                    "v.y": 100.0,
+                                                    "v.z": 200.0
+                                                },
+                                                "rotation": {
+                                                    "q.x": -0.0,
+                                                    "q.y": 1.0,
+                                                    "q.z": -0.0,
+                                                    "q.w": -4.371138828673793e-8
+                                                },
+                                                "scale": {
+                                                    "v.x": 1.0,
+                                                    "v.y": 1.0,
+                                                    "v.z": 1.0
+                                                },
+                                                "isStatic": false
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "polymorphic_id": 2147483651,
+                                        "polymorphic_name": "Engine::CameraComponent",
+                                        "ptr_wrapper": {
+                                            "id": 2147483652,
+                                            "data": {
+                                                "Component": {
+                                                    "isEnabled": true
+                                                },
+                                                "fieldOfVision": 60.0,
+                                                "clippingPlanes": {
+                                                    "v.x": 0.10000000149011612,
+                                                    "v.y": 1000.0
+                                                },
+                                                "view": {
+                                                    "m[0]": {
+                                                        "v.x": -1.0,
+                                                        "v.y": 0.0,
+                                                        "v.z": -8.742277657347586e-8,
+                                                        "v.w": 0.0
+                                                    },
+                                                    "m[1]": {
+                                                        "v.x": 0.0,
+                                                        "v.y": 1.0,
+                                                        "v.z": 0.0,
+                                                        "v.w": 0.0
+                                                    },
+                                                    "m[2]": {
+                                                        "v.x": 8.742277657347586e-8,
+                                                        "v.y": 0.0,
+                                                        "v.z": -1.0,
+                                                        "v.w": 0.0
+                                                    },
+                                                    "m[3]": {
+                                                        "v.x": -0.00001748455542838201,
+                                                        "v.y": -100.0,
+                                                        "v.z": 200.0,
+                                                        "v.w": 1.0
+                                                    }
+                                                },
+                                                "projection": {
+                                                    "m[0]": {
+                                                        "v.x": 2.304659128189087,
+                                                        "v.y": 0.0,
+                                                        "v.z": 0.0,
+                                                        "v.w": 0.0
+                                                    },
+                                                    "m[1]": {
+                                                        "v.x": 0.0,
+                                                        "v.y": 1.732050895690918,
+                                                        "v.z": 0.0,
+                                                        "v.w": 0.0
+                                                    },
+                                                    "m[2]": {
+                                                        "v.x": 0.0,
+                                                        "v.y": 0.0,
+                                                        "v.z": 1.0001999139785767,
+                                                        "v.w": 1.0
+                                                    },
+                                                    "m[3]": {
+                                                        "v.x": 0.0,
+                                                        "v.y": 0.0,
+                                                        "v.z": -0.20002000033855439,
+                                                        "v.w": 0.0
+                                                    }
+                                                },
+                                                "transformComponent": {
+                                                    "locked_ptr": {
+                                                        "polymorphic_id": 1073741824,
+                                                        "ptr_wrapper": {
+                                                            "id": 3
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                ],
+                                "entity.isActive": true
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

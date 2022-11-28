@@ -37,9 +37,6 @@ THE SOFTWARE.
 #include <utility>
 #include <iomanip>
 
-#include <cereal/types/array.hpp>
-#include <cereal/access.hpp>
-
 #define BEGIN_XG_NAMESPACE namespace xg {
 #define END_XG_NAMESPACE }
 
@@ -51,9 +48,6 @@ BEGIN_XG_NAMESPACE
 // string via constructor.
 class Guid
 {
-	// EDIT
-	friend cereal::access;
-
 public:
 	explicit Guid(const std::array<unsigned char, 16> &bytes);
 	explicit Guid(std::array<unsigned char, 16> &&bytes);
@@ -78,9 +72,6 @@ public:
 private:
 	void zeroify();
 
-	template <class Archive>
-	void Serialize(Archive& archive);
-
 	// actual data
 	std::array<unsigned char, 16> _bytes;
 
@@ -88,13 +79,6 @@ private:
 	friend std::ostream &operator<<(std::ostream &s, const Guid &guid);
 	friend bool operator<(const Guid &lhs, const Guid &rhs);
 };
-
-template <class Archive>
-void Guid::Serialize(Archive& archive) {
-	archive(
-		CEREAL_NVP(_bytes)
-	);
-}
 
 Guid newGuid();
 

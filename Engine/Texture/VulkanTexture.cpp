@@ -8,10 +8,11 @@ namespace Engine {
 
 	VulkanTexture::VulkanTexture(const std::string& filename, int desiredChannels) : Texture(filename, desiredChannels) {
 		const std::string baseLocation = "Resources/Textures/" + filename;
-		const std::string defaultTextureLocation = (AssetManager::Get()->GetProjectRoot() + "Resources/Textures/default.png");
+		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
+		const std::string defaultTextureLocation = (assetManager->GetProjectRoot() + "Resources/Textures/default.png");
 		stbi_uc* textureData = stbi_load(
-			AssetManager::FileExists(baseLocation) ?
-			(AssetManager::Get()->GetProjectRoot() + baseLocation).c_str() :
+			assetManager->FileExists(baseLocation) ?
+			(assetManager->GetProjectRoot() + baseLocation).c_str() :
 			defaultTextureLocation.c_str(),
 			&width, &height, &channels, STBI_rgb_alpha);
 

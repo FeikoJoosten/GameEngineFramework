@@ -1,17 +1,27 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
+#include "Engine/Entity/Entity.hpp"
 #include "Engine/Camera/Frustum.hpp"
 #include "Engine/Components/TransformComponent.hpp"
-#include "Engine/Entity/Entity.hpp"
+#include "Engine/Utility/Defines.hpp"
+
+#include <cereal/types/polymorphic.hpp>
 
 namespace Engine {
 	/// <summary>
 	/// This class is used for the creation of a camera.
 	/// </summary>
-	class ENGINE_API CameraComponent : public Component, std::enable_shared_from_this<CameraComponent> {
+	class ENGINE_API CameraComponent : public Component {
+		friend cereal::access;
 		template <class ComponentType>
 		friend std::shared_ptr<ComponentType> Entity::AddComponent();
+
+		float fieldOfVision = 60.f;
+		glm::vec2 clippingPlanes {};
+		glm::mat4x4 view {};
+		glm::mat4x4 projection {};
+		std::weak_ptr<TransformComponent> transformComponent {};
 
 		CameraComponent() = default;
 
@@ -87,16 +97,45 @@ namespace Engine {
 		[[nodiscard]] Frustum CalculateFrustum(glm::vec3 right, glm::vec3 up) const;
 
 	private:
-		float fieldOfVision = 60.f;
-		glm::vec2 clippingPlanes {};
-		glm::mat4x4 view {};
-		glm::mat4x4 projection {};
-		std::weak_ptr<TransformComponent> transformComponent {};
 
 		void HandleOnTransformComponentModifiedEvent(std::shared_ptr<TransformComponent> modifiedTransformComponent);
 
 		virtual void OnComponentAdded(std::shared_ptr<Component> addedComponent) override;
 
 		virtual void OnComponentRemoved(std::shared_ptr<Component> removedComponent) override;
+
+		template<class Archive>
+		void Save(Archive& archive) const;
+
+		template<class Archive>
+		void Load(Archive& archive);
 	};
+
+	template <class Archive>
+	void CameraComponent::Save(Archive& archive) const {
+		archive(
+			cereal::make_nvp("Component", cereal::virtual_base_class<Component>(this)),
+			CEREAL_NVP(fieldOfVision),
+			CEREAL_NVP(clippingPlanes),
+			CEREAL_NVP(view),
+			CEREAL_NVP(projection),
+			CEREAL_NVP(transformComponent)
+		);
+	}
+
+	template <class Archive>
+	void CameraComponent::Load(Archive& archive) {
+		archive(
+			cereal::make_nvp("Component", cereal::virtual_base_class<Component>(this)),
+			CEREAL_NVP(fieldOfVision),
+			CEREAL_NVP(clippingPlanes),
+			CEREAL_NVP(view),
+			CEREAL_NVP(projection),
+			CEREAL_NVP(transformComponent)
+		);
+
+		if (!transformComponent.expired()) transformComponent.lock()->OnModifiedEvent += Sharp::EventHandler::Bind(this, &CameraComponent::HandleOnTransformComponentModifiedEvent);
+	}
 } // namespace Engine
+
+CEREAL_REGISTER_TYPE(Engine::CameraComponent)

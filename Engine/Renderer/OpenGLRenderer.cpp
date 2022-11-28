@@ -78,8 +78,7 @@ namespace Engine {
 			glCheckError();
 
 			const std::shared_ptr<Material> meshMaterial = model->GetMeshMaterial(mesh);
-			if (meshMaterial->IsDiffuseLoaded())
-				textureParam->SetValue(*meshMaterial->GetDiffuseTexture().lock());
+			textureParam->SetValue(*meshMaterial->GetDiffuseTexture().lock()); // Defaults to missing texture if no diffuse is loaded
 			glCheckError();
 
 			glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh->indices.size()), GL_UNSIGNED_INT, nullptr);

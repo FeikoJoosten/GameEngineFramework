@@ -15,14 +15,14 @@ namespace Engine {
 		friend cereal::access;
 		friend class AssetManager;
 
-		std::map<xg::Guid, std::string> assetRegistryPathsByGuid {};
+		std::map<xg::Guid, std::pair<std::string, std::string>> assetRegistryPathsByGuid {};
 
 		AssetRegistry() = default;
 
 	public:
 		Sharp::Event<const std::shared_ptr<Asset>&, const std::string&> OnAssetRegisteredEvent;
 		Sharp::Event<const xg::Guid&, const std::string&> OnAssetUnRegisteredEvent;
-		Sharp::Event<const xg::Guid&, const std::string&, const std::string&> OnAssetMovedOrRenamedEvent;
+		Sharp::Event<const xg::Guid&, const std::string&, const std::string&, const std::string&, const std::string&> OnAssetMovedOrRenamedEvent;
 
 		AssetRegistry(const AssetRegistry& other) = delete;
 		AssetRegistry(AssetRegistry&& other) noexcept = delete;
@@ -31,15 +31,15 @@ namespace Engine {
 		AssetRegistry& operator=(const AssetRegistry& other) = delete;
 		AssetRegistry& operator=(AssetRegistry&& other) noexcept = delete;
 
-		bool TryGetPathForGuid(xg::Guid assetGuid, std::string& assetPath) const;
+		bool TryGetPathForGuid(const xg::Guid& assetGuid, std::string& pathInProject, std::string& assetName) const;
 
-		bool TryGetGuidForPath(const std::string& assetPath, xg::Guid& assetGuid) const;
+		bool TryGetGuidForPath(const std::string& assetPath, const std::string& assetName, xg::Guid& assetGuid) const;
 
-		bool TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const std::string& assetPath);
+		bool TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const std::string& pathInProject);
 
 		bool TryUnRegisterAsset(const xg::Guid& assetGuid);
 
-		bool TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newAssetPath);
+		bool TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newPathInProject, const std::string& newAssetName);
 
 	private:
 		template <class Archive>
@@ -53,4 +53,3 @@ namespace Engine {
 		);
 	}
 }
-

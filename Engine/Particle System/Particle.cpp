@@ -81,7 +81,7 @@ namespace Engine {
 
 	std::pair<glm::vec3, glm::vec3> Particle::GetForce()
 	{
-		return std::pair<glm::vec3, glm::vec3>(forceMin.xyz, forceMax.xyz);
+		return std::pair(forceMin, forceMax);
 	}
 
 	void Particle::SetLifetime(float lifetimeMin, float lifetimeMax)
@@ -92,7 +92,7 @@ namespace Engine {
 
 	std::pair<float, float> Particle::GetLifetime()
 	{
-		return std::pair<float, float>(lifetimeMin, lifetimeMax);
+		return std::pair(lifetimeMin, lifetimeMax);
 	}
 
 	void Particle::SetSpeed(float speedMin, float speedMax)
@@ -103,7 +103,7 @@ namespace Engine {
 
 	std::pair<float, float> Particle::GetSpeed()
 	{
-		return std::pair<float, float>(speedMin, speedMax);
+		return std::pair(speedMin, speedMax);
 	}
 
 	void Particle::SetMass(float massMin, float massMax)
@@ -114,7 +114,7 @@ namespace Engine {
 
 	std::pair<float, float> Particle::GetMass()
 	{
-		return std::pair<float, float>(massMin, massMax);
+		return std::pair(massMin, massMax);
 	}
 
 	void Particle::SetGravityEnabled(bool gravity)
@@ -184,7 +184,7 @@ namespace Engine {
 
 	std::pair<float, float> Particle::GetLineStartThickness()
 	{
-		return std::pair<float, float>(startLineThicknessMin, startLineThicknessMax);
+		return std::pair(startLineThicknessMin, startLineThicknessMax);
 	}
 
 	void Particle::SetLineEndthickness(float thicknessMin, float thicknessMax)
@@ -195,7 +195,7 @@ namespace Engine {
 
 	std::pair<float, float> Particle::GetLineEndThickness()
 	{
-		return std::pair<float, float>(endLineThicknessMin, endLineThicknessMax);
+		return std::pair(endLineThicknessMin, endLineThicknessMax);
 	}
 
 	void Particle::SetLineThicknessInterpolateType(InterpolateType type)
@@ -216,7 +216,7 @@ namespace Engine {
 
 	std::pair<glm::vec2, glm::vec2> Particle::GetBillboardSizeStart()
 	{
-		return std::pair<glm::vec2, glm::vec2>(startSizeMin, startSizeMax);
+		return std::pair(startSizeMin, startSizeMax);
 	}
 
 	void Particle::SetBillboardSizeEnd(glm::vec2 sizeMin, glm::vec2 sizeMax)
@@ -227,7 +227,7 @@ namespace Engine {
 
 	std::pair<glm::vec2, glm::vec2> Particle::GetBillboardSizeEnd()
 	{
-		return std::pair<glm::vec2, glm::vec2>(endSizeMin, endSizeMax);
+		return std::pair(endSizeMin, endSizeMax);
 	}
 
 	void Particle::SetBillboardSizeInterpolateType(InterpolateType type)
@@ -248,7 +248,7 @@ namespace Engine {
 
 	std::pair<float, float> Particle::GetBillboardRollSpeedStart()
 	{
-		return std::pair<float, float>(startRollSpeedMin, startRollSpeedMax);
+		return std::pair(startRollSpeedMin, startRollSpeedMax);
 	}
 
 	void Particle::SetBillboardRollSpeedEnd(float speedMin, float speedMax)
@@ -259,7 +259,7 @@ namespace Engine {
 
 	std::pair<float, float> Particle::GetBillboardRollSpeedEnd()
 	{
-		return std::pair<float, float>(endRollSpeedMin, endRollSpeedMax);
+		return std::pair(endRollSpeedMin, endRollSpeedMax);
 	}
 
 	void Particle::SetBillboardRoll(float rollMin, float rollMax)
@@ -270,7 +270,7 @@ namespace Engine {
 
 	std::pair<float, float> Particle::GetBillboardRoll()
 	{
-		return std::pair<float, float>(rollMin, rollMax);
+		return std::pair(rollMin, rollMax);
 	}
 
 	void Particle::SetBillboardRollSpeedInterpolateType(InterpolateType type)
@@ -311,7 +311,7 @@ namespace Engine {
 
 	std::pair<glm::vec3, glm::vec3> Particle::GetMeshScaleStart()
 	{
-		return std::pair<glm::vec3, glm::vec3>(startScaleMin.xyz, startScaleMax.xyz);
+		return std::pair(startScaleMin, startScaleMax);
 	}
 
 	void Particle::SetMeshScaleEnd(glm::vec3 scaleMin, glm::vec3 scaleMax)
@@ -322,7 +322,7 @@ namespace Engine {
 
 	std::pair<glm::vec3, glm::vec3> Particle::GetMeshScaleEnd()
 	{
-		return std::pair<glm::vec3, glm::vec3>(endScaleMin.xyz, endScaleMax.xyz);
+		return std::pair(endScaleMin, endScaleMax);
 	}
 
 	void Particle::SetMeshScaleInterpolateType(InterpolateType type)
@@ -343,7 +343,7 @@ namespace Engine {
 
 	std::pair<glm::vec3, glm::vec3> Particle::GetMeshRotationSpeedStart()
 	{
-		return std::pair<glm::vec3, glm::vec3>(startRotationSpeedMin.xyz, startRotationSpeedMax.xyz);
+		return std::pair(startRotationSpeedMin, startRotationSpeedMax);
 	}
 
 	void Particle::SetMeshRotationSpeedEnd(glm::vec3 speedMin, glm::vec3 speedMax)
@@ -354,7 +354,7 @@ namespace Engine {
 
 	std::pair<glm::vec3, glm::vec3> Particle::GetMeshRotationSpeedEnd()
 	{
-		return std::pair<glm::vec3, glm::vec3>(endRotationSpeedMin.xyz, endRotationSpeedMax.xyz);
+		return std::pair(endRotationSpeedMin, endRotationSpeedMax);
 	}
 
 	void Particle::SetMeshRotation(glm::vec3 rotationMin, glm::vec3 rotationMax)
@@ -365,7 +365,7 @@ namespace Engine {
 
 	std::pair<glm::vec3, glm::vec3> Particle::GetMeshRotation()
 	{
-		return std::pair<glm::vec3, glm::vec3>(rotationMin.xyz, rotationMax.xyz);
+		return std::pair(rotationMin, rotationMax);
 	}
 
 	void Particle::SetMeshRotationSpeedInterpolateType(InterpolateType type)

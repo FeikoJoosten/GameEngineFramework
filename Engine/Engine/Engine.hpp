@@ -4,8 +4,6 @@
 #include "Engine/Utility/Defines.hpp"
 
 #include <memory>
-#include <string>
-#include <vector>
 
 #include <cereal/types/string.hpp>
 #include <cereal/types/vector.hpp>

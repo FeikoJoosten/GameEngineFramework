@@ -1,21 +1,24 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
+#include "Engine/Utility/Defines.hpp"
 
 #include <cereal/access.hpp>
-#include <cereal/types/string.hpp>
+#include <cereal/types/memory.hpp>
 #include <crossguid/guid.hpp>
 
 namespace Engine {
-	class ENGINE_API Asset {
+	class ENGINE_API Asset : public std::enable_shared_from_this<Asset> {
 		friend cereal::access;
 		friend class AssetRegistry;
 
 		std::string name {};
 		xg::Guid guid {};
+		static inline std::string extension = ".asset";
 
 	protected:
 		explicit Asset() = default;
+		explicit Asset(std::string name);
 
 	public:
 		virtual ~Asset() = default;
@@ -29,6 +32,10 @@ namespace Engine {
 		void SetName(const std::string& newName);
 
 		[[nodiscard]] const xg::Guid& GetGuid() const;
+
+		[[nodiscard]] virtual const std::string& GetDefaultExtension() const;
+
+		void Save();
 
 	private:
 

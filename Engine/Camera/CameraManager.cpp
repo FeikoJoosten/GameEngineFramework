@@ -8,19 +8,26 @@
 namespace Engine {
 
 	CameraManager::CameraManager() : entitySystem(Engine::GetEntitySystem()) {
-		if (entitySystem) {
-			entitySystem->OnComponentAddedToEntityEvent += Sharp::EventHandler::Bind(this, &CameraManager::HandleOnComponentAddedToEntityEvent);
-			entitySystem->OnComponentRemovedFromEntityEvent += Sharp::EventHandler::Bind(this, &CameraManager::HandleOnComponentRemovedFromEntityEvent);
+		if (!entitySystem) return;
+
+		entitySystem->OnComponentAddedToEntityEvent += Sharp::EventHandler::Bind(this, &CameraManager::HandleOnComponentAddedToEntityEvent);
+		entitySystem->OnComponentRemovedFromEntityEvent += Sharp::EventHandler::Bind(this, &CameraManager::HandleOnComponentRemovedFromEntityEvent);
+
+		for(const std::shared_ptr<Entity>& entity : entitySystem->GetAllEntities()) {
+			const std::shared_ptr<CameraComponent>& cameraComponent = entity->GetComponent<CameraComponent>();
+			if (!cameraComponent) continue;
+
+			HandleOnCameraAddedToEntity(cameraComponent);
 		}
 	}
 
 	CameraManager::~CameraManager() {
-		if (entitySystem) {
-			entitySystem->OnComponentAddedToEntityEvent -= Sharp::EventHandler::Bind(this, &CameraManager::HandleOnComponentAddedToEntityEvent);
-			entitySystem->OnComponentRemovedFromEntityEvent -= Sharp::EventHandler::Bind(this, &CameraManager::HandleOnComponentRemovedFromEntityEvent);
-		}
-	}
+		if (!entitySystem) return;
 
+		entitySystem->OnComponentAddedToEntityEvent -= Sharp::EventHandler::Bind(this, &CameraManager::HandleOnComponentAddedToEntityEvent);
+		entitySystem->OnComponentRemovedFromEntityEvent -= Sharp::EventHandler::Bind(this, &CameraManager::HandleOnComponentRemovedFromEntityEvent);
+	}
+	
 	std::shared_ptr<CameraManager> CameraManager::Get() {
 		return Engine::GetCameraManager();
 	}
@@ -32,6 +39,12 @@ namespace Engine {
 	void CameraManager::HandleOnComponentAddedToEntityEvent(const std::shared_ptr<Entity> entity, const std::shared_ptr<Component> addedComponent) {
 		const std::shared_ptr<CameraComponent> cameraComponent = std::dynamic_pointer_cast<CameraComponent>(addedComponent);
 		if (!cameraComponent) return;
+
+		HandleOnCameraAddedToEntity(cameraComponent);
+	}
+
+	void CameraManager::HandleOnCameraAddedToEntity(const std::shared_ptr<CameraComponent>& cameraComponent) {
+		if (std::find(allCameras.begin(), allCameras.end(), cameraComponent) != allCameras.end()) return;
 
 		allCameras.push_back(cameraComponent);
 		if (cameraComponent->GetIsActiveAndEnabled()) allActiveCameras.push_back(cameraComponent);

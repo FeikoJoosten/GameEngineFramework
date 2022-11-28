@@ -3,11 +3,15 @@
 #include <glm/gtx/euler_angles.hpp>
 
 namespace Engine {
+	TransformComponent::TransformComponent() {
+		RecalculateModelMatrix();
+	}
+
 	void TransformComponent::SetPosition(const glm::vec3 newPosition) noexcept {
 		if (isStatic) return;
 
 		position = newPosition;
-		RecalculateModelMatrix();
+		RecalculateModelMatrixAndInvokedOnModified();
 	}
 
 	void TransformComponent::SetPosition(const float x, const float y, const float z) noexcept {
@@ -22,7 +26,7 @@ namespace Engine {
 		if (isStatic) return;
 
 		rotation = newRotation;
-		RecalculateModelMatrix();
+		RecalculateModelMatrixAndInvokedOnModified();
 	}
 
 	void TransformComponent::SetRotation(const float x, const float y, const float z) noexcept {
@@ -38,14 +42,14 @@ namespace Engine {
 
 		position = newPosition;
 		rotation = newRotation;
-		RecalculateModelMatrix();
+		RecalculateModelMatrixAndInvokedOnModified();
 	}
 
 	void TransformComponent::SetScale(const glm::vec3 newScale) noexcept {
 		if (isStatic) return;
 
 		scale = newScale;
-		RecalculateModelMatrix();
+		RecalculateModelMatrixAndInvokedOnModified();
 	}
 
 	void TransformComponent::SetScale(const float x, const float y, const float z) noexcept {
@@ -84,7 +88,7 @@ namespace Engine {
 	void TransformComponent::SetIsStatic(const bool newIsStatic) noexcept {
 		isStatic = newIsStatic;
 
-		OnModifiedEvent(std::static_pointer_cast<TransformComponent>(GetPointerReference()));
+		OnModifiedEvent(std::static_pointer_cast<TransformComponent>(shared_from_this()));
 	}
 
 	bool TransformComponent::GetIsStatic() const noexcept {
@@ -95,7 +99,7 @@ namespace Engine {
 		if (isStatic) return;
 
 		position += rotation * positionToAdd;
-		RecalculateModelMatrix();
+		RecalculateModelMatrixAndInvokedOnModified();
 	}
 
 	void TransformComponent::Translate(const float x) noexcept {
@@ -114,7 +118,7 @@ namespace Engine {
 		if (isStatic) return;
 
 		rotation *= rotationToAdd;
-		RecalculateModelMatrix();
+		RecalculateModelMatrixAndInvokedOnModified();
 	}
 
 	void TransformComponent::AddRotation(const float x) noexcept {
@@ -133,7 +137,7 @@ namespace Engine {
 		if (isStatic) return;
 
 		scale += scaleToAdd;
-		RecalculateModelMatrix();
+		RecalculateModelMatrixAndInvokedOnModified();
 	}
 
 	void TransformComponent::AddScale(const float x) noexcept {
@@ -181,7 +185,7 @@ namespace Engine {
 			glm::vec3(modelMatrix[2]) / scale[2]);
 		rotation = glm::quat_cast(rotMtx);
 		
-		OnModifiedEvent(std::static_pointer_cast<TransformComponent>(GetPointerReference()));
+		OnModifiedEvent(std::static_pointer_cast<TransformComponent>(shared_from_this()));
 	}
 
 	void TransformComponent::RecalculateModelMatrix() noexcept {
@@ -193,6 +197,10 @@ namespace Engine {
 		if (currentModelMatrix == rotationScaleMatrix) return;
 
 		modelMatrix = rotationScaleMatrix;
-		OnModifiedEvent(std::static_pointer_cast<TransformComponent>(GetPointerReference()));
+	}
+
+	void TransformComponent::RecalculateModelMatrixAndInvokedOnModified() noexcept {
+		RecalculateModelMatrix();
+		OnModifiedEvent(std::static_pointer_cast<TransformComponent>(shared_from_this()));
 	}
 } //namespace Engine

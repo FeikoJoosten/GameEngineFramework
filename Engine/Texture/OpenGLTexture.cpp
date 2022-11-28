@@ -9,11 +9,13 @@
 
 namespace Engine {
 	OpenGLTexture::OpenGLTexture(const std::string& filename, const int desiredChannels) : Texture(filename, desiredChannels) {
-		const std::string baseLocation = "Resources/Textures/" + filename;
-		const std::string defaultTextureLocation = AssetManager::Get()->GetProjectRoot() + "Resources/Textures/default.png";
+		const std::string baseLocation = "Resources/Textures";
+		const std::shared_ptr<AssetManager>& assetManager = AssetManager::Get();
+		const std::string projectRoot = assetManager->GetProjectRoot();
+		const std::string defaultTextureLocation = projectRoot + "Resources/Textures/default.png";
 		stbi_uc* textureData = stbi_load(
-			AssetManager::FileExists(baseLocation) ?
-			(AssetManager::Get()->GetProjectRoot() + baseLocation).c_str() :
+			assetManager->FileExists(baseLocation, filename, true) ?
+			(projectRoot + baseLocation + "/" + filename).c_str() :
 			defaultTextureLocation.c_str(),
 			&width, &height, &channels, STBI_rgb_alpha);
 		OpenGLTexture::CreateTextureWithData(textureData, true);

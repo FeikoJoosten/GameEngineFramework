@@ -70,7 +70,7 @@ void DoDebug(const char* debugLevel, const char* classPath, const char* function
 	const std::string outputString = outputStream.str();
 
 	if (firstWrite) {
-		std::string projectRoot = Engine::AssetManager::Get()->GetProjectRoot();
+		std::string projectRoot = Engine::AssetManager::GetProjectRoot();
 		std::string fullLogPath = projectRoot + LOG_PATH;
 		logPath = new char[fullLogPath.size()]();
 		strcpy(logPath, fullLogPath.c_str());

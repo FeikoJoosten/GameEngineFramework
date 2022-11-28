@@ -39,7 +39,7 @@ namespace Engine
 	std::weak_ptr<Model> ResourceManager::CreateModel(std::string modelName, std::string meshToLoad, std::string skeletonToLoad)
 	{
 		Assimp::Importer importer;
-		std::string path = AssetManager::Get()->GetProjectRoot() + "Resources/Models/" + meshToLoad;
+		std::string path = AssetManager::GetProjectRoot() + "Resources/Models/" + meshToLoad;
 		std::string skeletonPath;
 
 		const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices | aiProcess_ImproveCacheLocality |
@@ -71,7 +71,7 @@ namespace Engine
 	std::weak_ptr<Skeleton> ResourceManager::CreateSkeleton(std::string skeletonToLoad)
 	{
 		Assimp::Importer importer;
-		std::string path = AssetManager::Get()->GetProjectRoot() + "Resources/Models/" + skeletonToLoad;
+		std::string path = AssetManager::GetProjectRoot() + "Resources/Models/" + skeletonToLoad;
 
 		for (size_t i = 0, size = loadedSkeletons_.size(); i < size; ++i) {
 			if (loadedSkeletons_[i]->GetName() == skeletonToLoad)
@@ -98,7 +98,7 @@ namespace Engine
 	void ResourceManager::AddAnimationsToSkeleton(std::string skeletonName, std::string animationsToLoad, std::vector<std::string> names)
 	{
 		Assimp::Importer importer;
-		std::string path = AssetManager::Get()->GetProjectRoot() + "Resources/Animations/" + animationsToLoad;
+		std::string path = AssetManager::GetProjectRoot() + "Resources/Animations/" + animationsToLoad;
 		const aiScene* scene = importer.ReadFile(path.c_str(), 0);
 
 		for (size_t i = 0, size = loadedSkeletons_.size(); i < size; ++i)
@@ -219,8 +219,8 @@ namespace Engine
 			//I'll load only the first set for now, if needed we can extend
 			if (mesh->mTextureCoords[0] > nullptr)
 			{
-				vertex.texCoords.s = mesh->mTextureCoords[0][i].x;
-				vertex.texCoords.t = mesh->mTextureCoords[0][i].y;
+				vertex.texCoords.x = mesh->mTextureCoords[0][i].x;
+				vertex.texCoords.y = mesh->mTextureCoords[0][i].y;
 			}
 			else
 			{

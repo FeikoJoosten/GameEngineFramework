@@ -12,6 +12,9 @@
 #include "Engine/Entity/EntitySystem.hpp"
 #include "Engine/Engine/EngineImGui.hpp"
 #include "Engine/Window/Window.hpp"
+#include "Engine/Entity/EntitySerialization.hpp"
+
+#include "Engine/Scene/SceneManager.hpp"
 
 #if defined(_WIN32) && defined(UNICODE)
 #include <utf8.h>
@@ -77,18 +80,32 @@ namespace Engine {
 
 		//// Put test stuff here
 
+		const std::shared_ptr<SceneManager> sceneManager = SceneManager::Get();
+		//std::shared_ptr<Scene> mainScene = SceneManager::CreateScene("Main Scene", "Scenes/");
+		std::shared_ptr<Scene> mainScene = sceneManager->OpenScene("Scenes/", "Main Scene");
+
 		// ImGuiRenderer handles the main menu menu's. It works standalone, but has to be cleared in the correct order.
 		//std::unique_ptr<ImGuiRenderer> imGuiRenderer = std::make_unique<ImGuiRenderer>();
 		// This should be created by the scene view window instead of here
 		const std::shared_ptr<EntitySystem> entitySystem = EntitySystem::Get();
-		const std::shared_ptr<Entity> cameraEntity = entitySystem->CreateEntity("Camera");
-		const std::shared_ptr<TransformComponent> transformComponent = cameraEntity->AddComponent<TransformComponent>();
-		transformComponent->SetPositionAndRotation(glm::vec3(0.f, 100.f, 200.f), glm::vec3(0.f, glm::radians(180.f), 0.f));
-		const std::shared_ptr<CameraComponent> cameraComponent = cameraEntity->AddComponent<CameraComponent>();
-		cameraComponent->SetProjection(60.f, 0.1f, 1000.f);
+		//const std::shared_ptr<Entity> cameraEntity = entitySystem->CreateEntity("Camera");
+		//const std::shared_ptr<TransformComponent> transformComponent = cameraEntity->AddComponent<TransformComponent>();
+		//transformComponent->SetPositionAndRotation(glm::vec3(0.f, 100.f, 200.f), glm::vec3(0.f, glm::radians(180.f), 0.f));
+		//const std::shared_ptr<CameraComponent> cameraComponent = cameraEntity->AddComponent<CameraComponent>();
+		//cameraComponent->SetProjection(60.f, 0.1f, 1000.f);
 		
-		//const std::shared_ptr<Entity> lockedEntity = entitySystem->CreateEntity("Amazing Entity");
-		//const std::shared_ptr<Model> model = lockedEntity->AddComponent<ModelComponent>("xbot.fbx")->GetModel();
+		//mainScene->AddEntity(cameraEntity);
+		//mainScene->Save();
+
+		//std::string currentFilePath;
+		//std::string assetName;
+		//const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
+		//if (assetManager->GetAssetRegistry()->TryGetPathForGuid(mainScene->GetGuid(), currentFilePath, assetName))
+		//	assetManager->WriteDataToFullPath(currentFilePath, mainScene);
+		
+		const std::shared_ptr<Entity> lockedEntity = entitySystem->CreateEntity("Amazing Entity");
+		const std::shared_ptr<ModelComponent> modelComponent = lockedEntity->AddComponent<ModelComponent>();
+		modelComponent->SetModel("jeep1.fbx");
 		//std::vector<std::string> modelAnimations {};
 		//if(model->HasAnimations()) {
 			//model->GetAnimations(modelAnimations);
@@ -96,14 +113,14 @@ namespace Engine {
 			//model->SetLooping(true);
 		//}
 		//lockedEntity->AddComponent<LightComponent>("light", LightAmbientLight, glm::vec3(0.f, 50.f, 0.f), glm::vec3(), glm::vec3(1.f, 1.f, 1.f), 3000.f, 100.f, 10.f, 10.f);
-		//lockedEntity->AddComponent<TransformComponent>();
+		lockedEntity->AddComponent<TransformComponent>();
+		mainScene->AddEntity(lockedEntity);
 
 		//const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
-		//const std::string entityFilePath = assetManager->GetProjectRoot() + "Resources/Entities/Amazing Entity";
-		//assetManager->WriteDataToPath(entityFilePath, lockedEntity);
+		//const std::string entityFilePath = assetManager->GetProjectRoot() + "Entities";
+		//AssetManager::WriteDataToPath(entityFilePath, "Amazing Entity", lockedEntity);
 		//std::shared_ptr<Entity> lockedEntity = assetManager->ReadDataFromPath<std::shared_ptr<Entity>>(entityFilePath);
 		
-		// TODO: Let the engine update the game instead of the other way around. Maybe move the main to the engine?
 		while (!Window::Get()->ShouldClose())
 		{
 			Application::Update();

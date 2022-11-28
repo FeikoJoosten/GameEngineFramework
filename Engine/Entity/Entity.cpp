@@ -3,7 +3,7 @@
 
 namespace Engine {
 	Entity::~Entity() {
-		OnEntityDestroyedEvent(GetPointer());
+		OnEntityDestroyedEvent(std::static_pointer_cast<Entity>(shared_from_this()));
 	}
 
 	std::vector<std::shared_ptr<Component>> Entity::GetAllComponents() const {
@@ -22,10 +22,6 @@ namespace Engine {
 		}
 	}
 
-	int Entity::GetId() const {
-		return id;
-	}
-
 	bool Entity::GetIsActive() const {
 		return isActive;
 	}
@@ -34,25 +30,23 @@ namespace Engine {
 		if (newIsActive == isActive) return;
 
 		isActive = newIsActive;
-		OnActiveStateChangedEvent(GetPointer(), isActive);
+		OnActiveStateChangedEvent(std::static_pointer_cast<Entity>(shared_from_this()), isActive);
 	}
 
-	void Entity::InitializeEntity(const std::shared_ptr<Entity>& newPointerReference, const int newId) {
-		pointerReference = newPointerReference;
-		id = newId;
+	void Entity::OnEntityAddedToEntitySystem() {
+		const std::shared_ptr<Entity> pointerReference = std::static_pointer_cast<Entity>(shared_from_this());
+		for(const std::shared_ptr<Component>& component : components) {
+			component->SetOwner(std::static_pointer_cast<Entity>(shared_from_this()));
+			OnComponentAddedEvent(pointerReference, component);
+		}
 	}
 
-	void Entity::InitializeComponent(const std::shared_ptr<Component>& componentToInitialize) const {
-		componentToInitialize->SetOwner(GetPointer());
-		componentToInitialize->SetPointerReference(componentToInitialize);
+	void Entity::InitializeComponent(const std::shared_ptr<Component>& componentToInitialize) {
+		componentToInitialize->SetOwner(std::static_pointer_cast<Entity>(shared_from_this()));
 		OnComponentAdded(componentToInitialize);
 
 		for (size_t j = 0, size = components.size() - 1; j < size; ++j)
 			componentToInitialize->OnComponentAdded(components[j]);
-	}
-
-	std::shared_ptr<Entity> Entity::GetPointer() const {
-		return pointerReference.lock();
 	}
 
 	void Entity::OnComponentAdded(const std::shared_ptr<Component>& addedComponent) const {

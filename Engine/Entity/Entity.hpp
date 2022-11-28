@@ -1,31 +1,29 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
-#include "Engine/Utility/Defines.hpp"
 #include "Engine/AssetManagement/Asset.hpp"
+#include "Engine/Components/Component.hpp"
+#include "Engine/Entity/EntitySerialization.hpp"
+#include "Engine/Utility/Defines.hpp"
 #include "Engine/Utility/Event.hpp"
 
-#include <cereal/access.hpp>
-#include <cereal/types/vector.hpp>
-
 namespace Engine {
-	class Component;
-
 	/// <summary>
 	/// This object is a holder object for components.
 	/// </summary>
 	class ENGINE_API Entity final : public Asset {
 	protected:
-		// Need to friend the entirety of EntitySystem as EntitySystem::AddEntity is a private function
-		friend class EntitySystem;
 		friend cereal::access;
+		// Need to friend the entirety of EntitySystem as EntitySystem::AddEntity is a private function
+		template<class Archive>
+		friend void Serialize(Archive& archive, Entity& entity);
+		friend class EntitySystem;
+		friend class EntitySerialization;
 
-		int id = -1;
 		bool isActive = true;
 		std::vector<std::shared_ptr<Component>> components {};
-		std::weak_ptr<Entity> pointerReference {};
 
-		Entity() = default;
+		explicit Entity() = default;
 
 	public:
 		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentAddedEvent;
@@ -93,12 +91,6 @@ namespace Engine {
 		void Update() const;
 
 		/// <summary>
-		/// Returns the currently assigned ID of this entity.
-		/// </summary>
-		/// <returns></returns>
-		[[nodiscard]] int GetId() const;
-
-		/// <summary>
 		/// This method will return the active state of this entity.
 		/// </summary>
 		/// <returns>Returns true if this entity is active.</returns>
@@ -111,18 +103,14 @@ namespace Engine {
 		void SetIsActive(bool newIsActive);
 
 	private:
-		void InitializeEntity(const std::shared_ptr<Entity>& newPointerReference, int newId);
 
-		void InitializeComponent(const std::shared_ptr<Component>& componentToInitialize) const;
+		void OnEntityAddedToEntitySystem();
 
-		[[nodiscard]] std::shared_ptr<Entity> GetPointer() const;
+		void InitializeComponent(const std::shared_ptr<Component>& componentToInitialize);
 
 		void OnComponentAdded(const std::shared_ptr<Component>& addedComponent) const;
 
 		void OnComponentRemoved(const std::shared_ptr<Component>& removedComponent) const;
-
-		template <class Archive>
-		void Serialize(Archive& archive);
 	};
 
 	template <typename ComponentType>
@@ -153,7 +141,7 @@ namespace Engine {
 		const std::shared_ptr<Component> componentToReturn = components.back();
 		InitializeComponent(componentToReturn);
 
-		OnComponentAddedEvent(pointerReference.lock(), componentToReturn);
+		OnComponentAddedEvent(std::static_pointer_cast<Entity>(shared_from_this()), componentToReturn);
 		return std::static_pointer_cast<ComponentType>(componentToReturn);
 	}
 
@@ -182,7 +170,7 @@ namespace Engine {
 				for (const std::shared_ptr<Component>& component : components)
 					componentToRemove->OnComponentRemoved(component);
 
-				OnComponentAddedEvent(pointerReference.lock(), componentToRemove);
+				OnComponentAddedEvent(std::static_pointer_cast<Entity>(shared_from_this()), componentToRemove);
 			}
 			amountToRemove--;
 		}
@@ -191,13 +179,5 @@ namespace Engine {
 	template <typename ComponentType>
 	void Entity::RemoveAllComponents() {
 		RemoveComponent<ComponentType>(components.size());
-	}
-
-	template <class Archive>
-	void Entity::Serialize(Archive& archive) {
-		archive(
-			cereal::make_nvp("Asset", cereal::virtual_base_class<Asset>(this)),
-			CEREAL_NVP(components)
-		);
 	}
 } // namespace Engine

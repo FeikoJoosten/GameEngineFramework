@@ -1,0 +1,1259 @@
+{
+    "data": {
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "assetRegistryPathsByGuid": [
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 5,
+                                "value1": 123,
+                                "value2": 64,
+                                "value3": 224,
+                                "value4": 43,
+                                "value5": 62,
+                                "value6": 68,
+                                "value7": 108,
+                                "value8": 183,
+                                "value9": 145,
+                                "value10": 89,
+                                "value11": 201,
+                                "value12": 224,
+                                "value13": 40,
+                                "value14": 254,
+                                "value15": 11
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 9,
+                                "value1": 36,
+                                "value2": 207,
+                                "value3": 22,
+                                "value4": 27,
+                                "value5": 120,
+                                "value6": 66,
+                                "value7": 86,
+                                "value8": 162,
+                                "value9": 168,
+                                "value10": 185,
+                                "value11": 231,
+                                "value12": 5,
+                                "value13": 178,
+                                "value14": 201,
+                                "value15": 247
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 18,
+                                "value1": 154,
+                                "value2": 74,
+                                "value3": 253,
+                                "value4": 163,
+                                "value5": 80,
+                                "value6": 71,
+                                "value7": 129,
+                                "value8": 171,
+                                "value9": 233,
+                                "value10": 28,
+                                "value11": 127,
+                                "value12": 138,
+                                "value13": 231,
+                                "value14": 98,
+                                "value15": 169
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 18,
+                                "value1": 251,
+                                "value2": 109,
+                                "value3": 193,
+                                "value4": 209,
+                                "value5": 89,
+                                "value6": 64,
+                                "value7": 250,
+                                "value8": 165,
+                                "value9": 121,
+                                "value10": 109,
+                                "value11": 187,
+                                "value12": 99,
+                                "value13": 18,
+                                "value14": 232,
+                                "value15": 180
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 19,
+                                "value1": 106,
+                                "value2": 189,
+                                "value3": 100,
+                                "value4": 233,
+                                "value5": 71,
+                                "value6": 78,
+                                "value7": 126,
+                                "value8": 167,
+                                "value9": 214,
+                                "value10": 60,
+                                "value11": 0,
+                                "value12": 126,
+                                "value13": 66,
+                                "value14": 14,
+                                "value15": 44
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 25,
+                                "value1": 236,
+                                "value2": 237,
+                                "value3": 134,
+                                "value4": 112,
+                                "value5": 74,
+                                "value6": 71,
+                                "value7": 68,
+                                "value8": 139,
+                                "value9": 139,
+                                "value10": 150,
+                                "value11": 90,
+                                "value12": 204,
+                                "value13": 96,
+                                "value14": 216,
+                                "value15": 56
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 37,
+                                "value1": 164,
+                                "value2": 116,
+                                "value3": 234,
+                                "value4": 167,
+                                "value5": 113,
+                                "value6": 67,
+                                "value7": 53,
+                                "value8": 167,
+                                "value9": 73,
+                                "value10": 175,
+                                "value11": 6,
+                                "value12": 10,
+                                "value13": 121,
+                                "value14": 66,
+                                "value15": 61
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Camera",
+                            "value1": "Camera"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 37,
+                                "value1": 219,
+                                "value2": 35,
+                                "value3": 35,
+                                "value4": 125,
+                                "value5": 240,
+                                "value6": 77,
+                                "value7": 178,
+                                "value8": 132,
+                                "value9": 225,
+                                "value10": 21,
+                                "value11": 95,
+                                "value12": 195,
+                                "value13": 118,
+                                "value14": 64,
+                                "value15": 195
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 38,
+                                "value1": 65,
+                                "value2": 216,
+                                "value3": 215,
+                                "value4": 76,
+                                "value5": 117,
+                                "value6": 74,
+                                "value7": 213,
+                                "value8": 154,
+                                "value9": 48,
+                                "value10": 58,
+                                "value11": 180,
+                                "value12": 37,
+                                "value13": 1,
+                                "value14": 194,
+                                "value15": 53
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 47,
+                                "value1": 228,
+                                "value2": 178,
+                                "value3": 156,
+                                "value4": 54,
+                                "value5": 181,
+                                "value6": 75,
+                                "value7": 13,
+                                "value8": 151,
+                                "value9": 209,
+                                "value10": 226,
+                                "value11": 105,
+                                "value12": 81,
+                                "value13": 207,
+                                "value14": 185,
+                                "value15": 57
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 48,
+                                "value1": 139,
+                                "value2": 153,
+                                "value3": 243,
+                                "value4": 39,
+                                "value5": 41,
+                                "value6": 78,
+                                "value7": 56,
+                                "value8": 181,
+                                "value9": 31,
+                                "value10": 189,
+                                "value11": 70,
+                                "value12": 217,
+                                "value13": 8,
+                                "value14": 32,
+                                "value15": 183
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 50,
+                                "value1": 243,
+                                "value2": 113,
+                                "value3": 244,
+                                "value4": 36,
+                                "value5": 143,
+                                "value6": 72,
+                                "value7": 245,
+                                "value8": 129,
+                                "value9": 87,
+                                "value10": 230,
+                                "value11": 181,
+                                "value12": 240,
+                                "value13": 65,
+                                "value14": 198,
+                                "value15": 240
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 70,
+                                "value1": 226,
+                                "value2": 39,
+                                "value3": 210,
+                                "value4": 89,
+                                "value5": 135,
+                                "value6": 76,
+                                "value7": 244,
+                                "value8": 175,
+                                "value9": 217,
+                                "value10": 75,
+                                "value11": 252,
+                                "value12": 130,
+                                "value13": 148,
+                                "value14": 93,
+                                "value15": 28
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Camera",
+                            "value1": "Camera"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 72,
+                                "value1": 204,
+                                "value2": 17,
+                                "value3": 216,
+                                "value4": 228,
+                                "value5": 9,
+                                "value6": 70,
+                                "value7": 215,
+                                "value8": 153,
+                                "value9": 95,
+                                "value10": 55,
+                                "value11": 198,
+                                "value12": 111,
+                                "value13": 146,
+                                "value14": 140,
+                                "value15": 209
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 80,
+                                "value1": 150,
+                                "value2": 115,
+                                "value3": 76,
+                                "value4": 253,
+                                "value5": 228,
+                                "value6": 72,
+                                "value7": 217,
+                                "value8": 148,
+                                "value9": 61,
+                                "value10": 182,
+                                "value11": 157,
+                                "value12": 30,
+                                "value13": 229,
+                                "value14": 81,
+                                "value15": 190
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 83,
+                                "value1": 235,
+                                "value2": 60,
+                                "value3": 135,
+                                "value4": 61,
+                                "value5": 203,
+                                "value6": 72,
+                                "value7": 185,
+                                "value8": 136,
+                                "value9": 88,
+                                "value10": 162,
+                                "value11": 158,
+                                "value12": 115,
+                                "value13": 53,
+                                "value14": 97,
+                                "value15": 175
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 84,
+                                "value1": 20,
+                                "value2": 192,
+                                "value3": 246,
+                                "value4": 61,
+                                "value5": 222,
+                                "value6": 74,
+                                "value7": 208,
+                                "value8": 153,
+                                "value9": 245,
+                                "value10": 12,
+                                "value11": 155,
+                                "value12": 43,
+                                "value13": 31,
+                                "value14": 93,
+                                "value15": 61
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 89,
+                                "value1": 133,
+                                "value2": 116,
+                                "value3": 190,
+                                "value4": 65,
+                                "value5": 106,
+                                "value6": 67,
+                                "value7": 255,
+                                "value8": 190,
+                                "value9": 171,
+                                "value10": 111,
+                                "value11": 130,
+                                "value12": 122,
+                                "value13": 124,
+                                "value14": 196,
+                                "value15": 15
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 90,
+                                "value1": 13,
+                                "value2": 94,
+                                "value3": 229,
+                                "value4": 160,
+                                "value5": 218,
+                                "value6": 69,
+                                "value7": 251,
+                                "value8": 163,
+                                "value9": 82,
+                                "value10": 135,
+                                "value11": 80,
+                                "value12": 194,
+                                "value13": 73,
+                                "value14": 228,
+                                "value15": 141
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 94,
+                                "value1": 193,
+                                "value2": 120,
+                                "value3": 146,
+                                "value4": 83,
+                                "value5": 34,
+                                "value6": 76,
+                                "value7": 37,
+                                "value8": 188,
+                                "value9": 5,
+                                "value10": 26,
+                                "value11": 144,
+                                "value12": 244,
+                                "value13": 168,
+                                "value14": 0,
+                                "value15": 101
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 100,
+                                "value1": 30,
+                                "value2": 240,
+                                "value3": 226,
+                                "value4": 180,
+                                "value5": 205,
+                                "value6": 74,
+                                "value7": 28,
+                                "value8": 184,
+                                "value9": 83,
+                                "value10": 163,
+                                "value11": 225,
+                                "value12": 91,
+                                "value13": 239,
+                                "value14": 78,
+                                "value15": 171
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 102,
+                                "value1": 15,
+                                "value2": 98,
+                                "value3": 160,
+                                "value4": 9,
+                                "value5": 245,
+                                "value6": 69,
+                                "value7": 119,
+                                "value8": 148,
+                                "value9": 27,
+                                "value10": 169,
+                                "value11": 211,
+                                "value12": 49,
+                                "value13": 183,
+                                "value14": 160,
+                                "value15": 242
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 115,
+                                "value1": 181,
+                                "value2": 161,
+                                "value3": 0,
+                                "value4": 243,
+                                "value5": 173,
+                                "value6": 76,
+                                "value7": 63,
+                                "value8": 151,
+                                "value9": 190,
+                                "value10": 121,
+                                "value11": 204,
+                                "value12": 214,
+                                "value13": 215,
+                                "value14": 152,
+                                "value15": 9
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Camera",
+                            "value1": "Camera"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 123,
+                                "value1": 141,
+                                "value2": 96,
+                                "value3": 169,
+                                "value4": 166,
+                                "value5": 89,
+                                "value6": 70,
+                                "value7": 205,
+                                "value8": 167,
+                                "value9": 220,
+                                "value10": 48,
+                                "value11": 219,
+                                "value12": 221,
+                                "value13": 190,
+                                "value14": 208,
+                                "value15": 253
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 131,
+                                "value1": 194,
+                                "value2": 231,
+                                "value3": 78,
+                                "value4": 147,
+                                "value5": 18,
+                                "value6": 68,
+                                "value7": 158,
+                                "value8": 169,
+                                "value9": 119,
+                                "value10": 101,
+                                "value11": 131,
+                                "value12": 95,
+                                "value13": 135,
+                                "value14": 32,
+                                "value15": 89
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 134,
+                                "value1": 84,
+                                "value2": 37,
+                                "value3": 46,
+                                "value4": 211,
+                                "value5": 195,
+                                "value6": 73,
+                                "value7": 234,
+                                "value8": 184,
+                                "value9": 181,
+                                "value10": 113,
+                                "value11": 3,
+                                "value12": 135,
+                                "value13": 32,
+                                "value14": 206,
+                                "value15": 125
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Camera",
+                            "value1": "Camera"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 144,
+                                "value1": 181,
+                                "value2": 101,
+                                "value3": 147,
+                                "value4": 245,
+                                "value5": 49,
+                                "value6": 70,
+                                "value7": 178,
+                                "value8": 191,
+                                "value9": 87,
+                                "value10": 175,
+                                "value11": 168,
+                                "value12": 244,
+                                "value13": 53,
+                                "value14": 247,
+                                "value15": 56
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 147,
+                                "value1": 214,
+                                "value2": 67,
+                                "value3": 96,
+                                "value4": 27,
+                                "value5": 165,
+                                "value6": 75,
+                                "value7": 220,
+                                "value8": 155,
+                                "value9": 222,
+                                "value10": 226,
+                                "value11": 172,
+                                "value12": 227,
+                                "value13": 90,
+                                "value14": 53,
+                                "value15": 222
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 151,
+                                "value1": 44,
+                                "value2": 90,
+                                "value3": 185,
+                                "value4": 47,
+                                "value5": 228,
+                                "value6": 77,
+                                "value7": 228,
+                                "value8": 189,
+                                "value9": 177,
+                                "value10": 66,
+                                "value11": 22,
+                                "value12": 245,
+                                "value13": 247,
+                                "value14": 186,
+                                "value15": 225
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Camera",
+                            "value1": "Camera"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 153,
+                                "value1": 73,
+                                "value2": 141,
+                                "value3": 130,
+                                "value4": 246,
+                                "value5": 47,
+                                "value6": 79,
+                                "value7": 92,
+                                "value8": 146,
+                                "value9": 10,
+                                "value10": 16,
+                                "value11": 170,
+                                "value12": 176,
+                                "value13": 65,
+                                "value14": 56,
+                                "value15": 50
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 153,
+                                "value1": 111,
+                                "value2": 143,
+                                "value3": 244,
+                                "value4": 210,
+                                "value5": 247,
+                                "value6": 74,
+                                "value7": 18,
+                                "value8": 138,
+                                "value9": 168,
+                                "value10": 24,
+                                "value11": 172,
+                                "value12": 91,
+                                "value13": 197,
+                                "value14": 62,
+                                "value15": 59
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 159,
+                                "value1": 201,
+                                "value2": 40,
+                                "value3": 247,
+                                "value4": 64,
+                                "value5": 44,
+                                "value6": 66,
+                                "value7": 181,
+                                "value8": 137,
+                                "value9": 186,
+                                "value10": 92,
+                                "value11": 35,
+                                "value12": 144,
+                                "value13": 48,
+                                "value14": 131,
+                                "value15": 45
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 160,
+                                "value1": 109,
+                                "value2": 182,
+                                "value3": 210,
+                                "value4": 88,
+                                "value5": 71,
+                                "value6": 69,
+                                "value7": 165,
+                                "value8": 139,
+                                "value9": 167,
+                                "value10": 96,
+                                "value11": 137,
+                                "value12": 181,
+                                "value13": 207,
+                                "value14": 120,
+                                "value15": 214
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 163,
+                                "value1": 34,
+                                "value2": 199,
+                                "value3": 248,
+                                "value4": 9,
+                                "value5": 16,
+                                "value6": 67,
+                                "value7": 3,
+                                "value8": 148,
+                                "value9": 251,
+                                "value10": 93,
+                                "value11": 137,
+                                "value12": 10,
+                                "value13": 5,
+                                "value14": 177,
+                                "value15": 17
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 166,
+                                "value1": 61,
+                                "value2": 149,
+                                "value3": 10,
+                                "value4": 31,
+                                "value5": 126,
+                                "value6": 75,
+                                "value7": 71,
+                                "value8": 156,
+                                "value9": 5,
+                                "value10": 133,
+                                "value11": 129,
+                                "value12": 157,
+                                "value13": 93,
+                                "value14": 51,
+                                "value15": 7
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Camera",
+                            "value1": "Camera"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 167,
+                                "value1": 117,
+                                "value2": 98,
+                                "value3": 198,
+                                "value4": 61,
+                                "value5": 68,
+                                "value6": 75,
+                                "value7": 192,
+                                "value8": 138,
+                                "value9": 81,
+                                "value10": 176,
+                                "value11": 239,
+                                "value12": 42,
+                                "value13": 245,
+                                "value14": 29,
+                                "value15": 138
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 172,
+                                "value1": 160,
+                                "value2": 219,
+                                "value3": 32,
+                                "value4": 40,
+                                "value5": 244,
+                                "value6": 76,
+                                "value7": 44,
+                                "value8": 160,
+                                "value9": 136,
+                                "value10": 98,
+                                "value11": 29,
+                                "value12": 29,
+                                "value13": 71,
+                                "value14": 128,
+                                "value15": 241
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 173,
+                                "value1": 170,
+                                "value2": 4,
+                                "value3": 247,
+                                "value4": 179,
+                                "value5": 14,
+                                "value6": 74,
+                                "value7": 253,
+                                "value8": 158,
+                                "value9": 84,
+                                "value10": 111,
+                                "value11": 44,
+                                "value12": 68,
+                                "value13": 156,
+                                "value14": 49,
+                                "value15": 234
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 179,
+                                "value1": 215,
+                                "value2": 255,
+                                "value3": 177,
+                                "value4": 223,
+                                "value5": 152,
+                                "value6": 67,
+                                "value7": 9,
+                                "value8": 190,
+                                "value9": 106,
+                                "value10": 34,
+                                "value11": 224,
+                                "value12": 63,
+                                "value13": 124,
+                                "value14": 167,
+                                "value15": 135
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 198,
+                                "value1": 157,
+                                "value2": 230,
+                                "value3": 36,
+                                "value4": 102,
+                                "value5": 86,
+                                "value6": 68,
+                                "value7": 196,
+                                "value8": 159,
+                                "value9": 239,
+                                "value10": 218,
+                                "value11": 9,
+                                "value12": 222,
+                                "value13": 31,
+                                "value14": 183,
+                                "value15": 20
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 205,
+                                "value1": 71,
+                                "value2": 64,
+                                "value3": 31,
+                                "value4": 181,
+                                "value5": 41,
+                                "value6": 72,
+                                "value7": 106,
+                                "value8": 178,
+                                "value9": 26,
+                                "value10": 203,
+                                "value11": 196,
+                                "value12": 26,
+                                "value13": 76,
+                                "value14": 61,
+                                "value15": 180
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 210,
+                                "value1": 10,
+                                "value2": 30,
+                                "value3": 215,
+                                "value4": 77,
+                                "value5": 153,
+                                "value6": 77,
+                                "value7": 104,
+                                "value8": 158,
+                                "value9": 225,
+                                "value10": 132,
+                                "value11": 99,
+                                "value12": 230,
+                                "value13": 148,
+                                "value14": 0,
+                                "value15": 167
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 210,
+                                "value1": 221,
+                                "value2": 192,
+                                "value3": 32,
+                                "value4": 222,
+                                "value5": 187,
+                                "value6": 67,
+                                "value7": 28,
+                                "value8": 131,
+                                "value9": 255,
+                                "value10": 64,
+                                "value11": 207,
+                                "value12": 162,
+                                "value13": 121,
+                                "value14": 3,
+                                "value15": 191
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 219,
+                                "value1": 237,
+                                "value2": 42,
+                                "value3": 124,
+                                "value4": 84,
+                                "value5": 249,
+                                "value6": 78,
+                                "value7": 182,
+                                "value8": 182,
+                                "value9": 156,
+                                "value10": 133,
+                                "value11": 117,
+                                "value12": 107,
+                                "value13": 124,
+                                "value14": 21,
+                                "value15": 176
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 222,
+                                "value1": 213,
+                                "value2": 164,
+                                "value3": 70,
+                                "value4": 215,
+                                "value5": 223,
+                                "value6": 75,
+                                "value7": 203,
+                                "value8": 147,
+                                "value9": 98,
+                                "value10": 91,
+                                "value11": 254,
+                                "value12": 243,
+                                "value13": 248,
+                                "value14": 94,
+                                "value15": 34
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Amazing Entity",
+                            "value1": "Amazing Entity"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 238,
+                                "value1": 134,
+                                "value2": 236,
+                                "value3": 66,
+                                "value4": 128,
+                                "value5": 223,
+                                "value6": 68,
+                                "value7": 207,
+                                "value8": 168,
+                                "value9": 205,
+                                "value10": 63,
+                                "value11": 219,
+                                "value12": 143,
+                                "value13": 45,
+                                "value14": 73,
+                                "value15": 153
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 239,
+                                "value1": 166,
+                                "value2": 84,
+                                "value3": 224,
+                                "value4": 37,
+                                "value5": 60,
+                                "value6": 68,
+                                "value7": 220,
+                                "value8": 183,
+                                "value9": 32,
+                                "value10": 148,
+                                "value11": 192,
+                                "value12": 235,
+                                "value13": 128,
+                                "value14": 189,
+                                "value15": 187
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/Main Scene/Camera",
+                            "value1": "Camera"
+                        }
+                    },
+                    {
+                        "key": {
+                            "bytes": {
+                                "value0": 248,
+                                "value1": 169,
+                                "value2": 177,
+                                "value3": 162,
+                                "value4": 125,
+                                "value5": 206,
+                                "value6": 64,
+                                "value7": 250,
+                                "value8": 143,
+                                "value9": 8,
+                                "value10": 56,
+                                "value11": 6,
+                                "value12": 185,
+                                "value13": 241,
+                                "value14": 31,
+                                "value15": 45
+                            }
+                        },
+                        "value": {
+                            "value0": "D:\\Projects\\GameEngineFramework\\ProjectRoot/Resources/Scenes/",
+                            "value1": "Main Scene"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -54,6 +54,6 @@ namespace Engine
 		std::vector<char> vertexData;
 		std::vector<char> fragmentData;
 	protected:
-		const char* shaderFolder = "Resources/Shaders/";
+		const char* shaderFolder = "Shaders/";
 	};
 }

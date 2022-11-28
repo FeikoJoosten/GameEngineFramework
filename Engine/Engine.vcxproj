@@ -103,6 +103,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,6 +129,7 @@
       <ShowIncludes>false</ShowIncludes>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,6 +155,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -180,6 +183,7 @@
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -204,8 +208,10 @@
     <ClInclude Include="AssetManagement\AssetRegistry.hpp" />
     <ClInclude Include="AssetManagement\EngineAssetManager.hpp" />
     <ClInclude Include="AssetManagement\EngineProjectFileWatcher.hpp" />
+    <ClInclude Include="AssetManagement\IAssetImporter.hpp" />
     <ClInclude Include="AssetManagement\MeshAssetImporter.hpp" />
     <ClInclude Include="AssetManagement\ModelImporter.hpp" />
+    <ClInclude Include="AssetManagement\SceneImporter.hpp" />
     <ClInclude Include="Camera\CameraManager.hpp" />
     <ClInclude Include="Components\CameraComponent.hpp" />
     <ClInclude Include="Camera\Frustum.hpp" />
@@ -221,6 +227,7 @@
     <ClInclude Include="Components\TransformComponent.hpp" />
     <ClInclude Include="Engine\Engine.hpp" />
     <ClInclude Include="Entity\Entity.hpp" />
+    <ClInclude Include="Entity\EntitySerialization.hpp" />
     <ClInclude Include="Entity\EntitySystem.hpp" />
     <ClInclude Include="Serialization\GlmSerializationHelper.hpp" />
     <ClInclude Include="Input\InputManager.hpp" />
@@ -260,6 +267,8 @@
     <ClInclude Include="Resources\ResourceManager.hpp" />
     <ClInclude Include="Scene\Scene.hpp" />
     <ClInclude Include="Scene\SceneManager.hpp" />
+    <ClInclude Include="Serialization\GuidSerializationHelper.hpp" />
+    <ClInclude Include="Serialization\SerializationHelpers.hpp" />
     <ClInclude Include="Shader\OpenGLShader.hpp" />
     <ClInclude Include="Shader\Shader.hpp" />
     <ClInclude Include="Texture\OpenGLTexture.hpp" />
@@ -337,6 +346,7 @@
     <ClCompile Include="Renderer\Vulkan\VulkanSpriteRenderer.cpp" />
     <ClCompile Include="Renderer\Vulkan\VulkanStaticMeshRenderer.cpp" />
     <ClCompile Include="Resources\ResourceManager.cpp" />
+    <ClCompile Include="SceneImporter.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Shader\OpenGLShader.cpp" />

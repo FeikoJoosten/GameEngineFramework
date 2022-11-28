@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Engine/Utility/Defines.hpp"
 #include "Engine/Components/Component.hpp"
+#include "Engine/Entity/Entity.hpp"
+#include "Engine/Utility/Defines.hpp"
 #include "Engine/Utility/Event.hpp"
-#include "Engine/Serialization/GlmSerializationHelper.hpp"
 
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
@@ -22,7 +22,7 @@ namespace Engine {
 
 		glm::mat4x4 modelMatrix {};
 
-		TransformComponent() = default;
+		TransformComponent();
 
 	public:
 		Sharp::Event<std::shared_ptr<TransformComponent>> OnModifiedEvent;
@@ -83,12 +83,28 @@ namespace Engine {
 
 		void RecalculateModelMatrix() noexcept;
 
-		template <class Archive>
-		void Serialize(Archive& archive);
+		void RecalculateModelMatrixAndInvokedOnModified() noexcept;
+
+		template<class Archive>
+		void Save(Archive& archive) const;
+
+		template<class Archive>
+		void Load(Archive& archive);
 	};
 
 	template <class Archive>
-	void TransformComponent::Serialize(Archive& archive) {
+	void TransformComponent::Save(Archive& archive) const {
+		archive(
+			cereal::make_nvp("Component", cereal::virtual_base_class<Component>(this)),
+			CEREAL_NVP(position),
+			CEREAL_NVP(rotation),
+			CEREAL_NVP(scale),
+			CEREAL_NVP(isStatic)
+		);
+	}
+
+	template <class Archive>
+	void TransformComponent::Load(Archive& archive) {
 		archive(
 			cereal::make_nvp("Component", cereal::virtual_base_class<Component>(this)),
 			CEREAL_NVP(position),

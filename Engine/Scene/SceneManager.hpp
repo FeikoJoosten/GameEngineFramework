@@ -5,56 +5,44 @@
 #include "Engine/Scene/Scene.hpp"
 
 #include <cereal/access.hpp>
-#include <cereal/cereal.hpp>
 #include <memory>
-
 
 namespace Engine {
 	class Scene;
+	class SceneImporter;
 
 	class ENGINE_API SceneManager {
 		friend std::shared_ptr<SceneManager> Engine::GetSceneManager() noexcept;
 		friend cereal::access;
 
-		SceneManager();
+		std::vector<std::shared_ptr<Scene>> openScenes;
+		std::shared_ptr<SceneImporter> sceneImporter;
+
+		SceneManager() = default;
 
 	public:
+		Sharp::Event<std::shared_ptr<Scene>> OnSceneOpenedEvent;
+		Sharp::Event<std::shared_ptr<Scene>> OnSceneClosedEvent;
+
+		~SceneManager() = default;
 		SceneManager(const SceneManager& other) = delete;
 		SceneManager(SceneManager&& other) noexcept = delete;
-		~SceneManager();
 
 		SceneManager& operator=(const SceneManager& other) = delete;
 		SceneManager& operator=(SceneManager&& other) noexcept = delete;
 
 		static std::shared_ptr<SceneManager> Get();
 
-		std::shared_ptr<Scene> GetActiveScene();
+		std::vector<std::shared_ptr<Scene>> GetOpenScenes();
 
-		void OpenScene(const std::string& path);
+		std::shared_ptr<Scene> OpenScene(const std::string& pathInProject, const std::string& sceneName);
 
-		void OpenScene(std::shared_ptr<Scene> scene);
+		void OpenScene(const std::shared_ptr<Scene>& sceneToOpen);
 
-	private:
-		std::shared_ptr<Scene> activeScene;
+		void CloseScene(const std::shared_ptr<Scene>& sceneToClose);
 
-		template <class Archive>
-		void Save(Archive& archive);
+		bool IsSceneOpened(const std::shared_ptr<Scene>& sceneToCheck);
 
-		template <class Archive>
-		void Load(Archive& archive);
+		static std::shared_ptr<Scene> CreateScene(const std::string& sceneName = "scene", const std::string& pathInProject = "");
 	};
-
-	template <class Archive>
-	void SceneManager::Save(Archive& archive) {
-		archive(
-			cereal::make_nvp("lastActiveScene", activeScene->GetPath())
-		);
-	}
-
-	template <class Archive> void SceneManager::Load(Archive& archive) {
-		std::string lastActiveScenePath;
-		archive(lastActiveScenePath);
-
-		OpenScene(lastActiveScenePath);
-	}
 }

@@ -33,14 +33,24 @@ namespace Engine
 		virtual void Update() override;
 
 	private:
-		template <class Archive>
-		void Serialize(Archive& archive);
+		template<class Archive>
+		void Save(Archive& archive) const;
+
+		template<class Archive>
+		void Load(Archive& archive);
 	};
 
 	template <class Archive>
-	void ModelComponent::Serialize(Archive& archive) {
+	void ModelComponent::Save(Archive& archive) const {
 		archive(
-			CEREAL_NVP(cereal::base_class<RenderComponent>(this))
+			CEREAL_NVP(cereal::virtual_base_class<RenderComponent>(this))
+		);
+	}
+
+	template <class Archive>
+	void ModelComponent::Load(Archive& archive) {
+		archive(
+			CEREAL_NVP(cereal::virtual_base_class<RenderComponent>(this))
 		);
 	}
 } //namespace Engine

@@ -435,6 +435,21 @@
     <ClInclude Include="AssetManagement\EngineProjectFileWatcher.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\EntitySerialization.hpp">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\SceneImporter.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\GuidSerializationHelper.hpp">
+      <Filter>Header Files\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\SerializationHelpers.hpp">
+      <Filter>Header Files\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\IAssetImporter.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity\Entity.cpp">
@@ -651,6 +666,9 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="AssetManagement\EngineProjectFileWatcher.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneImporter.cpp">
       <Filter>Source Files\AssetManagement</Filter>
     </ClCompile>
   </ItemGroup>

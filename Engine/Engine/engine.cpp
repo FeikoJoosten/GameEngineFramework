@@ -43,6 +43,8 @@ namespace Engine {
 				EngineAssetManager::SaveEngineData<Engine>(engineSettings);
 			} else exit(0);
 		}
+
+		AssetManager::projectRoot = engineSettings.lastOpenedProject + "/";
 	}
 
 	Engine::~Engine() {
@@ -135,7 +137,7 @@ namespace Engine {
 	std::shared_ptr<AssetManager> Engine::GetAssetManager() noexcept {
 		CreateInstance();
 		if (instance->assetManager == nullptr)
-			instance->assetManager = std::shared_ptr<AssetManager>(new AssetManager(instance->engineSettings.lastOpenedProject + "/"));
+			instance->assetManager = std::shared_ptr<AssetManager>(new AssetManager());
 		return instance->assetManager;
 	}
 

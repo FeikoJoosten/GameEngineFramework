@@ -12,6 +12,10 @@ namespace Engine {
 	class ENGINE_API RenderComponent : public Component {
 		friend cereal::access;
 
+		std::weak_ptr<TransformComponent> transformComponent;
+		std::shared_ptr<Model> model;
+		std::weak_ptr<Material> material;
+
 	protected:
 		RenderComponent() = default;
 
@@ -54,29 +58,34 @@ namespace Engine {
 		[[nodiscard]] std::shared_ptr<Material> GetMaterial() const;
 
 	protected:
-		std::weak_ptr<TransformComponent> transformComponent;
 
 		virtual void OnComponentAdded(std::shared_ptr<Component> addedComponent) override;
 
 		virtual void OnComponentRemoved(std::shared_ptr<Component> removedComponent) override;
 
 	private:
-		std::shared_ptr<Model> model;
-		std::weak_ptr<Material> material;
+		template<class Archive>
+		void Save(Archive& archive) const;
 
-		/// <summary>
-		/// Saves the data of this component to a archive 
-		/// </summary>
-		/// <param name="archive"> the archive that you want to save to </param>
-		template <typename Archive>
-		void Serialize(Archive& archive);
+		template<class Archive>
+		void Load(Archive& archive);
 	};
 
 	template <typename Archive>
-	void RenderComponent::Serialize(Archive& archive) {
+	void RenderComponent::Save(Archive& archive) const {
 		archive(
 			CEREAL_NVP(cereal::base_class<Component>(this)),
-			CEREAL_NVP(model)
+			CEREAL_NVP(model),
+			CEREAL_NVP(transformComponent)
+		);
+	}
+
+	template <typename Archive>
+	void RenderComponent::Load(Archive& archive) {
+		archive(
+			CEREAL_NVP(cereal::base_class<Component>(this)),
+			CEREAL_NVP(model),
+			CEREAL_NVP(transformComponent)
 		);
 	}
 }

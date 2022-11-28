@@ -4,19 +4,20 @@
 #include <crossguid/guid.hpp>
 
 namespace Engine {
-	bool AssetRegistry::TryGetPathForGuid(const xg::Guid assetGuid, std::string& assetPath) const {
+	bool AssetRegistry::TryGetPathForGuid(const xg::Guid& assetGuid, std::string& pathInProject, std::string& assetName) const {
 		for (const auto& [guid, path] : assetRegistryPathsByGuid) {
 			if (guid == assetGuid) {
-				assetPath = path;
+				pathInProject = path.first;
+				assetName = path.second;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	bool AssetRegistry::TryGetGuidForPath(const std::string& assetPath, xg::Guid& assetGuid) const {
+	bool AssetRegistry::TryGetGuidForPath(const std::string& assetPath, const std::string& assetName, xg::Guid& assetGuid) const {
 		for(const auto& [guid, path] : assetRegistryPathsByGuid) {
-			if(path == assetPath) {
+			if(path.first == assetPath && path.second == assetName) {
 				assetGuid = guid;
 				return true;
 			}
@@ -25,19 +26,19 @@ namespace Engine {
 		return false;
 	}
 
-	bool AssetRegistry::TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const std::string& assetPath) {
-		const std::map<xg::Guid, std::string>::iterator iterator = assetRegistryPathsByGuid.find(assetToRegister->GetGuid());
+	bool AssetRegistry::TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const std::string& pathInProject) {
+		const std::map<xg::Guid, std::pair<std::string, std::string>>::iterator iterator = assetRegistryPathsByGuid.find(assetToRegister->GetGuid());
 
 		if (iterator != assetRegistryPathsByGuid.end()) return false;
 
 		assetToRegister->guid = xg::newGuid();
-		assetRegistryPathsByGuid.insert({ assetToRegister->guid, assetPath });
-		OnAssetRegisteredEvent(assetToRegister, assetPath);
+		assetRegistryPathsByGuid.insert({ assetToRegister->guid, { pathInProject, assetToRegister->GetName() } });
+		OnAssetRegisteredEvent(assetToRegister, pathInProject);
 		return true;
 	}
 
 	bool AssetRegistry::TryUnRegisterAsset(const xg::Guid& assetGuid) {
-		const std::map<xg::Guid, std::string>::iterator iterator = assetRegistryPathsByGuid.find(assetGuid);
+		const std::map<xg::Guid, std::pair<std::string, std::string>>::iterator iterator = assetRegistryPathsByGuid.find(assetGuid);
 
 		if (iterator != assetRegistryPathsByGuid.end())	return false;
 
@@ -46,13 +47,14 @@ namespace Engine {
 		return true;
 	}
 
-	bool AssetRegistry::TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newAssetPath) {
-		const std::map<xg::Guid, std::string>::iterator iterator = assetRegistryPathsByGuid.find(assetGuid);
+	bool AssetRegistry::TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newPathInProject, const std::string& newAssetName) {
+		const std::map<xg::Guid, std::pair<std::string, std::string>>::iterator iterator = assetRegistryPathsByGuid.find(assetGuid);
 
 		if (iterator != assetRegistryPathsByGuid.end())	return false;
 
-		OnAssetMovedOrRenamedEvent(assetGuid, iterator->second, newAssetPath);
-		iterator->second = newAssetPath;
+		iterator->second.first = newPathInProject;
+		iterator->second.second = newAssetName;
+		OnAssetMovedOrRenamedEvent(assetGuid, iterator->second.first, newPathInProject, iterator->second.second, newAssetName);
 		return true;
 	}
 }

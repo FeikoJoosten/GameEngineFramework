@@ -14,13 +14,17 @@
 namespace Engine {
 	Renderer::Renderer() noexcept {
 		entitySystem = EntitySystem::Get();
-		if (entitySystem)
-			entitySystem->OnComponentAddedToEntityEvent += Sharp::EventHandler::Bind(this, &Renderer::HandleOnComponentAddedToEntityEvent);
+		entitySystem->OnComponentAddedToEntityEvent += Sharp::EventHandler::Bind(this, &Renderer::HandleOnComponentAddedToEntityEvent);
+
+		for(std::shared_ptr<RenderComponent>& renderComponent : entitySystem->GetAllComponents<RenderComponent>())
+			renderComponents.push_back(renderComponent);
 	}
 
 	Renderer::~Renderer() {
 		if (entitySystem)
 			entitySystem->OnComponentAddedToEntityEvent -= Sharp::EventHandler::Bind(this, &Renderer::HandleOnComponentAddedToEntityEvent);
+
+		renderComponents.clear();
 	}
 
 	std::shared_ptr<Renderer> Renderer::Get() {
@@ -52,8 +56,10 @@ namespace Engine {
 	}
 
 	void Renderer::HandleOnComponentAddedToEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> addedComponent) {
-		if (const std::shared_ptr<RenderComponent> renderComponent = std::dynamic_pointer_cast<RenderComponent>(addedComponent))
-			renderComponents.push_back(renderComponent);
+		const std::shared_ptr<RenderComponent> renderComponent = std::dynamic_pointer_cast<RenderComponent>(addedComponent);
+		if (!renderComponent) return;
+
+		renderComponents.push_back(renderComponent);
 	}
 
 	void Renderer::HandleOnComponentRemovedFromEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> removedComponent) {

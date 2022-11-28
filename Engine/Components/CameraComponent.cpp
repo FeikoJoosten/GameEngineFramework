@@ -74,7 +74,6 @@ namespace Engine {
 		if (const std::shared_ptr<TransformComponent> possibleTransformComponent = std::dynamic_pointer_cast<TransformComponent>(addedComponent)) {
 			transformComponent = possibleTransformComponent;
 			possibleTransformComponent->OnModifiedEvent += Sharp::EventHandler::Bind(this, &CameraComponent::HandleOnTransformComponentModifiedEvent);
-			SetIsEnabled(true);
 			HandleOnTransformComponentModifiedEvent(possibleTransformComponent);
 		}
 	}
@@ -85,7 +84,6 @@ namespace Engine {
 		if(!transformComponent.expired()) {
 			transformComponent.lock()->OnModifiedEvent -= Sharp::EventHandler::Bind(this, &CameraComponent::HandleOnTransformComponentModifiedEvent);
 			transformComponent.reset();
-			SetIsEnabled(false);
 		}
 	}
 } // namespace Engine

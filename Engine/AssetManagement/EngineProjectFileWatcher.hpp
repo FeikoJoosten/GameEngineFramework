@@ -9,12 +9,20 @@
 namespace Engine {
 	class AssetRegistry;
 
+	struct ENGINE_LOCAL AssetAction {
+		const std::string directory;
+		const std::string fileName;
+		const efsw::Action action;
+		const std::string oldFileName;
+	};
+
 	class ENGINE_LOCAL EngineProjectFileWatcher : public efsw::FileWatchListener {
 		friend class AssetManager;
 
 		std::unique_ptr<efsw::FileWatcher> fileWatcher {};
 		std::shared_ptr<AssetRegistry> assetRegistry {};
 		efsw::WatchID ownWatchId {};
+		std::vector<AssetAction> assetActionsToProcess {};
 
 		EngineProjectFileWatcher(const std::string& directoryToWatch, std::shared_ptr<AssetRegistry> assetRegistry);
 
@@ -26,6 +34,9 @@ namespace Engine {
 		EngineProjectFileWatcher& operator=(const EngineProjectFileWatcher& other) = delete;
 		EngineProjectFileWatcher& operator=(EngineProjectFileWatcher&& other) = delete;
 
+	private:
 		virtual void handleFileAction(efsw::WatchID watchId, const std::string& dir, const std::string& filename, efsw::Action action, std::string oldFilename) override;
+
+		void Update();
 	};
 }

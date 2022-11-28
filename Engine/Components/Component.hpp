@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
-#include "Engine/Entity/Entity.hpp"
 #include "Engine/Utility/Event.hpp"
 
 #include <cereal/types/memory.hpp>
@@ -11,10 +10,13 @@ namespace Engine {
 	/// <summary>
 	/// This is the base class for components.
 	/// </summary>
-	class ENGINE_API Component {
+	class ENGINE_API Component : public std::enable_shared_from_this<Component> {
 		// Need to give full access to Entity class because otherwise a circular dependency is created with private friends
 		friend class Entity;
 		friend cereal::access;
+
+		bool isEnabled = true;
+		std::weak_ptr<Entity> owner;
 
 	protected:
 		Component() = default;
@@ -99,19 +101,6 @@ namespace Engine {
 	protected:
 
 		/// <summary>
-		/// This method allows you to get a direct reference to the shared pointer of this component.
-		/// </summary>
-		/// <returns>Returns the reference of this object as a shared pointer.</returns>
-		[[nodiscard]] std::shared_ptr<Component> GetPointerReference() const;
-
-		/// <summary>
-		/// This method allows you to get a direct reference to the shared pointer of this component.
-		/// </summary>
-		/// <returns>Returns the reference of this object as a shared pointer.</returns>
-		template<typename ComponentType>
-		[[nodiscard]] std::shared_ptr<ComponentType> GetPointerReference() const;
-
-		/// <summary>
 		/// The update method of this component. NOTE: This method will not be called in case the entity is disabled.
 		/// </summary>
 		virtual void Update();
@@ -129,18 +118,15 @@ namespace Engine {
 		virtual void OnComponentRemoved(std::shared_ptr<Component> removedComponent);
 
 	private:
-		bool isEnabled = true;
-		std::weak_ptr<Entity> owner;
-		std::weak_ptr<Component> pointerReference;
-
 		void SetOwner(std::shared_ptr<Entity> newOwner);
-
-		void SetPointerReference(std::weak_ptr<Component> newPointerReference);
 
 		void HandleOnOwnerActiveStateChangedEvent(std::shared_ptr<Entity> owningEntity, bool owningEntityIsActive);
 
 		template<class Archive>
-		void Serialize(Archive& archive);
+		void Save(Archive& archive) const;
+
+		template<class Archive>
+		void Load(Archive& archive);
 	};
 
 	template <typename ComponentType>
@@ -180,7 +166,16 @@ namespace Engine {
 	}
 
 	template<class Archive>
-	void Component::Serialize(Archive& archive) {
-		archive(CEREAL_NVP(isEnabled));
+	void Component::Save(Archive& archive) const {
+		archive(
+			CEREAL_NVP(isEnabled)
+		);
+	}
+
+	template<class Archive>
+	void Component::Load(Archive& archive) {
+		archive(
+			CEREAL_NVP(isEnabled)
+		);
 	}
 } // namespace Engine

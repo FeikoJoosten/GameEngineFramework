@@ -7,6 +7,7 @@
 namespace Engine {
 	class Component;
 	class Entity;
+	class Scene;
 
 	/// <summary>
 	/// This object keeps track of all available entities. NOTE: only the Engine class is allowed to create this object.
@@ -15,14 +16,17 @@ namespace Engine {
 		friend std::shared_ptr<EntitySystem> Engine::GetEntitySystem() noexcept;
 		friend class Application;
 
-		EntitySystem() = default;
+		std::vector<std::shared_ptr<Entity>> system;
+		std::shared_ptr<SceneManager> sceneManager;
+
+		EntitySystem();
 	public:
 		Sharp::Event<std::shared_ptr<Entity>> OnEntityAddedEvent;
 		Sharp::Event<std::shared_ptr<Entity>> OnEntityRemovedEvent;
 		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentAddedToEntityEvent;
 		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentRemovedFromEntityEvent;
 
-		~EntitySystem() = default;
+		~EntitySystem();
 		EntitySystem(const EntitySystem& other) = delete;
 		EntitySystem(EntitySystem&& other) noexcept = delete;
 
@@ -40,11 +44,6 @@ namespace Engine {
 		/// <param name="entityName">The name of the entity you want to create, this is empty by default.</param>
 		/// <returns>Returns the newly created entity as a shared pointer.</returns>
 		[[nodiscard]] std::shared_ptr<Entity> CreateEntity(const std::string& entityName = "");
-
-		/// <summary>Allows you to get the entity you want based on the id number.</summary>
-		/// <param name="id">The entity you want to get.</param>
-		/// <returns>Will return the entity with the given id if found. Otherwise will return an empty shared pointer.</returns>
-		[[nodiscard]] std::shared_ptr<Entity> GetEntity(int id) const;
 
 		/// <summary>
 		/// This method will allow you to get all entities available.
@@ -67,15 +66,20 @@ namespace Engine {
 		[[nodiscard]] std::vector<std::shared_ptr<Entity>> GetAllEntitiesWithComponent();
 
 	private:
-		std::vector<std::shared_ptr<Entity>> system;
-
-		void AddEntity(std::shared_ptr<Entity> entityToAdd);
+		void AddEntity(const std::shared_ptr<Entity>& entityToAdd);
 
 		void RemoveEntity(std::shared_ptr<Entity> entityToRemove);
 
 		void Update() const;
 
+		void HandleOnSceneOpenedEvent(std::shared_ptr<Scene> openedScene);
+
+		void HandleOnSceneClosedEvent(std::shared_ptr<Scene> closedScene);
+
+		void HandleOnSceneActiveStateChangedEvent(std::shared_ptr<Scene> scene, bool isActive);
+
 		void HandleOnComponentAddedToEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> addedComponent);
+
 		void HandleOnComponentRemovedFromEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> removedComponent);
 	};
 

@@ -15,6 +15,8 @@ namespace Engine
 	/// </summary>
 	class ENGINE_API Mesh : public Asset
 	{
+		friend cereal::access;
+
 	public:
 		/// <summary>
 		/// The vertices of this mesh.

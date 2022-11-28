@@ -1,4 +1,5 @@
 #include "Engine/Application/Application.hpp"
+#include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/Components/CameraComponent.hpp"
 #include "Engine/Camera/CameraManager.hpp"
 #include "Engine/Collision/CollisionSystem.hpp"
@@ -19,11 +20,13 @@ namespace Engine {
 	}
 
 	void Application::Update() {
-
 		const std::shared_ptr<Time> time = Time::Get();
 		time->OnUpdateBegin();
 
 		const std::shared_ptr<Engine> engine = Engine::instance;
+
+		if (engine->assetManager != nullptr)
+			engine->assetManager->UpdateFileWatcher();
 
 		// TODO: Replace with something on application level which controls the playing state
 		if (isPlaying) {
