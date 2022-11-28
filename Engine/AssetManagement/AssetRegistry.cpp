@@ -57,4 +57,14 @@ namespace Engine {
 		OnAssetMovedOrRenamedEvent(assetGuid, iterator->second.first, newPathInProject, iterator->second.second, newAssetName);
 		return true;
 	}
+
+	bool AssetRegistry::TryAssignGuidToAsset(const std::shared_ptr<Asset>& assetToUpdate, const xg::Guid& assetGuid) {
+		const std::map<xg::Guid, std::pair<std::string, std::string>>::iterator iterator = assetRegistryPathsByGuid.find(assetGuid);
+
+		if (iterator == assetRegistryPathsByGuid.end())	return false;
+		if (iterator->second.second != assetToUpdate->GetName()) return false;
+
+		assetToUpdate->guid = assetGuid; // No need to invoke event, as the asset itself was out of sync
+		return true;
+	}
 }

@@ -41,6 +41,7 @@ namespace Engine {
 
 		bool TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newPathInProject, const std::string& newAssetName);
 
+		bool TryAssignGuidToAsset(const std::shared_ptr<Asset>& assetToUpdate, const xg::Guid& assetGuid);
 	private:
 		template <class Archive>
 		void Serialize(Archive& archive);

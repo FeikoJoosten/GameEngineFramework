@@ -22,8 +22,12 @@ namespace Engine {
 			std::string filePath;
 			std::string assetName;
 			if(assetRegistry->TryGetPathForGuid(GetGuid(), filePath, assetName)) {
+				const std::string entityPath = filePath + assetName + extension + "/";
+				xg::Guid entityGuid;
 				// TODO: Replace entityToAdd->GetName with relative path in scene
-				assetRegistry->TryRegisterAsset(entityToAdd, filePath + assetName + "/" + entityToAdd->GetName());
+				if (!assetRegistry->TryGetGuidForPath(entityPath, entityToAdd->GetName(), entityGuid))
+					assetRegistry->TryRegisterAsset(entityToAdd, entityPath);
+				else assetRegistry->TryAssignGuidToAsset(entityToAdd, entityGuid);
 			}
 		}
 
