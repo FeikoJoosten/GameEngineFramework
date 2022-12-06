@@ -188,9 +188,8 @@ namespace Engine {
 		if (map->GetBool(EnableMouseRotation)) {
 			lockedCameraTransformComponent->Rotate(
 				glm::vec3(
-					// TODO: Figure out why I need to flip Y and X axis here?
 					map->GetFloatDelta(MouseY) * deltaMouseRotationSpeed,
-					-map->GetFloatDelta(MouseX) * deltaMouseRotationSpeed,
+					map->GetFloatDelta(MouseX) * -deltaMouseRotationSpeed,
 					0.f));
 		}
 	}

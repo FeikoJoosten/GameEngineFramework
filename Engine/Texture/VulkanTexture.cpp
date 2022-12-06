@@ -7,17 +7,16 @@
 namespace Engine {
 
 	VulkanTexture::VulkanTexture(const std::string& filename, int desiredChannels) : Texture(filename, desiredChannels) {
-		const std::string baseLocation = "Resources/Textures/" + filename;
-		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
-		const std::string defaultTextureLocation = (assetManager->GetProjectRoot() + "Resources/Textures/default.png");
+		const std::string baseLocation = "Textures/";
+		const std::shared_ptr<AssetManager>& assetManager = AssetManager::Get();
+		const std::string projectRoot = assetManager->GetProjectRoot();
+		const std::string defaultTextureLocation = projectRoot + "Resources/Textures/default.png";
 		stbi_uc* textureData = stbi_load(
-			assetManager->FileExists(baseLocation) ?
-			(assetManager->GetProjectRoot() + baseLocation).c_str() :
+			assetManager->FileExists(baseLocation, baseLocation + filename, true) ?
+			(projectRoot + "Resources/" + baseLocation + filename).c_str() :
 			defaultTextureLocation.c_str(),
 			&width, &height, &channels, STBI_rgb_alpha);
-
 		VulkanTexture::CreateTextureWithData(textureData, true);
-
 		stbi_image_free(textureData);
 	}
 

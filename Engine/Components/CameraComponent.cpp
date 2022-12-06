@@ -37,7 +37,7 @@ namespace Engine {
 		clippingPlanes.x = zNear;
 		clippingPlanes.y = zFar;
 
-		const std::shared_ptr<Window> window = Window::Get();
+		const std::shared_ptr<Window>& window = Window::Get();
 
 		projection = glm::perspective(glm::radians(newFoV), static_cast<float>(window->GetHeight()) / static_cast<float>(window->GetWidth()), zNear, zFar);
 	}

@@ -153,7 +153,7 @@ namespace Engine {
 	}
 
 	glm::vec3 TransformComponent::GetRight() const noexcept {
-		return rotation * glm::vec3(1.f, 0.f, 0.f);
+		return rotation * glm::vec3(-1.f, 0.f, 0.f);
 	}
 
 	glm::vec3 TransformComponent::GetUp() const noexcept {
@@ -189,14 +189,14 @@ namespace Engine {
 	}
 
 	void TransformComponent::RecalculateModelMatrix() noexcept {
-		const glm::mat4x4 currentModelMatrix = modelMatrix;
-		const glm::mat4x4 rotationMatrix = glm::eulerAngleYXZ(rotation.y, rotation.x, rotation.z);
-		glm::mat4x4 rotationScaleMatrix = rotationMatrix * glm::scale(rotationMatrix, scale);
-		rotationScaleMatrix[3] = glm::vec4(position, 1);
+		constexpr glm::mat4 identityMatrix = glm::identity<glm::mat4>();
+		const glm::mat4 translationMatrix = glm::translate(identityMatrix, position);
+		const glm::mat4 rotationMatrix = glm::mat4_cast(rotation);
+		const glm::mat4 scaleMatrix = glm::scale(identityMatrix, scale);
 
-		if (currentModelMatrix == rotationScaleMatrix) return;
+		const glm::mat4 newModelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 
-		modelMatrix = rotationScaleMatrix;
+		modelMatrix = newModelMatrix;
 	}
 
 	void TransformComponent::RecalculateModelMatrixAndInvokedOnModified() noexcept {

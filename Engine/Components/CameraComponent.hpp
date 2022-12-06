@@ -117,8 +117,6 @@ namespace Engine {
 			cereal::make_nvp("Component", cereal::virtual_base_class<Component>(this)),
 			CEREAL_NVP(fieldOfVision),
 			CEREAL_NVP(clippingPlanes),
-			CEREAL_NVP(view),
-			CEREAL_NVP(projection),
 			CEREAL_NVP(transformComponent)
 		);
 	}
@@ -129,12 +127,15 @@ namespace Engine {
 			cereal::make_nvp("Component", cereal::virtual_base_class<Component>(this)),
 			CEREAL_NVP(fieldOfVision),
 			CEREAL_NVP(clippingPlanes),
-			CEREAL_NVP(view),
-			CEREAL_NVP(projection),
 			CEREAL_NVP(transformComponent)
 		);
 
-		if (!transformComponent.expired()) transformComponent.lock()->OnModifiedEvent += Sharp::EventHandler::Bind(this, &CameraComponent::HandleOnTransformComponentModifiedEvent);
+		if (!transformComponent.expired()) {
+			transformComponent.lock()->OnModifiedEvent += Sharp::EventHandler::Bind(this, &CameraComponent::HandleOnTransformComponentModifiedEvent);
+			HandleOnTransformComponentModifiedEvent(transformComponent.lock());
+		}
+
+		SetProjection(fieldOfVision, clippingPlanes.x, clippingPlanes.y);
 	}
 } // namespace Engine
 

@@ -112,6 +112,8 @@ namespace Engine {
 			CEREAL_NVP(scale),
 			CEREAL_NVP(isStatic)
 		);
+
+		RecalculateModelMatrix();
 	}
 
 } // namespace Engine
