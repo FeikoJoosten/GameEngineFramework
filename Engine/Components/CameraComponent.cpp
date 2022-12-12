@@ -61,9 +61,9 @@ namespace Engine {
 
 	void CameraComponent::HandleOnTransformComponentModifiedEvent(const std::shared_ptr<TransformComponent> modifiedTransformComponent) {
 		if (!GetIsEnabled() || !modifiedTransformComponent) return;
-		
+
 		const glm::vec3 position = modifiedTransformComponent->GetPosition();
-		SetView(glm::lookAt(position, position + modifiedTransformComponent->GetForward(), modifiedTransformComponent->GetUp()));
+		SetView(glm::lookAtLH(position, position + modifiedTransformComponent->GetForward(), modifiedTransformComponent->GetUp()));
 	}
 
 	void CameraComponent::OnComponentAdded(const std::shared_ptr<Component> addedComponent) {

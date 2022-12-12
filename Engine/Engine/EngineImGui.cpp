@@ -148,7 +148,7 @@ namespace Engine {
 		if (ImGui::GetIO().WantTextInput) return;
 
 		constexpr float cameraMovementSpeed = 100.f;
-		constexpr float cameraRotationSpeed = 1.f;
+		constexpr float cameraRotationSpeed = 75.f;
 		constexpr float cameraMouseRotationSpeed = 100.f;
 
 		if (activeCamera.expired() || !activeCamera.lock()->GetIsActiveAndEnabled()) {
@@ -170,17 +170,17 @@ namespace Engine {
 		if (map->GetBool(MoveBackwards))
 			lockedCameraTransformComponent->Translate(0, 0, -deltaMovementSpeed);
 		if (map->GetBool(MoveLeft))
-			lockedCameraTransformComponent->Translate(deltaMovementSpeed);
-		if (map->GetBool(MoveRight))
 			lockedCameraTransformComponent->Translate(-deltaMovementSpeed);
+		if (map->GetBool(MoveRight))
+			lockedCameraTransformComponent->Translate(deltaMovementSpeed);
 		if (map->GetBool(MoveUp))
 			lockedCameraTransformComponent->Translate(0, deltaMovementSpeed);
 		if (map->GetBool(MoveDown))
 			lockedCameraTransformComponent->Translate(0, -deltaMovementSpeed);
 		if (map->GetBool(RotateLeft))
-			lockedCameraTransformComponent->Rotate(glm::vec3(0.f, deltaRotationSpeed, 0.f));
-		if (map->GetBool(RotateRight))
 			lockedCameraTransformComponent->Rotate(glm::vec3(0.f, -deltaRotationSpeed, 0.f));
+		if (map->GetBool(RotateRight))
+			lockedCameraTransformComponent->Rotate(glm::vec3(0.f, deltaRotationSpeed, 0.f));
 		if (map->GetBool(RotateUp))
 			lockedCameraTransformComponent->Rotate(glm::vec3(-deltaRotationSpeed, 0.f, 0.f));
 		if (map->GetBool(RotateDown))

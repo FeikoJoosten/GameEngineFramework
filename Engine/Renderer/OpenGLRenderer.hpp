@@ -48,9 +48,7 @@ namespace Engine {
 
 		std::shared_ptr<OpenGLShader> shader;
 		std::shared_ptr<Window> window;
-		std::shared_ptr<ShaderParameter> projParam;
-		std::shared_ptr<ShaderParameter> modelParam;
-		std::shared_ptr<ShaderParameter> viewParam;
+		std::shared_ptr<ShaderParameter> modelViewProjectionParam;
 		std::shared_ptr<ShaderParameter> textureParam;
 		std::shared_ptr<ShaderParameter> mainTextureColor;
 		std::shared_ptr<ShaderAttribute> positionAttribute;

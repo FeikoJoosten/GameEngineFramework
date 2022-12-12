@@ -204,7 +204,7 @@ namespace Engine
 			//position vertex coords
 			vertex.position.x = mesh->mVertices[i].x;
 			vertex.position.y = mesh->mVertices[i].y;
-			vertex.position.z = mesh->mVertices[i].z;
+			vertex.position.z = -mesh->mVertices[i].z;
 
 			//check if we have normals
 			if (mesh->mNormals)

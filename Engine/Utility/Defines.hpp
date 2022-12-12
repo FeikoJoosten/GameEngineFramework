@@ -34,9 +34,9 @@
 #define CEREAL_SAVE_MINIMAL_FUNCTION_NAME SaveMinimal
 #endif
 
-//#ifndef GLM_FORCE_LEFT_HANDED
-//#define GLM_FORCE_LEFT_HANDED
-//#endif
+#ifndef GLM_FORCE_LEFT_HANDED
+#define GLM_FORCE_LEFT_HANDED
+#endif
 
 #ifndef GLM_FORCE_XYZW_ONLY
 #define GLM_FORCE_XYZW_ONLY

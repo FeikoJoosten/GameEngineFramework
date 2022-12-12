@@ -41,6 +41,7 @@ namespace Engine {
 		void SetRotation(float x, float y, float z) noexcept;
 		[[nodiscard]] glm::quat GetRotation() const noexcept;
 
+		void SetPositionAndRotation(glm::vec3 newPosition, glm::vec3 newRotation);
 		void SetPositionAndRotation(glm::vec3 newPosition, glm::quat newRotation);
 
 		void SetScale(glm::vec3 newScale) noexcept;
@@ -48,8 +49,6 @@ namespace Engine {
 		[[nodiscard]] glm::vec3 GetScale() const noexcept;
 
 		void SetModelMatrix(glm::mat4x4 newModelMatrix) noexcept;
-		void SetModelMatrix(float newModelMatrix[16]) noexcept;
-		void SetModelMatrix(glm::vec4 newModelMatrix[4]) noexcept;
 		[[nodiscard]] glm::mat4x4 GetModelMatrix() const noexcept;
 
 		void SetIsStatic(bool newIsStatic) noexcept;
@@ -60,6 +59,7 @@ namespace Engine {
 		void Translate(float x, float y) noexcept;
 		void Translate(float x, float y, float z) noexcept;
 
+		void Rotate(glm::vec3 rotationToAdd) noexcept;
 		void Rotate(glm::quat rotationToAdd) noexcept;
 		void AddRotation(float x) noexcept;
 		void AddRotation(float x, float y) noexcept;

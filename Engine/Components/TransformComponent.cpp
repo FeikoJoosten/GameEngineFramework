@@ -1,6 +1,6 @@
 #include "Engine/Components/TransformComponent.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 namespace Engine {
 	TransformComponent::TransformComponent() {
@@ -30,11 +30,15 @@ namespace Engine {
 	}
 
 	void TransformComponent::SetRotation(const float x, const float y, const float z) noexcept {
-		SetRotation(glm::vec3(x, y, z));
+		SetRotation(glm::radians(glm::vec3(x, y, z)));
 	}
 
 	glm::quat TransformComponent::GetRotation() const noexcept {
 		return rotation;
+	}
+
+	void TransformComponent::SetPositionAndRotation(const glm::vec3 newPosition, const glm::vec3 newRotation) {
+		SetPositionAndRotation(newPosition, glm::quat(glm::radians(newRotation)));
 	}
 
 	void TransformComponent::SetPositionAndRotation(const glm::vec3 newPosition, const glm::quat newRotation) {
@@ -65,20 +69,6 @@ namespace Engine {
 
 		modelMatrix = newModelMatrix;
 		DecomposeModelMatrix();
-	}
-
-	void TransformComponent::SetModelMatrix(float newModelMatrix[16]) noexcept {
-		SetModelMatrix(glm::mat4x4(newModelMatrix[0], newModelMatrix[1], newModelMatrix[2], newModelMatrix[3],
-			newModelMatrix[4], newModelMatrix[5], newModelMatrix[6], newModelMatrix[7],
-			newModelMatrix[8], newModelMatrix[9], newModelMatrix[10], newModelMatrix[11],
-			newModelMatrix[12], newModelMatrix[13], newModelMatrix[14], newModelMatrix[15]));
-	}
-
-	void TransformComponent::SetModelMatrix(glm::vec4 newModelMatrix[4]) noexcept {
-		SetModelMatrix(glm::mat4x4(newModelMatrix[0].x, newModelMatrix[0].y, newModelMatrix[0].z, newModelMatrix[0].w,
-			newModelMatrix[1].x, newModelMatrix[1].y, newModelMatrix[1].z, newModelMatrix[1].w,
-			newModelMatrix[2].x, newModelMatrix[2].y, newModelMatrix[2].z, newModelMatrix[2].w,
-			newModelMatrix[3].x, newModelMatrix[3].y, newModelMatrix[3].z, newModelMatrix[3].w));
 	}
 
 	glm::mat4x4 TransformComponent::GetModelMatrix() const noexcept {
@@ -112,6 +102,10 @@ namespace Engine {
 
 	void TransformComponent::Translate(const float x, const float y, const float z) noexcept {
 		Translate(glm::vec3(x, y, z));
+	}
+
+	void TransformComponent::Rotate(const glm::vec3 rotationToAdd) noexcept {
+		Rotate(glm::quat(glm::radians(rotationToAdd)));
 	}
 
 	void TransformComponent::Rotate(const glm::quat rotationToAdd) noexcept {
@@ -153,7 +147,7 @@ namespace Engine {
 	}
 
 	glm::vec3 TransformComponent::GetRight() const noexcept {
-		return rotation * glm::vec3(-1.f, 0.f, 0.f);
+		return rotation * glm::vec3(1.f, 0.f, 0.f);
 	}
 
 	glm::vec3 TransformComponent::GetUp() const noexcept {
@@ -176,14 +170,10 @@ namespace Engine {
 	}
 
 	void TransformComponent::DecomposeModelMatrix() noexcept {
-		position = modelMatrix[3];
-		for (int i = 0; i < 3; i++)
-			scale[i] = glm::length(glm::vec3(modelMatrix[i]));
-		const glm::mat3 rotMtx(
-			glm::vec3(modelMatrix[0]) / scale[0],
-			glm::vec3(modelMatrix[1]) / scale[1],
-			glm::vec3(modelMatrix[2]) / scale[2]);
-		rotation = glm::quat_cast(rotMtx);
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::decompose(modelMatrix, scale, rotation, position, skew, perspective);
+		rotation = glm::conjugate(rotation);
 		
 		OnModifiedEvent(std::static_pointer_cast<TransformComponent>(shared_from_this()));
 	}

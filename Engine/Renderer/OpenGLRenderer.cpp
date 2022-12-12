@@ -10,6 +10,8 @@
 #include "Engine/Window/Window.hpp"
 
 namespace Engine {
+	glm::mat4 viewProjection;
+
 	OpenGLRenderer::OpenGLRenderer(const std::string& vertexShader, const std::string& fragmentShader)
 	{
 		window = Window::Get();
@@ -17,9 +19,7 @@ namespace Engine {
 		window->OnWindowShutdownRequestedEvent += Sharp::EventHandler::Bind(this, &OpenGLRenderer::HandleOnWindowShutdownRequestedEvent);
 
 		this->shader = std::shared_ptr<OpenGLShader>(new OpenGLShader(vertexShader, fragmentShader));
-		projParam = this->shader->GetParameter("u_projection");
-		modelParam = this->shader->GetParameter("u_model");
-		viewParam = this->shader->GetParameter("u_view");
+		modelViewProjectionParam = this->shader->GetParameter("u_mvp");
 		textureParam = this->shader->GetParameter("u_texture");
 		mainTextureColor = this->shader->GetParameter("u_mainTextColor");
 
@@ -37,8 +37,7 @@ namespace Engine {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		shader->Activate();
 
-		viewParam->SetValue(view);
-		projParam->SetValue(projection);
+		viewProjection = projection * view;
 	}
 
 	void OpenGLRenderer::Render(const glm::mat4x4& modelMatrix, const std::shared_ptr<Model> model, const glm::vec4& mainColor)
@@ -46,7 +45,7 @@ namespace Engine {
 		if (model == nullptr)
 			return;
 
-		modelParam->SetValue(modelMatrix);
+		modelViewProjectionParam->SetValue(viewProjection * modelMatrix);
 		mainTextureColor->SetValue(mainColor);
 
 		const std::vector<std::shared_ptr<Mesh>>& meshes = model->GetModelMeshes();
