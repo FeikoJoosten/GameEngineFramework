@@ -149,7 +149,7 @@ namespace Engine {
 
 		constexpr float cameraMovementSpeed = 100.f;
 		constexpr float cameraRotationSpeed = 75.f;
-		constexpr float cameraMouseRotationSpeed = 100.f;
+		constexpr float cameraMouseRotationSpeed = 1000.f;
 
 		if (activeCamera.expired() || !activeCamera.lock()->GetIsActiveAndEnabled()) {
 			const std::vector<std::shared_ptr<CameraComponent>> allActiveCameras = CameraManager::Get()->GetAllActiveCameras();
@@ -189,7 +189,7 @@ namespace Engine {
 			lockedCameraTransformComponent->Rotate(
 				glm::vec3(
 					map->GetFloatDelta(MouseY) * deltaMouseRotationSpeed,
-					map->GetFloatDelta(MouseX) * -deltaMouseRotationSpeed,
+					map->GetFloatDelta(MouseX) * deltaMouseRotationSpeed,
 					0.f));
 		}
 	}
