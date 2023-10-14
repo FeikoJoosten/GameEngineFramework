@@ -115,6 +115,9 @@
     <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\test\unit\Common\utBaseProcess.cpp">
       <Filter>UnitTests\Common</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\test\unit\Geometry\utGeometryUtils.cpp">
+      <Filter>UnitTests\GeometryTools</Filter>
+    </ClCompile>
     <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\test\unit\ImportExport\Assxml\utAssxmlImportExport.cpp">
       <Filter>UnitTests\ImportExport</Filter>
     </ClCompile>
@@ -361,7 +364,7 @@
     <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\test\unit\utGenBoundingBoxesProcess.cpp">
       <Filter>UnitTests\PostProcess</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\contrib\gtest\src\gtest-all.cc">
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\contrib\googletest\googletest\src\gtest-all.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -403,6 +406,9 @@
     </Filter>
     <Filter Include="UnitTests\Compiler">
       <UniqueIdentifier>{16664315-75CE-3868-92AF-125AF11102A7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UnitTests\GeometryTools">
+      <UniqueIdentifier>{E8877E98-8CB8-3B99-9349-EE917DA2BA3B}</UniqueIdentifier>
     </Filter>
     <Filter Include="UnitTests\ImportExport">
       <UniqueIdentifier>{C3880FCC-A9EC-3D60-990A-10408928D564}</UniqueIdentifier>

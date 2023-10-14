@@ -94,6 +94,9 @@
     <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\code\Common\Base64.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\code\Geometry\GeometryUtils.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
     <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\code\Common\DefaultLogger.cpp">
       <Filter>Logging</Filter>
     </ClCompile>
@@ -634,9 +637,6 @@
     <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\code\AssetLib\Step\StepExporter.cpp">
       <Filter>AssetLib\STEP</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\contrib\unzip\crypt.c">
-      <Filter>Contrib\unzip</Filter>
-    </ClCompile>
     <ClCompile Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\contrib\unzip\ioapi.c">
       <Filter>Contrib\unzip</Filter>
     </ClCompile>
@@ -735,11 +735,20 @@
     <ClInclude Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\code\Common\ScenePreprocessor.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\code\Common\StackAllocator.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\code\Common\StackAllocator.inl">
+      <Filter>Common</Filter>
+    </ClInclude>
     <ClInclude Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\code\Common\TargetAnimation.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\code\Common\simd.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\code\Geometry\GeometryUtils.h">
+      <Filter>Geometry</Filter>
     </ClInclude>
     <ClInclude Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\include\assimp\DefaultLogger.hpp">
       <Filter>include\assimp</Filter>
@@ -1590,6 +1599,9 @@
     <ClInclude Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\include\assimp\cimport.h">
       <Filter>include\assimp</Filter>
     </ClInclude>
+    <ClInclude Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\include\assimp\AssertHandler.h">
+      <Filter>include\assimp</Filter>
+    </ClInclude>
     <ClInclude Include="D:\Projects\GameEngineFramework\ThirdParty\assimp\include\assimp\importerdesc.h">
       <Filter>include\assimp</Filter>
     </ClInclude>
@@ -1938,6 +1950,9 @@
     </Filter>
     <Filter Include="Exporter">
       <UniqueIdentifier>{B1E654EE-D191-320A-9E1B-61E5E7A8AB28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{275A9334-B506-317A-B893-18DEC7B90AAD}</UniqueIdentifier>
     </Filter>
     <Filter Include="Logging">
       <UniqueIdentifier>{89954FB9-AAA2-3CA2-9550-081189636DD2}</UniqueIdentifier>

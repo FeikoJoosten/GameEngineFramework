@@ -1,14 +1,10 @@
 # CMake generation dependency list for this directory.
-C:/Program Files/CMake/share/cmake-3.24/Modules/CheckCSourceCompiles.cmake
-C:/Program Files/CMake/share/cmake-3.24/Modules/CheckFunctionExists.c
-C:/Program Files/CMake/share/cmake-3.24/Modules/CheckFunctionExists.cmake
-C:/Program Files/CMake/share/cmake-3.24/Modules/CheckIncludeFile.c.in
-C:/Program Files/CMake/share/cmake-3.24/Modules/CheckIncludeFile.cmake
-C:/Program Files/CMake/share/cmake-3.24/Modules/CheckIncludeFileCXX.cmake
-C:/Program Files/CMake/share/cmake-3.24/Modules/CheckTypeSize.c.in
-C:/Program Files/CMake/share/cmake-3.24/Modules/CheckTypeSize.cmake
-C:/Program Files/CMake/share/cmake-3.24/Modules/Internal/CheckSourceCompiles.cmake
-D:/Projects/GameEngineFramework/ThirdParty/assimp/CMakeFiles/CheckTypeSize/OFF64_T.c
+C:/Program Files/CMake/share/cmake-3.28/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.28/Modules/CheckFunctionExists.cmake
+C:/Program Files/CMake/share/cmake-3.28/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-3.28/Modules/CheckIncludeFileCXX.cmake
+C:/Program Files/CMake/share/cmake-3.28/Modules/CheckTypeSize.cmake
+C:/Program Files/CMake/share/cmake-3.28/Modules/Internal/CheckSourceCompiles.cmake
 D:/Projects/GameEngineFramework/ThirdParty/assimp/contrib/zlib/CMakeLists.txt
 D:/Projects/GameEngineFramework/ThirdParty/assimp/contrib/zlib/zconf.h.cmakein
 D:/Projects/GameEngineFramework/ThirdParty/assimp/contrib/zlib/zlib.pc.cmakein

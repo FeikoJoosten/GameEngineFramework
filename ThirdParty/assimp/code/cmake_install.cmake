@@ -32,27 +32,15 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-if(CMAKE_INSTALL_COMPONENT STREQUAL "libassimp5.2.4-dev" OR NOT CMAKE_INSTALL_COMPONENT)
+if(CMAKE_INSTALL_COMPONENT STREQUAL "libassimp5.3.0-dev" OR NOT CMAKE_INSTALL_COMPONENT)
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY OPTIONAL FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/lib/Debug/assimp-vc143-mtd.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/lib/Debug/assimp-vc143-mtd.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY OPTIONAL FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/lib/Release/assimp-vc143-mt.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/lib/Release/assimp-vc143-mt.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Mm][Ii][Nn][Ss][Ii][Zz][Ee][Rr][Ee][Ll])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY OPTIONAL FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/lib/MinSizeRel/assimp-vc143-mt.lib")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/lib/MinSizeRel/assimp-vc143-mt.lib")
   elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY OPTIONAL FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/lib/RelWithDebInfo/assimp-vc143-mt.lib")
-  endif()
-endif()
-
-if(CMAKE_INSTALL_COMPONENT STREQUAL "libassimp5.2.4" OR NOT CMAKE_INSTALL_COMPONENT)
-  if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE SHARED_LIBRARY FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/bin/Debug/assimp-vc143-mtd.dll")
-  elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE SHARED_LIBRARY FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/bin/Release/assimp-vc143-mt.dll")
-  elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Mm][Ii][Nn][Ss][Ii][Zz][Ee][Rr][Ee][Ll])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE SHARED_LIBRARY FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/bin/MinSizeRel/assimp-vc143-mt.dll")
-  elseif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE SHARED_LIBRARY FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/bin/RelWithDebInfo/assimp-vc143-mt.dll")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/lib/RelWithDebInfo/assimp-vc143-mt.lib")
   endif()
 endif()
 
@@ -93,6 +81,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "assimp-dev" OR NOT CMAKE_INSTALL_COMPONENT)
     "D:/Projects/GameEngineFramework/ThirdParty/assimp/code/../include/assimp/vector3.inl"
     "D:/Projects/GameEngineFramework/ThirdParty/assimp/code/../include/assimp/version.h"
     "D:/Projects/GameEngineFramework/ThirdParty/assimp/code/../include/assimp/cimport.h"
+    "D:/Projects/GameEngineFramework/ThirdParty/assimp/code/../include/assimp/AssertHandler.h"
     "D:/Projects/GameEngineFramework/ThirdParty/assimp/code/../include/assimp/importerdesc.h"
     "D:/Projects/GameEngineFramework/ThirdParty/assimp/code/../include/assimp/Importer.hpp"
     "D:/Projects/GameEngineFramework/ThirdParty/assimp/code/../include/assimp/DefaultLogger.hpp"
@@ -156,13 +145,13 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE FILE FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/code/Debug/assimp-vc143-mtd.pdb")
-  endif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE FILE FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/code/assimp-vc143-mtd.pdb")
+  endif()
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   if(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE FILE FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/code/RelWithDebInfo/assimp-vc143-mt.pdb")
-  endif(CMAKE_INSTALL_CONFIG_NAME MATCHES "^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE FILE FILES "D:/Projects/GameEngineFramework/ThirdParty/assimp/code/assimp-vc143-mt.pdb")
+  endif()
 endif()
 
