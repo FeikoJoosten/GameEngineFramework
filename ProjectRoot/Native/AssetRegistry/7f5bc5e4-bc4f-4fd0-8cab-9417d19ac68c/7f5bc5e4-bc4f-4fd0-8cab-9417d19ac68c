@@ -1,0 +1,47 @@
+{
+    "data": {
+        "guid": {
+            "bytes": {
+                "value0": 127,
+                "value1": 91,
+                "value2": 197,
+                "value3": 228,
+                "value4": 188,
+                "value5": 79,
+                "value6": 79,
+                "value7": 208,
+                "value8": 140,
+                "value9": 171,
+                "value10": 148,
+                "value11": 23,
+                "value12": 209,
+                "value13": 154,
+                "value14": 198,
+                "value15": 140
+            }
+        },
+        "parentGuid": {
+            "bytes": {
+                "value0": 0,
+                "value1": 0,
+                "value2": 0,
+                "value3": 0,
+                "value4": 0,
+                "value5": 0,
+                "value6": 0,
+                "value7": 0,
+                "value8": 0,
+                "value9": 0,
+                "value10": 0,
+                "value11": 0,
+                "value12": 0,
+                "value13": 0,
+                "value14": 0,
+                "value15": 0
+            }
+        },
+        "childGuids": [],
+        "pathInProject": "Scenes/",
+        "assetNameWithExtension": "Main Scene.scene"
+    }
+}

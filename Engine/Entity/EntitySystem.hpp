@@ -2,12 +2,11 @@
 
 #include "Engine/Api/Api.hpp"
 #include "Engine/Engine/Engine.hpp"
+#include "Engine/Entity/Entity.hpp"
 #include "Engine/Utility/Event.hpp"
 
 namespace Engine {
 	class Component;
-	class Entity;
-	class Scene;
 
 	/// <summary>
 	/// This object keeps track of all available entities. NOTE: only the Engine class is allowed to create this object.
@@ -17,16 +16,15 @@ namespace Engine {
 		friend class Application;
 
 		std::vector<std::shared_ptr<Entity>> system;
-		std::shared_ptr<SceneManager> sceneManager;
 
-		EntitySystem();
+		explicit EntitySystem() = default;
 	public:
 		Sharp::Event<std::shared_ptr<Entity>> OnEntityAddedEvent;
 		Sharp::Event<std::shared_ptr<Entity>> OnEntityRemovedEvent;
 		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentAddedToEntityEvent;
 		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentRemovedFromEntityEvent;
 
-		~EntitySystem();
+		~EntitySystem() = default;
 		EntitySystem(const EntitySystem& other) = delete;
 		EntitySystem(EntitySystem&& other) noexcept = delete;
 
@@ -39,11 +37,6 @@ namespace Engine {
 		/// This method allows you to clear the entire entity system.
 		/// </summary>
 		void RemoveAllEntities();
-
-		/// <summary>Allows you to create a new Entity.</summary>
-		/// <param name="entityName">The name of the entity you want to create, this is empty by default.</param>
-		/// <returns>Returns the newly created entity as a shared pointer.</returns>
-		[[nodiscard]] std::shared_ptr<Entity> CreateEntity(const std::string& entityName = "");
 
 		/// <summary>
 		/// This method will allow you to get all entities available.
@@ -63,20 +56,15 @@ namespace Engine {
 		/// This method allows you to get a vector of shared pointer with entities that have the defined component attached to them.
 		/// </summary>
 		/// <returns>Returns a vector of shared pointers if any available entities have the component you are looking for. Otherwise returns an empty vector.</returns>
-		[[nodiscard]] std::vector<std::shared_ptr<Entity>> GetAllEntitiesWithComponent();
+		[[nodiscard]] std::vector<std::shared_ptr<Entity>> GetAllEntitiesWithComponent() const;
+
+		ENGINE_LOCAL void AddEntity(const std::shared_ptr<Entity>& entityToAdd);
+
+		ENGINE_LOCAL void RemoveEntity(const std::shared_ptr<Entity>& entityToRemove);
 
 	private:
-		void AddEntity(const std::shared_ptr<Entity>& entityToAdd);
-
-		void RemoveEntity(std::shared_ptr<Entity> entityToRemove);
-
+		
 		void Update() const;
-
-		void HandleOnSceneOpenedEvent(std::shared_ptr<Scene> openedScene);
-
-		void HandleOnSceneClosedEvent(std::shared_ptr<Scene> closedScene);
-
-		void HandleOnSceneActiveStateChangedEvent(std::shared_ptr<Scene> scene, bool isActive);
 
 		void HandleOnComponentAddedToEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> addedComponent);
 
@@ -98,7 +86,7 @@ namespace Engine {
 	}
 
 	template <typename ComponentType>
-	std::vector<std::shared_ptr<Entity>> EntitySystem::GetAllEntitiesWithComponent() {
+	std::vector<std::shared_ptr<Entity>> EntitySystem::GetAllEntitiesWithComponent() const {
 		std::vector<std::shared_ptr<Entity>> entitiesToReturn = std::vector<std::shared_ptr<Entity>>();
 
 		for (std::shared_ptr<Entity> entity : system) {
@@ -108,4 +96,4 @@ namespace Engine {
 
 		return entitiesToReturn;
 	}
-} // namespace Engine
+}

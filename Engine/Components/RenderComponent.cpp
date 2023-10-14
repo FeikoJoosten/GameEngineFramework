@@ -1,22 +1,9 @@
 #include "Engine/Components/RenderComponent.hpp"
 #include "Engine/Components/TransformComponent.hpp"
-#include "Engine/Resources/ResourceManager.hpp"
+
+CEREAL_REGISTER_TYPE(Engine::RenderComponent)
 
 namespace Engine {
-	void RenderComponent::SetModel(const std::shared_ptr<Model> newModel) {
-		model = newModel;
-	}
-
-	void RenderComponent::SetModel(const std::string& path) {
-		if (const std::weak_ptr<Model> newModel = ResourceManager::Get()->CreateModel(path, path); !newModel.expired()) {
-			this->model = newModel.lock();
-		}
-	}
-
-	std::shared_ptr<Model> RenderComponent::GetModel() const {
-		return model;
-	}
-
 	void RenderComponent::SetMaterial(const std::weak_ptr<Material> newMaterial) {
 		material = newMaterial;
 	}
@@ -38,6 +25,10 @@ namespace Engine {
 		if (transformComponent.lock().get() == removedComponent.get())
 			transformComponent.reset();
 		
-		transformComponent = GetComponent<TransformComponent>();
+		transformComponent = GetOwner()->GetComponent<TransformComponent>();
+	}
+
+	void RenderComponent::Render() const {
+		
 	}
 }

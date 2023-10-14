@@ -176,4 +176,4 @@ namespace Engine {
 	void InputManager::HandleOnWindowResizedEvent(GLFWwindow* glfwWindow, const int newWidth, const int newHeight) {
 		inputManager.SetDisplaySize(newWidth, newHeight);
 	}
-} // namespace Engine
+}

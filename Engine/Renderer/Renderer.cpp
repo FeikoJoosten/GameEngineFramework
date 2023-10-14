@@ -15,6 +15,7 @@ namespace Engine {
 	Renderer::Renderer() noexcept {
 		entitySystem = EntitySystem::Get();
 		entitySystem->OnComponentAddedToEntityEvent += Sharp::EventHandler::Bind(this, &Renderer::HandleOnComponentAddedToEntityEvent);
+		entitySystem->OnComponentRemovedFromEntityEvent += Sharp::EventHandler::Bind(this, &Renderer::HandleOnComponentRemovedFromEntityEvent);
 
 		for(std::shared_ptr<RenderComponent>& renderComponent : entitySystem->GetAllComponents<RenderComponent>())
 			renderComponents.push_back(renderComponent);
@@ -23,6 +24,7 @@ namespace Engine {
 	Renderer::~Renderer() {
 		if (entitySystem)
 			entitySystem->OnComponentAddedToEntityEvent -= Sharp::EventHandler::Bind(this, &Renderer::HandleOnComponentAddedToEntityEvent);
+		entitySystem->OnComponentRemovedFromEntityEvent -= Sharp::EventHandler::Bind(this, &Renderer::HandleOnComponentRemovedFromEntityEvent);
 
 		renderComponents.clear();
 	}
@@ -33,8 +35,6 @@ namespace Engine {
 
 	void Renderer::RendererBegin(const glm::mat4x4& view, const glm::mat4x4& projection) {}
 
-	void Renderer::Render(const glm::mat4x4& modelMatrix, std::shared_ptr<Model> model, const glm::vec4& mainColor) {}
-
 	void Renderer::RendererEnd() {}
 
 	void Renderer::RenderFrame(const glm::mat4x4& view, const glm::mat4x4& projection) {
@@ -44,32 +44,32 @@ namespace Engine {
 			if (renderComponent.expired()) continue;
 
 			const std::shared_ptr<RenderComponent> lockedRenderComponent = renderComponent.lock();
-			if (!lockedRenderComponent->GetIsEnabled() || !lockedRenderComponent->GetOwner()->GetIsActive()) continue;
-			const std::shared_ptr<TransformComponent> transformComponent = lockedRenderComponent->GetComponent<TransformComponent>();
-			if (!transformComponent || !transformComponent->GetIsEnabled()) continue;
+			if (!lockedRenderComponent->GetIsActiveAndEnabled()) continue;
 
-			Render(transformComponent->GetModelMatrix(), lockedRenderComponent->GetModel());
+			// TODO: Add sorting based on same material
+			// Then 'activate' the material so properties like color, texture, etc can be sent to the GPU
+
+			lockedRenderComponent->Render();
 		}
 		PostRenderComponentsRenderEvent();
 
 		RendererEnd();
 	}
 
-	void Renderer::HandleOnComponentAddedToEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> addedComponent) {
+	void Renderer::HandleOnComponentAddedToEntityEvent([[maybe_unused]] std::shared_ptr<Entity> entity, const std::shared_ptr<Component> addedComponent) {
 		const std::shared_ptr<RenderComponent> renderComponent = std::dynamic_pointer_cast<RenderComponent>(addedComponent);
 		if (!renderComponent) return;
 
 		renderComponents.push_back(renderComponent);
 	}
 
-	void Renderer::HandleOnComponentRemovedFromEntityEvent(std::shared_ptr<Entity> entity, std::shared_ptr<Component> removedComponent) {
+	void Renderer::HandleOnComponentRemovedFromEntityEvent([[maybe_unused]] const std::shared_ptr<Entity> entity, const std::shared_ptr<Component> removedComponent) {
 		const std::shared_ptr<RenderComponent> renderComponent = std::dynamic_pointer_cast<RenderComponent>(removedComponent);
 		if (!renderComponent) return;
 
-		renderComponents.erase(
-			std::remove_if(renderComponents.begin(), renderComponents.end(),
-				[renderComponent](const std::weak_ptr<RenderComponent>& component) {
-					return !component.expired() && component.lock().get() == renderComponent.get();
-				}), renderComponents.end());
+		std::erase_if(renderComponents,
+		              [renderComponent](const std::weak_ptr<RenderComponent>& component) {
+			              return !component.expired() && component.lock().get() == renderComponent.get();
+		              });
 	}
-} // namespace Engine
+}

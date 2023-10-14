@@ -1,6 +1,4 @@
-#include "VulkanStaticMeshRenderer.hpp"
-
-#include "Engine/Resources/ResourceManager.hpp"
+#include "Engine/Renderer/Vulkan/VulkanStaticMeshRenderer.hpp"
 
 #ifdef USING_VULKAN
 

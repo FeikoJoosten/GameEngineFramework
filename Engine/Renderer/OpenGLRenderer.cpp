@@ -40,58 +40,52 @@ namespace Engine {
 		viewProjection = projection * view;
 	}
 
-	void OpenGLRenderer::Render(const glm::mat4x4& modelMatrix, const std::shared_ptr<Model> model, const glm::vec4& mainColor)
+	void OpenGLRenderer::Render(const glm::mat4x4& modelMatrix, const std::shared_ptr<Model> model)
 	{
 		if (model == nullptr)
 			return;
 
-		modelViewProjectionParam->SetValue(viewProjection * modelMatrix);
-		mainTextureColor->SetValue(mainColor);
+		//modelViewProjectionParam->SetValue(viewProjection * modelMatrix);
+		//mainTextureColor->SetValue(mainColor);
 
-		const std::vector<std::shared_ptr<Mesh>>& meshes = model->GetModelMeshes();
-		for (const std::shared_ptr<Mesh>& mesh : meshes) {
-			if (mesh == nullptr) continue;
+		//const std::vector<std::shared_ptr<Mesh>>& meshes = model->GetModelMeshes();
+		//for (const std::shared_ptr<Mesh>& mesh : meshes) {
+		//	if (mesh == nullptr) continue;
 
-			const GLuint vboBuffer = static_cast<GLuint>(mesh->GetVBO());
-			const GLuint eboBuffer = static_cast<GLuint>(mesh->GetEBO());
-			if (glIsBuffer(vboBuffer) != GL_TRUE)
-				_ASSERT("The vertex buffer is not a valid buffer (VBO).");
-			if (glIsBuffer(eboBuffer) != GL_TRUE)
-				_ASSERT("The index buffer is not a valid buffer (EBO)");
+		//	const GLuint vboBuffer = static_cast<GLuint>(mesh->GetVBO());
+		//	const GLuint eboBuffer = static_cast<GLuint>(mesh->GetEBO());
+		//	if (glIsBuffer(vboBuffer) != GL_TRUE)
+		//		_ASSERT("The vertex buffer is not a valid buffer (VBO).");
+		//	if (glIsBuffer(eboBuffer) != GL_TRUE)
+		//		_ASSERT("The index buffer is not a valid buffer (EBO)");
 
-			// Bind the buffers to the global state
-			glBindBuffer(GL_ARRAY_BUFFER, vboBuffer);
-			glCheckError();
+		//	// Bind the buffers to the global state
+		//	glBindBuffer(GL_ARRAY_BUFFER, vboBuffer);
+		//	glCheckError();
+		//	
+		//	positionAttribute->SetAttributePointer(GL_FALSE, 0, nullptr);
+		//	normalAttribute->SetAttributePointer(GL_FALSE, 0, nullptr);
+		//	textureAttribute->SetAttributePointer(GL_FALSE, 0, nullptr);
 
-			// Default to VBO values, the pointer addresses are interpreted as byte-offsets.
-			const void* firstPosition = reinterpret_cast<const void*>(offsetof(Vertex, position));
-			const void* firstNormal = reinterpret_cast<const void*>(offsetof(Vertex, normal));
-			const void* firstTexture = reinterpret_cast<const void*>(offsetof(Vertex, texCoords));
+		//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboBuffer);
+		//	glCheckError();
 
-			constexpr GLsizei stride = sizeof(Vertex);
-			positionAttribute->SetAttributePointer(3, GL_FLOAT, GL_FALSE, stride, firstPosition);
-			normalAttribute->SetAttributePointer(3, GL_FLOAT, GL_FALSE, stride, firstNormal);
-			textureAttribute->SetAttributePointer(2, GL_FLOAT, GL_FALSE, stride, firstTexture);
+		//	const std::shared_ptr<Material> meshMaterial = model->GetMeshMaterial(mesh);
+		//	textureParam->SetValue(*meshMaterial->GetDiffuseTexture().lock()); // Defaults to missing texture if no diffuse is loaded
+		//	glCheckError();
 
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboBuffer);
-			glCheckError();
+		//	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh->GetIndices().size()), GL_UNSIGNED_INT, nullptr);
+		//	glCheckError();
 
-			const std::shared_ptr<Material> meshMaterial = model->GetMeshMaterial(mesh);
-			textureParam->SetValue(*meshMaterial->GetDiffuseTexture().lock()); // Defaults to missing texture if no diffuse is loaded
-			glCheckError();
+		//	glBindBuffer(GL_ARRAY_BUFFER, 0);
+		//	glCheckError();
+		//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 1);
+		//	glCheckError();
 
-			glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh->indices.size()), GL_UNSIGNED_INT, nullptr);
-			glCheckError();
-
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glCheckError();
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 1);
-			glCheckError();
-
-			positionAttribute->DisableAttributePointer();
-			normalAttribute->DisableAttributePointer();
-			textureAttribute->DisableAttributePointer();
-		}
+		//	positionAttribute->DisableAttributePointer();
+		//	normalAttribute->DisableAttributePointer();
+		//	textureAttribute->DisableAttributePointer();
+		//}
 	}
 
 	void OpenGLRenderer::RendererEnd()
@@ -105,5 +99,5 @@ namespace Engine {
 		windowPtr->OnWindowShutdownRequestedEvent -= Sharp::EventHandler::Bind(this, &OpenGLRenderer::HandleOnWindowShutdownRequestedEvent);
 		ImGui_ImplGlfwGL3_Shutdown();
 	}
-} // namespace Engine
-#endif // USING_OPENGL
+}
+#endif

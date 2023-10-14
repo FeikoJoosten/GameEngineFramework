@@ -86,5 +86,5 @@ namespace Engine {
 		static void InitMaterialData(VulkanRenderer* renderer, VulkanLogicalDevice* device, VulkanDescriptorPool* descriptorPool, VmaAllocator allocator);
 	};
 
-} // namespace Engine
-#endif // USING_VULKAN
+}
+#endif

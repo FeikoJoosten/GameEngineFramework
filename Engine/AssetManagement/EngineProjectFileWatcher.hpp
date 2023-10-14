@@ -1,19 +1,19 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
-#include "Engine/Utility/Defines.hpp"
 
 #include <efsw/efsw.hpp>
 #include <memory>
+#include <vector>
 
 namespace Engine {
 	class AssetRegistry;
 
 	struct ENGINE_LOCAL AssetAction {
 		const std::string directory;
-		const std::string fileName;
+		const char* fileName;
 		const efsw::Action action;
-		const std::string oldFileName;
+		const char* oldFileName;
 	};
 
 	class ENGINE_LOCAL EngineProjectFileWatcher : public efsw::FileWatchListener {

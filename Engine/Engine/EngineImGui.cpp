@@ -4,6 +4,7 @@
 #include "Engine/Components/Component.hpp"
 #include "Engine/Camera/CameraManager.hpp"
 #include "Engine/Components/CameraComponent.hpp"
+#include "Engine/Components/TransformComponent.hpp"
 #include "Engine/Input/InputManager.hpp"
 #include "Engine/Renderer/IMGUI/imgui.h"
 #include "Engine/Renderer/Renderer.hpp"

@@ -4,6 +4,7 @@
 #include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/Shader/OpenGLShader.hpp"
 #include "Engine/Texture/Texture.hpp"
+#include "Engine/Texture/OpenGLTexture.hpp"
 #include "Engine/Utility/Logging.hpp"
 #include "Engine/Renderer/OpenGLUtility.hpp"
 
@@ -184,7 +185,7 @@ namespace Engine
 		glCheckError();
 	}
 
-	void ShaderParameter::SetValue(Texture &texture_) const
+	void ShaderParameter::SetValue(Texture& texture) const
 	{
 		if (!IsValid())
 			return;
@@ -194,7 +195,7 @@ namespace Engine
 		glActiveTexture(GL_TEXTURE0 + _sampler);
 		glCheckError();
 		// Work with this texture
-		glBindTexture(GL_TEXTURE_2D, GLuint(texture_.GetTexture()));
+		glBindTexture(GL_TEXTURE_2D, GLuint(static_cast<OpenGLTexture&>(texture).GetTexture()));
 		glCheckError();
 		// Set the sampler
 		glUniform1i(_location, _sampler);
@@ -207,8 +208,7 @@ namespace Engine
 	//
 	////////////////////////////////////////////////////////////////////////////////
 
-	void ShaderAttribute::SetAttributePointer(GLint size,
-		GLenum type,
+	void ShaderAttribute::SetAttributePointer(
 		GLboolean normalized,
 		GLsizei stride,
 		const GLvoid *pointer) const
@@ -218,8 +218,8 @@ namespace Engine
 
 		glVertexAttribPointer(
 			_location,           // attribute
-			size,               // number of elements per vertex element
-			type,               // the type of each element
+			_size,               // number of elements per vertex element
+			_type,               // the type of each element
 			normalized,         // take our values as-is or normalize
 			stride,             // no extra data between each position
 			pointer             // offset of first element
@@ -248,7 +248,7 @@ namespace Engine
 	GLuint LoadShader(std::string filePath, int shaderType)
 	{
 		GLuint shader;
-		CompileShader(&shader, shaderType, reinterpret_cast<char const *const>(AssetManager::Get()->ReadFile(filePath).data()));
+		CompileShader(&shader, shaderType, reinterpret_cast<char const *const>(AssetManager::Get()->ReadRawFile(filePath).data()));
 		return shader;
 	}
 
@@ -440,32 +440,27 @@ namespace Engine
 		GLint maxAttribNameLength = 0;
 		glGetProgramiv(program, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttribNameLength);
 		std::vector<GLchar> attribNameData(maxAttribNameLength);
-
-
+		
 		for (int attrib = 0; attrib < numActiveAttribs; ++attrib)
 		{
-			GLint arraySize = 0;
-			GLenum type = 0;
+			GLint attributeSize = 0;
+			GLenum attributeType = 0;
 			GLsizei actualLength = 0;
 			glGetActiveAttrib(program,
 				attrib,
 				GLsizei(attribNameData.size()),
 				&actualLength,
-				&arraySize,
-				&type,
+				&attributeSize,
+				&attributeType,
 				&attribNameData[0]);
-			std::string name(static_cast<char*>(&attribNameData[0]));
-			GLint location = glGetAttribLocation(program, name.c_str());
+			std::string attributeName(static_cast<char*>(&attribNameData[0]));
+			GLint location = glGetAttribLocation(program, attributeName.c_str());
 
-			auto itr = attributes.find(name);
+			std::map<std::string, std::shared_ptr<ShaderAttribute>>::iterator itr = attributes.find(attributeName);
 			if (itr != attributes.end())
-			{
-				itr->second->Reset(this, name, type, location);
-			}
+				itr->second->Reset(this, attributeName, attributeType, location, attributeSize);
 			else
-			{
-				attributes[name] = std::shared_ptr<ShaderAttribute>(new ShaderAttribute(this, name, type, location));
-			}
+				attributes[attributeName] = std::shared_ptr<ShaderAttribute>(new ShaderAttribute(this, attributeName, attributeType, location, attributeSize));
 		}
 	}
 

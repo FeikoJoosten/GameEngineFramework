@@ -13,14 +13,14 @@ namespace Engine {
 		friend class AssetRegistry;
 
 		std::string name {};
-		xg::Guid guid {};
-		static inline std::string extension = ".asset";
+		xg::Guid guid;
 
 	protected:
 		explicit Asset() = default;
 		explicit Asset(std::string name);
 
 	public:
+
 		virtual ~Asset() = default;
 		Asset(const Asset& other) = delete;
 		Asset(Asset&& other) = delete;
@@ -32,8 +32,6 @@ namespace Engine {
 		void SetName(const std::string& newName);
 
 		[[nodiscard]] const xg::Guid& GetGuid() const;
-
-		[[nodiscard]] virtual const std::string& GetDefaultExtension() const;
 
 		void Save();
 

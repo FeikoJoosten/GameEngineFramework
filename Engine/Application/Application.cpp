@@ -2,7 +2,6 @@
 #include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/Components/CameraComponent.hpp"
 #include "Engine/Camera/CameraManager.hpp"
-#include "Engine/Collision/CollisionSystem.hpp"
 #include "Engine/Engine/Engine.hpp"
 #include "Engine/Entity/EntitySystem.hpp"
 #include "Engine/Input/InputManager.hpp"
@@ -32,14 +31,6 @@ namespace Engine {
 		if (isPlaying) {
 			if (engine->entitySystem != nullptr)
 				engine->entitySystem->Update();
-
-			if (engine->collisionSystem != nullptr) {
-				if (engine->collisionSystem->IsRunning() == false)
-					engine->collisionSystem->Start();
-			}
-
-			if (engine->collisionSystem != nullptr)
-				engine->collisionSystem->Update();
 		}
 
 		//Input manager should always update. 
@@ -47,13 +38,9 @@ namespace Engine {
 			engine->inputManager->Update();
 
 		if (engine->renderer && engine->cameraManager ){
-			const std::vector<std::shared_ptr<CameraComponent>> allCameras = engine->cameraManager->GetAllActiveCameras();
-
-			for (const std::shared_ptr<CameraComponent>& camera : allCameras) {
-				engine->renderer->RenderFrame(
-					camera->GetView(),
-					camera->GetProjection());
-			}
+			for (const std::vector<std::shared_ptr<CameraComponent>> allCameras = engine->cameraManager->GetAllActiveCameras();
+				const std::shared_ptr<CameraComponent>& camera : allCameras)
+				engine->renderer->RenderFrame(camera->GetView(), camera->GetProjection());
 		}
 		
 		time->OnUpdateEnd();

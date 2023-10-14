@@ -2,36 +2,35 @@
 
 #include "Engine/Api/Api.hpp"
 #include "Engine/AssetManagement/Asset.hpp"
-#include "Engine/Components/Component.hpp"
-#include "Engine/Entity/EntitySerialization.hpp"
 #include "Engine/Utility/Defines.hpp"
 #include "Engine/Utility/Event.hpp"
 
+#include <cereal/types/base_class.hpp>
+#include <cereal/types/vector.hpp>
+
 namespace Engine {
+
+	class Component;
+
 	/// <summary>
 	/// This object is a holder object for components.
 	/// </summary>
 	class ENGINE_API Entity final : public Asset {
-	protected:
 		friend cereal::access;
 		// Need to friend the entirety of EntitySystem as EntitySystem::AddEntity is a private function
-		template<class Archive>
-		friend void Serialize(Archive& archive, Entity& entity);
 		friend class EntitySystem;
-		friend class EntitySerialization;
 
 		bool isActive = true;
 		std::vector<std::shared_ptr<Component>> components {};
 
-		explicit Entity() = default;
+		Entity() = default;
 
 	public:
 		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentAddedEvent;
 		Sharp::Event<std::shared_ptr<Entity>, std::shared_ptr<Component>> OnComponentRemovedEvent;
 		Sharp::Event<std::shared_ptr<Entity>, bool> OnActiveStateChangedEvent;
-		Sharp::Event<std::shared_ptr<Entity>> OnEntityDestroyedEvent;
 
-		virtual ~Entity() override;
+		explicit Entity(std::string name);
 		Entity(const Entity& other) = delete;
 		Entity(Entity&& other) = delete;
 		Entity& operator=(const Entity& other) = delete;
@@ -111,6 +110,9 @@ namespace Engine {
 		void OnComponentAdded(const std::shared_ptr<Component>& addedComponent) const;
 
 		void OnComponentRemoved(const std::shared_ptr<Component>& removedComponent) const;
+
+		template <class Archive>
+		void Serialize(Archive& archive);
 	};
 
 	template <typename ComponentType>
@@ -159,12 +161,13 @@ namespace Engine {
 		if (amountToRemove > components.size())
 			amountToRemove = components.size();
 
+		const std::vector<std::shared_ptr<Component>>::iterator componentsBegin = components.begin();
 		for (size_t i = components.size() - 1; i != -1; --i) {
 			if (amountToRemove == 0)
 				break;
 
 			if (std::shared_ptr<ComponentType> componentToRemove = std::dynamic_pointer_cast<ComponentType>(components[i])) {
-				components.erase(components.begin() + i);
+				components.erase(componentsBegin + i);
 				OnComponentRemoved(componentToRemove);
 
 				for (const std::shared_ptr<Component>& component : components)
@@ -180,4 +183,13 @@ namespace Engine {
 	void Entity::RemoveAllComponents() {
 		RemoveComponent<ComponentType>(components.size());
 	}
-} // namespace Engine
+
+	template<class Archive>
+	void Entity::Serialize(Archive& archive) {
+		archive(
+			CEREAL_NVP(cereal::base_class<Asset>(this)),
+			CEREAL_NVP(components),
+			CEREAL_NVP(isActive)
+		);
+	}
+}

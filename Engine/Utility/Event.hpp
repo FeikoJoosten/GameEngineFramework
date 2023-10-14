@@ -114,7 +114,7 @@ namespace Sharp    // short for SharpTools
 
 		/** verify if this handler will eventually call the same function as the passed handler. */
 		virtual bool IsBoundToSameFunctionAs(std::shared_ptr<EventHandlerImplBase<T...>> pHandler2) override {
-			if (!IsSameType(pHandler2))
+			if (!this->IsSameType(pHandler2))
 				return false;
 
 			// they are the same type so we can safely cast to this class type
@@ -284,7 +284,7 @@ namespace Sharp    // short for SharpTools
 		*/
 		void operator()(T... eventData) {
 			// raise the event by telling all the handlers
-			for (std::shared_ptr<EventHandlerImpl<T...>> handler : m_eventHandlers) {
+			for (std::shared_ptr<EventHandlerImpl<T...>> handler : this->m_eventHandlers) {
 				if (handler)
 					handler->OnEvent(eventData...);  // this is a virtual function that will eventually call the function passed to Eventhandler::Bind() for this handler
 			}

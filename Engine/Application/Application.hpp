@@ -22,5 +22,5 @@ namespace Engine {
 		/// </summary>
 		static void Quit();
 	};
-} // namespace Engine
+}
 

@@ -1,70 +1,227 @@
 #include "Engine/AssetManagement/AssetRegistry.hpp"
 #include "Engine/AssetManagement/Asset.hpp"
+#include "Engine/AssetManagement/AssetManager.hpp"
+#include "Engine/AssetManagement/AssetImportSettingsAssetImporter.hpp"
+#include "Engine/Utility/StringUtility.hpp"
 
 #include <crossguid/guid.hpp>
+#include <nameof.hpp>
 
 namespace Engine {
-	bool AssetRegistry::TryGetPathForGuid(const xg::Guid& assetGuid, std::string& pathInProject, std::string& assetName) const {
-		for (const auto& [guid, path] : assetRegistryPathsByGuid) {
-			if (guid == assetGuid) {
-				pathInProject = path.first;
-				assetName = path.second;
-				return true;
-			}
-		}
+	const std::string ASSET_REGISTRY_PATH = static_cast<std::string>(NAMEOF_SHORT_TYPE(AssetRegistry)) + "/";
+
+	void AssetRegistry::AssetMetaInfo::AddChildGuid(const xg::Guid childGuid) {
+		if (std::ranges::find(childGuids, childGuid) != childGuids.end()) return;
+
+		childGuids.push_back(childGuid);
+	}
+
+	bool AssetRegistry::AssetMetaInfo::operator==(const AssetMetaInfo& other) const {
+		if (guid != other.guid) return false;
+		if (parentGuid != other.parentGuid) return false;
+		if (childGuids != other.childGuids) return false;
+		if (pathInProject != other.pathInProject) return false;
+		if (assetNameWithExtension != other.assetNameWithExtension) return false;
+
+		return true;
+	}
+
+	bool AssetRegistry::AssetMetaInfo::operator!=(const AssetMetaInfo& other) const {
+		return !operator==(other);
+	}
+
+	bool AssetRegistry::IsAssetRegistered(const xg::Guid& assetGuid) {
+		if (AssetMetaInfo outputMetaInfo; TryLoadAssetMetaInfoForGuid(assetGuid, outputMetaInfo))
+			return true;
+
 		return false;
 	}
 
-	bool AssetRegistry::TryGetGuidForPath(const std::string& assetPath, const std::string& assetName, xg::Guid& assetGuid) const {
-		for(const auto& [guid, path] : assetRegistryPathsByGuid) {
-			if(path.first == assetPath && path.second == assetName) {
-				assetGuid = guid;
-				return true;
-			}
+	bool AssetRegistry::TryGetPathForGuid(const xg::Guid& assetGuid, std::string& pathInProject, std::string& assetNameWithExtension) {
+		if (AssetMetaInfo outputMetaInfo; TryLoadAssetMetaInfoForGuid(assetGuid, outputMetaInfo)) {
+			pathInProject = outputMetaInfo.pathInProject;
+			assetNameWithExtension = outputMetaInfo.assetNameWithExtension;
+			return true;
 		}
-		
+
 		return false;
 	}
 
-	bool AssetRegistry::TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const std::string& pathInProject) {
-		const std::map<xg::Guid, std::pair<std::string, std::string>>::iterator iterator = assetRegistryPathsByGuid.find(assetToRegister->GetGuid());
+	bool AssetRegistry::TryGetGuidForPath(const std::string& pathInProject, const char* assetNameWithExtension, xg::Guid& assetGuid) {
+		std::string sanitizedPath = StringUtility::SanitizePath(pathInProject);
 
-		if (iterator != assetRegistryPathsByGuid.end()) return false;
+		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
+		std::shared_ptr<Asset> importSettingsAsAsset = assetManager->ReadDataFromPath<std::shared_ptr<Asset>>(pathInProject, assetNameWithExtension);
+		if (importSettingsAsAsset && importSettingsAsAsset->GetGuid().isValid()) {
+			assetGuid = importSettingsAsAsset->GetGuid();
+			return true;
+		}
+
+		const std::shared_ptr<IAssetImporter> assetImportSettingsImporter = assetManager->GetAssetImporter<AssetImportSettingsAssetImporter>();
+		importSettingsAsAsset = assetManager->ReadDataFromPath<std::shared_ptr<Asset>>(pathInProject, std::string(assetNameWithExtension).append(assetImportSettingsImporter->GetDefaultAssetExtension()));
+		if (importSettingsAsAsset) {
+			const std::shared_ptr<AssetImportSettings> importSettings = std::static_pointer_cast<AssetImportSettings>(importSettingsAsAsset);
+			if (!importSettings || !importSettings->relatedAssetGuid.isValid()) { // Fail safe in case the asset does not generate import settings
+				// This will end up being extremely slow if the project has thousands, if not already at hundreds, of assets. Is this really needed if import settings are always generated?
+				for (const std::string assetRegistryFolder = AssetManager::GetProjectRoot() + AssetManager::GetNativeFolder() + ASSET_REGISTRY_PATH;
+					const std::filesystem::directory_entry & directoryEntry : std::filesystem::directory_iterator { assetRegistryFolder }) {
+					std::filesystem::path directoryPath = directoryEntry.path();
+					std::filesystem::path folderName = directoryPath.filename();
+					AssetMetaInfo assetMetaInfo = AssetManager::ReadDataFromFullPath<AssetMetaInfo>(directoryPath.string() + "/", folderName.generic_string());
+					if (!assetMetaInfo.guid.isValid())	continue; // Do we need to error this?
+					if (assetMetaInfo.assetNameWithExtension != assetNameWithExtension) continue;
+					if (assetMetaInfo.pathInProject != pathInProject) continue;
+
+					assetGuid = assetMetaInfo.guid;
+					return true;
+				}
+
+				return false;
+			}
+			assetGuid = importSettings->relatedAssetGuid;
+			return true;
+		}
+
+		return false;
+	}
+
+	bool AssetRegistry::TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const std::string& pathInProject, const char* assetNameWithExtension) {
+		if (!assetToRegister) {
+			DEBUG_ERROR("The asset you tried to register is null!");
+			return false;
+		}
+
+		AssetMetaInfo outputMetaInfo;
+		if (const xg::Guid& assetGuid = assetToRegister->GetGuid(); assetGuid.isValid() && TryLoadAssetMetaInfoForGuid(assetGuid, outputMetaInfo)) return true; // Already registered, no need to return false
 
 		assetToRegister->guid = xg::newGuid();
-		assetRegistryPathsByGuid.insert({ assetToRegister->guid, { pathInProject, assetToRegister->GetName() } });
+		outputMetaInfo.assetNameWithExtension = assetNameWithExtension;
+		outputMetaInfo.pathInProject = StringUtility::SanitizePath(pathInProject);
+		outputMetaInfo.guid = assetToRegister->guid;
+		SaveAssetMetaInfo(outputMetaInfo);
+
 		OnAssetRegisteredEvent(assetToRegister, pathInProject);
 		return true;
 	}
 
 	bool AssetRegistry::TryUnRegisterAsset(const xg::Guid& assetGuid) {
-		const std::map<xg::Guid, std::pair<std::string, std::string>>::iterator iterator = assetRegistryPathsByGuid.find(assetGuid);
+		AssetMetaInfo outputMetaInfo;
+		if (!TryLoadAssetMetaInfoForGuid(assetGuid, outputMetaInfo)) return false;
 
-		if (iterator != assetRegistryPathsByGuid.end())	return false;
+		OnAssetUnRegisteredEvent(outputMetaInfo.guid, outputMetaInfo.assetNameWithExtension);
+		DeleteAssetMetaInfo(outputMetaInfo);
 
-		OnAssetUnRegisteredEvent(iterator->first, assetGuid);
-		assetRegistryPathsByGuid.erase(iterator);
 		return true;
 	}
 
-	bool AssetRegistry::TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newPathInProject, const std::string& newAssetName) {
-		const std::map<xg::Guid, std::pair<std::string, std::string>>::iterator iterator = assetRegistryPathsByGuid.find(assetGuid);
+	bool AssetRegistry::TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newPathInProject, const char* newAssetNameWithExtension) {
+		AssetMetaInfo outputMetaInfo;
+		if (!TryLoadAssetMetaInfoForGuid(assetGuid, outputMetaInfo)) return false;
 
-		if (iterator != assetRegistryPathsByGuid.end())	return false;
+		const std::string oldPathInProject = outputMetaInfo.pathInProject;
+		const std::string oldAssetName = outputMetaInfo.assetNameWithExtension;
+		outputMetaInfo.pathInProject = StringUtility::SanitizePath(newPathInProject);
+		outputMetaInfo.assetNameWithExtension = newAssetNameWithExtension; // TODO: Verify the incoming name has an extension appended to it
+		SaveAssetMetaInfo(outputMetaInfo);
 
-		iterator->second.first = newPathInProject;
-		iterator->second.second = newAssetName;
-		OnAssetMovedOrRenamedEvent(assetGuid, iterator->second.first, newPathInProject, iterator->second.second, newAssetName);
+		OnAssetMovedOrRenamedEvent(assetGuid, oldPathInProject, newPathInProject, oldAssetName, newAssetNameWithExtension);
+		return true;
+	}
+
+	bool AssetRegistry::TryWriteCustomDataToAsset(const xg::Guid& assetGuid, const std::shared_ptr<Asset>& customData, const std::string& dataExtension) {
+		if (!IsAssetRegistered(assetGuid)) {
+			DEBUG_ERROR("Failed to add asset to parent as the parent was not yet registerd");
+			return false;
+		}
+
+		AssetManager::Get()->WriteDataToFullPath(GetAssetRegistryPathForGuid(assetGuid), assetGuid, customData, dataExtension, Json);
+		return true;
+	}
+
+	bool AssetRegistry::TryLoadCustomDataFromAsset(const xg::Guid& assetGuid, const std::string& dataExtension, std::shared_ptr<Asset>& customData) {
+		if (!IsAssetRegistered(assetGuid)) {
+			DEBUG_ERROR("Failed to load custom data as the guid is unknown");
+			return false;
+		}
+
+		customData = AssetManager::Get()->ReadDataFromFullPath<std::shared_ptr<Asset>>(GetAssetRegistryPathForGuid(assetGuid), assetGuid.str() + dataExtension);
+		return static_cast<bool>(customData);
+	}
+
+	bool AssetRegistry::TryAddChildAssetToAsset(const xg::Guid& parentGuid, const xg::Guid& childGuid) {
+		AssetMetaInfo parentAssetMetaInfo;
+		if (!TryLoadAssetMetaInfoForGuid(parentGuid, parentAssetMetaInfo)) {
+			DEBUG_ERROR("Failed to add asset to parent as the parent was not yet registerd");
+			return false;
+		}
+
+		for (const xg::Guid& knownChildGuid : parentAssetMetaInfo.childGuids) {
+			if (knownChildGuid == childGuid) {
+				//DEBUG_WARNING("Not adding asset to parent as the parent already has this asset as a direct child"); // No need to log, this just creates clutter in the logs
+				return false;
+			}
+		}
+
+		AssetMetaInfo assetToAddAssetMetaInfo;
+		if (!TryLoadAssetMetaInfoForGuid(childGuid, assetToAddAssetMetaInfo)) {
+			DEBUG_ERROR("Failed to add asset to parent as the asset was not yet registerd");
+			return false;
+		}
+
+		parentAssetMetaInfo.childGuids.push_back(childGuid);
+		assetToAddAssetMetaInfo.parentGuid = parentGuid;
+		SaveAssetMetaInfo(parentAssetMetaInfo);
+		SaveAssetMetaInfo(assetToAddAssetMetaInfo);
 		return true;
 	}
 
 	bool AssetRegistry::TryAssignGuidToAsset(const std::shared_ptr<Asset>& assetToUpdate, const xg::Guid& assetGuid) {
-		const std::map<xg::Guid, std::pair<std::string, std::string>>::iterator iterator = assetRegistryPathsByGuid.find(assetGuid);
+		if (!assetGuid.isValid()) {
+			DEBUG_ERROR("Tried to assign invalid guid to asset!");
+			return false;
+		}
 
-		if (iterator == assetRegistryPathsByGuid.end())	return false;
-		if (iterator->second.second != assetToUpdate->GetName()) return false;
-
-		assetToUpdate->guid = assetGuid; // No need to invoke event, as the asset itself was out of sync
+		assetToUpdate->guid = assetGuid;
 		return true;
 	}
+
+	bool AssetRegistry::TryGetParentForAsset(const xg::Guid& childGuid, xg::Guid& parentGuid) {
+		AssetMetaInfo childMetaInfo;
+		if (!TryLoadAssetMetaInfoForGuid(childGuid, childMetaInfo)) return false;
+
+		parentGuid = childMetaInfo.parentGuid;
+		return true;
+	}
+
+	bool AssetRegistry::TryGetChildrenForAsset(const xg::Guid& parentGuid, std::vector<xg::Guid>& childGuids) {
+		AssetMetaInfo parentMetaInfo;
+		if (!TryLoadAssetMetaInfoForGuid(parentGuid, parentMetaInfo)) return false;
+
+		for (xg::Guid childGuid : parentMetaInfo.childGuids) {
+			if (std::ranges::find(childGuids, childGuid) != childGuids.end()) continue;
+
+			childGuids.push_back(childGuid);
+		}
+
+		return true;
+	}
+
+	bool AssetRegistry::TryLoadAssetMetaInfoForGuid(const xg::Guid& assetGuid, AssetMetaInfo& outputMetaInfo) {
+		outputMetaInfo = AssetManager::ReadDataFromFullPath<AssetMetaInfo>(GetAssetRegistryPathForGuid(assetGuid), assetGuid);
+		return outputMetaInfo.guid.isValid();
+	}
+
+	void AssetRegistry::SaveAssetMetaInfo(const AssetMetaInfo& assetMetaInfo) {
+		const std::string objectGuid = assetMetaInfo.guid;
+		AssetManager::Get()->WriteDataToFullPath(GetAssetRegistryPathForGuid(assetMetaInfo.guid), assetMetaInfo.guid, assetMetaInfo);
+	}
+
+	void AssetRegistry::DeleteAssetMetaInfo(const AssetMetaInfo& assetMetaInfo) {
+		AssetManager::Get()->DeleteFile(GetAssetRegistryPathForGuid(assetMetaInfo.guid), assetMetaInfo.guid, true);
+	}
+
+	std::string AssetRegistry::GetAssetRegistryPathForGuid(const xg::Guid& assetGuid) {
+		return AssetManager::GetProjectRoot() + AssetManager::GetNativeFolder() + ASSET_REGISTRY_PATH + assetGuid.str() + "/";
+	}
+
 }

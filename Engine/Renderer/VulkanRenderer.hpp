@@ -727,5 +727,5 @@ namespace Engine
 		bool resized{};
 
 	};
-} // namespace Engine
-#endif // USING_VULKAN
+}
+#endif

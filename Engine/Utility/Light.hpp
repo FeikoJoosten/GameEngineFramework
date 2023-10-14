@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
+#include "Engine/Utility/Defines.hpp"
 
 #include <cereal/access.hpp>
 #include <glm/glm.hpp>

@@ -1,14 +1,16 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
-#include "Engine/AssetManagement/Asset.hpp"
 #include "Engine/Application/Application.hpp"
-#include "Engine/Utility/Defines.hpp"
-#include "Engine/AssetManagement/IAssetImporter.hpp"
+#include "Engine/AssetManagement/Asset.hpp"
 #include "Engine/AssetManagement/AssetRegistry.hpp"
+#include "Engine/AssetManagement/AssetSerializationType.hpp"
+#include "Engine/AssetManagement/IAssetImporter.hpp"
 #include "Engine/AssetManagement/EngineProjectFileWatcher.hpp"
 #include "Engine/Engine/Engine.hpp"
+#include "Engine/Utility/Defines.hpp"
 #include "Engine/Utility/Logging.hpp"
+#include "Engine/Utility/StringUtility.hpp"
 
 #include <fstream>
 #include <filesystem>
@@ -29,7 +31,7 @@ namespace Engine {
 		AssetManager();
 
 	public:
-		~AssetManager();
+		~AssetManager() = default;
 		AssetManager(const AssetManager& other) = delete;
 		AssetManager(AssetManager&& other) noexcept = delete;
 
@@ -38,25 +40,28 @@ namespace Engine {
 
 		static std::shared_ptr<AssetManager> Get();
 
-		void WriteDataToPath(const std::string& pathInProject, const std::shared_ptr<Asset>& asset, bool writeNameValuePair = true);
+		void WriteAssetToPath(const std::string& pathInProject, const std::shared_ptr<Asset>& asset, const char* assetExtension = nullptr, const AssetSerializationType& serializationType = Json, bool writeNameValuePair = true);
 
 		template<class T>
-		void WriteDataToPath(const std::string& pathInProject, const std::string& fileName, T data, const std::string& fileExtension = "", bool writeNameValuePairs = true);
+		void WriteDataToPath(const std::string& pathInProject, const std::string& fileName, T data, const std::string& fileExtension = "", const AssetSerializationType& serializationType = Json, bool writeNameValuePairs = true);
 
-		void WriteDataToFullPath(const std::string& fullPath, const std::shared_ptr<Asset>& asset, bool writeNameValuePair = true);
+		void WriteAssetToFullPath(const std::string& fullPath, const std::shared_ptr<Asset>& asset, const char* assetExtension = nullptr, const AssetSerializationType& serializationType = Json, bool writeNameValuePair = true);
 
 		template<class T>
-		void WriteDataToFullPath(const std::string& fullPath, const std::string& fileName, T data, const std::string& fileExtension = "", bool writeNameValuePairs = true);
+		void WriteDataToFullPath(const std::string& fullPath, const std::string& fileName, T data, const std::string& fileExtension = "", const AssetSerializationType& serializationType = Json, bool writeNameValuePairs = true);
 
 		template<typename T>
-		[[nodiscard]] T ReadDataFromPath(const std::string& pathInProject, const std::string& fileName);
+		[[nodiscard]] std::shared_ptr<T> LoadAsset(const xg::Guid& assetGuid);
 
 		template<typename T>
-		[[nodiscard]] T ReadDataFromFullPath(const std::string& fullPath, const std::string& fileName);
+		[[nodiscard]] T ReadDataFromPath(const std::string& pathInProject, const std::string& fileName, const AssetSerializationType& serializationType = Json);
+
+		template<typename T>
+		[[nodiscard]] static T ReadDataFromFullPath(const std::string& fullPath, const std::string& fileName, const AssetSerializationType& serializationType = Json);
 
 		[[nodiscard]] bool FileExists(const std::string& fullPath, const std::string& fileName, bool isRelativeFromProject = false) const;
 
-		[[nodiscard]] bool FileExists(const std::string& fullPath, bool isRelativeFromProject = false) const;
+		[[nodiscard]] static bool FileExists(const std::string& fullPath);
 
 		static std::string GetDirectoryFromPath(const std::string& path);
 
@@ -69,69 +74,143 @@ namespace Engine {
 		template<class T>
 		[[nodiscard]] std::shared_ptr<T> GetAssetImporter();
 
-		[[nodiscard]] std::vector<char> ReadFile(const std::string& fileName, int fileOpenMode = std::ios_base::in) const;
+		template<class T>
+		[[nodiscard]] std::shared_ptr<IAssetImporter> GetAssetImporterForAssetType() const;
+
+		[[nodiscard]] bool TryGetAssetImporterForPath(const std::string& fullPath, std::shared_ptr<IAssetImporter>& outputAssetImporter) const;
+
+		[[nodiscard]] static std::vector<char> ReadRawFile(const std::string& fileName, int fileOpenMode = std::ios_base::in);
+
+		void DeleteFile(const std::string& fullPath, const std::string& fileName, bool isRelativeFromProject = false) const;
+
+		[[nodiscard]] static std::string PathInProjectToFullPath(const std::string& pathInProject);
+
+		[[nodiscard]] static std::string FullPathToPathInProject(const std::string& fullPath);
+
+		ENGINE_LOCAL [[nodiscard]] static std::string& GetNativeFolder();
 
 	private:
-		void HandleOnAssetRegisteredEvent(const std::shared_ptr<Asset>& registeredAsset, const std::string& assetPath);
-
-		void HandleOnAssetUnRegisteredEvent(const xg::Guid& unregisteredAssetGuid, const std::string& unregisteredAssetPath);
-
-		void HandleOnAssetMovedOrRenamedEvent(const xg::Guid& assetGuid, const std::string& oldPathInProject, const std::string& newPathInProject, const std::string& oldAssetName, const std::string& newAssetName);
-
-		void SaveAssetRegistry();
 
 		void UpdateFileWatcher() const;
 	};
 
 	template <typename T>
-	void AssetManager::WriteDataToPath(const std::string& pathInProject, const std::string& fileName, T data, const std::string& fileExtension, const bool writeNameValuePairs) {
-		WriteDataToFullPath(projectRoot + resourcesFolder + pathInProject, fileName, data, fileExtension, writeNameValuePairs);
+	void AssetManager::WriteDataToPath(const std::string& pathInProject, const std::string& fileName, T data, const std::string& fileExtension, const AssetSerializationType& serializationType, const bool writeNameValuePairs) {
+		WriteDataToFullPath(projectRoot + resourcesFolder + pathInProject, fileName, data, fileExtension, serializationType, writeNameValuePairs);
 	}
 
 	template <class T>
-	void AssetManager::WriteDataToFullPath(const std::string& fullPath, const std::string& fileName, T data, const std::string& fileExtension, const bool writeNameValuePairs) {
+	void AssetManager::WriteDataToFullPath(const std::string& fullPath, const std::string& fileName, T data, const std::string& fileExtension, const AssetSerializationType& serializationType, const bool writeNameValuePairs) {
 		const std::string desiredDirectoryPath = GetDirectoryFromPath(fullPath);
 		if (!std::filesystem::is_directory(desiredDirectoryPath)) {
-			if (!std::filesystem::create_directories(desiredDirectoryPath)) {
+			std::string outputDirectory = desiredDirectoryPath;
+			if (outputDirectory[outputDirectory.length() - 1] == '/')
+				outputDirectory = outputDirectory.substr(0, outputDirectory.length() - 1);
+			if (!std::filesystem::create_directories(outputDirectory) && !std::filesystem::exists(desiredDirectoryPath)) {
 				DEBUG_ERROR("Failed to create directories for path: " + fullPath);
 				return;
 			}
 		}
 
 		std::ofstream outputStream(desiredDirectoryPath + fileName + fileExtension);
-		cereal::JSONOutputArchive archive(outputStream);
 
-		writeNameValuePairs ? archive(CEREAL_NVP(data)) : archive(data);
+		switch (serializationType) {
+		case Json:
+		{
+			cereal::JSONOutputArchive jsonArchive(outputStream);
+			writeNameValuePairs ? jsonArchive(CEREAL_NVP(data)) : jsonArchive(data);
+			break;
+		}
+		case Binary:
+		{
+			cereal::BinaryOutputArchive binaryArchive(outputStream);
+			binaryArchive(data);
+			break;
+		}
+		case Xml:
+		{
+			cereal::XMLOutputArchive xmlArchive(outputStream);
+			writeNameValuePairs ? xmlArchive(CEREAL_NVP(data)) : xmlArchive(data);
+			break;
+		}
+		default: throw std::runtime_error("Invalid AssetSerializationType provided!");
+		}
+
+		outputStream.close();
 	}
 
 	template <typename T>
-	T AssetManager::ReadDataFromPath(const std::string& pathInProject, const std::string& fileName) {
-		return ReadDataFromFullPath<T>(projectRoot + resourcesFolder + pathInProject, fileName);
+	std::shared_ptr<T> AssetManager::LoadAsset(const xg::Guid& assetGuid) {
+		const std::shared_ptr<IAssetImporter> assetImporter = GetAssetImporterForAssetType<T>();
+		if (!assetImporter) return {};
+
+		if (const std::shared_ptr<Asset> loadedAsset = assetImporter->LoadAsset(assetGuid)) return std::static_pointer_cast<T>(loadedAsset);
+
+		return {};
 	}
 
 	template <typename T>
-	T AssetManager::ReadDataFromFullPath(const std::string& fullPath, const std::string& fileName) {
-		const std::string absolutePath = fullPath + fileName;
-		
-		if (FileExists(absolutePath)) {
-			if (std::ifstream inputStream(absolutePath); inputStream.good()) {
-				cereal::JSONInputArchive archive(inputStream);
-				T output;
-				archive(output);
-				return output;
+	T AssetManager::ReadDataFromPath(const std::string& pathInProject, const std::string& fileName, const AssetSerializationType& serializationType) {
+		return ReadDataFromFullPath<T>(projectRoot + resourcesFolder + pathInProject, fileName, serializationType);
+	}
+
+	template <typename T>
+	T AssetManager::ReadDataFromFullPath(const std::string& fullPath, const std::string& fileName, const AssetSerializationType& serializationType) {
+		const std::string absolutePath = StringUtility::SanitizePath(fullPath) + fileName;
+		std::ifstream inputStream(absolutePath);
+		if (!inputStream.good() || !inputStream.is_open()) return {};
+
+		T output = {};
+
+		// A try catch is required in case the deserialization fails which can occur if the serialization layout has been changed without updating the serialized data
+		try {
+			switch (serializationType) {
+			case Json:
+			{
+				cereal::JSONInputArchive jsonArchive(inputStream);
+				jsonArchive(output);
+				break;
+			}
+			case Binary:
+			{
+				cereal::BinaryInputArchive binaryArchive(inputStream);
+				binaryArchive(output);
+				break;
+			}
+			case Xml:
+			{
+				cereal::XMLInputArchive xmlArchive(inputStream);
+				xmlArchive(output);
+				break;
+			}
+			default: throw std::runtime_error("Invalid AssetSerializationType provided!");
 			}
 		}
-		return {};
+		catch (...) {}
+
+		inputStream.close();
+		return output;
 	}
 
 	template <class T>
 	std::shared_ptr<T> AssetManager::GetAssetImporter() {
-		const type_info& assetImporterType = typeid(T);
-		for(const std::shared_ptr<IAssetImporter>& assetImporter : assetImporters) {
-			const type_info& importerType = typeid(*assetImporter);
-			if (assetImporterType != importerType) continue;
+		static_assert(std::is_base_of_v<IAssetImporter, T>, "T must derive from IAssetImporter");
 
-			return std::static_pointer_cast<T>(assetImporter);
+		for (const std::shared_ptr<IAssetImporter>& assetImporter : assetImporters)
+			if (std::shared_ptr<T> castAssetImporter = std::dynamic_pointer_cast<T>(assetImporter)) return castAssetImporter;
+
+		return {};
+	}
+
+	template <class T>
+	std::shared_ptr<IAssetImporter> AssetManager::GetAssetImporterForAssetType() const {
+		static_assert(std::is_base_of_v<Asset, T>, "T must derive from Asset");
+
+		const type_info& assetType = typeid(T);
+		for (const std::shared_ptr<IAssetImporter>& assetImporter : assetImporters) {
+			if (!assetImporter->SupportsType(assetType)) continue;
+
+			return assetImporter;
 		}
 
 		return {};

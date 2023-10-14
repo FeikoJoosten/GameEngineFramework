@@ -51,15 +51,6 @@ namespace Engine
 		/// <param name="projection">The projection matrix used for this frame.</param>
 		virtual void RendererBegin(const glm::mat4x4& view, const glm::mat4x4& projection);
 
-		// TODO: Get rid of this method and instead retrieve the data from the renderer component. This way the rendering queue can be optimized
-		/// <summary>
-		/// This method is used to send draw data to the GPU.
-		/// </summary>
-		/// <param name="modelMatrix">The model matrix of the object you want to draw.</param>
-		/// <param name="model">The model to render.</param>
-		/// <param name="mainColor">The color you want to render your model in. By default this is set to white.</param>
-		virtual void Render(const glm::mat4x4& modelMatrix, std::shared_ptr<Model> model, const glm::vec4& mainColor = glm::vec4(1, 1, 1, 1));
-
 		//Used to unbind the current selected Shader & Entity combination defined in RendererBegin()
 		/// <summary>
 		/// This method is used to reset the current frame, so it's ready for the next frame.

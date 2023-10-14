@@ -1,6 +1,5 @@
 #include "VulkanSkeletalMeshRenderer.hpp"
 
-#include "Engine/Resources/ResourceManager.hpp"
 #ifdef USING_VULKAN
 #include "Engine/Renderer/VulkanRenderer.hpp"
 #include "Engine/Engine/Engine.hpp"

@@ -4,6 +4,7 @@
 #include "Engine/Api/Api.hpp"
 #include "Engine/Engine/Engine.hpp"
 #include "Engine/Utility/Event.hpp"
+#include "Engine/Utility/Defines.hpp"
 
 #if _WIN32 || _WIN64
 #define NOMINMAX

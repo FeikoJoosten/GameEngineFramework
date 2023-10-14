@@ -152,6 +152,6 @@ namespace Engine {
 		linePipeline->Recreate();
 	}
 
-} // namespace Engine
+}
 
-#endif // USING_VULKAN
+#endif

@@ -4,7 +4,8 @@
 #include "Engine/AssetManagement/AssetRegistry.hpp"
 #include "Engine/Utility/Logging.hpp"
 
-#include <filesystem>
+#include <format>
+#include <nameof.hpp>
 
 namespace Engine {
 
@@ -23,9 +24,9 @@ namespace Engine {
 		// Delaying the processing of the asset update ensures the file is fully written
 		AssetAction assetAction = {
 			dir + "/",
-			filename,
+			filename.c_str(),
 			action,
-			oldFilename
+			oldFilename.c_str()
 		};
 
 		assetActionsToProcess.emplace_back(assetAction);
@@ -34,35 +35,36 @@ namespace Engine {
 	void EngineProjectFileWatcher::Update() {
 		if (assetActionsToProcess.empty()) return;
 
-		for(const AssetAction& assetAction : assetActionsToProcess) {
-			const std::filesystem::path path = assetAction.directory + assetAction.fileName;
-			const std::string fullPath = path.generic_string();
+		for(const auto& [directory, fileName, action, oldFileName] : assetActionsToProcess) {
+			const std::string pathInProject = AssetManager::FullPathToPathInProject(directory);
+			const std::string fullPath = pathInProject + fileName;
+			
+			xg::Guid assetGuid;
+			AssetRegistry::TryGetGuidForPath(pathInProject, fileName, assetGuid);
 
-			switch (assetAction.action) {
+			switch (action) {
 			case efsw::Action::Add:
 			{
-				bool processed = false;
-				const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
-				const std::vector<std::shared_ptr<IAssetImporter>>& assetImporters = assetManager->GetAllAssetImporters();
-				for (const std::shared_ptr<IAssetImporter>& assetImporter : assetImporters) {
-					if (!assetImporter->SupportsFileExtension(path.extension().generic_string())) continue;
+				// No need to process the asset again if it is already registered
+				if (assetGuid.isValid()) continue;
 
-					const std::shared_ptr<Asset> processedAsset = assetImporter->ProcessAsset(assetAction.directory, assetAction.fileName);
-					processed = true;
-					if (!processedAsset) {
-						DEBUG_ERROR("Failed to process asset for: " + fullPath);
-					} else {
-						DEBUG_INFO("Successfully processed asset at path: " + fullPath);
-					}
+				const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
+				std::shared_ptr<IAssetImporter> assetImporter;
+				if(!assetManager->TryGetAssetImporterForPath(fullPath, assetImporter)) { // TODO: Verify fullPath contains path before project root
+					DEBUG_WARNING(std::format("No {} found for {}", NAMEOF_SHORT_TYPE(IAssetImporter).data(), fullPath));
+					continue;
 				}
 
-				if (!processed) DEBUG_WARNING("No AssetImporter found to support asset at path: " + fullPath);
+				if (const std::shared_ptr<Asset>& processedAsset = assetImporter->ImportAsset(pathInProject, fileName); !processedAsset) {
+					DEBUG_ERROR("Failed to process asset for: " + fullPath);
+				} else {
+					DEBUG_INFO("Successfully processed asset at path: " + fullPath);
+				}
 			}
 			break;
 			case efsw::Action::Delete:
 			{
-				xg::Guid assetGuid {};
-				if (assetRegistry->TryGetGuidForPath(assetAction.directory, assetAction.fileName, assetGuid))
+				if (assetGuid.isValid())
 					assetRegistry->TryUnRegisterAsset(assetGuid);
 			}
 			break;
@@ -70,10 +72,10 @@ namespace Engine {
 				break;
 			case efsw::Action::Moved:
 			{
-				xg::Guid assetGuid {};
-				if (assetRegistry->TryGetGuidForPath(assetAction.directory, assetAction.oldFileName, assetGuid))
-					assetRegistry->TryUpdatePathForGuid(assetGuid, fullPath, assetAction.fileName);
-				// No need to log an error here, could the user could have renamed an asset that wasn't even registered to begin with
+				const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
+				if (assetGuid.isValid())
+					assetRegistry->TryUpdatePathForGuid(assetGuid, pathInProject, fileName);
+				// No need to log an error here, the user could have renamed an asset that wasn't even registered to begin with
 				// Warning them about that only provides clutter in the logs
 			}
 			break;

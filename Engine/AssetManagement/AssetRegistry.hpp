@@ -5,17 +5,36 @@
 #include "Engine/Utility/Event.hpp"
 
 #include <cereal/access.hpp>
-#include <cereal/types/map.hpp>
-#include <crossguid/guid.hpp>
+#include <cereal/types/vector.hpp>
 
 namespace Engine {
 	class Asset;
 
 	class ENGINE_LOCAL AssetRegistry {
-		friend cereal::access;
-		friend class AssetManager;
 
-		std::map<xg::Guid, std::pair<std::string, std::string>> assetRegistryPathsByGuid {};
+		struct AssetMetaInfo {
+		private:
+			friend class cereal::access;
+
+		public:
+			xg::Guid guid;
+			xg::Guid parentGuid;
+			std::vector<xg::Guid> childGuids;
+
+			std::string pathInProject;
+			std::string assetNameWithExtension;
+
+			void AddChildGuid(xg::Guid childGuid);
+
+			bool operator==(const AssetMetaInfo& other) const;
+			bool operator!=(const AssetMetaInfo& other) const;
+
+		private:
+			template<class Archive>
+			void Serialize(Archive& archive);
+		};
+
+		friend class AssetManager;
 
 		AssetRegistry() = default;
 
@@ -31,26 +50,48 @@ namespace Engine {
 		AssetRegistry& operator=(const AssetRegistry& other) = delete;
 		AssetRegistry& operator=(AssetRegistry&& other) noexcept = delete;
 
-		bool TryGetPathForGuid(const xg::Guid& assetGuid, std::string& pathInProject, std::string& assetName) const;
+		static bool IsAssetRegistered(const xg::Guid& assetGuid);
 
-		bool TryGetGuidForPath(const std::string& assetPath, const std::string& assetName, xg::Guid& assetGuid) const;
+		static bool TryGetPathForGuid(const xg::Guid& assetGuid, std::string& pathInProject, std::string& assetNameWithExtension);
 
-		bool TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const std::string& pathInProject);
+		static bool TryGetGuidForPath(const std::string& pathInProject, const char* assetNameWithExtension, xg::Guid& assetGuid);
+
+		bool TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const std::string& pathInProject, const char* assetNameWithExtension);
 
 		bool TryUnRegisterAsset(const xg::Guid& assetGuid);
 
-		bool TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newPathInProject, const std::string& newAssetName);
+		bool TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newPathInProject, const char* newAssetNameWithExtension);
 
-		bool TryAssignGuidToAsset(const std::shared_ptr<Asset>& assetToUpdate, const xg::Guid& assetGuid);
+		static bool TryWriteCustomDataToAsset(const xg::Guid& assetGuid, const std::shared_ptr<Asset>& customData, const std::string& dataExtension);
+
+		static bool TryLoadCustomDataFromAsset(const xg::Guid& assetGuid, const std::string& dataExtension, std::shared_ptr<Asset>& customData);
+
+		static bool TryAddChildAssetToAsset(const xg::Guid& parentGuid, const xg::Guid& childGuid);
+
+		static bool TryAssignGuidToAsset(const std::shared_ptr<Asset>& assetToUpdate, const xg::Guid& assetGuid);
+
+		static bool TryGetParentForAsset(const xg::Guid& childGuid, xg::Guid& parentGuid);
+
+		static bool TryGetChildrenForAsset(const xg::Guid& parentGuid, std::vector<xg::Guid>& childGuids);
+
 	private:
-		template <class Archive>
-		void Serialize(Archive& archive);
+		[[nodiscard]] static bool TryLoadAssetMetaInfoForGuid(const xg::Guid& assetGuid, AssetMetaInfo& outputMetaInfo);
+
+		static void SaveAssetMetaInfo(const AssetMetaInfo& assetMetaInfo);
+
+		static void DeleteAssetMetaInfo(const AssetMetaInfo& assetMetaInfo);
+
+		[[nodiscard]] static std::string GetAssetRegistryPathForGuid(const xg::Guid& assetGuid);
 	};
 
 	template <class Archive>
-	void AssetRegistry::Serialize(Archive& archive) {
+	void AssetRegistry::AssetMetaInfo::Serialize(Archive& archive) {
 		archive(
-			CEREAL_NVP(assetRegistryPathsByGuid)
+			CEREAL_NVP(guid),
+			CEREAL_NVP(parentGuid),
+			CEREAL_NVP(childGuids),
+			CEREAL_NVP(pathInProject),
+			CEREAL_NVP(assetNameWithExtension)
 		);
 	}
 }

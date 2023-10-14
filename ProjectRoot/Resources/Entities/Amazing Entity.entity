@@ -1,0 +1,65 @@
+{
+    "data": {
+        "polymorphic_id": 2147483649,
+        "polymorphic_name": "Engine::Entity",
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "cereal::base_class<Asset>(this)": {
+                    "name": "Amazing Entity",
+                    "guid": {
+                        "bytes": {
+                            "value0": 184,
+                            "value1": 54,
+                            "value2": 4,
+                            "value3": 251,
+                            "value4": 211,
+                            "value5": 202,
+                            "value6": 66,
+                            "value7": 88,
+                            "value8": 174,
+                            "value9": 254,
+                            "value10": 61,
+                            "value11": 255,
+                            "value12": 194,
+                            "value13": 169,
+                            "value14": 94,
+                            "value15": 242
+                        }
+                    }
+                },
+                "components": [
+                    {
+                        "polymorphic_id": 2147483650,
+                        "polymorphic_name": "Engine::TransformComponent",
+                        "ptr_wrapper": {
+                            "id": 2147483650,
+                            "data": {
+                                "Component": {
+                                    "isEnabled": true
+                                },
+                                "position": {
+                                    "v.x": 0.0,
+                                    "v.y": 0.0,
+                                    "v.z": 0.0
+                                },
+                                "rotation": {
+                                    "v.x": 0.0,
+                                    "v.y": -0.0,
+                                    "v.z": 0.0
+                                },
+                                "scale": {
+                                    "v.x": 1.0,
+                                    "v.y": 1.0,
+                                    "v.z": 1.0
+                                },
+                                "isStatic": false
+                            }
+                        }
+                    }
+                ],
+                "isActive": true
+            }
+        }
+    }
+}

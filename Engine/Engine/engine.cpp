@@ -2,16 +2,15 @@
 #include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/AssetManagement/EngineAssetManager.hpp"
 #include "Engine/Camera/CameraManager.hpp"
-#include "Engine/Collision/CollisionSystem.hpp"
 #include "Engine/CommandLineArguments/CommandLineArgumentsManager.hpp"
 #include "Engine/Entity/EntitySystem.hpp"
 #include "Engine/Input/InputManager.hpp"
 #include "Engine/Renderer/Renderer.hpp"
-#include "Engine/Resources/ResourceManager.hpp"
 #include "Engine/Scene/SceneManager.hpp"
 #include "Engine/Utility/Defines.hpp"
 #include "Engine/Utility/Random.hpp"
 #include "Engine/Utility/Time.hpp"
+#include "Engine/Utility/StringUtility.hpp"
 
 #ifdef USING_OPENGL
 #include "Engine/Window/OpenGLWindow.hpp"
@@ -44,7 +43,7 @@ namespace Engine {
 			} else exit(0);
 		}
 
-		AssetManager::projectRoot = engineSettings.lastOpenedProject + "/";
+		AssetManager::projectRoot = StringUtility::SanitizePath(engineSettings.lastOpenedProject + "/");
 	}
 
 	Engine::~Engine() {
@@ -106,20 +105,6 @@ namespace Engine {
 		return instance->entitySystem;
 	}
 
-	std::shared_ptr<ResourceManager> Engine::GetResourceManager() noexcept {
-		CreateInstance();
-		if (instance->resourceManager == nullptr)
-			instance->resourceManager = std::shared_ptr<ResourceManager>(new ResourceManager());
-		return instance->resourceManager;
-	}
-
-	std::shared_ptr<CollisionSystem> Engine::GetCollisionSystem() noexcept {
-		CreateInstance();
-		if (instance->collisionSystem == nullptr)
-			instance->collisionSystem = std::shared_ptr<CollisionSystem>(new CollisionSystem());
-		return instance->collisionSystem;
-	}
-
 	std::shared_ptr<Random> Engine::GetRandom() noexcept {
 		CreateInstance();
 		if (instance->random == nullptr)
@@ -175,6 +160,6 @@ namespace Engine {
 			exit(0);
 		} //else if() TODO: Verify folder location, empty folder or project structure detected?
 
-		return pathToReturn;
+		return StringUtility::SanitizePath(pathToReturn);
 	}
-} // namespace Engine
+}

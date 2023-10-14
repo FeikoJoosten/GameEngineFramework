@@ -2,138 +2,146 @@
 
 #include "Engine/Api/Api.hpp"
 #include "Engine/AssetManagement/Asset.hpp"
-#include "Engine/Texture/Texture.hpp"
-#include "Engine/Utility/Vertex.hpp"
 #include "Engine/Utility/Defines.hpp"
 
-#include <vector>
+#include <cereal/types/base_class.hpp>
+#include <cereal/types/vector.hpp>
 
 namespace Engine
 {
-	/// <summary>
-	/// This object is used to store data regarding a mesh. NOTE: only the resource manager is allowed to create a mesh.
-	/// </summary>
 	class ENGINE_API Mesh : public Asset
 	{
 		friend cereal::access;
+		friend class MeshAssetImporter;
+
+	protected:
+		std::vector<glm::vec4> colors {};
+		std::vector<unsigned> indices {};
+		std::vector<glm::vec3> normals {};
+		std::vector<glm::vec3> tangents {};
+		std::vector<glm::vec2> uvs {};
+		std::vector<glm::vec2> uv2 {};
+		std::vector<glm::vec2> uv3 {};
+		std::vector<glm::vec2> uv4 {};
+		std::vector<glm::vec2> uv5 {};
+		std::vector<glm::vec2> uv6 {};
+		std::vector<glm::vec2> uv7 {};
+		std::vector<glm::vec2> uv8 {};
+		std::vector<glm::vec3> vertices {};
+
+		unsigned int ebo {};
+		unsigned int ubo {};
+		unsigned int vao {};
+		unsigned int vbo {};
+
+		Mesh() = default;
 
 	public:
-		/// <summary>
-		/// The vertices of this mesh.
-		/// </summary>
-		std::vector<Vertex> vertices;
-		/// <summary>
-		/// The indices of this mesh.
-		/// </summary>
-		std::vector<unsigned> indices;
+		virtual ~Mesh() override = default;
+		Mesh(const Mesh& other) = delete;
+		Mesh(Mesh&& other) noexcept = delete;
+		Mesh& operator=(const Mesh& other) = delete;
+		Mesh& operator=(Mesh&& other) noexcept = delete;
 
 		/// <summary>
 		/// This method allows you to get the VAO of this mesh.
 		/// </summary>
 		/// <returns>Returns the VAO as an uint64_t.</returns>
-		uint64_t GetVAO() const;
-		template<typename T>
+		uint64_t GetVao() const;
+
 		/// <summary>
 		/// This method allows you to get the VAO of this mesh.
 		/// </summary>
 		/// <returns>Returns the VAO as the defined type.</returns>
-		T GetVAO();
+		template<typename T>
+		T GetVao();
 
 		/// <summary>
 		/// This method allows you to get the VBO of this mesh.
 		/// </summary>
 		/// <returns>Returns the VBO as an uint64_t.</returns>
-		uint64_t GetVBO() const;
-		template<typename T>
+		uint64_t GetVbo() const;
+
 		/// <summary>
 		/// This method allows you to get the VBO of this mesh.
 		/// </summary>
 		/// <returns>Returns the VBO as the defined type.</returns>
-		T GetVBO();
+		template<typename T>
+		T GetVbo();
 
 		/// <summary>
 		/// This method allows you to get the EBO of this mesh.
 		/// </summary>
 		/// <returns>Returns the EBO as an uint64_t.</returns>
-		uint64_t GetEBO() const;
-		template <typename T>
+		uint64_t GetEbo() const;
+
 		/// <summary>
 		/// This method allows you to get the EBO of this mesh.
 		/// </summary>
 		/// <returns>Returns the EBO as the defined type.</returns>
-		T GetEBO();
+		template <typename T>
+		T GetEbo();
 
 		/// <summary>
 		/// This method allows you to get the UBO of this mesh.
 		/// </summary>
 		/// <returns>Returns the UBO as an uint64_t.</returns>
-		uint64_t GetUBO() const;
-		template <typename T>
+		uint64_t GetUbo() const;
+
 		/// <summary>
 		/// This method allows you to get the UBO of this mesh.
 		/// </summary>
 		/// <returns>Returns the UBO as the defined type.</returns>
-		T GetUBO();
+		template <typename T>
+		T GetUbo();
 
-		/// <summary>
-		/// This method allows you to compare a mesh with another mesh.
-		/// </summary>
-		/// <param name="other">The mesh you want to compare against.</param>
-		/// <returns>Returns true if both meshes are equal.</returns>
-		bool operator==(Mesh& other);
-		/// <summary>
-		/// This method allows you to compare a mesh with another mesh.
-		/// </summary>
-		/// <param name="other">The mesh you want to compare against.</param>
-		/// <returns>Returns true if the meshes are not equal.</returns>
-		bool operator!=(Mesh& other);
+		[[nodiscard]] const std::vector<glm::vec3>& GetVertices() const;
+
+		[[nodiscard]] const std::vector<unsigned>& GetIndices() const;
+
+		[[nodiscard]] const std::vector<glm::vec2>& GetUv() const;
+
+		[[nodiscard]] const std::vector<glm::vec2>& GetUv2() const;
+
+		[[nodiscard]] const std::vector<glm::vec2>& GetUv3() const;
+
+		[[nodiscard]] const std::vector<glm::vec2>& GetUv4() const;
+
+		[[nodiscard]] const std::vector<glm::vec2>& GetUv5() const;
+
+		[[nodiscard]] const std::vector<glm::vec2>& GetUv6() const;
+
+		[[nodiscard]] const std::vector<glm::vec2>& GetUv7() const;
+
+		[[nodiscard]] const std::vector<glm::vec2>& GetUv8() const;
 
 	private:
-
-		friend class ResourceManager;
-#ifdef USING_OPENGL
-		friend class OpenGLMesh;
-#endif
-#ifdef USING_VULKAN
-		friend class VulkanMesh;
-#endif
-
-		Mesh() = delete;
-		Mesh(std::vector<Vertex> vertices, std::vector<unsigned> indices);
-		virtual ~Mesh() noexcept;
-
-		//render data
-		//TODO use this function to set up additional variables that you might need for the mesh
 		virtual void SetUpMesh();
-	protected:
-		uint64_t vao, vbo, ebo, ubo;
-
-	private:
 
 		template <class Archive>
 		void Serialize(Archive& archive);
 	};
 
 	template <typename T>
-	T Mesh::GetVAO()
+	T Mesh::GetVao()
 	{
 		return T(vao);
 	}
 
 	template <typename T>
-	T Mesh::GetVBO()
+	T Mesh::GetVbo()
 	{
 		return T(vbo);
 	}
 
 	template <typename T>
-	T Mesh::GetEBO()
+	T Mesh::GetEbo()
 	{
 		return T(ebo);
 	}
 
 	template <typename T>
-	T Mesh::GetUBO()
+	T Mesh::GetUbo()
 	{
 		return T(ubo);
 	}
@@ -141,13 +149,21 @@ namespace Engine
 	template <class Archive>
 	void Mesh::Serialize(Archive& archive) {
 		archive(
-			CEREAL_NVP(vertices),
+			CEREAL_NVP(cereal::base_class<Asset>(this)),
+			CEREAL_NVP(colors),
 			CEREAL_NVP(indices),
-			CEREAL_NVP(vao),
-			CEREAL_NVP(vbo),
-			CEREAL_NVP(ebo),
-			CEREAL_NVP(ubo)
+			CEREAL_NVP(normals),
+			CEREAL_NVP(tangents),
+			CEREAL_NVP(uvs),
+			CEREAL_NVP(uv2),
+			CEREAL_NVP(uv3),
+			CEREAL_NVP(uv4),
+			CEREAL_NVP(uv5),
+			CEREAL_NVP(uv6),
+			CEREAL_NVP(uv7),
+			CEREAL_NVP(uv8),
+			CEREAL_NVP(vertices)
 		);
 	}
 
-} // namespace Engine
+}

@@ -1,65 +1,72 @@
 #include "Engine/AssetManagement/AssetManager.hpp"
+#include "Engine/AssetManagement/AssetAssetImporter.hpp"
+#include "Engine/AssetManagement/AssetImportSettingsAssetImporter.hpp"
 #include "Engine/AssetManagement/AssetRegistry.hpp"
 #include "Engine/AssetManagement/EngineProjectFileWatcher.hpp"
-#include "Engine/AssetManagement/ModelImporter.hpp"
-#include "Engine/AssetManagement/SceneImporter.hpp"
+#include "Engine/AssetManagement/EntityAssetImporter.hpp"
+#include "Engine/AssetManagement/MaterialAssetImporter.hpp"
+#include "Engine/AssetManagement/MeshAssetImporter.hpp"
+#include "Engine/AssetManagement/ModelAssetImporter.hpp"
+#include "Engine/AssetManagement/SceneAssetImporter.hpp"
+#include "Engine/AssetManagement/TextureAssetImporter.hpp"
 #include "Engine/Engine/Engine.hpp"
 
 #include <nameof.hpp>
 
 namespace Engine {
-	const std::string assetRegistryPath = static_cast<std::string>(NAMEOF_SHORT_TYPE(AssetRegistry));
-
 	AssetManager::AssetManager() {
-		assetRegistry = ReadDataFromFullPath<std::shared_ptr<AssetRegistry>>(projectRoot + nativeFolder, assetRegistryPath);
-		if (!assetRegistry) {
-			assetRegistry = std::shared_ptr<AssetRegistry>(new AssetRegistry());
-			SaveAssetRegistry();
-		}
-
-		assetRegistry->OnAssetRegisteredEvent += Sharp::EventHandler::Bind(this, &AssetManager::HandleOnAssetRegisteredEvent);
-		assetRegistry->OnAssetUnRegisteredEvent += Sharp::EventHandler::Bind(this, &AssetManager::HandleOnAssetUnRegisteredEvent);
-		assetRegistry->OnAssetMovedOrRenamedEvent += Sharp::EventHandler::Bind(this, &AssetManager::HandleOnAssetMovedOrRenamedEvent);
-
+		assetRegistry = std::shared_ptr<AssetRegistry>(new AssetRegistry());
 		fileWatcher = std::unique_ptr<EngineProjectFileWatcher>(new EngineProjectFileWatcher(projectRoot + resourcesFolder, assetRegistry));
 
-		//assetImporters.push_back(std::shared_ptr<IAssetImporter>(new ModelImporter()));
-		assetImporters.push_back(std::shared_ptr<SceneImporter>(new SceneImporter(assetRegistry)));
-	}
-
-	AssetManager::~AssetManager() {
-		if(assetRegistry) {
-			assetRegistry->OnAssetRegisteredEvent -= Sharp::EventHandler::Bind(this, &AssetManager::HandleOnAssetRegisteredEvent);
-			assetRegistry->OnAssetUnRegisteredEvent -= Sharp::EventHandler::Bind(this, &AssetManager::HandleOnAssetUnRegisteredEvent);
-			assetRegistry->OnAssetMovedOrRenamedEvent -= Sharp::EventHandler::Bind(this, &AssetManager::HandleOnAssetMovedOrRenamedEvent);
-		}
+		assetImporters.push_back(std::shared_ptr<AssetImportSettingsAssetImporter>(new AssetImportSettingsAssetImporter(assetRegistry)));
+		assetImporters.push_back(std::shared_ptr<EntityAssetImporter>(new EntityAssetImporter(assetRegistry)));
+		assetImporters.push_back(std::shared_ptr<MaterialAssetImporter>(new MaterialAssetImporter(assetRegistry)));
+		assetImporters.push_back(std::shared_ptr<MeshAssetImporter>(new MeshAssetImporter(assetRegistry)));
+		assetImporters.push_back(std::shared_ptr<ModelAssetImporter>(new ModelAssetImporter(assetRegistry)));
+		assetImporters.push_back(std::shared_ptr<SceneAssetImporter>(new SceneAssetImporter(assetRegistry)));
+		assetImporters.push_back(std::shared_ptr<TextureAssetImporter>(new TextureAssetImporter(assetRegistry)));
+		assetImporters.push_back(std::shared_ptr<AssetAssetImporter>(new AssetAssetImporter(assetRegistry))); // Register as last so type specific importers have priority
 	}
 
 	std::shared_ptr<AssetManager> AssetManager::Get() {
 		return Engine::GetAssetManager();
 	}
 
-	void AssetManager::WriteDataToPath(const std::string& pathInProject, const std::shared_ptr<Asset>& asset, const bool writeNameValuePair) {
-		WriteDataToFullPath(projectRoot + resourcesFolder + pathInProject, asset, writeNameValuePair);
+	void AssetManager::WriteAssetToPath(const std::string& pathInProject, const std::shared_ptr<Asset>& asset, const char* assetExtension, const AssetSerializationType& serializationType, const bool writeNameValuePair) {
+		WriteAssetToFullPath(projectRoot + resourcesFolder + pathInProject, asset, assetExtension, serializationType, writeNameValuePair);
 	}
 
-	void AssetManager::WriteDataToFullPath(const std::string& fullPath, const std::shared_ptr<Asset>& asset, const bool writeNameValuePair) {
-		if (!asset->GetGuid().isValid()) {
-			if (!assetRegistry->TryRegisterAsset(asset, fullPath)) {
+	void AssetManager::WriteAssetToFullPath(const std::string& fullPath, const std::shared_ptr<Asset>& asset, const char* assetExtension, const AssetSerializationType& serializationType, const bool writeNameValuePair) {
+		std::shared_ptr<IAssetImporter> importerToUse;
+
+		for (const std::shared_ptr<IAssetImporter>& assetImporter : assetImporters) {
+			if (!assetImporter->SupportsAsset(asset)) continue;
+
+			importerToUse = assetImporter;
+			break;
+		}
+		if (!importerToUse) {
+			DEBUG_ERROR("No importer found for asset, cannot write to path!")
+			return;
+		}
+
+		const std::string extensionToUse = assetExtension != nullptr ? assetExtension : importerToUse->GetDefaultAssetExtension();
+		if (!AssetRegistry::IsAssetRegistered(asset->GetGuid())) {
+			if (!assetRegistry->TryRegisterAsset(asset, FullPathToPathInProject(fullPath), (asset->GetName() + extensionToUse).c_str())) {
 				DEBUG_ERROR("Failed to process asset for: " + fullPath);
-			} else {
+				return;
 			}
 		}
 
-		WriteDataToFullPath(fullPath, asset->GetName(), asset, asset->GetDefaultExtension(), writeNameValuePair);
+		WriteDataToFullPath(fullPath, asset->GetName(), asset, extensionToUse, serializationType, writeNameValuePair);
 	}
 
 	bool AssetManager::FileExists(const std::string& fullPath, const std::string& fileName, const bool isRelativeFromProject) const {
-		return FileExists(isRelativeFromProject ? projectRoot + resourcesFolder + fileName : fullPath + "/" + fileName, isRelativeFromProject);
+		return FileExists(isRelativeFromProject ? projectRoot + resourcesFolder + fileName : fullPath + "/" + fileName);
 	}
 
-	bool AssetManager::FileExists(const std::string& fullPath, bool isRelativeFromProject) const {
-		std::ifstream file(fullPath.c_str());
+	bool AssetManager::FileExists(const std::string& fullPath) {
+		std::ifstream file(StringUtility::SanitizePath(fullPath));
 
 		const bool fileExists = file.is_open();
 		file.close();
@@ -70,7 +77,7 @@ namespace Engine {
 	std::string AssetManager::GetDirectoryFromPath(const std::string& path) {
 		const std::filesystem::path directoryPath { path };
 		
-		return directoryPath.parent_path().generic_string() + "/";
+		return StringUtility::SanitizePath(directoryPath.parent_path().generic_string() + "/");
 	}
 
 	const std::string& AssetManager::GetProjectRoot() {
@@ -85,8 +92,23 @@ namespace Engine {
 		return assetImporters;
 	}
 
-	std::vector<char> AssetManager::ReadFile(const std::string& fileName, const int fileOpenMode) const {
-		std::ifstream file((projectRoot + resourcesFolder + fileName).c_str(), fileOpenMode);
+	bool AssetManager::TryGetAssetImporterForPath(const std::string& fullPath, std::shared_ptr<IAssetImporter>& outputAssetImporter) const {
+		const std::string sanitizedFullPath = PathInProjectToFullPath(StringUtility::SanitizePath(fullPath));
+		const std::filesystem::path path = sanitizedFullPath;
+		const std::string& genericExtension = path.extension().generic_string();
+
+		for (const std::shared_ptr<IAssetImporter>& assetImporter : assetImporters) {
+			if (!assetImporter->SupportsFile(sanitizedFullPath, genericExtension)) continue;
+
+			outputAssetImporter = assetImporter;
+			if (assetImporter) return true;
+		}
+
+		return false;
+	}
+
+	std::vector<char> AssetManager::ReadRawFile(const std::string& fileName, const int fileOpenMode) {
+		std::ifstream file(projectRoot + resourcesFolder + fileName, fileOpenMode);
 
 		if (!file)
 			throw std::runtime_error("Failed to find file!");
@@ -105,20 +127,21 @@ namespace Engine {
 		return buffer;
 	}
 
-	void AssetManager::HandleOnAssetRegisteredEvent(const std::shared_ptr<Asset>&, const std::string&) {
-		SaveAssetRegistry();
+	void AssetManager::DeleteFile(const std::string& fullPath, const std::string& fileName, const bool isRelativeFromProject) const {
+		if(FileExists(fullPath, fileName, isRelativeFromProject))
+			std::remove((isRelativeFromProject ? projectRoot + resourcesFolder + fileName : StringUtility::SanitizePath(fullPath) + "/" + fileName).c_str());
 	}
 
-	void AssetManager::HandleOnAssetUnRegisteredEvent(const xg::Guid&, const std::string&) {
-		SaveAssetRegistry();
+	std::string AssetManager::PathInProjectToFullPath(const std::string& pathInProject) {
+		return projectRoot + resourcesFolder + StringUtility::SanitizePath(pathInProject);
 	}
 
-	void AssetManager::HandleOnAssetMovedOrRenamedEvent(const xg::Guid&, const std::string&, const std::string&, const std::string&, const std::string&) {
-		SaveAssetRegistry();
+	std::string AssetManager::FullPathToPathInProject(const std::string& fullPath) {
+		return StringUtility::SanitizePath(fullPath).substr(projectRoot.length() + resourcesFolder.length());
 	}
 
-	void AssetManager::SaveAssetRegistry() {
-		WriteDataToFullPath(projectRoot + nativeFolder, assetRegistryPath, assetRegistry);
+	std::string& AssetManager::GetNativeFolder() {
+		return nativeFolder;
 	}
 
 	// TODO: Replace with self managed update subscribe in FileWatcher itself

@@ -9,7 +9,7 @@
 class ENGINE_API Vertex
 {
 public:
-	glm::vec3 position;
+	glm::vec3 vertices;
 	glm::vec3 normal;
 	glm::vec2 texCoords;
 	float boneWeights[4];

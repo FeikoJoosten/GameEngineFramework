@@ -13,9 +13,9 @@ namespace Engine
 	{
 		friend class ResourceManager;
 
-		OpenGLMesh(std::vector<Vertex> vertices, std::vector<unsigned> indices);
+		OpenGLMesh() = default;
 	public:
-		OpenGLMesh() = delete;
+
 		virtual ~OpenGLMesh() noexcept override = default;
 		OpenGLMesh(const OpenGLMesh&other) = delete;
 		OpenGLMesh(OpenGLMesh &&other) noexcept = delete;
@@ -24,7 +24,7 @@ namespace Engine
 		OpenGLMesh& operator=(OpenGLMesh&& other) noexcept = delete;
 	private:
 
-		void SetUpMesh() override;
+		virtual void SetUpMesh() override;
 	};
-} // namespace Engine
+}
 #endif

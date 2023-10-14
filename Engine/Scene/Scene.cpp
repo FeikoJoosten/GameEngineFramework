@@ -1,48 +1,39 @@
 #include "Engine/Scene/Scene.hpp"
+#include "Engine/Components/Component.hpp"
 #include "Engine/Entity/Entity.hpp"
+#include "Engine/Entity/EntitySystem.hpp"
 
 #include <utility>
 
+
+CEREAL_REGISTER_TYPE(Engine::Scene);
+
 namespace Engine {
+	Scene::Scene() {
+		EntitySystem::Get()->OnEntityRemovedEvent += Sharp::EventHandler::Bind(this, &Scene::HandleOnEntityRemovedEvent);
+	}
 
 	Scene::Scene(std::string name) : Asset(std::move(name))  {
-		
+		EntitySystem::Get()->OnEntityRemovedEvent += Sharp::EventHandler::Bind(this, &Scene::HandleOnEntityRemovedEvent);
 	}
 
 	Scene::~Scene() {
-		for(const std::shared_ptr<Entity>& entity : entities)
-			entity->OnEntityDestroyedEvent -= Sharp::EventHandler::Bind(this, &Scene::HandleOnEntityDestroyedEvent);
+		EntitySystem::Get()->OnEntityRemovedEvent -= Sharp::EventHandler::Bind(this, &Scene::HandleOnEntityRemovedEvent);
 	}
 
 	void Scene::AddEntity(const std::shared_ptr<Entity>& entityToAdd) {
-		if (std::find(entities.begin(), entities.end(), entityToAdd) != entities.end()) return;
-
-		if(!entityToAdd->GetGuid().isValid()) {
-			const std::shared_ptr<AssetRegistry> assetRegistry = AssetManager::Get()->GetAssetRegistry();
-			std::string filePath;
-			std::string assetName;
-			if(assetRegistry->TryGetPathForGuid(GetGuid(), filePath, assetName)) {
-				const std::string entityPath = filePath + assetName + extension + "/";
-				xg::Guid entityGuid;
-				// TODO: Replace entityToAdd->GetName with relative path in scene
-				if (!assetRegistry->TryGetGuidForPath(entityPath, entityToAdd->GetName(), entityGuid))
-					assetRegistry->TryRegisterAsset(entityToAdd, entityPath);
-				else assetRegistry->TryAssignGuidToAsset(entityToAdd, entityGuid);
-			}
-		}
+		if (std::ranges::find(entities, entityToAdd) != entities.end()) return;
 
 		entities.push_back(entityToAdd);
-		entityToAdd->OnEntityDestroyedEvent += Sharp::EventHandler::Bind(this, &Scene::HandleOnEntityDestroyedEvent);
+		EntitySystem::Get()->AddEntity(entityToAdd);
 	}
 
 	void Scene::RemoveEntity(const std::shared_ptr<Entity>& entityToRemove) {
-		entities.erase(
-			std::remove_if(entities.begin(), entities.end(),
-				[entityToRemove](const std::shared_ptr<Entity>& entity) {
-					return entity.get() == entityToRemove.get();
-				}), entities.end());
-
-		entityToRemove->OnEntityDestroyedEvent -= Sharp::EventHandler::Bind(this, &Scene::HandleOnEntityDestroyedEvent);
+		std::erase_if(entities,
+		              [entityToRemove](const std::shared_ptr<Entity>& entity) {
+			              return entity.get() == entityToRemove.get();
+		              });
+		EntitySystem::Get()->RemoveEntity(entityToRemove);
 	}
 
 	bool Scene::GetIsActive() const {
@@ -53,10 +44,6 @@ namespace Engine {
 		return entities;
 	}
 
-	const std::string& Scene::GetDefaultExtension() const {
-		return extension;
-	}
-
 	void Scene::SetIsActive(const bool newIsActive) {
 		if (isActive == newIsActive) return;
 
@@ -64,7 +51,7 @@ namespace Engine {
 		OnActiveStateChangedEvent(std::static_pointer_cast<Scene>(shared_from_this()), isActive);
 	}
 
-	void Scene::HandleOnEntityDestroyedEvent(const std::shared_ptr<Entity> destroyedEntity) {
+	void Scene::HandleOnEntityRemovedEvent(const std::shared_ptr<Entity> destroyedEntity) {
 		RemoveEntity(destroyedEntity);
 	}
 }

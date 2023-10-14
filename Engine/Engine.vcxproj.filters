@@ -31,12 +31,6 @@
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{d42b5605-d51a-4618-b1d8-1dfece129f1a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Resources">
-      <UniqueIdentifier>{47065306-d62a-4aee-bd0d-86c7a4c338a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Resources">
-      <UniqueIdentifier>{6b5055f8-5f09-4c25-ae54-5c0dcba3ec7b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Window">
       <UniqueIdentifier>{da9c3c58-1697-4a34-946e-15a574faf3f7}</UniqueIdentifier>
     </Filter>
@@ -91,18 +85,6 @@
     <Filter Include="Source Files\Camera">
       <UniqueIdentifier>{a695b111-44c1-41a4-a9e2-2b31c49c1648}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Animation">
-      <UniqueIdentifier>{347a0862-325d-49e7-a77f-3cd85187bad4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Collision">
-      <UniqueIdentifier>{41c288ed-c308-47f7-8b9c-a0b48c165281}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Animation">
-      <UniqueIdentifier>{6ec1af27-537b-4486-8d80-e041bb4e6d70}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Collision">
-      <UniqueIdentifier>{b5db2ea9-9758-402a-9480-e88664e16dd1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Material">
       <UniqueIdentifier>{a50db432-70da-481e-a4bf-687aef847b58}</UniqueIdentifier>
     </Filter>
@@ -114,12 +96,6 @@
     </Filter>
     <Filter Include="Header Files\Renderer\Vulkan">
       <UniqueIdentifier>{be1225fd-d8c9-4f6e-b92d-afaab2e92183}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Particle System">
-      <UniqueIdentifier>{3e9b5d22-20be-4aea-8f2b-5dbd2597a506}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Particle System">
-      <UniqueIdentifier>{72c914b8-f1dc-4175-b053-5245c2c34cba}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Application">
       <UniqueIdentifier>{5605a1db-71f8-4726-b102-9cca86068494}</UniqueIdentifier>
@@ -192,7 +168,7 @@
     <ClInclude Include="Utility\Defines.hpp">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Components\ModelComponent.hpp">
+    <ClInclude Include="Components\MeshRendererComponent.hpp">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="Window\Window.hpp">
@@ -273,21 +249,6 @@
     <ClInclude Include="Renderer\imgui_impl_glfw_gl3.h">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Animation\Skeleton.hpp">
-      <Filter>Header Files\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="Collision\CollisionSystem.hpp">
-      <Filter>Header Files\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Collision\CollisionTypes.hpp">
-      <Filter>Header Files\Collision</Filter>
-    </ClInclude>
-    <ClInclude Include="Components\AnimationComponent.hpp">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Components\CollisionComponent.hpp">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Components\LightComponent.hpp">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
@@ -339,18 +300,6 @@
     <ClInclude Include="Mesh\Mesh.hpp">
       <Filter>Header Files\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Particle System\Emitter.hpp">
-      <Filter>Header Files\Particle System</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle System\Particle.hpp">
-      <Filter>Header Files\Particle System</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle System\VulkanEmitter.hpp">
-      <Filter>Header Files\Particle System</Filter>
-    </ClInclude>
-    <ClInclude Include="Resources\ResourceManager.hpp">
-      <Filter>Header Files\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\Light.hpp">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
@@ -399,9 +348,6 @@
     <ClInclude Include="Engine\Engine.hpp">
       <Filter>Header Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Animation\Animation.hpp">
-      <Filter>Header Files\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="CommandLineArguments\CommandLineArgumentsManager.hpp">
       <Filter>Header Files\CommandLineArguments</Filter>
     </ClInclude>
@@ -423,7 +369,7 @@
     <ClInclude Include="AssetManagement\AssetRegistry.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
-    <ClInclude Include="AssetManagement\ModelImporter.hpp">
+    <ClInclude Include="AssetManagement\ModelAssetImporter.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\GlmSerializationHelper.hpp">
@@ -435,10 +381,7 @@
     <ClInclude Include="AssetManagement\EngineProjectFileWatcher.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Entity\EntitySerialization.hpp">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetManagement\SceneImporter.hpp">
+    <ClInclude Include="AssetManagement\SceneAssetImporter.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\GuidSerializationHelper.hpp">
@@ -448,6 +391,36 @@
       <Filter>Header Files\Serialization</Filter>
     </ClInclude>
     <ClInclude Include="AssetManagement\IAssetImporter.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\TextureAssetImporter.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\AssetAssetImporter.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\EntityAssetImporter.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\AssetImportSettings.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\ModelAssetImportSettings.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\AssetImportSettingsAssetImporter.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\StringUtility.hpp">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\AssetReference.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\AssetSerializationType.hpp">
+      <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\MaterialAssetImporter.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
   </ItemGroup>
@@ -461,7 +434,7 @@
     <ClCompile Include="Entity\EntitySystem.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Components\ModelComponent.cpp">
+    <ClCompile Include="Components\MeshRendererComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="Window\Window.cpp">
@@ -536,18 +509,6 @@
     <ClCompile Include="Renderer\imgui_impl_glfw_gl3.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Animation\Skeleton.cpp">
-      <Filter>Source Files\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="Collision\CollisionSystem.cpp">
-      <Filter>Source Files\Collision</Filter>
-    </ClCompile>
-    <ClCompile Include="Components\AnimationComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Components\CollisionComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Components\LightComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -590,18 +551,6 @@
     <ClCompile Include="Renderer\Vulkan\VulkanStaticMeshRenderer.cpp">
       <Filter>Source Files\Renderer\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="Particle System\Emitter.cpp">
-      <Filter>Source Files\Particle System</Filter>
-    </ClCompile>
-    <ClCompile Include="Particle System\Particle.cpp">
-      <Filter>Source Files\Particle System</Filter>
-    </ClCompile>
-    <ClCompile Include="Particle System\VulkanEmitter.cpp">
-      <Filter>Source Files\Particle System</Filter>
-    </ClCompile>
-    <ClCompile Include="Resources\ResourceManager.cpp">
-      <Filter>Source Files\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\Random.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
@@ -616,9 +565,6 @@
     </ClCompile>
     <ClCompile Include="Application\Application.cpp">
       <Filter>Source Files\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="Animation\Animation.cpp">
-      <Filter>Source Files\Animation</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
@@ -653,12 +599,6 @@
     <ClCompile Include="ThirdParty\tinyfiledialogs\tinyfiledialogs.c">
       <Filter>Source Files\ThirdParty\tinyfiledialogs</Filter>
     </ClCompile>
-    <ClCompile Include="MeshAssetImporter.cpp">
-      <Filter>Source Files\AssetManagement</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelImporter.cpp">
-      <Filter>Source Files\AssetManagement</Filter>
-    </ClCompile>
     <ClCompile Include="AssetManagement\AssetRegistry.cpp">
       <Filter>Source Files\AssetManagement</Filter>
     </ClCompile>
@@ -668,7 +608,37 @@
     <ClCompile Include="AssetManagement\EngineProjectFileWatcher.cpp">
       <Filter>Source Files\AssetManagement</Filter>
     </ClCompile>
-    <ClCompile Include="SceneImporter.cpp">
+    <ClCompile Include="AssetManagement\TextureAssetImporter.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\AssetAssetImporter.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\EntityAssetImporter.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\MeshAssetImporter.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\ModelAssetImporter.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\SceneAssetImporter.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetImportSettings.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\AssetImportSettingsAssetImporter.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\ModelAssetImportSettings.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\StringUtility.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\MaterialAssetImporter.cpp">
       <Filter>Source Files\AssetManagement</Filter>
     </ClCompile>
   </ItemGroup>

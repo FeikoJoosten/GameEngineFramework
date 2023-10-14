@@ -166,6 +166,6 @@ namespace Engine {
 		return pipeline_;
 	}
 
-} // namespace Engine
+}
 
-#endif // USING_VULKAN
+#endif

@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Engine/Utility/Defines.hpp"
-
 #include <cereal/cereal.hpp>
-#include <cereal/types/array.hpp>
 #include <crossguid/guid.hpp>
 
 namespace xg {

@@ -1,19 +1,23 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
-#include "Engine/Entity/Entity.hpp"
-#include "Engine/Camera/Frustum.hpp"
+#include "Engine/Components/Component.hpp"
 #include "Engine/Components/TransformComponent.hpp"
+#include "Engine/Entity/Entity.hpp"
 #include "Engine/Utility/Defines.hpp"
 
-#include <cereal/types/polymorphic.hpp>
+#include <cereal/access.hpp>
+#include <cereal/types/base_class.hpp>
+#include <glm/glm.hpp>
 
 namespace Engine {
+	struct Frustum;
+
 	/// <summary>
 	/// This class is used for the creation of a camera.
 	/// </summary>
 	class ENGINE_API CameraComponent : public Component {
-		friend cereal::access;
+		friend class cereal::access;
 		template <class ComponentType>
 		friend std::shared_ptr<ComponentType> Entity::AddComponent();
 
@@ -26,10 +30,9 @@ namespace Engine {
 		CameraComponent() = default;
 
 	public:
+		virtual ~CameraComponent() override;
 		CameraComponent(const CameraComponent& other) = delete;
 		CameraComponent(CameraComponent&& other) noexcept = delete;
-		virtual ~CameraComponent() override;
-
 		CameraComponent& operator=(const CameraComponent& other) = delete;
 		CameraComponent& operator=(CameraComponent&& other) noexcept = delete;
 
@@ -114,7 +117,7 @@ namespace Engine {
 	template <class Archive>
 	void CameraComponent::Save(Archive& archive) const {
 		archive(
-			cereal::make_nvp("Component", cereal::virtual_base_class<Component>(this)),
+			cereal::make_nvp("Component", cereal::base_class<Component>(this)),
 			CEREAL_NVP(fieldOfVision),
 			CEREAL_NVP(clippingPlanes),
 			CEREAL_NVP(transformComponent)
@@ -124,7 +127,7 @@ namespace Engine {
 	template <class Archive>
 	void CameraComponent::Load(Archive& archive) {
 		archive(
-			cereal::make_nvp("Component", cereal::virtual_base_class<Component>(this)),
+			cereal::make_nvp("Component", cereal::base_class<Component>(this)),
 			CEREAL_NVP(fieldOfVision),
 			CEREAL_NVP(clippingPlanes),
 			CEREAL_NVP(transformComponent)
@@ -137,6 +140,4 @@ namespace Engine {
 
 		SetProjection(fieldOfVision, clippingPlanes.x, clippingPlanes.y);
 	}
-} // namespace Engine
-
-CEREAL_REGISTER_TYPE(Engine::CameraComponent)
+}

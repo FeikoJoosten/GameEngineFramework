@@ -90,4 +90,4 @@ namespace Engine {
 		/// <returns>Returns the left face of the frustum</returns>
 		Face GetLeftFace() const;
 	};
-} // namespace Engine
+}

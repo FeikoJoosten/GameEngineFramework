@@ -1,22 +1,22 @@
 #include "Engine/Entity/Entity.hpp"
+#include "Engine/Entity/EntitySystem.hpp"
+
 #include "Engine/Components/Component.hpp"
 
+CEREAL_REGISTER_TYPE(Engine::Entity);
+
 namespace Engine {
-	Entity::~Entity() {
-		OnEntityDestroyedEvent(std::static_pointer_cast<Entity>(shared_from_this()));
-	}
+	Entity::Entity(std::string name) : Asset(std::move(name)) {}
 
 	std::vector<std::shared_ptr<Component>> Entity::GetAllComponents() const {
 		return components;
 	}
 
 	void Entity::Update() const {
-		if (isActive == false)
-			return;
+		if (!isActive) return;
 
 		for (const std::shared_ptr<Component>& component : components) {
-			if (!component->GetIsEnabled())
-				continue;
+			if (!component->GetIsEnabled())	continue;
 
 			component->Update();
 		}
@@ -59,4 +59,4 @@ namespace Engine {
 		for (const std::shared_ptr<Component>& component : components)
 			component->OnComponentRemoved(removedComponent);
 	}
-} // namespace Engine
+}

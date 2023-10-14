@@ -239,5 +239,5 @@ namespace Engine {
 		VulkanMaterial::allocator_ = allocator;
 	}
 
-} // namespace Engine
-#endif // USING_VULKAN
+}
+#endif

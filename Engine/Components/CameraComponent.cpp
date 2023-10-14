@@ -1,8 +1,13 @@
 #include "Engine/Components/CameraComponent.hpp"
+#include "Engine/Components/TransformComponent.hpp"
+#include "Engine/Camera/Frustum.hpp"
 #include "Engine/Window/Window.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
+
+CEREAL_REGISTER_TYPE(Engine::CameraComponent)
+CEREAL_SPECIALIZE_FOR_ALL_ARCHIVES(Engine::CameraComponent, specialization::member_load_save)
 
 namespace Engine {
 	CameraComponent::~CameraComponent() {
@@ -86,4 +91,4 @@ namespace Engine {
 			transformComponent.reset();
 		}
 	}
-} // namespace Engine
+}

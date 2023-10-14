@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
+#include "Engine/Entity/Entity.hpp"
 #include "Engine/Utility/Event.hpp"
-
-#include <cereal/types/memory.hpp>
 
 namespace Engine {
 
@@ -13,7 +12,7 @@ namespace Engine {
 	class ENGINE_API Component : public std::enable_shared_from_this<Component> {
 		// Need to give full access to Entity class because otherwise a circular dependency is created with private friends
 		friend class Entity;
-		friend cereal::access;
+		friend class cereal::access;
 
 		bool isEnabled = true;
 		std::weak_ptr<Entity> owner;
@@ -52,14 +51,14 @@ namespace Engine {
 		/// <summary>
 		/// This method allows you to get the first component of the given type.
 		/// </summary>
-		/// <returns>Returns the first component of the given type as a weak pointer.</returns>
-		[[nodiscard]] std::shared_ptr<ComponentType> GetComponent();
+		/// <returns>Returns the first component of the given type as a shared pointer.</returns>
+		[[nodiscard]] std::shared_ptr<ComponentType> GetComponent() const;
 
 		template<typename ComponentType>
 		/// <summary>
 		/// This method allows you to get all of the components of the given type.
 		/// </summary>
-		/// <returns>Returns the all of the components of the given type as a weak pointer.</returns>
+		/// <returns>Returns the all of the components of the given type as a shared pointer.</returns>
 		[[nodiscard]] std::vector<std::shared_ptr<ComponentType>> GetComponents();
 
 		/// <summary>
@@ -68,28 +67,26 @@ namespace Engine {
 		/// <returns>Returns a vector of all the components of this entity.</returns>
 		[[nodiscard]] std::vector<std::shared_ptr<Component>> GetAllComponents() const;
 
-		template <class ComponentType, class... Args>
+		template <class ComponentType>
 		/// <summary>
 		/// Allows you to create a component of the given type.
 		/// </summary>
-		/// <param name="args">The arguments required to initialize the component.</param>
 		/// <returns>Returns the just created component of the given type as a shared pointer.</returns>
-		std::shared_ptr<ComponentType> AddComponent(Args&&... args);
+		std::shared_ptr<ComponentType> AddComponent();
 
-		template <class ComponentType, class... Args>
+		template <class ComponentType>
 		/// <summary>
-		/// Allows you to create X amount of components of the given type.
+		/// Adds X amount of components of the given type.
 		/// </summary>
 		/// <param name="count">The amount of components you want to add of this given type.</param>
-		/// <param name="args">The arguments required to initialize the components.</param>
 		/// <returns>Returns a vector of the just created components of the given type as a vector of shared pointers.</returns>
-		std::vector<std::shared_ptr<ComponentType>> AddComponents(size_t count, Args&&... args);
+		std::vector<std::shared_ptr<ComponentType>> AddComponents(size_t count);
 
 		template <typename ComponentType>
 		/// <summary>
-		/// Allows X amount of components of the given type.
+		/// Removes X amount of components of the given type.
 		/// </summary>
-		/// <param name="amountToRemove">Will remove 1 component by default, can be change optionally.</param>T
+		/// <param name="amountToRemove">Will remove 1 component by default, can be change optionally.</param>
 		void RemoveComponent(size_t amountToRemove = 1) const;
 
 		template <typename ComponentType>
@@ -123,14 +120,11 @@ namespace Engine {
 		void HandleOnOwnerActiveStateChangedEvent(std::shared_ptr<Entity> owningEntity, bool owningEntityIsActive);
 
 		template<class Archive>
-		void Save(Archive& archive) const;
-
-		template<class Archive>
-		void Load(Archive& archive);
+		void Serialize(Archive& archive);
 	};
 
 	template <typename ComponentType>
-	std::shared_ptr<ComponentType> Component::GetComponent() {
+	std::shared_ptr<ComponentType> Component::GetComponent() const {
 		if (owner.expired()) return {};
 		return owner.lock()->GetComponent<ComponentType>();
 	}
@@ -141,16 +135,16 @@ namespace Engine {
 		return owner.lock()->GetComponents<ComponentType>();
 	}
 
-	template <class ComponentType, class ... Args>
-	std::shared_ptr<ComponentType> Component::AddComponent(Args&&... args) {
+	template <class ComponentType>
+	std::shared_ptr<ComponentType> Component::AddComponent() {
 		if (owner.expired()) return {};
-		return owner.lock()->AddComponent<ComponentType>(&args...);
+		return owner.lock()->AddComponent<ComponentType>();
 	}
 
-	template <class ComponentType, class ... Args>
-	std::vector<std::shared_ptr<ComponentType>> Component::AddComponents(size_t count, Args&&... args) {
+	template <class ComponentType>
+	std::vector<std::shared_ptr<ComponentType>> Component::AddComponents(const size_t count) {
 		if (owner.expired()) return {};
-		return owner.lock()->AddComponents<ComponentType>(count, &args...);
+		return owner.lock()->AddComponents<ComponentType>(count);
 	}
 
 	template <typename ComponentType>
@@ -166,16 +160,9 @@ namespace Engine {
 	}
 
 	template<class Archive>
-	void Component::Save(Archive& archive) const {
+	void Component::Serialize(Archive& archive) {
 		archive(
 			CEREAL_NVP(isEnabled)
 		);
 	}
-
-	template<class Archive>
-	void Component::Load(Archive& archive) {
-		archive(
-			CEREAL_NVP(isEnabled)
-		);
-	}
-} // namespace Engine
+}

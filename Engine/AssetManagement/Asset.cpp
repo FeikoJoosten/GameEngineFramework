@@ -1,6 +1,8 @@
 #include "Engine/AssetManagement/Asset.hpp"
 #include "Engine/AssetManagement/AssetManager.hpp"
 
+CEREAL_REGISTER_TYPE(Engine::Asset);
+
 namespace Engine {
 	Asset::Asset(std::string name) : name(std::move(name)) {
 	}
@@ -17,16 +19,11 @@ namespace Engine {
 		return guid;
 	}
 
-	const std::string& Asset::GetDefaultExtension() const {
-		return extension;
-	}
-
 	void Asset::Save() {
 		std::string currentFilePath;
-		std::string assetName;
-		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
-		if (assetManager->GetAssetRegistry()->TryGetPathForGuid(guid, currentFilePath, assetName))
-			assetManager->WriteDataToFullPath(currentFilePath, shared_from_this());
+		const std::shared_ptr<AssetManager>& assetManager = AssetManager::Get();
+		if (std::string assetNameWithExtension; AssetRegistry::TryGetPathForGuid(guid, currentFilePath, assetNameWithExtension))
+			assetManager->WriteAssetToPath(currentFilePath, shared_from_this());
 		else
 			DEBUG_ERROR("Failed to save asset, because it was not yet registered with the asset registry!");
 	}

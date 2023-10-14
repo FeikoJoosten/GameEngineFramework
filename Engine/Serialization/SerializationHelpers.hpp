@@ -2,6 +2,7 @@
 
 #include "Engine/Serialization/GlmSerializationHelper.hpp"
 #include "Engine/Serialization/GuidSerializationHelper.hpp"
+#include "Engine/Utility/Defines.hpp"
 
 namespace cereal {
     template<class Archive, class F, class S>

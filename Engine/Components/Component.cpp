@@ -1,7 +1,7 @@
-#include <utility>
-
 #include "Engine/Components/Component.hpp"
 #include "Engine/Entity/Entity.hpp"
+
+CEREAL_REGISTER_TYPE(Engine::Component);
 
 namespace Engine {
 	Component::~Component() {
@@ -49,4 +49,4 @@ namespace Engine {
 	void Component::HandleOnOwnerActiveStateChangedEvent(const std::shared_ptr<Entity> owningEntity, const bool owningEntityIsActive) {
 		OnEnabledStateChangedEvent(shared_from_this(), owningEntityIsActive && isEnabled);
 	}
-} // namespace Engine
+}

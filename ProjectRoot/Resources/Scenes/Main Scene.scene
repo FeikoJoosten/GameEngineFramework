@@ -5,26 +5,26 @@
         "ptr_wrapper": {
             "id": 2147483649,
             "data": {
-                "cereal::virtual_base_class<Asset>(this)": {
+                "cereal::base_class<Asset>(this)": {
                     "name": "Main Scene",
                     "guid": {
                         "bytes": {
-                            "value0": 153,
-                            "value1": 111,
-                            "value2": 143,
-                            "value3": 244,
-                            "value4": 210,
-                            "value5": 247,
-                            "value6": 74,
-                            "value7": 18,
-                            "value8": 138,
-                            "value9": 168,
-                            "value10": 24,
-                            "value11": 172,
-                            "value12": 91,
-                            "value13": 197,
-                            "value14": 62,
-                            "value15": 59
+                            "value0": 127,
+                            "value1": 91,
+                            "value2": 197,
+                            "value3": 228,
+                            "value4": 188,
+                            "value5": 79,
+                            "value6": 79,
+                            "value7": 208,
+                            "value8": 140,
+                            "value9": 171,
+                            "value10": 148,
+                            "value11": 23,
+                            "value12": 209,
+                            "value13": 154,
+                            "value14": 198,
+                            "value15": 140
                         }
                     }
                 },
@@ -35,30 +35,30 @@
                         "ptr_wrapper": {
                             "id": 2147483650,
                             "data": {
-                                "cereal::base_class<Asset>(&entity)": {
-                                    "name": "Camera",
+                                "cereal::base_class<Asset>(this)": {
+                                    "name": "RootNode",
                                     "guid": {
                                         "bytes": {
-                                            "value0": 37,
-                                            "value1": 164,
-                                            "value2": 116,
-                                            "value3": 234,
-                                            "value4": 167,
-                                            "value5": 113,
-                                            "value6": 67,
-                                            "value7": 53,
-                                            "value8": 167,
-                                            "value9": 73,
-                                            "value10": 175,
-                                            "value11": 6,
-                                            "value12": 10,
-                                            "value13": 121,
-                                            "value14": 66,
-                                            "value15": 61
+                                            "value0": 0,
+                                            "value1": 0,
+                                            "value2": 0,
+                                            "value3": 0,
+                                            "value4": 0,
+                                            "value5": 0,
+                                            "value6": 0,
+                                            "value7": 0,
+                                            "value8": 0,
+                                            "value9": 0,
+                                            "value10": 0,
+                                            "value11": 0,
+                                            "value12": 0,
+                                            "value13": 0,
+                                            "value14": 0,
+                                            "value15": 0
                                         }
                                     }
                                 },
-                                "entity.components": [
+                                "components": [
                                     {
                                         "polymorphic_id": 2147483650,
                                         "polymorphic_name": "Engine::TransformComponent",
@@ -68,17 +68,195 @@
                                                 "Component": {
                                                     "isEnabled": true
                                                 },
-                                                "position": {
+                                                "parent": {
+                                                    "polymorphic_id": 0
+                                                },
+                                                "localPosition": {
+                                                    "v.x": 0.0,
+                                                    "v.y": 0.0,
+                                                    "v.z": 0.0
+                                                },
+                                                "localRotation": {
+                                                    "v.x": 0.0,
+                                                    "v.y": -0.0,
+                                                    "v.z": 0.0
+                                                },
+                                                "localScale": {
+                                                    "v.x": 1.0,
+                                                    "v.y": 1.0,
+                                                    "v.z": 1.0
+                                                },
+                                                "isStatic": false
+                                            }
+                                        }
+                                    }
+                                ],
+                                "isActive": true
+                            }
+                        }
+                    },
+                    {
+                        "polymorphic_id": 1073741824,
+                        "ptr_wrapper": {
+                            "id": 2147483652,
+                            "data": {
+                                "cereal::base_class<Asset>(this)": {
+                                    "name": "Crystal_stone",
+                                    "guid": {
+                                        "bytes": {
+                                            "value0": 0,
+                                            "value1": 0,
+                                            "value2": 0,
+                                            "value3": 0,
+                                            "value4": 0,
+                                            "value5": 0,
+                                            "value6": 0,
+                                            "value7": 0,
+                                            "value8": 0,
+                                            "value9": 0,
+                                            "value10": 0,
+                                            "value11": 0,
+                                            "value12": 0,
+                                            "value13": 0,
+                                            "value14": 0,
+                                            "value15": 0
+                                        }
+                                    }
+                                },
+                                "components": [
+                                    {
+                                        "polymorphic_id": 2,
+                                        "ptr_wrapper": {
+                                            "id": 2147483653,
+                                            "data": {
+                                                "Component": {
+                                                    "isEnabled": true
+                                                },
+                                                "parent": {
+                                                    "polymorphic_id": 1073741824,
+                                                    "ptr_wrapper": {
+                                                        "id": 3
+                                                    }
+                                                },
+                                                "localPosition": {
+                                                    "v.x": 0.07106146961450577,
+                                                    "v.y": -0.05987875908613205,
+                                                    "v.z": 0.08043143898248673
+                                                },
+                                                "localRotation": {
+                                                    "v.x": 90.00000762939453,
+                                                    "v.y": -0.0,
+                                                    "v.z": 0.0
+                                                },
+                                                "localScale": {
+                                                    "v.x": 100.0,
+                                                    "v.y": 100.0,
+                                                    "v.z": 100.0
+                                                },
+                                                "isStatic": false
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "polymorphic_id": 2147483651,
+                                        "polymorphic_name": "Engine::MeshRendererComponent",
+                                        "ptr_wrapper": {
+                                            "id": 2147483654,
+                                            "data": {
+                                                "cereal::base_class<RenderComponent>(this)": {
+                                                    "cereal::base_class<Component>(this)": {
+                                                        "isEnabled": true
+                                                    },
+                                                    "transformComponent": {
+                                                        "locked_ptr": {
+                                                            "polymorphic_id": 1073741824,
+                                                            "ptr_wrapper": {
+                                                                "id": 5
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "mesh": {
+                                                    "assetReferenceGuid": {
+                                                        "bytes": {
+                                                            "value0": 171,
+                                                            "value1": 44,
+                                                            "value2": 216,
+                                                            "value3": 0,
+                                                            "value4": 224,
+                                                            "value5": 180,
+                                                            "value6": 69,
+                                                            "value7": 16,
+                                                            "value8": 131,
+                                                            "value9": 252,
+                                                            "value10": 224,
+                                                            "value11": 113,
+                                                            "value12": 206,
+                                                            "value13": 70,
+                                                            "value14": 51,
+                                                            "value15": 241
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                ],
+                                "isActive": true
+                            }
+                        }
+                    },
+                    {
+                        "polymorphic_id": 1073741824,
+                        "ptr_wrapper": {
+                            "id": 2147483655,
+                            "data": {
+                                "cereal::base_class<Asset>(this)": {
+                                    "name": "Camera",
+                                    "guid": {
+                                        "bytes": {
+                                            "value0": 0,
+                                            "value1": 0,
+                                            "value2": 0,
+                                            "value3": 0,
+                                            "value4": 0,
+                                            "value5": 0,
+                                            "value6": 0,
+                                            "value7": 0,
+                                            "value8": 0,
+                                            "value9": 0,
+                                            "value10": 0,
+                                            "value11": 0,
+                                            "value12": 0,
+                                            "value13": 0,
+                                            "value14": 0,
+                                            "value15": 0
+                                        }
+                                    }
+                                },
+                                "components": [
+                                    {
+                                        "polymorphic_id": 2,
+                                        "ptr_wrapper": {
+                                            "id": 2147483656,
+                                            "data": {
+                                                "Component": {
+                                                    "isEnabled": true
+                                                },
+                                                "parent": {
+                                                    "polymorphic_id": 0
+                                                },
+                                                "localPosition": {
                                                     "v.x": 0.0,
                                                     "v.y": 100.0,
                                                     "v.z": 200.0
                                                 },
-                                                "rotation": {
+                                                "localRotation": {
                                                     "v.x": 0.0,
-                                                    "v.y": 180.0,
+                                                    "v.y": 3.141592502593994,
                                                     "v.z": 0.0
                                                 },
-                                                "scale": {
+                                                "localScale": {
                                                     "v.x": 1.0,
                                                     "v.y": 1.0,
                                                     "v.z": 1.0
@@ -88,10 +266,10 @@
                                         }
                                     },
                                     {
-                                        "polymorphic_id": 2147483651,
+                                        "polymorphic_id": 2147483652,
                                         "polymorphic_name": "Engine::CameraComponent",
                                         "ptr_wrapper": {
-                                            "id": 2147483652,
+                                            "id": 2147483657,
                                             "data": {
                                                 "Component": {
                                                     "isEnabled": true
@@ -105,7 +283,7 @@
                                                     "locked_ptr": {
                                                         "polymorphic_id": 1073741824,
                                                         "ptr_wrapper": {
-                                                            "id": 3
+                                                            "id": 8
                                                         }
                                                     }
                                                 }
@@ -113,7 +291,7 @@
                                         }
                                     }
                                 ],
-                                "entity.isActive": true
+                                "isActive": true
                             }
                         }
                     }

@@ -96,7 +96,7 @@ namespace Engine
 		/// Set the value of this parameter.
 		/// </summary>
 		/// <param name="val">The value expected as a texture.</param>
-		void SetValue(Texture& texture_) const;
+		void SetValue(Texture& texture) const;
 
 	protected:
 
@@ -208,14 +208,10 @@ namespace Engine
 		/// <summary>
 		/// This method allows you to set the value of your shader attribute. NOTE: see this link for more information: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glVertexAttribPointer.xhtml
 		/// </summary>
-		/// <param name="size">The size of the shader attribute.</param>
-		/// <param name="type">The type of the shader attribute.</param>
 		/// <param name="normalized">This bool defines if this value should be normalized before it's sent to the GPU.</param>
 		/// <param name="stride">The stride of the shader attribute.</param>
 		/// <param name="pointer">The pointer of the shader attribute.</param>
 		void SetAttributePointer(
-			GLint size,
-			GLenum type,
 			GLboolean normalized,
 			GLsizei stride,
 			const GLvoid * pointer) const;
@@ -235,11 +231,12 @@ namespace Engine
 		/// <param name="name">The name of the attribute you want to load in.</param>
 		/// <param name="type">The type of the attribute you want to load in.</param>
 		/// <param name="location">The location of the attribute you want to load in.</param>
-		ShaderAttribute(OpenGLShader* shader, std::string name, GLenum type, GLint location) :
+		ShaderAttribute(OpenGLShader* shader, std::string name, GLenum type, GLint location, GLint size) :
 			_shader(shader),
 			_name(name),
 			_type(type),
-			_location(location)
+			_location(location),
+			_size(size)
 		{}
 
 		/// <summary>
@@ -255,12 +252,13 @@ namespace Engine
 		/// <param name="name">The name of the attribute you want to load in.</param>
 		/// <param name="type">The type of the attribute you want to load in.</param>
 		/// <param name="location">The location of the attribute you want to load in.</param>
-		void Reset(OpenGLShader* shader, std::string name, GLenum type, GLint location)
+		void Reset(OpenGLShader* shader, std::string name, GLenum type, GLint location, GLint size)
 		{
 			this->_shader = shader;
 			this->_type = type;
 			this->_location = location;
 			this->_name = name;
+			this->_size = size;
 		}
 
 		/// <summary>
@@ -295,6 +293,8 @@ namespace Engine
 		/// The location of this shader attribute.
 		/// </summary>
 		GLint		_location;
+
+		GLint _size;
 	};
 
 	/// <summary>

@@ -73,4 +73,4 @@ namespace Engine {
 	Frustum::Face Frustum::GetLeftFace() const {
 		return leftFace;
 	}
-} // namespace Engine
+}

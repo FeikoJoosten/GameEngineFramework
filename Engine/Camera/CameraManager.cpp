@@ -44,7 +44,7 @@ namespace Engine {
 	}
 
 	void CameraManager::HandleOnCameraAddedToEntity(const std::shared_ptr<CameraComponent>& cameraComponent) {
-		if (std::find(allCameras.begin(), allCameras.end(), cameraComponent) != allCameras.end()) return;
+		if (std::ranges::find(allCameras, cameraComponent) != allCameras.end()) return;
 
 		allCameras.push_back(cameraComponent);
 		if (cameraComponent->GetIsActiveAndEnabled()) allActiveCameras.push_back(cameraComponent);

@@ -100,10 +100,11 @@
       <PreprocessorDefinitions>WIN32;ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;_DEBUG;Engine_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\crossguid\include;$(SolutionDir)ThirdParty\efsw\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)Engine\ThirdParty;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,11 +126,12 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\crossguid\include;$(SolutionDir)ThirdParty\efsw\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)Engine\ThirdParty;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <ShowIncludes>false</ShowIncludes>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,10 +154,11 @@
       <PreprocessorDefinitions>WIN32;ENGINE_DLL;_CRT_SECURE_NO_WARNINGS;NDEBUG;Engine_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\crossguid\include;$(SolutionDir)ThirdParty\efsw\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)Engine\ThirdParty;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -181,9 +184,10 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)ThirdParty\glm;$(SolutionDir)ThirdParty\utf8cpp;$(SolutionDir)ThirdParty\assimp\include;$(SolutionDir)ThirdParty\cereal\include;$(SolutionDir)ThirdParty\crossguid\include;$(SolutionDir)ThirdParty\efsw\include;$(SolutionDir)ThirdParty\GainInput\lib\include;$(SolutionDir)ThirdParty\glew-2.1.0\include;$(SolutionDir)ThirdParty\glfw-3.3.8\include;$(SolutionDir)Engine\ThirdParty;$(SolutionDir)ThirdParty\stb;$(SolutionDir)ThirdParty\nameof\include;$(SolutionDir)ThirdParty\Vulkan\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <EnableModules>true</EnableModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -198,36 +202,38 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Animation\Animation.hpp" />
-    <ClInclude Include="Animation\Skeleton.hpp" />
     <ClInclude Include="Api\Api.hpp" />
     <ClInclude Include="Application\Application.hpp" />
     <ClInclude Include="AssetManagement\Asset.hpp" />
+    <ClInclude Include="AssetManagement\AssetAssetImporter.hpp" />
     <ClInclude Include="AssetManagement\AssetImporter.hpp" />
+    <ClInclude Include="AssetManagement\AssetImportSettings.hpp" />
+    <ClInclude Include="AssetManagement\AssetImportSettingsAssetImporter.hpp" />
     <ClInclude Include="AssetManagement\AssetManager.hpp" />
+    <ClInclude Include="AssetManagement\AssetReference.hpp" />
     <ClInclude Include="AssetManagement\AssetRegistry.hpp" />
+    <ClInclude Include="AssetManagement\AssetSerializationType.hpp" />
     <ClInclude Include="AssetManagement\EngineAssetManager.hpp" />
     <ClInclude Include="AssetManagement\EngineProjectFileWatcher.hpp" />
+    <ClInclude Include="AssetManagement\EntityAssetImporter.hpp" />
     <ClInclude Include="AssetManagement\IAssetImporter.hpp" />
+    <ClInclude Include="AssetManagement\MaterialAssetImporter.hpp" />
     <ClInclude Include="AssetManagement\MeshAssetImporter.hpp" />
-    <ClInclude Include="AssetManagement\ModelImporter.hpp" />
-    <ClInclude Include="AssetManagement\SceneImporter.hpp" />
+    <ClInclude Include="AssetManagement\ModelAssetImporter.hpp" />
+    <ClInclude Include="AssetManagement\ModelAssetImportSettings.hpp" />
+    <ClInclude Include="AssetManagement\SceneAssetImporter.hpp" />
+    <ClInclude Include="AssetManagement\TextureAssetImporter.hpp" />
     <ClInclude Include="Camera\CameraManager.hpp" />
     <ClInclude Include="Components\CameraComponent.hpp" />
     <ClInclude Include="Camera\Frustum.hpp" />
-    <ClInclude Include="Collision\CollisionSystem.hpp" />
-    <ClInclude Include="Collision\CollisionTypes.hpp" />
     <ClInclude Include="CommandLineArguments\CommandLineArgumentsManager.hpp" />
-    <ClInclude Include="Components\AnimationComponent.hpp" />
-    <ClInclude Include="Components\CollisionComponent.hpp" />
     <ClInclude Include="Components\Component.hpp" />
     <ClInclude Include="Components\RenderComponent.hpp" />
     <ClInclude Include="Components\LightComponent.hpp" />
-    <ClInclude Include="Components\ModelComponent.hpp" />
+    <ClInclude Include="Components\MeshRendererComponent.hpp" />
     <ClInclude Include="Components\TransformComponent.hpp" />
     <ClInclude Include="Engine\Engine.hpp" />
     <ClInclude Include="Entity\Entity.hpp" />
-    <ClInclude Include="Entity\EntitySerialization.hpp" />
     <ClInclude Include="Entity\EntitySystem.hpp" />
     <ClInclude Include="Serialization\GlmSerializationHelper.hpp" />
     <ClInclude Include="Input\InputManager.hpp" />
@@ -237,9 +243,6 @@
     <ClInclude Include="Mesh\OpenGLMesh.hpp" />
     <ClInclude Include="Mesh\VulkanMesh.hpp" />
     <ClInclude Include="Model\Model.hpp" />
-    <ClInclude Include="Particle System\Emitter.hpp" />
-    <ClInclude Include="Particle System\Particle.hpp" />
-    <ClInclude Include="Particle System\VulkanEmitter.hpp" />
     <ClInclude Include="Renderer\IMGUI\imconfig.h" />
     <ClInclude Include="Renderer\IMGUI\imgui.h" />
     <ClInclude Include="Renderer\IMGUI\imgui_internal.h" />
@@ -264,7 +267,6 @@
     <ClInclude Include="Renderer\Vulkan\VulkanSkeletalMeshRenderer.hpp" />
     <ClInclude Include="Renderer\Vulkan\VulkanSpriteRenderer.hpp" />
     <ClInclude Include="Renderer\Vulkan\VulkanStaticMeshRenderer.hpp" />
-    <ClInclude Include="Resources\ResourceManager.hpp" />
     <ClInclude Include="Scene\Scene.hpp" />
     <ClInclude Include="Scene\SceneManager.hpp" />
     <ClInclude Include="Serialization\GuidSerializationHelper.hpp" />
@@ -283,6 +285,7 @@
     <ClInclude Include="Utility\Defines.hpp" />
     <ClInclude Include="Engine\EngineImGui.hpp" />
     <ClInclude Include="Utility\Event.hpp" />
+    <ClInclude Include="Utility\StringUtility.hpp" />
     <ClInclude Include="Utility\Time.hpp" />
     <ClInclude Include="Utility\Vertex.hpp" />
     <ClInclude Include="Window\OpenGLWindow.hpp" />
@@ -290,25 +293,30 @@
     <ClInclude Include="Window\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animation\Animation.cpp" />
-    <ClCompile Include="Animation\Skeleton.cpp" />
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="AssetImportSettings.cpp" />
     <ClCompile Include="AssetManagement\Asset.cpp" />
+    <ClCompile Include="AssetManagement\AssetAssetImporter.cpp" />
+    <ClCompile Include="AssetManagement\AssetImportSettingsAssetImporter.cpp" />
     <ClCompile Include="AssetManagement\AssetManager.cpp" />
     <ClCompile Include="AssetManagement\AssetRegistry.cpp" />
     <ClCompile Include="AssetManagement\EngineAssetManager.cpp" />
     <ClCompile Include="AssetManagement\EngineProjectFileWatcher.cpp" />
+    <ClCompile Include="AssetManagement\EntityAssetImporter.cpp" />
+    <ClCompile Include="AssetManagement\MaterialAssetImporter.cpp" />
+    <ClCompile Include="AssetManagement\MeshAssetImporter.cpp" />
+    <ClCompile Include="AssetManagement\ModelAssetImporter.cpp" />
+    <ClCompile Include="AssetManagement\ModelAssetImportSettings.cpp" />
+    <ClCompile Include="AssetManagement\SceneAssetImporter.cpp" />
+    <ClCompile Include="AssetManagement\TextureAssetImporter.cpp" />
     <ClCompile Include="Camera\CameraManager.cpp" />
     <ClCompile Include="Components\CameraComponent.cpp" />
     <ClCompile Include="Camera\Frustum.cpp" />
-    <ClCompile Include="Collision\CollisionSystem.cpp" />
     <ClCompile Include="CommandLineArguments\CommandLineArgumentsManager.cpp" />
-    <ClCompile Include="Components\AnimationComponent.cpp" />
-    <ClCompile Include="Components\CollisionComponent.cpp" />
     <ClCompile Include="Components\Component.cpp" />
     <ClCompile Include="Components\RenderComponent.cpp" />
     <ClCompile Include="Components\LightComponent.cpp" />
-    <ClCompile Include="Components\ModelComponent.cpp" />
+    <ClCompile Include="Components\MeshRendererComponent.cpp" />
     <ClCompile Include="Components\TransformComponent.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
@@ -320,12 +328,7 @@
     <ClCompile Include="Mesh\Mesh.cpp" />
     <ClCompile Include="Mesh\OpenGLMesh.cpp" />
     <ClCompile Include="Mesh\VulkanMesh.cpp" />
-    <ClCompile Include="MeshAssetImporter.cpp" />
-    <ClCompile Include="ModelImporter.cpp" />
     <ClCompile Include="Model\Model.cpp" />
-    <ClCompile Include="Particle System\Emitter.cpp" />
-    <ClCompile Include="Particle System\Particle.cpp" />
-    <ClCompile Include="Particle System\VulkanEmitter.cpp" />
     <ClCompile Include="Renderer\IMGUI\imgui.cpp" />
     <ClCompile Include="Renderer\IMGUI\imgui_demo.cpp" />
     <ClCompile Include="Renderer\IMGUI\imgui_draw.cpp" />
@@ -345,8 +348,6 @@
     <ClCompile Include="Renderer\Vulkan\VulkanSkeletalMeshRenderer.cpp" />
     <ClCompile Include="Renderer\Vulkan\VulkanSpriteRenderer.cpp" />
     <ClCompile Include="Renderer\Vulkan\VulkanStaticMeshRenderer.cpp" />
-    <ClCompile Include="Resources\ResourceManager.cpp" />
-    <ClCompile Include="SceneImporter.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Shader\OpenGLShader.cpp" />
@@ -359,6 +360,7 @@
     <ClCompile Include="Utility\Logging.cpp" />
     <ClCompile Include="Utility\Random.cpp" />
     <ClCompile Include="Engine\EngineImGui.cpp" />
+    <ClCompile Include="Utility\StringUtility.cpp" />
     <ClCompile Include="Utility\Time.cpp" />
     <ClCompile Include="Window\OpenGLWindow.cpp" />
     <ClCompile Include="Window\VulkanWindow.cpp" />

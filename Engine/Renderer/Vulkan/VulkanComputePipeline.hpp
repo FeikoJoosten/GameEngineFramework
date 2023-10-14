@@ -68,6 +68,6 @@ namespace Engine {
 		VulkanLogicalDevice * device_;
 	};
 
-} // namespace Engine
+}
 
-#endif // USING_VULKAN
+#endif

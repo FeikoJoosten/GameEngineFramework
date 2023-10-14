@@ -2,21 +2,21 @@
 
 #include "Engine/Api/Api.hpp"
 #include "Engine/Engine/Engine.hpp"
-#include "Engine/Scene/Scene.hpp"
+#include "Engine/Utility/Event.hpp"
 
 #include <cereal/access.hpp>
 #include <memory>
 
 namespace Engine {
 	class Scene;
-	class SceneImporter;
+	class SceneAssetImporter;
 
 	class ENGINE_API SceneManager {
 		friend std::shared_ptr<SceneManager> Engine::GetSceneManager() noexcept;
 		friend cereal::access;
 
 		std::vector<std::shared_ptr<Scene>> openScenes;
-		std::shared_ptr<SceneImporter> sceneImporter;
+		std::shared_ptr<SceneAssetImporter> sceneImporter;
 
 		SceneManager() = default;
 

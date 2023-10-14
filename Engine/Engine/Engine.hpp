@@ -5,20 +5,17 @@
 
 #include <memory>
 
-#include <cereal/types/string.hpp>
 #include <cereal/types/vector.hpp>
 
 namespace Engine {
 	class AssetManager;
 	class CameraManager;
-	class CollisionSystem;
 	class CommandLineArgumentsManager;
 	class EngineAssetManager;
 	class EntitySystem;
 	class InputManager;
 	class Renderer;
 	class Random;
-	class ResourceManager;
 	class SceneManager;
 	class Time;
 	class Window;
@@ -103,20 +100,6 @@ namespace Engine {
 		static std::shared_ptr<EntitySystem> GetEntitySystem() noexcept;
 
 		/// <summary>
-		/// This method allows you to get a shared pointer of the resource manager. 
-		/// If it has not been defined yet, it'll be created for you.
-		/// </summary>
-		/// <returns>Returns a shared pointer of the resource manager.</returns>
-		static std::shared_ptr<ResourceManager> GetResourceManager() noexcept;
-
-		/// <summary>
-		/// This method allows you to get a shared pointer of the collision system.
-		/// If it has not been defined yet, it'll be created for you.
-		/// </summary>
-		/// <returns>Returns a shared pointer of the collision system.</returns>
-		static std::shared_ptr<CollisionSystem> GetCollisionSystem() noexcept;
-
-		/// <summary>
 		/// this method allows you to get a shared pointer of the Random class object
 		/// If it has not been defined yet, it'll be created for you.
 		/// </summary>
@@ -160,8 +143,6 @@ namespace Engine {
 		std::shared_ptr<CameraManager> cameraManager;
 		std::shared_ptr<Time> time;
 		std::shared_ptr<EntitySystem> entitySystem;
-		std::shared_ptr<ResourceManager> resourceManager;
-		std::shared_ptr<CollisionSystem> collisionSystem;
 		std::shared_ptr<Random> random;
 		std::shared_ptr<SceneManager> sceneManager;
 		std::shared_ptr<AssetManager> assetManager;

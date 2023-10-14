@@ -47,7 +47,7 @@ namespace Engine {
 	void EngineAssetManager::SaveEngineData(const DataType& input, bool writeNameValuePairs, const std::string& fileExtension) {
 		const std::string filePath = MakeEngineFilePath<OwnerType, DataType>(fileExtension);
 		if(const std::string desiredDirectoryPath = AssetManager::GetDirectoryFromPath(filePath); !std::filesystem::is_directory(desiredDirectoryPath)) {
-			if(!std::filesystem::create_directories(desiredDirectoryPath)) {
+			if(!std::filesystem::create_directories(desiredDirectoryPath) && !std::filesystem::exists(desiredDirectoryPath)) {
 				DEBUG_ERROR("Failed to create directories for path: " + filePath);
 				return;
 			}

@@ -3,18 +3,18 @@
 
 #include "Engine/Application/Application.hpp"
 #include "Engine/AssetManagement/AssetManager.hpp"
-#include "Engine/Components/CameraComponent.hpp"
 #include "Engine/CommandLineArguments/CommandLineArgumentsManager.hpp"
+#include "Engine/Components/CameraComponent.hpp"
 #include "Engine/Components/TransformComponent.hpp"
-#include "Engine/Components/ModelComponent.hpp"
+#include "Engine/Components/MeshRendererComponent.hpp"
 #include "Engine/Components/LightComponent.hpp"
 #include "Engine/Entity/Entity.hpp"
-#include "Engine/Entity/EntitySystem.hpp"
 #include "Engine/Engine/EngineImGui.hpp"
+#include "Engine/Model/Model.hpp"
 #include "Engine/Window/Window.hpp"
-#include "Engine/Entity/EntitySerialization.hpp"
-
+#include "Engine/Scene/Scene.hpp"
 #include "Engine/Scene/SceneManager.hpp"
+
 
 #if defined(_WIN32) && defined(UNICODE)
 #include <utf8.h>
@@ -78,47 +78,60 @@ namespace Engine {
 		Engine::GetCameraManager(); // TODO: Replace this with scene/game view so that will auto-initialize the camera manager somehow
 		std::shared_ptr<EngineImGui> engineImGui = std::make_shared<EngineImGui>();
 
-		//// Put test stuff here
+		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
+		const std::string pathInProject = "Models/";
+		const char* fileName = "Fantasy_crystal_stone.fbx";
+
+		//std::shared_ptr<IAssetImporter> assetImporter;
+		//if (assetManager->TryGetAssetImporterForPath(pathInProject + fileName, assetImporter))
+		//	assetImporter->ImportAsset(pathInProject, fileName);
+		//xg::Guid modelGuid;
+		//AssetRegistry::TryGetGuidForPath(pathInProject, fileName, modelGuid);
 
 		const std::shared_ptr<SceneManager> sceneManager = SceneManager::Get();
-		//std::shared_ptr<Scene> mainScene = SceneManager::CreateScene("Main Scene", "Scenes/");
-		std::shared_ptr<Scene> mainScene = sceneManager->OpenScene("Scenes/", "Main Scene");
+		const std::shared_ptr<Scene> mainScene = sceneManager->OpenScene("Scenes/", "Main Scene.scene");
+
+		//if (const std::shared_ptr<Model> loadedModel = std::shared_ptr<Model>(AssetReference<Model>(modelGuid))) {
+		//	const std::shared_ptr<Scene> mainScene = SceneManager::CreateScene("Main Scene", "Scenes/");
+		//	for (const std::shared_ptr<Entity>& entity : loadedModel->GetEntities())
+		//		mainScene->AddEntity(entity);
+		//
+		//	const std::shared_ptr<Entity> cameraEntity = std::make_shared<Entity>("Camera");
+		//	const std::shared_ptr<TransformComponent> transformComponent = cameraEntity->AddComponent<TransformComponent>();
+		//	transformComponent->SetPositionAndRotation(glm::vec3(0.f, 100.f, 200.f), glm::vec3(0.f, glm::radians(180.f), 0.f));
+		//	const std::shared_ptr<CameraComponent> cameraComponent = cameraEntity->AddComponent<CameraComponent>();
+		//	cameraComponent->SetProjection(60.f, 0.1f, 1000.f);
+		//
+		//	mainScene->AddEntity(cameraEntity);
+		//	mainScene->Save();
+		//}
+
+		//// Put test stuff here
+
 
 		// ImGuiRenderer handles the main menu menu's. It works standalone, but has to be cleared in the correct order.
 		//std::unique_ptr<ImGuiRenderer> imGuiRenderer = std::make_unique<ImGuiRenderer>();
 		// This should be created by the scene view window instead of here
-		const std::shared_ptr<EntitySystem> entitySystem = EntitySystem::Get();
-		//const std::shared_ptr<Entity> cameraEntity = entitySystem->CreateEntity("Camera");
-		//const std::shared_ptr<TransformComponent> transformComponent = cameraEntity->AddComponent<TransformComponent>();
-		//transformComponent->SetPositionAndRotation(glm::vec3(0.f, 100.f, 200.f), glm::vec3(0.f, glm::radians(180.f), 0.f));
-		//const std::shared_ptr<CameraComponent> cameraComponent = cameraEntity->AddComponent<CameraComponent>();
-		//cameraComponent->SetProjection(60.f, 0.1f, 1000.f);
+		//const std::shared_ptr<EntitySystem> entitySystem = EntitySystem::Get();
 		
-		//mainScene->AddEntity(cameraEntity);
-		//mainScene->Save();
 
 		//std::string currentFilePath;
-		//std::string assetName;
+		//const char* assetNameWithExtension;
 		//const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
-		//if (assetManager->GetAssetRegistry()->TryGetPathForGuid(mainScene->GetGuid(), currentFilePath, assetName))
-		//	assetManager->WriteDataToFullPath(currentFilePath, mainScene);
+		//if (assetManager->GetAssetRegistry()->TryGetPathForGuid(mainScene->GetGuid(), currentFilePath, assetNameWithExtension))
+		//	assetManager->WriteAssetToFullPath(currentFilePath, mainScene);
 		
-		const std::shared_ptr<Entity> lockedEntity = entitySystem->CreateEntity("Amazing Entity");
-		const std::shared_ptr<ModelComponent> modelComponent = lockedEntity->AddComponent<ModelComponent>();
-		modelComponent->SetModel("jeep1.fbx");
-		//std::vector<std::string> modelAnimations {};
-		//if(model->HasAnimations()) {
-			//model->GetAnimations(modelAnimations);
-			//model->SetAnimation(modelAnimations[0], true);
-			//model->SetLooping(true);
-		//}
+		//const std::shared_ptr<Entity> lockedEntity = entitySystem->CreateEntity("Amazing Entity");
+		//const std::shared_ptr<MeshRendererComponent> modelComponent = lockedEntity->AddComponent<MeshRendererComponent>();
 		//lockedEntity->AddComponent<LightComponent>("light", LightAmbientLight, glm::vec3(0.f, 50.f, 0.f), glm::vec3(), glm::vec3(1.f, 1.f, 1.f), 3000.f, 100.f, 10.f, 10.f);
-		lockedEntity->AddComponent<TransformComponent>();
-		mainScene->AddEntity(lockedEntity);
+		//lockedEntity->AddComponent<TransformComponent>();
+		//mainScene->AddEntity(lockedEntity);
+		//mainScene->Save();
 
 		//const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
+		//assetManager->WriteAssetToPath("Scenes/", mainScene);
 		//const std::string entityFilePath = assetManager->GetProjectRoot() + "Entities";
-		//AssetManager::WriteDataToPath(entityFilePath, "Amazing Entity", lockedEntity);
+		//AssetManager::WriteAssetToPath(entityFilePath, "Amazing Entity", lockedEntity);
 		//std::shared_ptr<Entity> lockedEntity = assetManager->ReadDataFromPath<std::shared_ptr<Entity>>(entityFilePath);
 		
 		while (!Window::Get()->ShouldClose())
