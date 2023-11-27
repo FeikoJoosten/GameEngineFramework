@@ -10,7 +10,7 @@
 namespace Engine {
 	class AssetImportSettings;
 
-	template <class AssetType>
+	template <typename AssetType>
 	class ENGINE_API AssetImporter : public IAssetImporter {
 	protected:
 		std::shared_ptr<AssetRegistry> assetRegistry;
@@ -36,66 +36,71 @@ namespace Engine {
 
 		virtual std::shared_ptr<Asset> ImportAsset(const std::shared_ptr<Asset>& assetToImport) final override;
 
-		virtual std::shared_ptr<Asset> ImportAsset(const std::string& pathInProject, const char* assetNameWithExtension) final override;
+		virtual std::shared_ptr<Asset> ImportAsset(const std::string& fullPath, const char* assetNameWithExtension) final override;
 
-		[[nodiscard]] virtual std::shared_ptr<Asset> LoadAsset(const xg::Guid& assetGuid) const override;
+		virtual std::shared_ptr<Asset> ImportAsset(const std::shared_ptr<Asset>& assetToImport, const std::string& fullPath, const char* assetNameWithExtension) final override;
+
+		[[nodiscard]] virtual std::shared_ptr<Asset> LoadAsset(const xg::Guid& assetGuid) const final override;
+
+		[[nodiscard]] virtual std::shared_ptr<AssetImportSettings> GetDefaultImportSettings() const override;
 
 	protected:
 		virtual void TryAppendAssetExtension(std::string& fileName);
 
 		virtual std::shared_ptr<Asset> ImportAsset(const std::shared_ptr<Asset>& assetToImport, const std::shared_ptr<AssetImportSettings>& importSettings);
 
-		virtual std::shared_ptr<Asset> ImportAsset(const std::string& pathInProject, const char* assetNameWithExtension, const std::shared_ptr<AssetImportSettings>& importSettings) = 0;
+		virtual std::shared_ptr<Asset> ImportAsset(const std::string& fullPath, const char* assetNameWithExtension, const std::shared_ptr<AssetImportSettings>& importSettings);
 
-		virtual std::shared_ptr<AssetImportSettings> GetDefaultImportSettings();
+		[[nodiscard]] virtual std::shared_ptr<Asset> LoadAsset(const xg::Guid& assetGuid, const std::shared_ptr<AssetImportSettings>& importSettings) const;
 	};
 
-	template <class AssetType>
+	template <typename AssetType>
 	AssetImporter<AssetType>::AssetImporter(std::shared_ptr<AssetRegistry> assetRegistry) : assetRegistry(std::move(assetRegistry)), supportedType(typeid(AssetType)) {
 		static_assert(std::is_base_of_v<Asset, AssetType>, "AssetType must derive from Asset");
 	}
 
-	template <class AssetType>
+	template <typename AssetType>
 	const char* AssetImporter<AssetType>::GetDefaultAssetExtension() const {
 		return ".asset";
 	}
 
-	template <class AssetType>
+	template <typename AssetType>
 	bool AssetImporter<AssetType>::SupportsAsset(const std::shared_ptr<Asset>& assetToVerify) {
 		return std::dynamic_pointer_cast<AssetType>(assetToVerify) != nullptr;
 	}
 
-	template <class AssetType>
+	template <typename AssetType>
 	bool AssetImporter<AssetType>::SupportsFile(const std::string& fullPath, const std::string& fileExtension) {
 		return fileExtension == GetDefaultAssetExtension();
 	}
 
-	template <class AssetType> bool AssetImporter<AssetType>::SupportsType(const type_info& typeInfo) {
+	template <typename AssetType> bool AssetImporter<AssetType>::SupportsType(const type_info& typeInfo) {
 		return typeInfo == supportedType;
 	}
 
-	template <class AssetType>
+	template <typename AssetType>
 	std::shared_ptr<Asset> AssetImporter<AssetType>::ImportAsset(const std::shared_ptr<Asset>& assetToImport) {
-		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
-		const std::shared_ptr<AssetImporter> importSettingsImporter = std::reinterpret_pointer_cast<AssetImporter>(assetManager->GetAssetImporterForAssetType<AssetImportSettings>());
-		const std::string importSettingsExtension = importSettingsImporter->GetDefaultAssetExtension();
-
-		std::shared_ptr<AssetImportSettings> importSettings = {};
-		std::string pathInProject;
+		std::string fullPath;
 		std::string assetNameWithExtension;
-		if (assetToImport->GetGuid().isValid() && AssetRegistry::TryGetPathForGuid(assetToImport->GetGuid(), pathInProject, assetNameWithExtension))
-			importSettings = assetManager->ReadDataFromPath<std::shared_ptr<AssetImportSettings>>(pathInProject, assetNameWithExtension + importSettingsExtension);
+		if (!assetToImport->GetGuid().isValid() || !AssetRegistry::TryGetFullPathForGuid(assetToImport->GetGuid(), fullPath, assetNameWithExtension)) {
+			DEBUG_ERROR("Cannot import asset because it is not yet registerd!");
+			return {};
+		}
 
-		if (!importSettings) importSettings = GetDefaultImportSettings();
+		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
+		std::shared_ptr<AssetImportSettings> importSettings;
+		if (!assetToImport->GetGuid().isValid() || !AssetRegistry::TryGetImportSettingsForAsset(assetToImport->GetGuid(), importSettings)) {
+			importSettings = GetDefaultImportSettings();
+			importSettings->SetName(assetNameWithExtension);
+			assetManager->WriteAssetToFullPath(fullPath, importSettings);
+		}
+
 		std::shared_ptr<Asset> importedAsset = ImportAsset(assetToImport, importSettings);
 		if (!importedAsset) return {};
 
-		// child assets should never generate import settings until a valid nested import settings method is figured out
-		if (xg::Guid parentGuid; AssetRegistry::TryGetParentForAsset(importedAsset->GetGuid(), parentGuid)) return importedAsset;
-
 		bool isDirty = false;
-		if (const std::string& importedAssetName = importedAsset->GetName(); importSettings->GetName() != importedAssetName) {
-			importSettings->SetName(importedAssetName);
+		if (importSettings->GetName() != assetNameWithExtension) {
+			importSettings->SetName(assetNameWithExtension);
 			isDirty = true;
 		}
 		if (const xg::Guid& importedAssetGuid = importedAsset->GetGuid(); importSettings->relatedAssetGuid != importedAssetGuid) {
@@ -103,28 +108,28 @@ namespace Engine {
 			isDirty = true;
 		}
 
-		if (isDirty) assetManager->WriteAssetToPath(pathInProject, importSettings, importSettingsExtension.c_str());
+		if (isDirty) assetManager->WriteAssetToFullPath(fullPath, importSettings);
 		return importedAsset;
 	}
 
-	template <class AssetType>
-	std::shared_ptr<Asset> AssetImporter<AssetType>::ImportAsset(const std::string& pathInProject, const char* assetNameWithExtension) {
-		StringUtility::SanitizePath(pathInProject);
+	template <typename AssetType>
+	std::shared_ptr<Asset> AssetImporter<AssetType>::ImportAsset(const std::string& fullPath, const char* assetNameWithExtension) {
+		StringUtility::SanitizePath(fullPath);
 		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
-		const std::shared_ptr<AssetImporter> importSettingsImporter = std::reinterpret_pointer_cast<AssetImporter>(assetManager->GetAssetImporterForAssetType<AssetImportSettings>());
-		const std::string importSettingsExtension = importSettingsImporter->GetDefaultAssetExtension();
 
-		std::shared_ptr<AssetImportSettings> importSettings = assetManager->ReadDataFromPath<std::shared_ptr<AssetImportSettings>>(pathInProject, assetNameWithExtension + importSettingsExtension);
-		if (!importSettings) importSettings = GetDefaultImportSettings();
-		std::shared_ptr<Asset> importedAsset = ImportAsset(pathInProject, assetNameWithExtension, importSettings);
+		std::shared_ptr<AssetImportSettings> importSettings;
+		if (xg::Guid assetGuid; !AssetRegistry::TryGetGuidForFullPath(fullPath, assetNameWithExtension, assetGuid) || !AssetRegistry::TryGetImportSettingsForAsset(assetGuid, importSettings)) {
+			importSettings = GetDefaultImportSettings();
+			importSettings->SetName(assetNameWithExtension);
+			assetManager->WriteAssetToFullPath(fullPath, importSettings);
+		}
+
+		std::shared_ptr<Asset> importedAsset = ImportAsset(fullPath, assetNameWithExtension, importSettings);
 		if (!importedAsset) return {};
 
-		// child assets should never generate import settings until a valid nested import settings method is figured out
-		if (xg::Guid parentGuid; AssetRegistry::TryGetParentForAsset(importedAsset->GetGuid(), parentGuid)) return importedAsset;
-
 		bool isDirty = false;
-		if (const std::string& importedAssetName = importedAsset->GetName(); importSettings->GetName() != importedAssetName) {
-			importSettings->SetName(importedAssetName);
+		if (importSettings->GetName() != assetNameWithExtension) {
+			importSettings->SetName(assetNameWithExtension);
 			isDirty = true;
 		}
 		if (const xg::Guid& importedAssetGuid = importedAsset->GetGuid(); importSettings->relatedAssetGuid != importedAssetGuid) {
@@ -132,11 +137,60 @@ namespace Engine {
 			isDirty = true;
 		}
 
-		if (isDirty) assetManager->WriteAssetToPath(pathInProject, importSettings, importSettingsExtension.c_str());
+		if (isDirty) assetManager->WriteAssetToFullPath(fullPath, importSettings);
 		return importedAsset;
 	}
 
-	template <class AssetType>
+	template <typename AssetType>
+	std::shared_ptr<Asset> AssetImporter<AssetType>::ImportAsset(const std::shared_ptr<Asset>& assetToImport, const std::string& fullPath, const char* assetNameWithExtension) {
+		StringUtility::SanitizePath(fullPath);
+		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
+		const std::shared_ptr<IAssetImporter> importSettingsImporter = assetManager->GetAssetImporterForAssetType<AssetImportSettings>();
+		const std::string importSettingsExtension = importSettingsImporter->GetDefaultAssetExtension();
+		const std::string importSettingsFileName = assetNameWithExtension + importSettingsExtension;
+
+		std::shared_ptr<AssetImportSettings> importSettings;
+		const xg::Guid& assetGuid = assetToImport->GetGuid();
+		if (!assetGuid.isValid() || !AssetRegistry::TryGetImportSettingsForAsset(assetGuid, importSettings)) {
+			importSettings = GetDefaultImportSettings();
+			importSettings->SetName(assetNameWithExtension);
+			assetManager->WriteAssetToFullPath(fullPath, importSettings);
+		}
+
+		if (!assetGuid.isValid())
+			assetRegistry->TryRegisterAsset(assetToImport, importSettings->GetGuid(), fullPath, assetNameWithExtension);
+
+		std::shared_ptr<Asset> importedAsset = ImportAsset(assetToImport, importSettings);
+		if (!importedAsset) return {};
+
+		bool isDirty = false;
+		if (importSettings->GetName() != assetNameWithExtension) {
+			importSettings->SetName(assetNameWithExtension);
+			isDirty = true;
+		}
+		if (const xg::Guid& importedAssetGuid = importedAsset->GetGuid(); importSettings->relatedAssetGuid != importedAssetGuid) {
+			importSettings->relatedAssetGuid = importedAsset->GetGuid();
+			isDirty = true;
+		}
+
+		if (isDirty) assetManager->WriteAssetToFullPath(fullPath, importSettings);
+		return importedAsset;
+	}
+
+	template <typename AssetType>
+	std::shared_ptr<Asset> AssetImporter<AssetType>::LoadAsset(const xg::Guid& assetGuid) const {
+		std::shared_ptr<AssetImportSettings> importSettings;
+		if (!assetRegistry->TryGetImportSettingsForAsset(assetGuid, importSettings)) return {};
+
+		return LoadAsset(assetGuid, importSettings);
+	}
+
+	template <typename AssetType>
+	std::shared_ptr<AssetImportSettings> AssetImporter<AssetType>::GetDefaultImportSettings() const {
+		return std::make_shared<AssetImportSettings>();
+	}
+
+	template <typename AssetType>
 	void AssetImporter<AssetType>::TryAppendAssetExtension(std::string& fileName) {
 		const std::string assetExtension = GetDefaultAssetExtension();
 		const size_t assetExtensionLength = assetExtension.length();
@@ -145,30 +199,28 @@ namespace Engine {
 			fileName += assetExtension;
 	}
 
-	template <class AssetType>
+	template <typename AssetType>
 	std::shared_ptr<Asset> AssetImporter<AssetType>::ImportAsset(const std::shared_ptr<Asset>& assetToImport, const std::shared_ptr<AssetImportSettings>& importSettings) {
 		return assetToImport;
 	}
 
-	template <class AssetType>
-	std::shared_ptr<Asset> AssetImporter<AssetType>::LoadAsset(const xg::Guid& assetGuid) const {
-		const std::shared_ptr<AssetManager>& assetManager = AssetManager::Get();
-		std::string pathInProject;
+	template <typename AssetType>
+	std::shared_ptr<Asset> AssetImporter<AssetType>::ImportAsset(const std::string& fullPath, const char* assetNameWithExtension, const std::shared_ptr<AssetImportSettings>& importSettings) {
+		return AssetManager::ReadDataFromFullPath<std::shared_ptr<Asset>>(fullPath, assetNameWithExtension);
+	}
+
+	template <typename AssetType>
+	std::shared_ptr<Asset> AssetImporter<AssetType>::LoadAsset(const xg::Guid& assetGuid, const std::shared_ptr<AssetImportSettings>& importSettings) const {
+		std::string fullPath;
 		std::string assetNameWithExtension;
-		if (!AssetRegistry::TryGetPathForGuid(assetGuid, pathInProject, assetNameWithExtension)) {
+		if (!AssetRegistry::TryGetFullPathForGuid(assetGuid, fullPath, assetNameWithExtension)) {
 			DEBUG_ERROR("Cannot load asset because it is not registered!");
 			return {};
 		}
 
-		const std::shared_ptr<Asset>& loadedAsset = assetManager->ReadDataFromPath<std::shared_ptr<Asset>>(pathInProject, assetNameWithExtension);
+		const std::shared_ptr<Asset>& loadedAsset = AssetManager::ReadDataFromFullPath<std::shared_ptr<Asset>>(fullPath, assetNameWithExtension);
 
-		// If we load as the AssetType class, cereal throws an exception when loading as it cannot upcast from AssetType --> Asset?
 		return loadedAsset;
-	}
-
-	template <class AssetType>
-	std::shared_ptr<AssetImportSettings> AssetImporter<AssetType>::GetDefaultImportSettings() {
-		return std::make_shared<AssetImportSettings>();
 	}
 }
 

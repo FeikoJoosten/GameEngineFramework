@@ -1,6 +1,7 @@
 #include "Engine/Scene/SceneManager.hpp"
 #include "Engine/AssetManagement/AssetManager.hpp"
-#include "Engine/AssetManagement/SceneAssetImporter.hpp"
+#include "Engine/AssetManagement/AssetImportSettingsAssetImporter.hpp"
+#include "Engine/Scene/SceneAssetImporter.hpp"
 #include "Engine/Engine/Engine.hpp"
 #include "Engine/Entity/EntitySystem.hpp"
 #include "Engine/Scene/Scene.hpp"
@@ -64,11 +65,12 @@ namespace Engine {
 	}
 
 	std::shared_ptr<Scene> SceneManager::CreateScene(const std::string& sceneName, const std::string& pathInProject) {
-		std::shared_ptr<Scene> createdScene = std::shared_ptr<Scene>(new Scene(sceneName));
-
 		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
-		const std::shared_ptr<SceneAssetImporter> sceneAssetImporter = assetManager->GetAssetImporter<SceneAssetImporter>();
-		assetManager->GetAssetRegistry()->TryRegisterAsset(createdScene, pathInProject, (sceneName + sceneAssetImporter->GetDefaultAssetExtension()).c_str());
+		const std::shared_ptr<IAssetImporter> sceneAssetImporter = assetManager->GetAssetImporter<SceneAssetImporter>();
+
+		std::shared_ptr<Scene> createdScene = std::static_pointer_cast<Scene>(sceneAssetImporter->CreateAsset());
+		createdScene->SetName(sceneName);
+		assetManager->WriteAssetToPath(pathInProject, createdScene);
 
 		return createdScene;
 	}

@@ -8,7 +8,8 @@ in vec3 a_position;
 in vec3 a_normal;
 in vec2 a_texture;
 
-vec3 u_light_direction = vec3(1.0, 2.0, 3.0);
+//vec3 u_light_direction = vec3(1.0, 2.0, 3.0);
+uniform vec3 u_light_direction;
 
 // Vertex shader outputs
 out vec2 v_texture;

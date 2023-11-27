@@ -11,6 +11,7 @@ namespace Engine {
 	class ENGINE_API Asset : public std::enable_shared_from_this<Asset> {
 		friend cereal::access;
 		friend class AssetRegistry;
+		friend class AssetAssetImporter;
 
 		std::string name {};
 		xg::Guid guid;

@@ -21,8 +21,14 @@ namespace Engine {
 
 		virtual std::shared_ptr<Asset> ImportAsset(const std::shared_ptr<Asset>& assetToImport) = 0;
 
-		virtual std::shared_ptr<Asset> ImportAsset(const std::string& pathInProject, const char* assetNameWithExtension) = 0;
+		virtual std::shared_ptr<Asset> ImportAsset(const std::string& fullPath, const char* assetNameWithExtension) = 0;
+
+		virtual std::shared_ptr<Asset> ImportAsset(const std::shared_ptr<Asset>& assetToImport, const std::string& fullPath, const char* assetNameWithExtension) = 0;
 
 		[[nodiscard]] virtual std::shared_ptr<Asset> LoadAsset(const xg::Guid& assetGuid) const = 0;
+
+		[[nodiscard]] virtual std::shared_ptr<Asset> CreateAsset() const = 0;
+
+		[[nodiscard]] virtual std::shared_ptr<AssetImportSettings> GetDefaultImportSettings() const = 0;
 	};
 }

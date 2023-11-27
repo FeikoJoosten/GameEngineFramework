@@ -4,27 +4,28 @@
 #ifdef USING_OPENGL
 #include "Engine/Mesh/Mesh.hpp"
 
+#include <GL/glew.h>
+
 namespace Engine
 {
-	/// <summary>
-	/// This object is used to store data regarding a mesh. NOTE: only the resource manager is allowed to create a mesh.
-	/// </summary>
-	class ENGINE_LOCAL OpenGLMesh : public Mesh
+	class ENGINE_LOCAL OpenGLMesh
 	{
-		friend class ResourceManager;
+		friend class OpenGLRenderer;
 
-		OpenGLMesh() = default;
+		std::shared_ptr<Mesh> mesh;
+		GLuint ebo {};
+		GLuint vbo {};
+
+		explicit OpenGLMesh(const std::shared_ptr<Mesh>& mesh);
+
 	public:
-
-		virtual ~OpenGLMesh() noexcept override = default;
+		OpenGLMesh() = delete;
+		virtual ~OpenGLMesh() noexcept = default;
 		OpenGLMesh(const OpenGLMesh&other) = delete;
 		OpenGLMesh(OpenGLMesh &&other) noexcept = delete;
 
 		OpenGLMesh& operator=(const OpenGLMesh& other) = delete;
 		OpenGLMesh& operator=(OpenGLMesh&& other) noexcept = delete;
-	private:
-
-		virtual void SetUpMesh() override;
 	};
 }
 #endif

@@ -1,0 +1,16 @@
+{
+    "data": {
+        "guid": {
+            "guid": "7331de65-089f-45a0-98e1-dc5a47ac6a71"
+        },
+        "parentGuid": {
+            "guid": "00000000-0000-0000-0000-000000000000"
+        },
+        "childGuids": [],
+        "importSettingsGuid": {
+            "guid": "64d36b1c-e9b1-4296-8815-7e8938dc4a7c"
+        },
+        "fullPath": "D:/Projects/GameEngineFramework/ProjectRoot/Resources/Scenes/",
+        "assetNameWithExtension": "Main Scene.scene"
+    }
+}

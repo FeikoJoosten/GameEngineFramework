@@ -37,15 +37,13 @@ namespace Engine {
 		if (engine->inputManager != nullptr)
 			engine->inputManager->Update();
 
-		if (engine->renderer && engine->cameraManager ){
-			for (const std::vector<std::shared_ptr<CameraComponent>> allCameras = engine->cameraManager->GetAllActiveCameras();
-				const std::shared_ptr<CameraComponent>& camera : allCameras)
-				engine->renderer->RenderFrame(camera->GetView(), camera->GetProjection());
+		if (engine->renderer && engine->cameraManager) {
+			for (const std::vector<std::shared_ptr<CameraComponent>> allCameras = engine->cameraManager->GetAllActiveCameras(); const std::shared_ptr<CameraComponent>&camera : allCameras)
+				engine->renderer->RenderFrame(camera);
 		}
-		
+
 		time->OnUpdateEnd();
 	}
 
-	void Application::Quit() {
-	}
+	void Application::Quit() {}
 }

@@ -1,0 +1,20 @@
+{
+    "data": {
+        "polymorphic_id": 2147483649,
+        "polymorphic_name": "Engine::AssetImportSettings",
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "cereal::base_class<Asset>(this)": {
+                    "name": "meshImportSettings",
+                    "guid": {
+                        "guid": "a5928fd1-964c-4832-9d46-341966789730"
+                    }
+                },
+                "relatedAssetGuid": {
+                    "guid": "00000000-0000-0000-0000-000000000000"
+                }
+            }
+        }
+    }
+}

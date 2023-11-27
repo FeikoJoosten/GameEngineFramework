@@ -35,7 +35,7 @@
 //#endif
 
 #ifndef GLM_FORCE_LEFT_HANDED
-#define GLM_FORCE_LEFT_HANDED
+//#define GLM_FORCE_LEFT_HANDED
 #endif
 
 #ifndef GLM_FORCE_XYZW_ONLY

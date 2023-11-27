@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Engine/Api/Api.hpp"
-#include "Engine/Entity/Entity.hpp"
 #include "Engine/Utility/Event.hpp"
+#include "Engine/Entity/Entity.hpp"
+
+#include <cereal/access.hpp>
 
 namespace Engine {
-
 	/// <summary>
 	/// This is the base class for components.
 	/// </summary>

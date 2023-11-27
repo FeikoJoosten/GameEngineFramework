@@ -9,6 +9,7 @@
 
 namespace Engine {
 	class Asset;
+	class AssetImportSettings;
 
 	class ENGINE_LOCAL AssetRegistry {
 
@@ -20,8 +21,9 @@ namespace Engine {
 			xg::Guid guid;
 			xg::Guid parentGuid;
 			std::vector<xg::Guid> childGuids;
+			xg::Guid importSettingsGuid;
 
-			std::string pathInProject;
+			std::string fullPath;
 			std::string assetNameWithExtension;
 
 			void AddChildGuid(xg::Guid childGuid);
@@ -52,15 +54,17 @@ namespace Engine {
 
 		static bool IsAssetRegistered(const xg::Guid& assetGuid);
 
-		static bool TryGetPathForGuid(const xg::Guid& assetGuid, std::string& pathInProject, std::string& assetNameWithExtension);
+		static bool TryGetFullPathForGuid(const xg::Guid& assetGuid, std::string& fullPath, std::string& assetNameWithExtension);
 
 		static bool TryGetGuidForPath(const std::string& pathInProject, const char* assetNameWithExtension, xg::Guid& assetGuid);
 
-		bool TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const std::string& pathInProject, const char* assetNameWithExtension);
+		static bool TryGetGuidForFullPath(const std::string& fullPath, const char* assetNameWithExtension, xg::Guid& assetGuid);
+
+		bool TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const xg::Guid& importSettingsGuid, const std::string& fullPath, const char* assetNameWithExtension);
 
 		bool TryUnRegisterAsset(const xg::Guid& assetGuid);
 
-		bool TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newPathInProject, const char* newAssetNameWithExtension);
+		bool TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newFullPath, const char* newAssetNameWithExtension);
 
 		static bool TryWriteCustomDataToAsset(const xg::Guid& assetGuid, const std::shared_ptr<Asset>& customData, const std::string& dataExtension);
 
@@ -68,11 +72,17 @@ namespace Engine {
 
 		static bool TryAddChildAssetToAsset(const xg::Guid& parentGuid, const xg::Guid& childGuid);
 
+		static void RemoveChildAssetFromAsset(const xg::Guid& parentGuid, const xg::Guid& childGuid);
+
 		static bool TryAssignGuidToAsset(const std::shared_ptr<Asset>& assetToUpdate, const xg::Guid& assetGuid);
 
 		static bool TryGetParentForAsset(const xg::Guid& childGuid, xg::Guid& parentGuid);
 
 		static bool TryGetChildrenForAsset(const xg::Guid& parentGuid, std::vector<xg::Guid>& childGuids);
+
+		static bool TryGetImportSettingsForAsset(const xg::Guid& assetGuid, std::shared_ptr<AssetImportSettings>& importSettings);
+
+		[[nodiscard]] static std::string GetAssetRegistryPathForGuid(const xg::Guid& assetGuid);
 
 	private:
 		[[nodiscard]] static bool TryLoadAssetMetaInfoForGuid(const xg::Guid& assetGuid, AssetMetaInfo& outputMetaInfo);
@@ -80,8 +90,6 @@ namespace Engine {
 		static void SaveAssetMetaInfo(const AssetMetaInfo& assetMetaInfo);
 
 		static void DeleteAssetMetaInfo(const AssetMetaInfo& assetMetaInfo);
-
-		[[nodiscard]] static std::string GetAssetRegistryPathForGuid(const xg::Guid& assetGuid);
 	};
 
 	template <class Archive>
@@ -90,7 +98,8 @@ namespace Engine {
 			CEREAL_NVP(guid),
 			CEREAL_NVP(parentGuid),
 			CEREAL_NVP(childGuids),
-			CEREAL_NVP(pathInProject),
+			CEREAL_NVP(importSettingsGuid),
+			CEREAL_NVP(fullPath),
 			CEREAL_NVP(assetNameWithExtension)
 		);
 	}

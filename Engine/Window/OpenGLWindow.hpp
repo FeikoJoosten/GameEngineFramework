@@ -21,6 +21,9 @@ namespace Engine {
 
 		OpenGLWindow& operator=(const OpenGLWindow& other) = delete;
 		OpenGLWindow& operator=(OpenGLWindow&& other) noexcept = delete;
+
+	protected:
+		virtual void HandleOnWindowResized(int newWidth, int newHeight) override;
 	};
 } //namespace Engine
 #endif

@@ -3,13 +3,15 @@
 #include "Engine/AssetManagement/AssetImportSettingsAssetImporter.hpp"
 #include "Engine/AssetManagement/AssetRegistry.hpp"
 #include "Engine/AssetManagement/EngineProjectFileWatcher.hpp"
-#include "Engine/AssetManagement/EntityAssetImporter.hpp"
-#include "Engine/AssetManagement/MaterialAssetImporter.hpp"
-#include "Engine/AssetManagement/MeshAssetImporter.hpp"
-#include "Engine/AssetManagement/ModelAssetImporter.hpp"
-#include "Engine/AssetManagement/SceneAssetImporter.hpp"
-#include "Engine/AssetManagement/TextureAssetImporter.hpp"
+#include "Engine/Entity/EntityAssetImporter.hpp"
 #include "Engine/Engine/Engine.hpp"
+#include "Engine/Material/MaterialAssetImporter.hpp"
+#include "Engine/Mesh/MeshAssetImporter.hpp"
+#include "Engine/Model/ModelAssetImporter.hpp"
+#include "Engine/Scene/SceneAssetImporter.hpp"
+#include "Engine/Shader/ShaderAssetImporter.hpp"
+#include "Engine/Shader/ShaderStageAssetImporter.hpp"
+#include "Engine/Texture/TextureAssetImporter.hpp"
 
 #include <nameof.hpp>
 
@@ -24,6 +26,8 @@ namespace Engine {
 		assetImporters.push_back(std::shared_ptr<MeshAssetImporter>(new MeshAssetImporter(assetRegistry)));
 		assetImporters.push_back(std::shared_ptr<ModelAssetImporter>(new ModelAssetImporter(assetRegistry)));
 		assetImporters.push_back(std::shared_ptr<SceneAssetImporter>(new SceneAssetImporter(assetRegistry)));
+		assetImporters.push_back(std::shared_ptr<ShaderAssetImporter>(new ShaderAssetImporter(assetRegistry)));
+		assetImporters.push_back(std::shared_ptr<ShaderStageAssetImporter>(new ShaderStageAssetImporter(assetRegistry)));
 		assetImporters.push_back(std::shared_ptr<TextureAssetImporter>(new TextureAssetImporter(assetRegistry)));
 		assetImporters.push_back(std::shared_ptr<AssetAssetImporter>(new AssetAssetImporter(assetRegistry))); // Register as last so type specific importers have priority
 	}
@@ -37,22 +41,38 @@ namespace Engine {
 	}
 
 	void AssetManager::WriteAssetToFullPath(const std::string& fullPath, const std::shared_ptr<Asset>& asset, const char* assetExtension, const AssetSerializationType& serializationType, const bool writeNameValuePair) {
+		std::string extensionToUse;
 		std::shared_ptr<IAssetImporter> importerToUse;
-
 		for (const std::shared_ptr<IAssetImporter>& assetImporter : assetImporters) {
 			if (!assetImporter->SupportsAsset(asset)) continue;
 
 			importerToUse = assetImporter;
 			break;
 		}
-		if (!importerToUse) {
-			DEBUG_ERROR("No importer found for asset, cannot write to path!")
-			return;
-		}
 
-		const std::string extensionToUse = assetExtension != nullptr ? assetExtension : importerToUse->GetDefaultAssetExtension();
+		if(!assetExtension) {
+			if (!importerToUse) {
+				DEBUG_ERROR("No importer found for asset, cannot write to path! Please ensure an importer exists for the asset type or provide an asset extension!");
+				return;
+			}
+
+			extensionToUse = importerToUse->GetDefaultAssetExtension();
+		} else extensionToUse = assetExtension;
+
 		if (!AssetRegistry::IsAssetRegistered(asset->GetGuid())) {
-			if (!assetRegistry->TryRegisterAsset(asset, FullPathToPathInProject(fullPath), (asset->GetName() + extensionToUse).c_str())) {
+			std::shared_ptr<AssetImportSettings> importSettings = std::dynamic_pointer_cast<AssetImportSettings>(asset);
+			if (!importSettings && !AssetRegistry::TryGetImportSettingsForAsset(asset->GetGuid(), importSettings)) {
+				DEBUG_DEBUG("No import settings found, trying to import asset");
+				if (importerToUse && importerToUse->ImportAsset(asset, fullPath, (asset->GetName() + extensionToUse).c_str()))
+					AssetRegistry::TryGetImportSettingsForAsset(asset->GetGuid(), importSettings);
+
+				if (!importSettings) {
+					DEBUG_ERROR("Failed to processet asset, as it doesn't have import settings generated!");
+					return;
+				}
+			}
+
+			if (!AssetRegistry::IsAssetRegistered(asset->GetGuid()) && !assetRegistry->TryRegisterAsset(asset, importSettings->GetGuid(), fullPath, (asset->GetName() + extensionToUse).c_str())) {
 				DEBUG_ERROR("Failed to process asset for: " + fullPath);
 				return;
 			}
@@ -61,7 +81,7 @@ namespace Engine {
 		WriteDataToFullPath(fullPath, asset->GetName(), asset, extensionToUse, serializationType, writeNameValuePair);
 	}
 
-	bool AssetManager::FileExists(const std::string& fullPath, const std::string& fileName, const bool isRelativeFromProject) const {
+	bool AssetManager::FileExists(const std::string& fullPath, const std::string& fileName, const bool isRelativeFromProject) {
 		return FileExists(isRelativeFromProject ? projectRoot + resourcesFolder + fileName : fullPath + "/" + fileName);
 	}
 
@@ -92,8 +112,8 @@ namespace Engine {
 		return assetImporters;
 	}
 
-	bool AssetManager::TryGetAssetImporterForPath(const std::string& fullPath, std::shared_ptr<IAssetImporter>& outputAssetImporter) const {
-		const std::string sanitizedFullPath = PathInProjectToFullPath(StringUtility::SanitizePath(fullPath));
+	bool AssetManager::TryGetAssetImporterForPath(const std::string& pathInProject, std::shared_ptr<IAssetImporter>& outputAssetImporter) const {
+		const std::string sanitizedFullPath = PathInProjectToFullPath(StringUtility::SanitizePath(pathInProject));
 		const std::filesystem::path path = sanitizedFullPath;
 		const std::string& genericExtension = path.extension().generic_string();
 
@@ -110,9 +130,7 @@ namespace Engine {
 	std::vector<char> AssetManager::ReadRawFile(const std::string& fileName, const int fileOpenMode) {
 		std::ifstream file(projectRoot + resourcesFolder + fileName, fileOpenMode);
 
-		if (!file)
-			throw std::runtime_error("Failed to find file!");
-
+		if (!file.good()) return {};
 		if (!file.is_open())
 			throw std::runtime_error("Failed to open file!");
 

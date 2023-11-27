@@ -29,11 +29,6 @@ namespace Engine
 		std::vector<glm::vec2> uv8 {};
 		std::vector<glm::vec3> vertices {};
 
-		unsigned int ebo {};
-		unsigned int ubo {};
-		unsigned int vao {};
-		unsigned int vbo {};
-
 		Mesh() = default;
 
 	public:
@@ -43,59 +38,9 @@ namespace Engine
 		Mesh& operator=(const Mesh& other) = delete;
 		Mesh& operator=(Mesh&& other) noexcept = delete;
 
-		/// <summary>
-		/// This method allows you to get the VAO of this mesh.
-		/// </summary>
-		/// <returns>Returns the VAO as an uint64_t.</returns>
-		uint64_t GetVao() const;
-
-		/// <summary>
-		/// This method allows you to get the VAO of this mesh.
-		/// </summary>
-		/// <returns>Returns the VAO as the defined type.</returns>
-		template<typename T>
-		T GetVao();
-
-		/// <summary>
-		/// This method allows you to get the VBO of this mesh.
-		/// </summary>
-		/// <returns>Returns the VBO as an uint64_t.</returns>
-		uint64_t GetVbo() const;
-
-		/// <summary>
-		/// This method allows you to get the VBO of this mesh.
-		/// </summary>
-		/// <returns>Returns the VBO as the defined type.</returns>
-		template<typename T>
-		T GetVbo();
-
-		/// <summary>
-		/// This method allows you to get the EBO of this mesh.
-		/// </summary>
-		/// <returns>Returns the EBO as an uint64_t.</returns>
-		uint64_t GetEbo() const;
-
-		/// <summary>
-		/// This method allows you to get the EBO of this mesh.
-		/// </summary>
-		/// <returns>Returns the EBO as the defined type.</returns>
-		template <typename T>
-		T GetEbo();
-
-		/// <summary>
-		/// This method allows you to get the UBO of this mesh.
-		/// </summary>
-		/// <returns>Returns the UBO as an uint64_t.</returns>
-		uint64_t GetUbo() const;
-
-		/// <summary>
-		/// This method allows you to get the UBO of this mesh.
-		/// </summary>
-		/// <returns>Returns the UBO as the defined type.</returns>
-		template <typename T>
-		T GetUbo();
-
 		[[nodiscard]] const std::vector<glm::vec3>& GetVertices() const;
+
+		[[nodiscard]] const std::vector<glm::vec3>& GetNormals() const;
 
 		[[nodiscard]] const std::vector<unsigned>& GetIndices() const;
 
@@ -116,35 +61,9 @@ namespace Engine
 		[[nodiscard]] const std::vector<glm::vec2>& GetUv8() const;
 
 	private:
-		virtual void SetUpMesh();
-
 		template <class Archive>
 		void Serialize(Archive& archive);
 	};
-
-	template <typename T>
-	T Mesh::GetVao()
-	{
-		return T(vao);
-	}
-
-	template <typename T>
-	T Mesh::GetVbo()
-	{
-		return T(vbo);
-	}
-
-	template <typename T>
-	T Mesh::GetEbo()
-	{
-		return T(ebo);
-	}
-
-	template <typename T>
-	T Mesh::GetUbo()
-	{
-		return T(ubo);
-	}
 
 	template <class Archive>
 	void Mesh::Serialize(Archive& archive) {

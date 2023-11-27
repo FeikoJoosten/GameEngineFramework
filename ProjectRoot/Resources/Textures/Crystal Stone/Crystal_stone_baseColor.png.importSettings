@@ -1,0 +1,24 @@
+{
+    "data": {
+        "polymorphic_id": 2147483649,
+        "polymorphic_name": "Engine::TextureAssetImportSettings",
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "cereal::base_class<AssetImportSettings>(this)": {
+                    "cereal::base_class<Asset>(this)": {
+                        "name": "Crystal_stone_baseColor.png",
+                        "guid": {
+                            "guid": "476fc838-e217-4e8a-bddf-39cd99babad8"
+                        }
+                    },
+                    "relatedAssetGuid": {
+                        "guid": "8ded4ebe-ef45-44fc-9206-78c342485b29"
+                    }
+                },
+                "generateMipMaps": true,
+                "dataSize": 0
+            }
+        }
+    }
+}

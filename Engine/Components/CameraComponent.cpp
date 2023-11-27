@@ -33,8 +33,8 @@ namespace Engine {
 		return projection;
 	}
 
-	glm::mat4x4 CameraComponent::GetViewProjection() const {
-		return GetView() * GetProjection();
+	glm::mat4x4 CameraComponent::GetProjectionView() const {
+		return GetProjection() * GetView();
 	}
 
 	void CameraComponent::SetProjection(const float newFoV, const float zNear, const float zFar) {
@@ -44,7 +44,8 @@ namespace Engine {
 
 		const std::shared_ptr<Window>& window = Window::Get();
 
-		projection = glm::perspective(glm::radians(newFoV), static_cast<float>(window->GetHeight()) / static_cast<float>(window->GetWidth()), zNear, zFar);
+		const float aspectRatio = static_cast<float>(window->GetWidth()) / static_cast<float>(window->GetHeight());
+		projection = glm::perspective(glm::radians(newFoV), aspectRatio, zNear, zFar);
 	}
 
 	void CameraComponent::SetView(const glm::mat4x4 newView) {
@@ -68,7 +69,8 @@ namespace Engine {
 		if (!GetIsEnabled() || !modifiedTransformComponent) return;
 
 		const glm::vec3 position = modifiedTransformComponent->GetPosition();
-		SetView(glm::lookAtLH(position, position + modifiedTransformComponent->GetForward(), modifiedTransformComponent->GetUp()));
+		const glm::vec3 center = position + modifiedTransformComponent->GetForward();
+		SetView(glm::lookAt(position, center, modifiedTransformComponent->GetUp()));
 	}
 
 	void CameraComponent::OnComponentAdded(const std::shared_ptr<Component> addedComponent) {

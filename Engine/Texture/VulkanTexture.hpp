@@ -12,12 +12,10 @@
 
 namespace Engine
 {
-	class ResourceManager;
 	class VulkanRenderer;
 
 	class ENGINE_API VulkanTexture : public Texture
 	{
-		friend class ResourceManager;
 		friend class VulkanRenderer;
 
 		static void InitTextureSystem(VulkanRenderer* renderer, VulkanLogicalDevice* device, VulkanDescriptorPool* descriptorPool, VmaAllocator allocator, VkCommandPool commandPool);

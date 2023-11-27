@@ -44,10 +44,6 @@ namespace Engine {
 		MoveBackwards,
 		MoveUp,
 		MoveDown,
-		RotateLeft,
-		RotateRight,
-		RotateUp,
-		RotateDown,
 		EnableMouseRotation,
 		LeftCtrl,
 		LeftShift,
@@ -75,10 +71,6 @@ namespace Engine {
 		map->MapBool(MoveBackwards, keyboardDeviceId, gainput::KeyS);
 		map->MapBool(MoveUp, keyboardDeviceId, gainput::KeySpace);
 		map->MapBool(MoveDown, keyboardDeviceId, gainput::KeyShiftL);
-		map->MapBool(RotateLeft, keyboardDeviceId, gainput::KeyLeft);
-		map->MapBool(RotateRight, keyboardDeviceId, gainput::KeyRight);
-		map->MapBool(RotateUp, keyboardDeviceId, gainput::KeyUp);
-		map->MapBool(RotateDown, keyboardDeviceId, gainput::KeyDown);
 		map->MapBool(EnableMouseRotation, mouseDeviceId, gainput::MouseButtonRight);
 		map->MapBool(LeftCtrl, keyboardDeviceId, gainput::KeyCtrlL);
 		map->MapBool(LeftShift, keyboardDeviceId, gainput::KeyShiftL);
@@ -149,8 +141,7 @@ namespace Engine {
 		if (ImGui::GetIO().WantTextInput) return;
 
 		constexpr float cameraMovementSpeed = 100.f;
-		constexpr float cameraRotationSpeed = 75.f;
-		constexpr float cameraMouseRotationSpeed = 1000.f;
+		constexpr float cameraMouseRotationSpeed = 100.f;
 
 		if (activeCamera.expired() || !activeCamera.lock()->GetIsActiveAndEnabled()) {
 			const std::vector<std::shared_ptr<CameraComponent>> allActiveCameras = CameraManager::Get()->GetAllActiveCameras();
@@ -160,38 +151,29 @@ namespace Engine {
 		}
 
 		const std::shared_ptr<CameraComponent> lockedCameraComponent = activeCamera.lock();
-		const std::shared_ptr<TransformComponent> lockedCameraTransformComponent = lockedCameraComponent->GetComponent<TransformComponent>();
+		const std::shared_ptr<TransformComponent> cameraTransformComponent = lockedCameraComponent->GetComponent<TransformComponent>();
 		const float deltaTime = Time::Get()->GetDeltaTime();
 		const float deltaMovementSpeed = cameraMovementSpeed * deltaTime;
-		const float deltaRotationSpeed = cameraRotationSpeed * deltaTime;
 		const float deltaMouseRotationSpeed = cameraMouseRotationSpeed * deltaTime;
 
 		if (map->GetBool(MoveForwards))
-			lockedCameraTransformComponent->Translate(0, 0, deltaMovementSpeed);
+			cameraTransformComponent->Translate(0, 0, deltaMovementSpeed);
 		if (map->GetBool(MoveBackwards))
-			lockedCameraTransformComponent->Translate(0, 0, -deltaMovementSpeed);
+			cameraTransformComponent->Translate(0, 0, -deltaMovementSpeed);
 		if (map->GetBool(MoveLeft))
-			lockedCameraTransformComponent->Translate(-deltaMovementSpeed);
+			cameraTransformComponent->Translate(-deltaMovementSpeed);
 		if (map->GetBool(MoveRight))
-			lockedCameraTransformComponent->Translate(deltaMovementSpeed);
+			cameraTransformComponent->Translate(deltaMovementSpeed);
 		if (map->GetBool(MoveUp))
-			lockedCameraTransformComponent->Translate(0, deltaMovementSpeed);
+			cameraTransformComponent->Translate(0, deltaMovementSpeed);
 		if (map->GetBool(MoveDown))
-			lockedCameraTransformComponent->Translate(0, -deltaMovementSpeed);
-		if (map->GetBool(RotateLeft))
-			lockedCameraTransformComponent->Rotate(glm::vec3(0.f, -deltaRotationSpeed, 0.f));
-		if (map->GetBool(RotateRight))
-			lockedCameraTransformComponent->Rotate(glm::vec3(0.f, deltaRotationSpeed, 0.f));
-		if (map->GetBool(RotateUp))
-			lockedCameraTransformComponent->Rotate(glm::vec3(-deltaRotationSpeed, 0.f, 0.f));
-		if (map->GetBool(RotateDown))
-			lockedCameraTransformComponent->Rotate(glm::vec3(deltaRotationSpeed, 0.f, 0.f));
+			cameraTransformComponent->Translate(0, -deltaMovementSpeed);
 		if (map->GetBool(EnableMouseRotation)) {
-			lockedCameraTransformComponent->Rotate(
-				glm::vec3(
-					map->GetFloatDelta(MouseY) * deltaMouseRotationSpeed,
-					map->GetFloatDelta(MouseX) * deltaMouseRotationSpeed,
-					0.f));
+			const glm::vec3 rotationToAdd = glm::vec3(
+				map->GetFloatDelta(MouseY) * deltaMouseRotationSpeed,
+				-map->GetFloatDelta(MouseX) * deltaMouseRotationSpeed,
+				0.f);
+			cameraTransformComponent->SetRotation(glm::eulerAngles(cameraTransformComponent->GetRotation()) + rotationToAdd);
 		}
 	}
 } //namespace Engine

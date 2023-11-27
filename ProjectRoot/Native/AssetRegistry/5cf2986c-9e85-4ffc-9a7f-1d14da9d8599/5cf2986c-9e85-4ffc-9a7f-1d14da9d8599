@@ -1,0 +1,23 @@
+{
+    "data": {
+        "guid": {
+            "guid": "5cf2986c-9e85-4ffc-9a7f-1d14da9d8599"
+        },
+        "parentGuid": {
+            "guid": "00000000-0000-0000-0000-000000000000"
+        },
+        "childGuids": [
+            {
+                "guid": "a083b99a-c120-449d-93c7-dba4096e9829"
+            },
+            {
+                "guid": "c75f336c-8b5f-49f5-a9af-1be40c9fcff9"
+            }
+        ],
+        "importSettingsGuid": {
+            "guid": "30e75340-c72e-4366-bf8c-ecbe371bf491"
+        },
+        "fullPath": "D:/Projects/GameEngineFramework/ProjectRoot/Resources/Shaders/",
+        "assetNameWithExtension": "GLSL Basic3D.shader"
+    }
+}

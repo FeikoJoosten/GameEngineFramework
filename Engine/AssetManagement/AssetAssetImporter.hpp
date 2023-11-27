@@ -16,6 +16,6 @@ namespace Engine {
 		AssetAssetImporter& operator=(const AssetAssetImporter& other) = delete;
 		AssetAssetImporter& operator=(AssetAssetImporter&& other) = delete;
 
-		virtual std::shared_ptr<Asset> ImportAsset(const std::string& pathInProject, const char* assetNameWithExtension, const std::shared_ptr<AssetImportSettings>& importSettings) override;
+		[[nodiscard]] virtual std::shared_ptr<Asset> CreateAsset() const override;
 	};
 }

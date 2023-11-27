@@ -12,6 +12,8 @@
 
 #define GLM_SETUP_INCLUDED			GLM_VERSION
 
+#define GLM_FORCE_LEFT_HANDED // Edit: Always force left handed
+
 ///////////////////////////////////////////////////////////////////////////////////
 // Active states
 

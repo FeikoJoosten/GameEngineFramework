@@ -1,0 +1,16 @@
+{
+    "data": {
+        "guid": {
+            "guid": "a073ecee-c8e3-4cba-83e8-83dd72b3c931"
+        },
+        "parentGuid": {
+            "guid": "00000000-0000-0000-0000-000000000000"
+        },
+        "childGuids": [],
+        "importSettingsGuid": {
+            "guid": "a073ecee-c8e3-4cba-83e8-83dd72b3c931"
+        },
+        "fullPath": "D:/Projects/GameEngineFramework/ProjectRoot/Native/AssetRegistry/37ea9878-bc79-40ff-8caf-792d68518d98/",
+        "assetNameWithExtension": "textureImportSettings.importSettings"
+    }
+}

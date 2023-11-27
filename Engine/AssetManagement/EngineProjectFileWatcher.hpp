@@ -11,9 +11,11 @@ namespace Engine {
 
 	struct ENGINE_LOCAL AssetAction {
 		const std::string directory;
-		const char* fileName;
+		const std::string fileName;
 		const efsw::Action action;
-		const char* oldFileName;
+		const std::string oldFileName;
+
+		bool operator==(const AssetAction& other) const;
 	};
 
 	class ENGINE_LOCAL EngineProjectFileWatcher : public efsw::FileWatchListener {

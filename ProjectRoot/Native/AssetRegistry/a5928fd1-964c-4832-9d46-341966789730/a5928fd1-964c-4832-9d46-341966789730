@@ -1,0 +1,16 @@
+{
+    "data": {
+        "guid": {
+            "guid": "a5928fd1-964c-4832-9d46-341966789730"
+        },
+        "parentGuid": {
+            "guid": "00000000-0000-0000-0000-000000000000"
+        },
+        "childGuids": [],
+        "importSettingsGuid": {
+            "guid": "a5928fd1-964c-4832-9d46-341966789730"
+        },
+        "fullPath": "D:/Projects/GameEngineFramework/ProjectRoot/Native/AssetRegistry/37ea9878-bc79-40ff-8caf-792d68518d98/",
+        "assetNameWithExtension": "meshImportSettings.importSettings"
+    }
+}

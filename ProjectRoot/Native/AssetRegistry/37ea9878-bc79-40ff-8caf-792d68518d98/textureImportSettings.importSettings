@@ -1,0 +1,24 @@
+{
+    "data": {
+        "polymorphic_id": 2147483649,
+        "polymorphic_name": "Engine::TextureAssetImportSettings",
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "cereal::base_class<AssetImportSettings>(this)": {
+                    "cereal::base_class<Asset>(this)": {
+                        "name": "textureImportSettings",
+                        "guid": {
+                            "guid": "a073ecee-c8e3-4cba-83e8-83dd72b3c931"
+                        }
+                    },
+                    "relatedAssetGuid": {
+                        "guid": "00000000-0000-0000-0000-000000000000"
+                    }
+                },
+                "generateMipMaps": true,
+                "dataSize": 0
+            }
+        }
+    }
+}

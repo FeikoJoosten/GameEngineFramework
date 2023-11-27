@@ -7,7 +7,7 @@ namespace Engine {
 		return ".importSettings";
 	}
 
-	std::shared_ptr<Asset> AssetImportSettingsAssetImporter::ImportAsset(const std::string& pathInProject, const char* assetNameWithExtension, const std::shared_ptr<AssetImportSettings>& importSettings) {
-		return AssetManager::Get()->ReadDataFromPath<std::shared_ptr<Asset>>(pathInProject, assetNameWithExtension);
+	std::shared_ptr<Asset> AssetImportSettingsAssetImporter::CreateAsset() const {
+		return std::make_shared<AssetImportSettings>();
 	}
 }

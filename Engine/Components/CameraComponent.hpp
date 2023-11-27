@@ -10,6 +10,9 @@
 #include <cereal/types/base_class.hpp>
 #include <glm/glm.hpp>
 
+#include "Engine/AssetManagement/Asset.hpp"
+#include "Engine/AssetManagement/Asset.hpp"
+
 namespace Engine {
 	struct Frustum;
 
@@ -67,7 +70,7 @@ namespace Engine {
 		/// 
 		/// </summary>
 		/// <returns>Returns the view * projection matrices.</returns>
-		[[nodiscard]] glm::mat4x4 GetViewProjection() const;
+		[[nodiscard]] glm::mat4x4 GetProjectionView() const;
 
 		/// <summary>
 		/// This function allows you to set the projection matrix of the camera. Automatically creates a projection matrix for you.

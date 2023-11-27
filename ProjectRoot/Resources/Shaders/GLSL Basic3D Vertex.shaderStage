@@ -1,0 +1,19 @@
+{
+    "data": {
+        "polymorphic_id": 2147483649,
+        "polymorphic_name": "Engine::ShaderStage",
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "cereal::base_class<Asset>(this)": {
+                    "name": "GLSL Basic3D Vertex",
+                    "guid": {
+                        "guid": "a083b99a-c120-449d-93c7-dba4096e9829"
+                    }
+                },
+                "shaderStageType": 0,
+                "shaderStageCode": "#version 330 core\n\n// Uniforms\nuniform mat4 u_mvp;\n\n// Vertex atributes\nin vec3 a_position;\nin vec3 a_normal;\nin vec2 a_texture;\n\n//vec3 u_light_direction = vec3(1.0, 2.0, 3.0);\nuniform vec3 u_light_direction;\n\n// Vertex shader outputs\nout vec2 v_texture;\nout float v_intensity;\nout vec3 normal;\n\nvoid main()\n{\n\tnormal = normalize((u_mvp * vec4(a_normal, 0.0)).xyz);\n\tvec3 light_dir = normalize(u_light_direction);\n\tv_intensity = max(0.0, dot(normal, light_dir));\n\tv_texture = a_texture;\n\tgl_Position = u_mvp * vec4(a_position, 1.0);\n}"
+            }
+        }
+    }
+}

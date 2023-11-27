@@ -1,0 +1,20 @@
+{
+    "data": {
+        "polymorphic_id": 2147483649,
+        "polymorphic_name": "Engine::AssetImportSettings",
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "cereal::base_class<Asset>(this)": {
+                    "name": "Main Scene.scene",
+                    "guid": {
+                        "guid": "64d36b1c-e9b1-4296-8815-7e8938dc4a7c"
+                    }
+                },
+                "relatedAssetGuid": {
+                    "guid": "7331de65-089f-45a0-98e1-dc5a47ac6a71"
+                }
+            }
+        }
+    }
+}

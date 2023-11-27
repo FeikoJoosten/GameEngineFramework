@@ -1,10 +1,7 @@
 #include "Engine/Scene/Scene.hpp"
-#include "Engine/Components/Component.hpp"
+#include "Engine/Components/Component.hpp" // Not including this breaks scene serialization because cereal doesn't know the component type
 #include "Engine/Entity/Entity.hpp"
 #include "Engine/Entity/EntitySystem.hpp"
-
-#include <utility>
-
 
 CEREAL_REGISTER_TYPE(Engine::Scene);
 

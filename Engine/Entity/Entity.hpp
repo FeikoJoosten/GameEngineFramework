@@ -19,6 +19,7 @@ namespace Engine {
 		friend cereal::access;
 		// Need to friend the entirety of EntitySystem as EntitySystem::AddEntity is a private function
 		friend class EntitySystem;
+		friend class EntityAssetImporter;
 
 		bool isActive = true;
 		std::vector<std::shared_ptr<Component>> components {};

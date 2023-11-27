@@ -14,7 +14,7 @@ namespace Engine {
 
 		friend cereal::access;
 
-		std::shared_ptr<T> assetReference;
+		std::shared_ptr<T> assetReference = nullptr;
 
 
 	public:
@@ -26,12 +26,16 @@ namespace Engine {
 		AssetReference(AssetReference&& other) = delete;
 		AssetReference& operator=(const AssetReference& other) = delete;
 		AssetReference& operator=(AssetReference&& other) = delete;
-		AssetReference& operator=(const std::shared_ptr<T>& assetReference);
+		AssetReference& operator=(const std::shared_ptr<T>& newAssetReference);
 		AssetReference& operator=(const xg::Guid& assetGuid);
+		bool operator==(const std::shared_ptr<T>& otherAsset) const;
+		bool operator==(const xg::Guid& otherAssetGuid) const;
 
-		explicit operator std::shared_ptr<T>() const { return assetReference; }
-		explicit operator const std::shared_ptr<T>&() { return assetReference; }
-		explicit operator bool() const { return assetReference; }
+		operator std::shared_ptr<T>() const { return assetReference; }
+		operator const std::shared_ptr<T>& () { return assetReference; }
+		operator xg::Guid() const { return assetReference ? assetReference->GetGuid() : xg::Guid(); }
+		operator const xg::Guid& () { return assetReference ? assetReference->GetGuid() : xg::Guid(); }
+		explicit operator bool() const { return assetReference.get(); }
 
 	private:
 
@@ -54,8 +58,8 @@ namespace Engine {
 	}
 
 	template <typename T>
-	AssetReference<T>& AssetReference<T>::operator=(const std::shared_ptr<T>& assetReference) {
-		this->assetReference = assetReference;
+	AssetReference<T>& AssetReference<T>::operator=(const std::shared_ptr<T>& newAssetReference) {
+		this->assetReference = newAssetReference;
 		return *this;
 	}
 
@@ -64,6 +68,18 @@ namespace Engine {
 		const std::shared_ptr<AssetManager>& assetManager = AssetManager::Get();
 		assetReference = assetManager->LoadAsset<T>(assetGuid);
 		return *this;
+	}
+
+	template <typename T>
+	bool AssetReference<T>::operator==(const std::shared_ptr<T>& otherAsset) const {
+		if (otherAsset == assetReference) return true;
+		if (otherAsset && assetReference) return otherAsset.get() == assetReference.get();
+		return false;
+	}
+
+	template <typename T>
+	bool AssetReference<T>::operator==(const xg::Guid& otherAssetGuid) const {
+		return (assetReference ? assetReference->GetGuid() : xg::Guid()) == otherAssetGuid;
 	}
 
 	template <typename T>
@@ -81,7 +97,7 @@ namespace Engine {
 	template <typename T>
 	template <class Archive>
 	void AssetReference<T>::Load(Archive& archive) {
-		xg::Guid assetReferenceGuid;
+		xg::Guid assetReferenceGuid {};
 
 		archive(
 			CEREAL_NVP(assetReferenceGuid)

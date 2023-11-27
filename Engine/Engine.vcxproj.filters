@@ -363,13 +363,7 @@
     <ClInclude Include="AssetManagement\AssetImporter.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
-    <ClInclude Include="AssetManagement\MeshAssetImporter.hpp">
-      <Filter>Header Files\AssetManagement</Filter>
-    </ClInclude>
     <ClInclude Include="AssetManagement\AssetRegistry.hpp">
-      <Filter>Header Files\AssetManagement</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetManagement\ModelAssetImporter.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\GlmSerializationHelper.hpp">
@@ -377,12 +371,6 @@
     </ClInclude>
     <ClInclude Include="Components\CameraComponent.hpp">
       <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetManagement\EngineProjectFileWatcher.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetManagement\SceneAssetImporter.hpp">
-      <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\GuidSerializationHelper.hpp">
       <Filter>Header Files\Serialization</Filter>
@@ -393,19 +381,10 @@
     <ClInclude Include="AssetManagement\IAssetImporter.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
-    <ClInclude Include="AssetManagement\TextureAssetImporter.hpp">
-      <Filter>Header Files\AssetManagement</Filter>
-    </ClInclude>
     <ClInclude Include="AssetManagement\AssetAssetImporter.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
-    <ClInclude Include="AssetManagement\EntityAssetImporter.hpp">
-      <Filter>Header Files\AssetManagement</Filter>
-    </ClInclude>
     <ClInclude Include="AssetManagement\AssetImportSettings.hpp">
-      <Filter>Header Files\AssetManagement</Filter>
-    </ClInclude>
-    <ClInclude Include="AssetManagement\ModelAssetImportSettings.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
     <ClInclude Include="AssetManagement\AssetImportSettingsAssetImporter.hpp">
@@ -420,8 +399,59 @@
     <ClInclude Include="AssetManagement\AssetSerializationType.hpp">
       <Filter>Header Files\AssetManagement</Filter>
     </ClInclude>
-    <ClInclude Include="AssetManagement\MaterialAssetImporter.hpp">
+    <ClInclude Include="Entity\EntityAssetImporter.hpp">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Material\MaterialAssetImporter.hpp">
+      <Filter>Header Files\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh\MeshAssetImporter.hpp">
+      <Filter>Header Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelAssetImporter.hpp">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelAssetImportSettings.hpp">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneAssetImporter.hpp">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\TextureAssetImporter.hpp">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\TextureAssetImportSettings.hpp">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\TextureDataSize.hpp">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderStageType.hpp">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderAssetImporter.hpp">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManagement\EngineProjectFileWatcher.hpp">
       <Filter>Header Files\AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderStage.hpp">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderStageAssetImporter.hpp">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderParameter.hpp">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderParameterType.hpp">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\RenderCommand.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderConstants.hpp">
+      <Filter>Header Files\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -608,37 +638,55 @@
     <ClCompile Include="AssetManagement\EngineProjectFileWatcher.cpp">
       <Filter>Source Files\AssetManagement</Filter>
     </ClCompile>
-    <ClCompile Include="AssetManagement\TextureAssetImporter.cpp">
-      <Filter>Source Files\AssetManagement</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetManagement\AssetAssetImporter.cpp">
-      <Filter>Source Files\AssetManagement</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetManagement\EntityAssetImporter.cpp">
-      <Filter>Source Files\AssetManagement</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetManagement\MeshAssetImporter.cpp">
-      <Filter>Source Files\AssetManagement</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetManagement\ModelAssetImporter.cpp">
-      <Filter>Source Files\AssetManagement</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetManagement\SceneAssetImporter.cpp">
-      <Filter>Source Files\AssetManagement</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetImportSettings.cpp">
-      <Filter>Source Files\AssetManagement</Filter>
-    </ClCompile>
     <ClCompile Include="AssetManagement\AssetImportSettingsAssetImporter.cpp">
-      <Filter>Source Files\AssetManagement</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetManagement\ModelAssetImportSettings.cpp">
       <Filter>Source Files\AssetManagement</Filter>
     </ClCompile>
     <ClCompile Include="Utility\StringUtility.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="AssetManagement\MaterialAssetImporter.cpp">
+    <ClCompile Include="Entity\EntityAssetImporter.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Material\MaterialAssetImporter.cpp">
+      <Filter>Source Files\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh\MeshAssetImporter.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelAssetImporter.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelAssetImportSettings.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneAssetImporter.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\TextureAssetImporter.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\TextureAssetImportSettings.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ShaderAssetImporter.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ShaderStageAssetImporter.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ShaderParameter.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\RenderCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ShaderStage.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\AssetImportSettings.cpp">
+      <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManagement\AssetAssetImporter.cpp">
       <Filter>Source Files\AssetManagement</Filter>
     </ClCompile>
   </ItemGroup>

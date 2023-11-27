@@ -1,0 +1,20 @@
+{
+    "data": {
+        "guid": {
+            "guid": "bdf4eab2-0346-445e-a314-7bb875f22256"
+        },
+        "parentGuid": {
+            "guid": "00000000-0000-0000-0000-000000000000"
+        },
+        "childGuids": [
+            {
+                "guid": "2b9eece5-b8fd-4d52-acff-23727c80d9f2"
+            }
+        ],
+        "importSettingsGuid": {
+            "guid": "37ea9878-bc79-40ff-8caf-792d68518d98"
+        },
+        "fullPath": "D:/Projects/GameEngineFramework/ProjectRoot/Resources/Models/",
+        "assetNameWithExtension": "Fantasy_crystal_stone.fbx"
+    }
+}

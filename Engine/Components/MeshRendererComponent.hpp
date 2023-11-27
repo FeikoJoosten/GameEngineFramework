@@ -21,6 +21,8 @@ namespace Engine
 		explicit MeshRendererComponent() = default;
 
 	public:
+		Sharp::Event<std::shared_ptr<MeshRendererComponent>, std::shared_ptr<Mesh>, std::shared_ptr<Mesh>> OnMeshChangedEvent;
+
 		virtual ~MeshRendererComponent() override = default;
 		MeshRendererComponent(const MeshRendererComponent& other) = delete;
 		MeshRendererComponent(MeshRendererComponent&& other) = delete;
@@ -40,7 +42,7 @@ namespace Engine
 		[[nodiscard]] std::shared_ptr<Mesh> GetMesh() const;
 
 	private:
-		virtual void Render() const override;
+		virtual void Render(const std::shared_ptr<CameraComponent>& camera) const override;
 
 		template<class Archive>
 		void Serialize(Archive& archive);

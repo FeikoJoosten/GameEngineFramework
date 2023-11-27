@@ -50,5 +50,11 @@ namespace Engine
 		// Cull triangles which normal is not towards the camera
 		glEnable(GL_CULL_FACE);
 	}
+
+	void OpenGLWindow::HandleOnWindowResized(const int newWidth, const int newHeight) {
+		Window::HandleOnWindowResized(newWidth, newHeight);
+
+		glViewport(0, 0, newWidth, newHeight);
+	}
 } //namespace Engine
 #endif

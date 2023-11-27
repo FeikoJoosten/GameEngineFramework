@@ -5,32 +5,12 @@ CEREAL_REGISTER_TYPE(Engine::Mesh);
 
 namespace Engine
 {
-	void Mesh::SetUpMesh()
-	{
-	}
-
-	uint64_t Mesh::GetVao() const
-	{
-		return vao;
-	}
-
-	uint64_t Mesh::GetVbo() const
-	{
-		return vbo;
-	}
-
-	uint64_t Mesh::GetEbo() const
-	{
-		return ebo;
-	}
-
-	uint64_t Mesh::GetUbo() const
-	{
-		return ubo;
-	}
-
 	const std::vector<glm::vec3>& Mesh::GetVertices() const {
 		return vertices;
+	}
+
+	const std::vector<glm::vec3>& Mesh::GetNormals() const {
+		return normals;
 	}
 
 	const std::vector<unsigned>& Mesh::GetIndices() const {

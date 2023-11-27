@@ -57,7 +57,7 @@ namespace Engine {
 			instance->window = std::shared_ptr<OpenGLWindow>(new OpenGLWindow());
 #endif
 #ifdef USING_VULKAN
-		instance->window = std::shared_ptr<VulkanWindow>(new VulkanWindow());
+			instance->window = std::shared_ptr<VulkanWindow>(new VulkanWindow());
 #endif
 		return instance->window;
 	}
@@ -73,7 +73,7 @@ namespace Engine {
 		CreateInstance();
 		if (instance->renderer == nullptr) {
 #ifdef USING_OPENGL
-			instance->renderer = std::shared_ptr<OpenGLRenderer>(new OpenGLRenderer("Basic3D.vert", "Basic3D.frag"));
+			instance->renderer = std::make_shared<OpenGLRenderer>();
 #endif
 #ifdef USING_VULKAN
 			instance->renderer = std::shared_ptr<VulkanRenderer>(new VulkanRenderer());

@@ -1,0 +1,16 @@
+{
+    "data": {
+        "guid": {
+            "guid": "0132e90f-7c62-4cae-af9c-84f399e4c317"
+        },
+        "parentGuid": {
+            "guid": "00000000-0000-0000-0000-000000000000"
+        },
+        "childGuids": [],
+        "importSettingsGuid": {
+            "guid": "0132e90f-7c62-4cae-af9c-84f399e4c317"
+        },
+        "fullPath": "D:/Projects/GameEngineFramework/ProjectRoot/Resources/Shaders/",
+        "assetNameWithExtension": "GLSL Basic3D Vertex.shaderStage.importSettings"
+    }
+}

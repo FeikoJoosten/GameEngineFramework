@@ -53,7 +53,7 @@ namespace Engine {
 
 	void Window::SetShouldClose(const bool value) noexcept {
 		if (value)
-			OnWindowShutdownRequestedEvent(Get());
+			OnWindowShutdownRequestedEvent();
 
 		if (window != nullptr)
 			glfwSetWindowShouldClose(window, value);
@@ -115,30 +115,30 @@ namespace Engine {
 		return displayHeight;
 	}
 
-	void Window::HandleOnWindowResized(GLFWwindow* glfwWindow, const int newWidth, const int newHeight) {
-		if (newWidth == 0 || newHeight == 0) return;
+	void Window::HandleOnWindowResized(const int newWidth, const int newHeight) {
+		if (newWidth == 0 || newHeight == 0 || !window) return;
 
 		width = newWidth;
 		height = newHeight;
 
 		int displayW;
 		int displayH;
-		glfwGetFramebufferSize(glfwWindow, &displayW, &displayH);
+		glfwGetFramebufferSize(window, &displayW, &displayH);
 		displayWidth = displayW;
 		displayHeight = displayH;
 
-		OnWindowResizedEvent(glfwWindow, newWidth, newHeight);
+		OnWindowResizedEvent(newWidth, newHeight);
 
 		ImGuiIO& io = ImGui::GetIO();
 		io.DisplaySize = ImVec2(static_cast<float>(newWidth), static_cast<float>(newHeight));
 		io.DisplayFramebufferScale = ImVec2(newWidth > 0 ? static_cast<float>(displayW) / io.DisplaySize.x : 0, newHeight > 0 ? static_cast<float>(displayH) / io.DisplaySize.y : 0);
 	}
 
-	void Window::HandleOnWindowRepositioned(GLFWwindow* glfwWindow, const int newXPosition, const int newYPosition) {
+	void Window::HandleOnWindowRepositioned(const int newXPosition, const int newYPosition) {
 		xPosition = newXPosition;
 		yPosition = newYPosition;
 
-		OnWindowRepositionedEvent(glfwWindow, newXPosition, newYPosition);
+		OnWindowRepositionedEvent(newXPosition, newYPosition);
 	}
 
 	void Window::CreateInternalWindow() {
@@ -164,17 +164,17 @@ namespace Engine {
 
 		glfwSetWindowSizeCallback(window, WindowResizeCallback);
 		glfwSetWindowPosCallback(window, WindowRepositionCallback);
-		HandleOnWindowResized(window, width, height);
+		HandleOnWindowResized(width, height);
 	}
 
-	void Window::WindowResizeCallback(GLFWwindow* glfwWindow, const int newWidth, const int newHeight) {
+	void Window::WindowResizeCallback(GLFWwindow*, const int newWidth, const int newHeight) {
 		const std::shared_ptr<Window> window = Get();
-		window->HandleOnWindowResized(glfwWindow, newWidth, newHeight);
+		window->HandleOnWindowResized(newWidth, newHeight);
 	}
 
-	void Window::WindowRepositionCallback(GLFWwindow* glfwWindow, const int newXPosition, const int newYPosition) {
+	void Window::WindowRepositionCallback(GLFWwindow*, const int newXPosition, const int newYPosition) {
 		const std::shared_ptr<Window> window = Get();
-		window->HandleOnWindowRepositioned(glfwWindow, newXPosition, newYPosition);
+		window->HandleOnWindowRepositioned(newXPosition, newYPosition);
 	}
 
 } //namespace Engine

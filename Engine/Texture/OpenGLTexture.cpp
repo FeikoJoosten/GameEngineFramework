@@ -1,109 +1,103 @@
 #include "Engine/Texture/OpenGLTexture.hpp"
+#include "Engine/AssetManagement/AssetRegistry.hpp"
+#include "Engine/Texture/TextureAssetImportSettings.hpp"
+#include "Engine/Utility/Logging.hpp"
 
 #ifdef USING_OPENGL
-#include "Engine/AssetManagement/AssetManager.hpp"
 #include "Engine/Renderer/OpenGLUtility.hpp"
 
 #include <GL/glew.h>
-#include <stb/stb_image.h>
 
 namespace Engine {
-	OpenGLTexture::OpenGLTexture(const std::string& filename, const int desiredChannels) {
-		const std::string baseLocation = "Textures/";
-		const std::shared_ptr<AssetManager>& assetManager = AssetManager::Get();
-		const std::string projectRoot = assetManager->GetProjectRoot();
-		const std::string defaultTextureLocation = projectRoot + "Resources/Textures/default.png";
-		stbi_uc* textureData = stbi_load(
-			assetManager->FileExists(baseLocation, baseLocation + filename, true) ?
-			(projectRoot + "Resources/" + baseLocation + filename).c_str() :
-			defaultTextureLocation.c_str(),
-			&width, &height, &channels, STBI_rgb_alpha);
-		OpenGLTexture::CreateTextureWithData(textureData, true);
-		stbi_image_free(textureData);
-	}
+	OpenGLTexture::OpenGLTexture(const std::shared_ptr<Texture>& relatedTexture) {
+		this->relatedTexture = relatedTexture;
 
-	unsigned int OpenGLTexture::GetTexture() const {
-		return textureId;
+		std::shared_ptr<AssetImportSettings> importSettings;
+		AssetRegistry::TryGetImportSettingsForAsset(relatedTexture->GetGuid(), importSettings);
+		const std::shared_ptr<TextureAssetImportSettings> textureAssetImportSettings = std::static_pointer_cast<TextureAssetImportSettings>(importSettings);
+
+		GLenum format;
+		switch (relatedTexture->GetNumberOfChannels()) {
+		case 1:
+			format = GL_R;
+			break;
+		case 2:
+			format = GL_RG;
+			break;
+		case 3:
+			format = GL_RGB;
+			break;
+		case 4:
+			format = GL_RGBA;
+			break;
+		default:
+			DEBUG_ERROR("Not supported number of channels! Incoming number of channels: " + relatedTexture->GetNumberOfChannels());
+			return;
+		}
+
+		GLuint textureReference;
+		glGenTextures(1, &textureReference);
+		glCheckError();
+
+		glBindTexture(GL_TEXTURE_2D, textureReference);
+		glCheckError();
+
+		if (textureAssetImportSettings->generateMipMaps)
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		else
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glCheckError();
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glCheckError();
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glCheckError();
+
+		GLenum type;
+		switch (textureAssetImportSettings->dataSize) {
+		case TextureDataSize::Char:
+			type = GL_UNSIGNED_BYTE;
+			break;
+		case TextureDataSize::Short:
+			type = GL_UNSIGNED_SHORT;
+			break;
+		case TextureDataSize::Int:
+			type = GL_UNSIGNED_INT;
+			break;
+		default:
+			type = GL_UNSIGNED_BYTE;
+			break;
+		}
+
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			textureAssetImportSettings->mipMapLevel,
+			format,
+			relatedTexture->GetWidth(),
+			relatedTexture->GetHeight(),
+			0,
+			format,
+			type,
+			relatedTexture->GetRawTextureData());
+		glCheckError();
+
+		if (textureAssetImportSettings->generateMipMaps)
+			glGenerateMipmap(GL_TEXTURE_2D);
+
+		glCheckError();
+
+		textureId = textureReference;
 	}
 
 	OpenGLTexture::~OpenGLTexture() {
-		GLuint textureReference = GLuint(textureId);
-
 		if (textureId)
-			glDeleteTextures(1, &textureReference);
+			glDeleteTextures(1, &textureId);
 	}
 
-	Texture* OpenGLTexture::CreateTextureWithData(stbi_uc* data, bool genMipMaps, TextureDataSize bytes) {
-		return nullptr;
-		//this->dataSize = bytes;
-		//GLuint textureReference = GLuint(textureId);
-		//if (textureReference)
-		//	glDeleteTextures(1, &textureReference);
-		//
-		//glGenTextures(1, &textureReference);									// Gen    
-		//glCheckError();
-		//
-		//glBindTexture(GL_TEXTURE_2D, textureReference);                          // Bind
-		//glCheckError();
-		//
-		////
-		//if (genMipMaps)
-		//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);    // Minmization
-		//else
-		//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);                   // Minmization
-		//glCheckError();
-		//
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);                       // Magnification
-		//glCheckError();
-		//
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		//glCheckError();
-		//
-		//GLenum type;
-		//
-		//switch (bytes) {
-		//case TextureDataSize::UChar:
-		//	type = GL_UNSIGNED_BYTE;
-		//	break;
-		//case TextureDataSize::SChar:
-		//	type = GL_UNSIGNED_BYTE;
-		//	break;
-		//case TextureDataSize::UShort:
-		//	type = GL_UNSIGNED_SHORT;
-		//	break;
-		//case TextureDataSize::SShort:
-		//	type = GL_UNSIGNED_SHORT;
-		//	break;
-		//case TextureDataSize::UInt:
-		//	type = GL_UNSIGNED_INT;
-		//	break;
-		//case TextureDataSize::SInt:
-		//	type = GL_UNSIGNED_INT;
-		//	break;
-		//default:
-		//	type = GL_UNSIGNED_BYTE;
-		//	break;
-		//}
-		//
-		//glTexImage2D(
-		//	GL_TEXTURE_2D,						// What (target)
-		//	0,									// Mip-map level
-		//	GL_RGBA,		                    // Internal format
-		//	width,								// Width
-		//	height,								// Height
-		//	0,									// Border
-		//	GL_RGBA,							// Format (how to use)
-		//	type,								// Type   (how to intepret)
-		//	data);								// Data
-		//glCheckError();
-		//
-		//if (genMipMaps)
-		//	glGenerateMipmap(GL_TEXTURE_2D);
-		//
-		//glCheckError();
-		//
-		//textureId = uint64_t(textureReference);
+	unsigned int OpenGLTexture::GetTextureId() const {
+		return textureId;
 	}
-} //namespace Engine
+}
 #endif

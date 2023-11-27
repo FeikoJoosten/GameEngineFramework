@@ -8,6 +8,9 @@
 #endif
 
 // comment to disable info, warning or debug.
+#ifndef DEBUG_DEBUG_ENABLED
+#define DEBUG_DEBUG_ENABLED 1
+#endif
 #ifndef DEBUG_INFO_ENABLED
 #define DEBUG_INFO_ENABLED 1
 #endif
@@ -40,31 +43,11 @@
 
 void ENGINE_API DoDebug(const char* debugLevel, const char* classPath, const char* function, int lineNumber, const std::string& value);
 
-/* example: debug_warning("ResourceManager","GetFile()","File not found"); */
-
-/*! \brief This functions logs a debug error to the log and console.
-*	This does not halt the program!
-*
-*	This macro requires three parameters-
-*	debug_class -> the class you're working on.
-*	function -> the function you're working in.
-*	value -> the message you want to pass on.
-*
-*/
 #if DEBUG_ERROR_ENABLED
 #define DEBUG_ERROR(value) DoDebug("[ERROR] ", __FILE__, __func__, __LINE__, value);
 #else
 #define DEBUG_ERROR(value) {}
 #endif
-
-
-/*! \brief This functions logs a debug warning to the log and console.
-*
-*	This macro requires three parameters-
-*	debug_class -> the class you're working on.
-*	function -> the function you're working in.
-*	value -> the message you want to pass on.
-*/
 
 #if DEBUG_WARNING_ENABLED
 #define DEBUG_WARNING(value) DoDebug("[WARNING] ", __FILE__, __func__, __LINE__, value);
@@ -72,17 +55,14 @@ void ENGINE_API DoDebug(const char* debugLevel, const char* classPath, const cha
 #define DEBUG_WARNING(value) {}
 #endif
 
-/*! \brief This functions logs a debug info to the log and console.
-*	Use this for useless information.
-*
-*	This macro requires three parameters-
-*	debug_class -> the class you're working on.
-*	function -> the function you're working in.
-*	value -> the message you want to pass on.
-*
-*/
 #if DEBUG_INFO_ENABLED
 #define DEBUG_INFO(value) DoDebug("[INFO] ", __FILE__, __func__, __LINE__, value);
 #else
 #define DEBUG_INFO(value) {}
+#endif
+
+#if DEBUG_DEBUG_ENABLED
+#define DEBUG_DEBUG(value) DoDebug("[DEBUG] ", __FILE__, __func__, __LINE__, value);
+#else
+#define DEBUG_DEBUG(value) {}
 #endif

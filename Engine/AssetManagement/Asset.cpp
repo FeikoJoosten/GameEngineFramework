@@ -22,8 +22,8 @@ namespace Engine {
 	void Asset::Save() {
 		std::string currentFilePath;
 		const std::shared_ptr<AssetManager>& assetManager = AssetManager::Get();
-		if (std::string assetNameWithExtension; AssetRegistry::TryGetPathForGuid(guid, currentFilePath, assetNameWithExtension))
-			assetManager->WriteAssetToPath(currentFilePath, shared_from_this());
+		if (std::string assetNameWithExtension; AssetRegistry::TryGetFullPathForGuid(guid, currentFilePath, assetNameWithExtension))
+			assetManager->WriteAssetToFullPath(currentFilePath, shared_from_this());
 		else
 			DEBUG_ERROR("Failed to save asset, because it was not yet registered with the asset registry!");
 	}

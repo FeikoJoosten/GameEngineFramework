@@ -18,6 +18,6 @@ namespace Engine {
 
 		[[nodiscard]] virtual const char* GetDefaultAssetExtension() const override;
 
-		virtual std::shared_ptr<Asset> ImportAsset(const std::string& pathInProject, const char* assetNameWithExtension, const std::shared_ptr<AssetImportSettings>& importSettings) override;
+		[[nodiscard]] virtual std::shared_ptr<Asset> CreateAsset() const override;
 	};
 }

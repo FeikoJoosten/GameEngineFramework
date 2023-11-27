@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Engine/Utility/Defines.hpp"
-
 #include <cereal/cereal.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -64,23 +62,21 @@ namespace glm {
 
     template<class Archive, class T>
     void Load(Archive& archive, glm::qua<T, glm::defaultp>& q) {
-        glm::vec3 v {};
         archive(
-            CEREAL_NVP(v.x),
-            CEREAL_NVP(v.y),
-            CEREAL_NVP(v.z)
+            CEREAL_NVP(q.x),
+            CEREAL_NVP(q.y),
+            CEREAL_NVP(q.z),
+            CEREAL_NVP(q.w)
         );
-
-        q = glm::radians(v);
     }
 
     template<class Archive, class T>
     void Save(Archive& archive, const glm::qua<T, glm::defaultp>& q) {
-        const glm::vec3 v = glm::degrees(glm::eulerAngles(q));
         archive(
-            CEREAL_NVP(v.x),
-            CEREAL_NVP(v.y),
-            CEREAL_NVP(v.z)
+            CEREAL_NVP(q.x),
+            CEREAL_NVP(q.y),
+            CEREAL_NVP(q.z),
+            CEREAL_NVP(q.w)
         );
     }
 }

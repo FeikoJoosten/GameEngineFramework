@@ -1,5 +1,7 @@
 #include "Engine/Texture/Texture.hpp"
 
+CEREAL_REGISTER_TYPE(Engine::Texture);
+
 namespace Engine
 {
 	int Texture::GetWidth() const {
@@ -10,19 +12,11 @@ namespace Engine
 		return height;
 	}
 
-	bool Texture::operator==(const Texture& texture) const {
-		if (width != texture.width) return false;
-		if (height != texture.height) return false;
-		if (channels != texture.channels) return false;
-
-		return false;
+	int Texture::GetNumberOfChannels() const {
+		return channels;
 	}
 
-	bool Texture::operator!=(const Texture& texture) const {
-		if (width != texture.width) return true;
-		if (height != texture.height) return true;
-		if (channels != texture.channels) return true;
-
-		return false;
+	const unsigned char* Texture::GetRawTextureData() const {
+		return textureData.data();
 	}
-} //namespace Engine
+}

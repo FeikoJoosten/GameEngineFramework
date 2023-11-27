@@ -1,0 +1,16 @@
+{
+    "data": {
+        "guid": {
+            "guid": "3bbd2b9d-f334-4c55-a940-8fc0759e000b"
+        },
+        "parentGuid": {
+            "guid": "00000000-0000-0000-0000-000000000000"
+        },
+        "childGuids": [],
+        "importSettingsGuid": {
+            "guid": "3bbd2b9d-f334-4c55-a940-8fc0759e000b"
+        },
+        "fullPath": "D:/Projects/GameEngineFramework/ProjectRoot/Resources/Shaders/",
+        "assetNameWithExtension": "GLSL Basic3D Fragment.shaderStage.importSettings"
+    }
+}

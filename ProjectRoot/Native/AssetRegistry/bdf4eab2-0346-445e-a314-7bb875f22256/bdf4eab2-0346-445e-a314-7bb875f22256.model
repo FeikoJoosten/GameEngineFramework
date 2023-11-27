@@ -1,0 +1,141 @@
+{
+    "data": {
+        "polymorphic_id": 2147483649,
+        "polymorphic_name": "Engine::Model",
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "cereal::base_class<Asset>(this)": {
+                    "name": "Fantasy_crystal_stone.fbx",
+                    "guid": {
+                        "guid": "bdf4eab2-0346-445e-a314-7bb875f22256"
+                    }
+                },
+                "entities": [
+                    {
+                        "polymorphic_id": 1073741824,
+                        "ptr_wrapper": {
+                            "id": 2147483650,
+                            "data": {
+                                "cereal::base_class<Asset>(this)": {
+                                    "name": "RootNode",
+                                    "guid": {
+                                        "guid": "00000000-0000-0000-0000-000000000000"
+                                    }
+                                },
+                                "components": [
+                                    {
+                                        "polymorphic_id": 2147483650,
+                                        "polymorphic_name": "Engine::TransformComponent",
+                                        "ptr_wrapper": {
+                                            "id": 2147483651,
+                                            "data": {
+                                                "Component": {
+                                                    "isEnabled": true
+                                                },
+                                                "parent": {
+                                                    "polymorphic_id": 0
+                                                },
+                                                "localPosition": {
+                                                    "v.x": 0.0,
+                                                    "v.y": 0.0,
+                                                    "v.z": 0.0
+                                                },
+                                                "localRotation": {
+                                                    "v.x": 0.0,
+                                                    "v.y": -0.0,
+                                                    "v.z": 0.0
+                                                },
+                                                "localScale": {
+                                                    "v.x": 1.0,
+                                                    "v.y": 1.0,
+                                                    "v.z": 1.0
+                                                },
+                                                "isStatic": false
+                                            }
+                                        }
+                                    }
+                                ],
+                                "isActive": true
+                            }
+                        }
+                    },
+                    {
+                        "polymorphic_id": 1073741824,
+                        "ptr_wrapper": {
+                            "id": 2147483652,
+                            "data": {
+                                "cereal::base_class<Asset>(this)": {
+                                    "name": "Crystal_stone",
+                                    "guid": {
+                                        "guid": "00000000-0000-0000-0000-000000000000"
+                                    }
+                                },
+                                "components": [
+                                    {
+                                        "polymorphic_id": 2,
+                                        "ptr_wrapper": {
+                                            "id": 2147483653,
+                                            "data": {
+                                                "Component": {
+                                                    "isEnabled": true
+                                                },
+                                                "parent": {
+                                                    "polymorphic_id": 1073741824,
+                                                    "ptr_wrapper": {
+                                                        "id": 3
+                                                    }
+                                                },
+                                                "localPosition": {
+                                                    "v.x": 0.07106146961450577,
+                                                    "v.y": -0.05987875908613205,
+                                                    "v.z": 0.08043143898248673
+                                                },
+                                                "localRotation": {
+                                                    "v.x": 90.00000762939453,
+                                                    "v.y": -0.0,
+                                                    "v.z": 0.0
+                                                },
+                                                "localScale": {
+                                                    "v.x": 100.0,
+                                                    "v.y": 100.0,
+                                                    "v.z": 100.0
+                                                },
+                                                "isStatic": false
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "polymorphic_id": 2147483651,
+                                        "polymorphic_name": "Engine::MeshRendererComponent",
+                                        "ptr_wrapper": {
+                                            "id": 2147483654,
+                                            "data": {
+                                                "cereal::base_class<RenderComponent>(this)": {
+                                                    "cereal::base_class<Component>(this)": {
+                                                        "isEnabled": true
+                                                    },
+                                                    "material": {
+                                                        "assetReferenceGuid": {
+                                                            "guid": "00000000-0000-0000-0000-000000000000"
+                                                        }
+                                                    }
+                                                },
+                                                "mesh": {
+                                                    "assetReferenceGuid": {
+                                                        "guid": "2b9eece5-b8fd-4d52-acff-23727c80d9f2"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                ],
+                                "isActive": true
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

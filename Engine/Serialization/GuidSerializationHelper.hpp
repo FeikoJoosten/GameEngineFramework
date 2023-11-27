@@ -2,23 +2,18 @@
 
 #include <cereal/cereal.hpp>
 #include <crossguid/guid.hpp>
+#include <nameof.hpp>
 
 namespace xg {
     template<class Archive>
     void Load(Archive& archive, Guid& guid) {
-    	std::array<unsigned char, 16> bytes {};
-
-        archive(
-            cereal::make_nvp("bytes", bytes)
-        );
-
-        guid = Guid(bytes);
+        std::string string;
+        archive(cereal::make_nvp(static_cast<std::string>(NAMEOF(guid)), string));
+        guid = Guid(string);
     }
 
     template<class Archive>
     void Save(Archive& archive, const Guid& guid) {
-        archive(
-            cereal::make_nvp("bytes", guid.bytes())
-        );
+        archive(cereal::make_nvp(static_cast<std::string>(NAMEOF(guid)), guid.str()));
     }
 }

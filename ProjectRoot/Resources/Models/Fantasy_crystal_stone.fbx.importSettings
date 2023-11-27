@@ -9,49 +9,25 @@
                     "cereal::base_class<Asset>(this)": {
                         "name": "Fantasy_crystal_stone.fbx",
                         "guid": {
-                            "bytes": {
-                                "value0": 56,
-                                "value1": 171,
-                                "value2": 188,
-                                "value3": 6,
-                                "value4": 66,
-                                "value5": 244,
-                                "value6": 76,
-                                "value7": 189,
-                                "value8": 132,
-                                "value9": 80,
-                                "value10": 60,
-                                "value11": 4,
-                                "value12": 4,
-                                "value13": 136,
-                                "value14": 217,
-                                "value15": 60
-                            }
+                            "guid": "37ea9878-bc79-40ff-8caf-792d68518d98"
                         }
                     },
                     "relatedAssetGuid": {
-                        "bytes": {
-                            "value0": 34,
-                            "value1": 119,
-                            "value2": 153,
-                            "value3": 240,
-                            "value4": 15,
-                            "value5": 241,
-                            "value6": 79,
-                            "value7": 135,
-                            "value8": 138,
-                            "value9": 83,
-                            "value10": 189,
-                            "value11": 169,
-                            "value12": 103,
-                            "value13": 74,
-                            "value14": 54,
-                            "value15": 114
-                        }
+                        "guid": "bdf4eab2-0346-445e-a314-7bb875f22256"
                     }
                 },
-                "importFlags": 10491930,
-                "scaleFactor": 0.009999999776482582
+                "importFlags": 8394762,
+                "scaleFactor": 0.009999999776482582,
+                "textureAssetImportSettings": {
+                    "assetReferenceGuid": {
+                        "guid": "a073ecee-c8e3-4cba-83e8-83dd72b3c931"
+                    }
+                },
+                "meshAssetImportSettings": {
+                    "assetReferenceGuid": {
+                        "guid": "a5928fd1-964c-4832-9d46-341966789730"
+                    }
+                }
             }
         }
     }

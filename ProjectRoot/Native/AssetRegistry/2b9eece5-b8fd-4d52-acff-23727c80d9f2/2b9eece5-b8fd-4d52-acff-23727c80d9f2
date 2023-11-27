@@ -1,0 +1,16 @@
+{
+    "data": {
+        "guid": {
+            "guid": "2b9eece5-b8fd-4d52-acff-23727c80d9f2"
+        },
+        "parentGuid": {
+            "guid": "bdf4eab2-0346-445e-a314-7bb875f22256"
+        },
+        "childGuids": [],
+        "importSettingsGuid": {
+            "guid": "a5928fd1-964c-4832-9d46-341966789730"
+        },
+        "fullPath": "D:/Projects/GameEngineFramework/ProjectRoot/Resources/Models/Fantasy_crystal_stone.fbx/",
+        "assetNameWithExtension": "Crystal_stone.001.mesh"
+    }
+}

@@ -92,8 +92,6 @@ namespace Engine
 
 	private:
 
-		friend class ResourceManager;
-
 		VulkanMesh() = delete;
 		VulkanMesh(aiMesh* mesh, std::shared_ptr<Skeleton> skeleton, std::vector<Vertex> vertices, std::vector<unsigned> indices);
 		VulkanMesh(VulkanMesh const &other) = default;

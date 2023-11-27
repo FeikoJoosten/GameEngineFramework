@@ -54,12 +54,12 @@ namespace Engine {
 		[[nodiscard]] std::shared_ptr<T> LoadAsset(const xg::Guid& assetGuid);
 
 		template<typename T>
-		[[nodiscard]] T ReadDataFromPath(const std::string& pathInProject, const std::string& fileName, const AssetSerializationType& serializationType = Json);
+		[[nodiscard]] static T ReadDataFromPath(const std::string& pathInProject, const std::string& fileName, const AssetSerializationType& serializationType = Json);
 
 		template<typename T>
 		[[nodiscard]] static T ReadDataFromFullPath(const std::string& fullPath, const std::string& fileName, const AssetSerializationType& serializationType = Json);
 
-		[[nodiscard]] bool FileExists(const std::string& fullPath, const std::string& fileName, bool isRelativeFromProject = false) const;
+		[[nodiscard]] static bool FileExists(const std::string& fullPath, const std::string& fileName, bool isRelativeFromProject = false);
 
 		[[nodiscard]] static bool FileExists(const std::string& fullPath);
 
@@ -77,7 +77,7 @@ namespace Engine {
 		template<class T>
 		[[nodiscard]] std::shared_ptr<IAssetImporter> GetAssetImporterForAssetType() const;
 
-		[[nodiscard]] bool TryGetAssetImporterForPath(const std::string& fullPath, std::shared_ptr<IAssetImporter>& outputAssetImporter) const;
+		[[nodiscard]] bool TryGetAssetImporterForPath(const std::string& pathInProject, std::shared_ptr<IAssetImporter>& outputAssetImporter) const;
 
 		[[nodiscard]] static std::vector<char> ReadRawFile(const std::string& fileName, int fileOpenMode = std::ios_base::in);
 
@@ -186,7 +186,7 @@ namespace Engine {
 			default: throw std::runtime_error("Invalid AssetSerializationType provided!");
 			}
 		}
-		catch (...) {}
+		catch (...) { }
 
 		inputStream.close();
 		return output;

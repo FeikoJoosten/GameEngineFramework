@@ -1,0 +1,16 @@
+{
+    "data": {
+        "guid": {
+            "guid": "30e75340-c72e-4366-bf8c-ecbe371bf491"
+        },
+        "parentGuid": {
+            "guid": "00000000-0000-0000-0000-000000000000"
+        },
+        "childGuids": [],
+        "importSettingsGuid": {
+            "guid": "30e75340-c72e-4366-bf8c-ecbe371bf491"
+        },
+        "fullPath": "D:/Projects/GameEngineFramework/ProjectRoot/Resources/Shaders/",
+        "assetNameWithExtension": "GLSL Basic3D.shader.importSettings"
+    }
+}

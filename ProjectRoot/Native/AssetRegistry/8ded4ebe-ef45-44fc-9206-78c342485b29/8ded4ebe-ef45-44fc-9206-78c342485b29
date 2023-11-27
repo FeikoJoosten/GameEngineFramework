@@ -1,0 +1,16 @@
+{
+    "data": {
+        "guid": {
+            "guid": "8ded4ebe-ef45-44fc-9206-78c342485b29"
+        },
+        "parentGuid": {
+            "guid": "00000000-0000-0000-0000-000000000000"
+        },
+        "childGuids": [],
+        "importSettingsGuid": {
+            "guid": "476fc838-e217-4e8a-bddf-39cd99babad8"
+        },
+        "fullPath": "D:/Projects/GameEngineFramework/ProjectRoot/Resources/Textures/Crystal Stone/",
+        "assetNameWithExtension": "Crystal_stone_baseColor.png"
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "data": {
+        "guid": {
+            "guid": "954af435-280c-490a-b146-25d7af163222"
+        },
+        "parentGuid": {
+            "guid": "00000000-0000-0000-0000-000000000000"
+        },
+        "childGuids": [],
+        "importSettingsGuid": {
+            "guid": "5e918da1-5618-4be6-bf57-abc06975769d"
+        },
+        "fullPath": "D:/Projects/GameEngineFramework/ProjectRoot/Resources/Materials/",
+        "assetNameWithExtension": "default.material"
+    }
+}

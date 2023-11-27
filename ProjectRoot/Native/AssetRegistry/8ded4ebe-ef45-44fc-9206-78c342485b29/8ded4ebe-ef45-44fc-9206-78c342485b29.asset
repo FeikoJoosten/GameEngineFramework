@@ -1,0 +1,20 @@
+{
+    "data": {
+        "polymorphic_id": 2147483649,
+        "polymorphic_name": "Engine::Texture",
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "cereal::base_class<Asset>(this)": {
+                    "name": "",
+                    "guid": {
+                        "guid": "8ded4ebe-ef45-44fc-9206-78c342485b29"
+                    }
+                },
+                "width": 2048,
+                "height": 2048,
+                "channels": 3
+            }
+        }
+    }
+}

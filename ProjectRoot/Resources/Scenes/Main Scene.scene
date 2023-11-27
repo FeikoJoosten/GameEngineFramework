@@ -8,24 +8,7 @@
                 "cereal::base_class<Asset>(this)": {
                     "name": "Main Scene",
                     "guid": {
-                        "bytes": {
-                            "value0": 127,
-                            "value1": 91,
-                            "value2": 197,
-                            "value3": 228,
-                            "value4": 188,
-                            "value5": 79,
-                            "value6": 79,
-                            "value7": 208,
-                            "value8": 140,
-                            "value9": 171,
-                            "value10": 148,
-                            "value11": 23,
-                            "value12": 209,
-                            "value13": 154,
-                            "value14": 198,
-                            "value15": 140
-                        }
+                        "guid": "7331de65-089f-45a0-98e1-dc5a47ac6a71"
                     }
                 },
                 "isActive": true,
@@ -38,24 +21,7 @@
                                 "cereal::base_class<Asset>(this)": {
                                     "name": "RootNode",
                                     "guid": {
-                                        "bytes": {
-                                            "value0": 0,
-                                            "value1": 0,
-                                            "value2": 0,
-                                            "value3": 0,
-                                            "value4": 0,
-                                            "value5": 0,
-                                            "value6": 0,
-                                            "value7": 0,
-                                            "value8": 0,
-                                            "value9": 0,
-                                            "value10": 0,
-                                            "value11": 0,
-                                            "value12": 0,
-                                            "value13": 0,
-                                            "value14": 0,
-                                            "value15": 0
-                                        }
+                                        "guid": "00000000-0000-0000-0000-000000000000"
                                     }
                                 },
                                 "components": [
@@ -77,9 +43,10 @@
                                                     "v.z": 0.0
                                                 },
                                                 "localRotation": {
-                                                    "v.x": 0.0,
-                                                    "v.y": -0.0,
-                                                    "v.z": 0.0
+                                                    "q.x": 0.0,
+                                                    "q.y": 0.0,
+                                                    "q.z": 0.0,
+                                                    "q.w": 1.0
                                                 },
                                                 "localScale": {
                                                     "v.x": 1.0,
@@ -103,24 +70,7 @@
                                 "cereal::base_class<Asset>(this)": {
                                     "name": "Crystal_stone",
                                     "guid": {
-                                        "bytes": {
-                                            "value0": 0,
-                                            "value1": 0,
-                                            "value2": 0,
-                                            "value3": 0,
-                                            "value4": 0,
-                                            "value5": 0,
-                                            "value6": 0,
-                                            "value7": 0,
-                                            "value8": 0,
-                                            "value9": 0,
-                                            "value10": 0,
-                                            "value11": 0,
-                                            "value12": 0,
-                                            "value13": 0,
-                                            "value14": 0,
-                                            "value15": 0
-                                        }
+                                        "guid": "00000000-0000-0000-0000-000000000000"
                                     }
                                 },
                                 "components": [
@@ -133,25 +83,23 @@
                                                     "isEnabled": true
                                                 },
                                                 "parent": {
-                                                    "polymorphic_id": 1073741824,
-                                                    "ptr_wrapper": {
-                                                        "id": 3
-                                                    }
+                                                    "polymorphic_id": 0
                                                 },
                                                 "localPosition": {
-                                                    "v.x": 0.07106146961450577,
-                                                    "v.y": -0.05987875908613205,
-                                                    "v.z": 0.08043143898248673
-                                                },
-                                                "localRotation": {
-                                                    "v.x": 90.00000762939453,
-                                                    "v.y": -0.0,
+                                                    "v.x": 0.0,
+                                                    "v.y": 0.0,
                                                     "v.z": 0.0
                                                 },
+                                                "localRotation": {
+                                                    "q.x": 0.70711,
+                                                    "q.y": 0.0,
+                                                    "q.z": 0.0,
+                                                    "q.w": 0.70711
+                                                },
                                                 "localScale": {
-                                                    "v.x": 100.0,
-                                                    "v.y": 100.0,
-                                                    "v.z": 100.0
+                                                    "v.x": 1.0,
+                                                    "v.y": 1.0,
+                                                    "v.z": 1.0
                                                 },
                                                 "isStatic": false
                                             }
@@ -167,35 +115,15 @@
                                                     "cereal::base_class<Component>(this)": {
                                                         "isEnabled": true
                                                     },
-                                                    "transformComponent": {
-                                                        "locked_ptr": {
-                                                            "polymorphic_id": 1073741824,
-                                                            "ptr_wrapper": {
-                                                                "id": 5
-                                                            }
+                                                    "material": {
+                                                        "assetReferenceGuid": {
+                                                            "guid": "954af435-280c-490a-b146-25d7af163222"
                                                         }
                                                     }
                                                 },
                                                 "mesh": {
                                                     "assetReferenceGuid": {
-                                                        "bytes": {
-                                                            "value0": 171,
-                                                            "value1": 44,
-                                                            "value2": 216,
-                                                            "value3": 0,
-                                                            "value4": 224,
-                                                            "value5": 180,
-                                                            "value6": 69,
-                                                            "value7": 16,
-                                                            "value8": 131,
-                                                            "value9": 252,
-                                                            "value10": 224,
-                                                            "value11": 113,
-                                                            "value12": 206,
-                                                            "value13": 70,
-                                                            "value14": 51,
-                                                            "value15": 241
-                                                        }
+                                                        "guid": "2b9eece5-b8fd-4d52-acff-23727c80d9f2"
                                                     }
                                                 }
                                             }
@@ -214,24 +142,7 @@
                                 "cereal::base_class<Asset>(this)": {
                                     "name": "Camera",
                                     "guid": {
-                                        "bytes": {
-                                            "value0": 0,
-                                            "value1": 0,
-                                            "value2": 0,
-                                            "value3": 0,
-                                            "value4": 0,
-                                            "value5": 0,
-                                            "value6": 0,
-                                            "value7": 0,
-                                            "value8": 0,
-                                            "value9": 0,
-                                            "value10": 0,
-                                            "value11": 0,
-                                            "value12": 0,
-                                            "value13": 0,
-                                            "value14": 0,
-                                            "value15": 0
-                                        }
+                                        "guid": "00000000-0000-0000-0000-000000000000"
                                     }
                                 },
                                 "components": [
@@ -252,9 +163,10 @@
                                                     "v.z": 200.0
                                                 },
                                                 "localRotation": {
-                                                    "v.x": 0.0,
-                                                    "v.y": 3.141592502593994,
-                                                    "v.z": 0.0
+                                                    "q.x": 0.0,
+                                                    "q.y": 1,
+                                                    "q.z": 0.0,
+                                                    "q.w": 0.0
                                                 },
                                                 "localScale": {
                                                     "v.x": 1.0,

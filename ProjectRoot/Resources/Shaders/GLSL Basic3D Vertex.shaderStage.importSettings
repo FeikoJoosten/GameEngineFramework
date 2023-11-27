@@ -1,0 +1,20 @@
+{
+    "data": {
+        "polymorphic_id": 2147483649,
+        "polymorphic_name": "Engine::AssetImportSettings",
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "cereal::base_class<Asset>(this)": {
+                    "name": "GLSL Basic3D Vertex.shaderStage",
+                    "guid": {
+                        "guid": "0132e90f-7c62-4cae-af9c-84f399e4c317"
+                    }
+                },
+                "relatedAssetGuid": {
+                    "guid": "a083b99a-c120-449d-93c7-dba4096e9829"
+                }
+            }
+        }
+    }
+}

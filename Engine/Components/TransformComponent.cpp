@@ -1,4 +1,5 @@
 #include "Engine/Components/TransformComponent.hpp"
+#include "Engine/Utility/Defines.hpp"
 #include "Engine/Utility/Logging.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -55,8 +56,6 @@ namespace Engine {
 	}
 
 	void TransformComponent::SetPosition(const float x, const float y, const float z) noexcept {
-		if (isStatic) return;
-
 		SetPosition({ x, y, z });
 	}
 
@@ -75,8 +74,6 @@ namespace Engine {
 	}
 
 	void TransformComponent::SetLocalPosition(const float x, const float y, const float z) noexcept {
-		if (isStatic) return;
-
 		SetLocalPosition({ x, y, z });
 	}
 
@@ -92,8 +89,6 @@ namespace Engine {
 	}
 
 	void TransformComponent::SetRotation(const float x, const float y, const float z) noexcept {
-		if (isStatic) return;
-
 		SetRotation(glm::radians(glm::vec3(x, y, z)));
 	}
 
@@ -112,9 +107,7 @@ namespace Engine {
 	}
 
 	void TransformComponent::SetLocalRotation(const float x, const float y, const float z) noexcept {
-		if (isStatic) return;
-
-		SetRotation(glm::radians(glm::vec3(x, y, z)));
+		SetLocalRotation(glm::radians(glm::vec3(x, y, z)));
 	}
 
 	glm::quat TransformComponent::GetLocalRotation() const noexcept {
@@ -134,7 +127,7 @@ namespace Engine {
 	}
 
 	void TransformComponent::SetLocalPositionAndLocalRotation(const glm::vec3 newPosition, const glm::vec3 newRotation) {
-		SetPositionAndRotation(newPosition, glm::radians(newRotation));
+		SetLocalPositionAndLocalRotation(newPosition, glm::quat(glm::radians(newRotation)));
 	}
 
 	void TransformComponent::SetLocalPositionAndLocalRotation(const glm::vec3 newPosition, const glm::quat newRotation) {
@@ -149,13 +142,10 @@ namespace Engine {
 		if (isStatic) return;
 
 		localScale = parent ? GetScale() * glm::vec3(1.f) / parent->GetScale() : newScale;
-
 		RecalculateLocalMatrixAndInvokeOnModified();
 	}
 
 	void TransformComponent::SetScale(const float x, const float y, const float z) noexcept {
-		if (isStatic) return;
-
 		SetScale(glm::vec3(x, y, z));
 	}
 
@@ -169,11 +159,10 @@ namespace Engine {
 		if (isStatic) return;
 
 		localScale = newScale;
+		RecalculateLocalMatrixAndInvokeOnModified();
 	}
 
 	void TransformComponent::SetLocalScale(const float x, const float y, const float z) noexcept {
-		if (isStatic) return;
-
 		SetLocalScale({ x, y, z });
 	}
 
@@ -190,7 +179,7 @@ namespace Engine {
 	}
 
 	glm::mat4x4 TransformComponent::GetMatrix() const noexcept {
-		if (parent) return parent->GetMatrix() * localMatrix;
+		if (parent) return localMatrix * parent->GetMatrix();
 
 		return localMatrix;
 	}
@@ -224,27 +213,23 @@ namespace Engine {
 	}
 
 	void TransformComponent::Translate(const float x) noexcept {
-		if (isStatic) return;
-
 		Translate({ x, 0, 0 });
 	}
 
 	void TransformComponent::Translate(const float x, const float y) noexcept {
-		if (isStatic) return;
-
 		Translate({ x, y, 0 });
 	}
 
 	void TransformComponent::Translate(const float x, const float y, const float z) noexcept {
-		if (isStatic) return;
-
 		Translate({ x, y, z });
 	}
 
 	void TransformComponent::Rotate(const glm::vec3 rotationToAdd) noexcept {
 		if (isStatic) return;
+		if (constexpr float epsilon = std::numeric_limits<float>::epsilon(); glm::length2(rotationToAdd) < epsilon * epsilon) return;
 
-		Rotate(glm::radians(rotationToAdd));
+		localRotation *= glm::quat(glm::radians(rotationToAdd));
+		RecalculateLocalMatrixAndInvokeOnModified();
 	}
 
 	void TransformComponent::Rotate(const glm::quat rotationToAdd) noexcept {
@@ -291,26 +276,27 @@ namespace Engine {
 	void TransformComponent::LookAt(const glm::vec3 targetPosition) noexcept {
 		if (isStatic) return;
 
-		localMatrix = glm::lookAt(GetLocalPosition(), parent ? parent->GetPosition() - targetPosition : targetPosition, GetLocalUp());
-		DecomposeLocalMatrix();
+		localRotation = glm::quatLookAt(GetPosition() - targetPosition, GetUp());
+		RecalculateLocalMatrixAndInvokeOnModified();
+		//localMatrix = glm::lookAt(GetLocalPosition(), parent ? parent->GetPosition() - targetPosition : targetPosition, GetLocalUp());
+		//DecomposeLocalMatrix();
 	}
 
 	void TransformComponent::DecomposeLocalMatrix() noexcept {
 		glm::vec3 skew;
 		glm::vec4 perspective;
 		glm::decompose(localMatrix, localScale, localRotation, localPosition, skew, perspective);
-		localPosition = perspective;
 
 		OnModifiedEvent(std::static_pointer_cast<TransformComponent>(shared_from_this()));
 	}
 
 	void TransformComponent::RecalculateLocalMatrix() noexcept {
-		constexpr glm::mat4 identityMatrix = glm::identity<glm::mat4>();
-		const glm::mat4 translationMatrix = glm::translate(identityMatrix, localPosition);
-		const glm::mat4 rotationMatrix = glm::mat4_cast(localRotation);
-		const glm::mat4 scaleMatrix = glm::scale(identityMatrix, localScale);
+		const glm::mat4 rotationMatrix = glm::toMat4(localRotation);
 
-		localMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+		localMatrix = glm::scale(rotationMatrix, localScale);
+		localMatrix[3][0] = localPosition.x;
+		localMatrix[3][1] = localPosition.y;
+		localMatrix[3][2] = localPosition.z;
 	}
 
 	void TransformComponent::RecalculateLocalMatrixAndInvokeOnModified() noexcept {

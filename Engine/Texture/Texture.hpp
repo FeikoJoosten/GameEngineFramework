@@ -6,65 +6,31 @@
 
 #include <cereal/types/base_class.hpp>
 #include <cereal/types/memory.hpp>
+#include <cereal/types/vector.hpp>
 
 namespace Engine {
-	enum class ENGINE_API TextureDataSize {
-		UChar = 0,
-		SChar,
-		UShort,
-		SShort,
-		UInt,
-		SInt
-	};
-
-	/// <summary>
-	/// This object is used to store information regarding a texture. NOTE: Only the resource manager is allowed to create this object.
-	/// </summary>
-	class ENGINE_API Texture : public Asset {
+	class ENGINE_API Texture final : public Asset {
 		friend cereal::access;
 		friend class TextureAssetImporter;
 
-	protected:
 		int width = 0;
 		int height = 0;
 		int channels = 0;
-		std::unique_ptr<unsigned char> textureData;
+		std::vector<unsigned char> textureData;
 
 		explicit Texture() = default;
-
 	public:
 
 		virtual ~Texture() override = default;
 		Texture(const Texture& other) = delete;
 		Texture(Texture&& other) noexcept = delete;
-
 		Texture& operator=(const Texture& other) = delete;
 		Texture& operator=(Texture&& other) noexcept = delete;
 
-		/// <summary>
-		/// This method allows you to get the width of this texture.
-		/// </summary>
-		/// <returns>Returns the width of this texture as an int.</returns>
-		int GetWidth() const;
-
-		/// <summary>
-		/// This method allows you to get the height of this texture.
-		/// </summary>
-		/// <returns>Returns the height of this texture as an int.</returns>
-		int GetHeight() const;
-
-		/// <summary>
-		/// This method allows you to compare a texture against another texture.
-		/// </summary>
-		/// <param name="texture">The texture you want to compare against.</param>
-		/// <returns>Returns true if both textures are equal to each other otherwise it returns false.</returns>
-		bool operator==(const Texture& texture) const;
-		/// <summary>
-		/// This method allows you to compare a texture against another texture.
-		/// </summary>
-		/// <param name="texture">The texture you want to compare against.</param>
-		/// <returns>Returns true if the textures are not equal to each other otherwise it returns false.</returns>
-		bool operator!=(const Texture& texture) const;
+		[[nodiscard]] int GetWidth() const;
+		[[nodiscard]] int GetHeight() const;
+		[[nodiscard]] int GetNumberOfChannels() const;
+		[[nodiscard]] const unsigned char* GetRawTextureData() const;
 
 		template <class Archive>
 		void Serialize(Archive& archive);
@@ -76,8 +42,7 @@ namespace Engine {
 			CEREAL_NVP(cereal::base_class<Asset>(this)),
 			CEREAL_NVP(width),
 			CEREAL_NVP(height),
-			CEREAL_NVP(channels),
-			CEREAL_NVP(textureData)
+			CEREAL_NVP(channels)
 		);
 	}
-} //namespace Engine
+}

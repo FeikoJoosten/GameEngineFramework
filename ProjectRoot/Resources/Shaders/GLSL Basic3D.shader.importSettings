@@ -1,0 +1,20 @@
+{
+    "data": {
+        "polymorphic_id": 2147483649,
+        "polymorphic_name": "Engine::AssetImportSettings",
+        "ptr_wrapper": {
+            "id": 2147483649,
+            "data": {
+                "cereal::base_class<Asset>(this)": {
+                    "name": "GLSL Basic3D.shader",
+                    "guid": {
+                        "guid": "30e75340-c72e-4366-bf8c-ecbe371bf491"
+                    }
+                },
+                "relatedAssetGuid": {
+                    "guid": "5cf2986c-9e85-4ffc-9a7f-1d14da9d8599"
+                }
+            }
+        }
+    }
+}

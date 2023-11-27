@@ -4,7 +4,6 @@
 #include "Engine/Api/Api.hpp"
 #include "Engine/Engine/Engine.hpp"
 #include "Engine/Utility/Event.hpp"
-#include "Engine/Utility/Defines.hpp"
 
 #if _WIN32 || _WIN64
 #define NOMINMAX
@@ -35,7 +34,21 @@ namespace Engine {
 			void Serialize(Archive& archive);
 		};
 
+	public:
+		Sharp::Event<int, int> OnWindowResizedEvent;
+		Sharp::Event<int, int> OnWindowRepositionedEvent;
+		Sharp::Event<> OnWindowShutdownRequestedEvent;
+
 	protected:
+		int width {};
+		int displayWidth {};
+		int height {};
+		int displayHeight {};
+		int xPosition {};
+		int yPosition {};
+		GLFWwindow* window = nullptr;
+		std::string title {};
+
 		Window() noexcept;
 	public:
 
@@ -126,29 +139,10 @@ namespace Engine {
 		/// <returns>Returns the display height of this window as an int.</returns>
 		[[nodiscard]] int GetDisplayHeight() const noexcept;
 
-		Sharp::Event<GLFWwindow*, int, int> OnWindowResizedEvent;
-		Sharp::Event<GLFWwindow*, int, int> OnWindowRepositionedEvent;
-		Sharp::Event<std::shared_ptr<Window>> OnWindowShutdownRequestedEvent;
-
 	protected:
-		int width {};
-		int displayWidth {};
-		int height {};
-		int displayHeight {};
-		int xPosition {};
-		int yPosition {};
-		GLFWwindow* window = nullptr;
-		std::string title {};
+		virtual void HandleOnWindowResized(int newWidth, int newHeight);
 
-		/// <summary>
-		/// This method is called whenever the GLFW window is resized.
-		/// </summary>
-		/// <param name="glfwWindow">This is a reference to the window pointer.</param>
-		/// <param name="newWidth">The new width.</param>
-		/// <param name="newHeight">The new height.</param>
-		virtual void HandleOnWindowResized(GLFWwindow* glfwWindow, int newWidth, int newHeight);
-
-		virtual void HandleOnWindowRepositioned(GLFWwindow* glfwWindow, int newXPosition, int newYPosition);
+		virtual void HandleOnWindowRepositioned(int newXPosition, int newYPosition);
 
 		void CreateInternalWindow();
 

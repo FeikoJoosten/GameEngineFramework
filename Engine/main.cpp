@@ -10,11 +10,17 @@
 #include "Engine/Components/LightComponent.hpp"
 #include "Engine/Entity/Entity.hpp"
 #include "Engine/Engine/EngineImGui.hpp"
+#include "Engine/Material/Material.hpp"
+#include "Engine/Material/MaterialAssetImporter.hpp"
 #include "Engine/Model/Model.hpp"
 #include "Engine/Window/Window.hpp"
 #include "Engine/Scene/Scene.hpp"
 #include "Engine/Scene/SceneManager.hpp"
-
+#include "Engine/Shader/Shader.hpp"
+#include "Engine/Shader/ShaderAssetImporter.hpp"
+#include "Engine/Shader/ShaderStage.hpp"
+#include "Engine/Shader/ShaderStageAssetImporter.hpp"
+#include "Engine/Texture/TextureAssetImporter.hpp"
 
 #if defined(_WIN32) && defined(UNICODE)
 #include <utf8.h>
@@ -79,22 +85,82 @@ namespace Engine {
 		std::shared_ptr<EngineImGui> engineImGui = std::make_shared<EngineImGui>();
 
 		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
-		const std::string pathInProject = "Models/";
-		const char* fileName = "Fantasy_crystal_stone.fbx";
-
+		//const std::string pathInProject = "Models/";
+		//const char* fileName = "Fantasy_crystal_stone.fbx";
 		//std::shared_ptr<IAssetImporter> assetImporter;
 		//if (assetManager->TryGetAssetImporterForPath(pathInProject + fileName, assetImporter))
-		//	assetImporter->ImportAsset(pathInProject, fileName);
+		//	assetImporter->ImportAsset(AssetManager::PathInProjectToFullPath(pathInProject), fileName);
 		//xg::Guid modelGuid;
 		//AssetRegistry::TryGetGuidForPath(pathInProject, fileName, modelGuid);
 
+		//const std::shared_ptr<MaterialAssetImporter> materialAssetImporter = assetManager->GetAssetImporter<MaterialAssetImporter>();
+		//const std::shared_ptr<ShaderAssetImporter> shaderAssetImporter = assetManager->GetAssetImporter<ShaderAssetImporter>();
+		//const std::shared_ptr<ShaderStageAssetImporter> shaderStageAssetImporter = assetManager->GetAssetImporter<ShaderStageAssetImporter>();
+		//const std::shared_ptr<Material> material = std::static_pointer_cast<Material>(materialAssetImporter->CreateAsset());
+		//const std::shared_ptr<Shader> shader = std::static_pointer_cast<Shader>(shaderAssetImporter->CreateAsset());
+		//const std::shared_ptr<ShaderStage> vertexShader = std::static_pointer_cast<ShaderStage>(shaderStageAssetImporter->CreateAsset());
+		//const std::shared_ptr<ShaderStage> fragmentShader = std::static_pointer_cast<ShaderStage>(shaderStageAssetImporter->CreateAsset());
+		//vertexShader->shaderStageType = ShaderStageType::Vertex;
+		//vertexShader->shaderStageCode = AssetManager::ReadRawFile("Shaders/Basic3D.vert").data();
+		//vertexShader->SetName("GLSL Basic3D Vertex");
+		//assetManager->WriteAssetToPath("Shaders/", vertexShader);
+		//fragmentShader->shaderStageType = ShaderStageType::Fragment;
+		//fragmentShader->shaderStageCode = AssetManager::ReadRawFile("Shaders/Basic3D.frag").data();
+		//fragmentShader->SetName("GLSL Basic3D Fragment");
+		//assetManager->WriteAssetToPath("Shaders/", fragmentShader);
+		//shader->SetName("GLSL Basic3D");
+		//assetManager->WriteAssetToPath("Shaders/", shader);
+		//shader->AddOrReplaceShaderStage(vertexShader);
+		//shader->AddOrReplaceShaderStage(fragmentShader);
+		//shader->Save();
+		//material->SetShader(shader);
+		//material->SetName("default");
+		//assetManager->WriteAssetToPath("Materials/", material);
+
+		xg::Guid shaderGuid;
+		AssetRegistry::TryGetGuidForPath("Shaders/", "GLSL Basic3D.shader", shaderGuid);
+		const std::shared_ptr<Shader> shader = AssetManager::Get()->LoadAsset<Shader>(shaderGuid);
+		//std::shared_ptr<ShaderParameter> textureParameter;
+		//shader->TryGetShaderParameter("u_texture", textureParameter);
+
+		xg::Guid vertexShaderStageGuid;
+		AssetRegistry::TryGetGuidForPath("Shaders/", "GLSL Basic3D Vertex.shaderStage", vertexShaderStageGuid);
+		const std::shared_ptr<ShaderStage> vertexShader = AssetManager::Get()->LoadAsset<ShaderStage>(vertexShaderStageGuid);
+		vertexShader->shaderStageCode = AssetManager::ReadRawFile("Shaders/Basic3D.vert").data();
+		vertexShader->Save();
+		//shader->AddOrReplaceShaderStage(vertexShader);
+		//shader->Save();
+
+		xg::Guid fragmentShaderStageGuid;
+		AssetRegistry::TryGetGuidForPath("Shaders/", "GLSL Basic3D Fragment.shaderStage", fragmentShaderStageGuid);
+		const std::shared_ptr<ShaderStage> fragmentShader = AssetManager::Get()->LoadAsset<ShaderStage>(fragmentShaderStageGuid);
+		fragmentShader->shaderStageCode = AssetManager::ReadRawFile("Shaders/Basic3D.frag").data();
+		fragmentShader->Save();
+		shader->AddOrReplaceShaderStage(fragmentShader);
+		if (std::shared_ptr<ShaderParameter> textureMainColorParameter; shader->TryGetShaderParameter("u_mainTextColor", textureMainColorParameter))
+			textureMainColorParameter->SetValue(glm::vec4(1));
+		shader->Save();
+
 		const std::shared_ptr<SceneManager> sceneManager = SceneManager::Get();
 		const std::shared_ptr<Scene> mainScene = sceneManager->OpenScene("Scenes/", "Main Scene.scene");
+		
+		//const std::shared_ptr<IAssetImporter> textureAssetImporter = assetManager->GetAssetImporter<TextureAssetImporter>();
+		//const std::shared_ptr<Asset> albedoTexture = textureAssetImporter->ImportAsset(AssetManager::PathInProjectToFullPath("Textures/Crystal Stone/"), "Crystal_stone_baseColor.png");
+		//textureParameter->SetValue(std::static_pointer_cast<Texture>(albedoTexture));
+		//shader->Save();
 
-		//if (const std::shared_ptr<Model> loadedModel = std::shared_ptr<Model>(AssetReference<Model>(modelGuid))) {
+		//xg::Guid materialGuid;
+		//AssetRegistry::TryGetGuidForPath("Materials/", "default.material", materialGuid);
+
+		//xg::Guid modelGuid;
+		//AssetRegistry::TryGetGuidForPath("Models/", "Fantasy_crystal_stone.fbx", modelGuid);
+		//if (const std::shared_ptr<Model> loadedModel = AssetReference<Model>(modelGuid)) {
 		//	const std::shared_ptr<Scene> mainScene = SceneManager::CreateScene("Main Scene", "Scenes/");
-		//	for (const std::shared_ptr<Entity>& entity : loadedModel->GetEntities())
+		//	for (const std::shared_ptr<Entity>& entity : loadedModel->GetEntities()) {
+		//		if (const std::shared_ptr<RenderComponent>& renderComponent = entity->GetComponent<RenderComponent>(); renderComponent) 
+		//			renderComponent->SetMaterial(materialGuid);
 		//		mainScene->AddEntity(entity);
+		//	}
 		//
 		//	const std::shared_ptr<Entity> cameraEntity = std::make_shared<Entity>("Camera");
 		//	const std::shared_ptr<TransformComponent> transformComponent = cameraEntity->AddComponent<TransformComponent>();
@@ -118,7 +184,7 @@ namespace Engine {
 		//std::string currentFilePath;
 		//const char* assetNameWithExtension;
 		//const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
-		//if (assetManager->GetAssetRegistry()->TryGetPathForGuid(mainScene->GetGuid(), currentFilePath, assetNameWithExtension))
+		//if (assetManager->GetAssetRegistry()->TryGetFullPathForGuid(mainScene->GetGuid(), currentFilePath, assetNameWithExtension))
 		//	assetManager->WriteAssetToFullPath(currentFilePath, mainScene);
 		
 		//const std::shared_ptr<Entity> lockedEntity = entitySystem->CreateEntity("Amazing Entity");
@@ -135,9 +201,8 @@ namespace Engine {
 		//std::shared_ptr<Entity> lockedEntity = assetManager->ReadDataFromPath<std::shared_ptr<Entity>>(entityFilePath);
 		
 		while (!Window::Get()->ShouldClose())
-		{
 			Application::Update();
-		}
+
 		//modelAnimations.clear();
 		//imGuiRenderer.reset();
 		Application::Quit();

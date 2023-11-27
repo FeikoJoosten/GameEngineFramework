@@ -53,22 +53,13 @@ namespace Engine {
 		uint32_t byteSize;
 
 		switch (bytes) {
-		case TextureDataSize::U_CHAR:
+		case TextureDataSize::CHAR:
 			byteSize = 1;
 			break;
-		case TextureDataSize::S_CHAR:
-			byteSize = 1;
-			break;
-		case TextureDataSize::U_SHORT:
+		case TextureDataSize::SHORT:
 			byteSize = 2;
 			break;
-		case TextureDataSize::S_SHORT:
-			byteSize = 2;
-			break;
-		case TextureDataSize::U_INT:
-			byteSize = 4;
-			break;
-		case TextureDataSize::S_INT:
+		case TextureDataSize::INT:
 			byteSize = 4;
 			break;
 		default:

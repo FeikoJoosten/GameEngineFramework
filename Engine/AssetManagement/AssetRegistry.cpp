@@ -20,7 +20,7 @@ namespace Engine {
 		if (guid != other.guid) return false;
 		if (parentGuid != other.parentGuid) return false;
 		if (childGuids != other.childGuids) return false;
-		if (pathInProject != other.pathInProject) return false;
+		if (fullPath != other.fullPath) return false;
 		if (assetNameWithExtension != other.assetNameWithExtension) return false;
 
 		return true;
@@ -37,9 +37,9 @@ namespace Engine {
 		return false;
 	}
 
-	bool AssetRegistry::TryGetPathForGuid(const xg::Guid& assetGuid, std::string& pathInProject, std::string& assetNameWithExtension) {
+	bool AssetRegistry::TryGetFullPathForGuid(const xg::Guid& assetGuid, std::string& fullPath, std::string& assetNameWithExtension) {
 		if (AssetMetaInfo outputMetaInfo; TryLoadAssetMetaInfoForGuid(assetGuid, outputMetaInfo)) {
-			pathInProject = outputMetaInfo.pathInProject;
+			fullPath = outputMetaInfo.fullPath;
 			assetNameWithExtension = outputMetaInfo.assetNameWithExtension;
 			return true;
 		}
@@ -48,44 +48,38 @@ namespace Engine {
 	}
 
 	bool AssetRegistry::TryGetGuidForPath(const std::string& pathInProject, const char* assetNameWithExtension, xg::Guid& assetGuid) {
-		std::string sanitizedPath = StringUtility::SanitizePath(pathInProject);
-
-		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
-		std::shared_ptr<Asset> importSettingsAsAsset = assetManager->ReadDataFromPath<std::shared_ptr<Asset>>(pathInProject, assetNameWithExtension);
-		if (importSettingsAsAsset && importSettingsAsAsset->GetGuid().isValid()) {
-			assetGuid = importSettingsAsAsset->GetGuid();
-			return true;
-		}
-
-		const std::shared_ptr<IAssetImporter> assetImportSettingsImporter = assetManager->GetAssetImporter<AssetImportSettingsAssetImporter>();
-		importSettingsAsAsset = assetManager->ReadDataFromPath<std::shared_ptr<Asset>>(pathInProject, std::string(assetNameWithExtension).append(assetImportSettingsImporter->GetDefaultAssetExtension()));
-		if (importSettingsAsAsset) {
-			const std::shared_ptr<AssetImportSettings> importSettings = std::static_pointer_cast<AssetImportSettings>(importSettingsAsAsset);
-			if (!importSettings || !importSettings->relatedAssetGuid.isValid()) { // Fail safe in case the asset does not generate import settings
-				// This will end up being extremely slow if the project has thousands, if not already at hundreds, of assets. Is this really needed if import settings are always generated?
-				for (const std::string assetRegistryFolder = AssetManager::GetProjectRoot() + AssetManager::GetNativeFolder() + ASSET_REGISTRY_PATH;
-					const std::filesystem::directory_entry & directoryEntry : std::filesystem::directory_iterator { assetRegistryFolder }) {
-					std::filesystem::path directoryPath = directoryEntry.path();
-					std::filesystem::path folderName = directoryPath.filename();
-					AssetMetaInfo assetMetaInfo = AssetManager::ReadDataFromFullPath<AssetMetaInfo>(directoryPath.string() + "/", folderName.generic_string());
-					if (!assetMetaInfo.guid.isValid())	continue; // Do we need to error this?
-					if (assetMetaInfo.assetNameWithExtension != assetNameWithExtension) continue;
-					if (assetMetaInfo.pathInProject != pathInProject) continue;
-
-					assetGuid = assetMetaInfo.guid;
-					return true;
-				}
-
-				return false;
-			}
-			assetGuid = importSettings->relatedAssetGuid;
-			return true;
-		}
-
-		return false;
+		return TryGetGuidForFullPath(AssetManager::PathInProjectToFullPath(pathInProject), assetNameWithExtension, assetGuid);
 	}
 
-	bool AssetRegistry::TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const std::string& pathInProject, const char* assetNameWithExtension) {
+	bool AssetRegistry::TryGetGuidForFullPath(const std::string& fullPath, const char* assetNameWithExtension, xg::Guid& assetGuid) {
+		std::string sanitizedPath = StringUtility::SanitizePath(fullPath);
+
+		const std::shared_ptr<AssetManager> assetManager = AssetManager::Get();
+		const std::shared_ptr<IAssetImporter> assetImportSettingsImporter = assetManager->GetAssetImporter<AssetImportSettingsAssetImporter>();
+		const std::shared_ptr<AssetImportSettings> importSettings = std::static_pointer_cast<AssetImportSettings>(AssetManager::ReadDataFromFullPath<std::shared_ptr<Asset>>(fullPath, std::string(assetNameWithExtension).append(assetImportSettingsImporter->GetDefaultAssetExtension())));
+		if (!importSettings || !importSettings->relatedAssetGuid.isValid()) { // Fail safe in case the asset does not generate import settings
+			// This will end up being extremely slow if the project has thousands, if not already at hundreds, of assets. Is this really needed if import settings are always generated?
+			for (const std::string assetRegistryFolder = AssetManager::GetProjectRoot() + AssetManager::GetNativeFolder() + ASSET_REGISTRY_PATH;
+				const std::filesystem::directory_entry & directoryEntry : std::filesystem::directory_iterator { assetRegistryFolder }) {
+				std::filesystem::path directoryPath = directoryEntry.path();
+				std::filesystem::path folderName = directoryPath.filename();
+				AssetMetaInfo assetMetaInfo = AssetManager::ReadDataFromFullPath<AssetMetaInfo>(directoryPath.string() + "/", folderName.generic_string());
+				if (!assetMetaInfo.guid.isValid())	continue; // Do we need to error this?
+				if (assetMetaInfo.assetNameWithExtension != assetNameWithExtension) continue;
+				if (assetMetaInfo.fullPath != fullPath) continue;
+
+				assetGuid = assetMetaInfo.guid;
+				return true;
+			}
+
+			return false;
+		}
+
+		assetGuid = importSettings->relatedAssetGuid;
+		return true;
+	}
+
+	bool AssetRegistry::TryRegisterAsset(const std::shared_ptr<Asset>& assetToRegister, const xg::Guid& importSettingsGuid, const std::string& fullPath, const char* assetNameWithExtension) {
 		if (!assetToRegister) {
 			DEBUG_ERROR("The asset you tried to register is null!");
 			return false;
@@ -96,11 +90,13 @@ namespace Engine {
 
 		assetToRegister->guid = xg::newGuid();
 		outputMetaInfo.assetNameWithExtension = assetNameWithExtension;
-		outputMetaInfo.pathInProject = StringUtility::SanitizePath(pathInProject);
+		outputMetaInfo.fullPath = fullPath;
 		outputMetaInfo.guid = assetToRegister->guid;
+		if (std::dynamic_pointer_cast<AssetImportSettings>(assetToRegister) && !importSettingsGuid.isValid()) outputMetaInfo.importSettingsGuid = assetToRegister->guid;
+		else outputMetaInfo.importSettingsGuid = importSettingsGuid;
 		SaveAssetMetaInfo(outputMetaInfo);
 
-		OnAssetRegisteredEvent(assetToRegister, pathInProject);
+		OnAssetRegisteredEvent(assetToRegister, fullPath);
 		return true;
 	}
 
@@ -114,17 +110,19 @@ namespace Engine {
 		return true;
 	}
 
-	bool AssetRegistry::TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newPathInProject, const char* newAssetNameWithExtension) {
+	bool AssetRegistry::TryUpdatePathForGuid(const xg::Guid& assetGuid, const std::string& newFullPath, const char* newAssetNameWithExtension) {
 		AssetMetaInfo outputMetaInfo;
 		if (!TryLoadAssetMetaInfoForGuid(assetGuid, outputMetaInfo)) return false;
 
-		const std::string oldPathInProject = outputMetaInfo.pathInProject;
+		const std::string oldFullPath = outputMetaInfo.fullPath;
 		const std::string oldAssetName = outputMetaInfo.assetNameWithExtension;
-		outputMetaInfo.pathInProject = StringUtility::SanitizePath(newPathInProject);
+		outputMetaInfo.fullPath = newFullPath;
 		outputMetaInfo.assetNameWithExtension = newAssetNameWithExtension; // TODO: Verify the incoming name has an extension appended to it
 		SaveAssetMetaInfo(outputMetaInfo);
 
-		OnAssetMovedOrRenamedEvent(assetGuid, oldPathInProject, newPathInProject, oldAssetName, newAssetNameWithExtension);
+		// TODO: Should this also move the import settings?
+
+		OnAssetMovedOrRenamedEvent(assetGuid, oldFullPath, newFullPath, oldAssetName, newAssetNameWithExtension);
 		return true;
 	}
 
@@ -144,7 +142,7 @@ namespace Engine {
 			return false;
 		}
 
-		customData = AssetManager::Get()->ReadDataFromFullPath<std::shared_ptr<Asset>>(GetAssetRegistryPathForGuid(assetGuid), assetGuid.str() + dataExtension);
+		customData = AssetManager::ReadDataFromFullPath<std::shared_ptr<Asset>>(GetAssetRegistryPathForGuid(assetGuid), assetGuid.str() + dataExtension);
 		return static_cast<bool>(customData);
 	}
 
@@ -173,6 +171,29 @@ namespace Engine {
 		SaveAssetMetaInfo(parentAssetMetaInfo);
 		SaveAssetMetaInfo(assetToAddAssetMetaInfo);
 		return true;
+	}
+
+	void AssetRegistry::RemoveChildAssetFromAsset(const xg::Guid& parentGuid, const xg::Guid& childGuid) {
+		AssetMetaInfo parentAssetMetaInfo;
+		if (!TryLoadAssetMetaInfoForGuid(parentGuid, parentAssetMetaInfo)) {
+			DEBUG_ERROR("Failed to remove asset from parent as the parent was not yet registerd");
+			return;
+		}
+
+		const std::ranges::borrowed_iterator_t<std::vector<xg::Guid>&> iterator = std::ranges::find(parentAssetMetaInfo.childGuids, childGuid);
+		if (iterator == parentAssetMetaInfo.childGuids.end()) return;
+
+
+		AssetMetaInfo assetToAddAssetMetaInfo;
+		if (!TryLoadAssetMetaInfoForGuid(childGuid, assetToAddAssetMetaInfo)) {
+			DEBUG_ERROR("Failed to remove asset from parent as the asset was not yet registerd");
+			return;
+		}
+
+		parentAssetMetaInfo.childGuids.erase(iterator);
+		assetToAddAssetMetaInfo.parentGuid = xg::Guid();
+		SaveAssetMetaInfo(parentAssetMetaInfo);
+		SaveAssetMetaInfo(assetToAddAssetMetaInfo);
 	}
 
 	bool AssetRegistry::TryAssignGuidToAsset(const std::shared_ptr<Asset>& assetToUpdate, const xg::Guid& assetGuid) {
@@ -206,6 +227,29 @@ namespace Engine {
 		return true;
 	}
 
+	bool AssetRegistry::TryGetImportSettingsForAsset(const xg::Guid& assetGuid,	std::shared_ptr<AssetImportSettings>& importSettings) {
+		AssetMetaInfo metaInfo;
+		if (!TryLoadAssetMetaInfoForGuid(assetGuid, metaInfo)) {
+			DEBUG_DEBUG("Cannot retrieve import settings, because the asset guid is unknown!");
+			return false;
+		}
+
+		if (!metaInfo.importSettingsGuid.isValid())
+			return false; // Should this log an error?
+
+		if (!TryLoadAssetMetaInfoForGuid(metaInfo.importSettingsGuid, metaInfo)) {
+			DEBUG_DEBUG("Cannot retrieve import settings, because the import settings cannot be found!");
+			return false;
+		}
+
+		importSettings = std::static_pointer_cast<AssetImportSettings>(AssetManager::ReadDataFromFullPath<std::shared_ptr<Asset>>(metaInfo.fullPath, metaInfo.assetNameWithExtension));
+		return static_cast<bool>(importSettings);
+	}
+
+	std::string AssetRegistry::GetAssetRegistryPathForGuid(const xg::Guid& assetGuid) {
+		return AssetManager::GetProjectRoot() + AssetManager::GetNativeFolder() + ASSET_REGISTRY_PATH + assetGuid.str() + "/";
+	}
+
 	bool AssetRegistry::TryLoadAssetMetaInfoForGuid(const xg::Guid& assetGuid, AssetMetaInfo& outputMetaInfo) {
 		outputMetaInfo = AssetManager::ReadDataFromFullPath<AssetMetaInfo>(GetAssetRegistryPathForGuid(assetGuid), assetGuid);
 		return outputMetaInfo.guid.isValid();
@@ -218,10 +262,6 @@ namespace Engine {
 
 	void AssetRegistry::DeleteAssetMetaInfo(const AssetMetaInfo& assetMetaInfo) {
 		AssetManager::Get()->DeleteFile(GetAssetRegistryPathForGuid(assetMetaInfo.guid), assetMetaInfo.guid, true);
-	}
-
-	std::string AssetRegistry::GetAssetRegistryPathForGuid(const xg::Guid& assetGuid) {
-		return AssetManager::GetProjectRoot() + AssetManager::GetNativeFolder() + ASSET_REGISTRY_PATH + assetGuid.str() + "/";
 	}
 
 }

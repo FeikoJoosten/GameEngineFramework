@@ -56,6 +56,6 @@ namespace Engine {
 
 		void Update() noexcept;
 
-		void HandleOnWindowResizedEvent(GLFWwindow* glfwWindow, int newWidth, int newHeight);
+		void HandleOnWindowResizedEvent(int newWidth, int newHeight);
 	};
 } //namespace Engine
