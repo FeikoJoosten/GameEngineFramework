@@ -5,10 +5,10 @@
 #include "Engine/Renderer/Renderer.hpp"
 
 #ifdef USING_OPENGL
-#include "Engine/Renderer/OpenGLRenderer.hpp"
+#include "Engine/Platform/OpenGL/Renderer/OpenGLRenderer.hpp"
 #endif
 #ifdef USING_VULKAN
-#include "Engine/Renderer/VulkanRenderer.hpp"
+#include "Engine/Platform/Vulkan/Renderer/VulkanRenderer.hpp"
 #endif
 
 namespace Engine {

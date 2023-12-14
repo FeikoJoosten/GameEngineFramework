@@ -13,12 +13,12 @@
 #include "Engine/Utility/StringUtility.hpp"
 
 #ifdef USING_OPENGL
-#include "Engine/Window/OpenGLWindow.hpp"
-#include "Engine/Renderer/OpenGLRenderer.hpp"
+#include "Engine/Platform/OpenGL/Window/OpenGLWindow.hpp"
+#include "Engine/Platform/OpenGL/Renderer/OpenGLRenderer.hpp"
 #endif
 #ifdef USING_VULKAN
-#include "Engine/Window/VulkanWindow.hpp"
-#include "Engine/Renderer/VulkanRenderer.hpp"
+#include "Engine/Platform/Vulkan/Window/VulkanWindow.hpp"
+#include "Engine/Platform/Vulkan/Renderer/VulkanRenderer.hpp"
 #endif
 
 #include <tinyfiledialogs/tinyfiledialogs.h>

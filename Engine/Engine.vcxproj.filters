@@ -91,12 +91,6 @@
     <Filter Include="Source Files\Material">
       <UniqueIdentifier>{8916de25-44c9-4c04-8472-5987516d2d16}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Renderer\Vulkan">
-      <UniqueIdentifier>{6f25b421-6a31-4429-ba77-cfa500c88f6e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Renderer\Vulkan">
-      <UniqueIdentifier>{be1225fd-d8c9-4f6e-b92d-afaab2e92183}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Application">
       <UniqueIdentifier>{5605a1db-71f8-4726-b102-9cca86068494}</UniqueIdentifier>
     </Filter>
@@ -154,6 +148,90 @@
     <Filter Include="Header Files\Serialization">
       <UniqueIdentifier>{ad088b50-3d95-4eb8-b26a-cb34c0910641}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Platform">
+      <UniqueIdentifier>{c9d8082a-7ebe-44a0-9660-1f25aefffdfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\Vulkan">
+      <UniqueIdentifier>{f45e0a7e-43a6-4371-abe1-258cade47284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\Vulkan\Mesh">
+      <UniqueIdentifier>{0c4fc433-846f-45a2-9eeb-36a27c7c9f74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\Vulkan\Window">
+      <UniqueIdentifier>{89c2a059-f0bd-4baa-82ab-6d4c720a2110}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\Vulkan\Texture">
+      <UniqueIdentifier>{5476b8e9-2678-4ab5-a9c2-2c888f90cca4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\Vulkan\Renderer">
+      <UniqueIdentifier>{a23521ed-7266-423b-99a1-84f0f3fcf52d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\Vulkan\ParticleSystem">
+      <UniqueIdentifier>{0a29e0c6-03ed-400c-a816-026e462289aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform">
+      <UniqueIdentifier>{d9cf485d-2548-4185-b77e-26a0e4a98469}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\Vulkan">
+      <UniqueIdentifier>{6666703e-9370-41cf-a810-706d57fd84dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\OpenGL">
+      <UniqueIdentifier>{8f432109-53ef-4e6c-88ae-2a81920aac6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\OpenGL">
+      <UniqueIdentifier>{b9d2a3fe-ba45-4b67-92bf-dec5745e692c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\OpenGL\Mesh">
+      <UniqueIdentifier>{a53d282c-4703-4ed2-a77b-469932851d6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\OpenGL\Renderer">
+      <UniqueIdentifier>{cbac3b51-db73-42b6-b19d-b8778b6030bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\OpenGL\Shader">
+      <UniqueIdentifier>{da10111f-853f-422d-a861-67e794e8d381}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\OpenGL\Texture">
+      <UniqueIdentifier>{6a99063a-251c-4921-a368-f54e0061b674}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\OpenGL\Window">
+      <UniqueIdentifier>{921b044f-56b5-4ded-b58b-0cdbe6d57129}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\OpenGL\Window">
+      <UniqueIdentifier>{3192bef6-28c3-46d6-bdc8-e05bbc4bb888}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\OpenGL\Texture">
+      <UniqueIdentifier>{e3c4c92d-105d-48bd-8967-e479461c6cce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\OpenGL\Shader">
+      <UniqueIdentifier>{efb57068-6e40-4b3f-b704-08b12d1107c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\OpenGL\Renderer">
+      <UniqueIdentifier>{5eaec139-660f-4d46-bf4b-225298e3d468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\OpenGL\Mesh">
+      <UniqueIdentifier>{4d0fdac9-4d08-4039-bdb3-61cc1b848ccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\Vulkan\Window">
+      <UniqueIdentifier>{1ff84e39-23bf-4a90-83bf-76972f1c216d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\Vulkan\Texture">
+      <UniqueIdentifier>{37a8c804-ebf8-4ef9-b415-de7d6b6c7e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\Vulkan\Renderer">
+      <UniqueIdentifier>{3b71cf1f-0c8c-4076-a7c7-4eccd5ca606d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\Vulkan\ParticleSystem">
+      <UniqueIdentifier>{66931db8-e956-4f74-a33d-87aabd387b9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\Vulkan\Mesh">
+      <UniqueIdentifier>{ca420a16-a80d-43c6-870f-ca14ee6a8aaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Platform\Vulkan\Material">
+      <UniqueIdentifier>{2ada1d38-99b0-4143-8afe-8dd0682d3bc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Platform\Vulkan\Material">
+      <UniqueIdentifier>{9d922e31-d41a-4af8-9eaa-1cd48433625e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Component.hpp">
@@ -177,9 +255,6 @@
     <ClInclude Include="Input\InputManager.hpp">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\imgui_impl_glfw_vulkan.h">
-      <Filter>Header Files\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\IMGUI\imconfig.h">
       <Filter>Header Files\Renderer\IMGUI</Filter>
     </ClInclude>
@@ -198,13 +273,7 @@
     <ClInclude Include="Renderer\IMGUI\stb_truetype.h">
       <Filter>Header Files\Renderer\IMGUI</Filter>
     </ClInclude>
-    <ClInclude Include="Window\VulkanWindow.hpp">
-      <Filter>Header Files\Window</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Renderer.hpp">
-      <Filter>Header Files\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\VulkanRenderer.hpp">
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Components\TransformComponent.hpp">
@@ -213,23 +282,8 @@
     <ClInclude Include="Shader\Shader.hpp">
       <Filter>Header Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Shader\OpenGLShader.hpp">
-      <Filter>Header Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Texture\Texture.hpp">
       <Filter>Header Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture\OpenGLTexture.hpp">
-      <Filter>Header Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Window\OpenGLWindow.hpp">
-      <Filter>Header Files\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\OpenGLRenderer.hpp">
-      <Filter>Header Files\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh\OpenGLMesh.hpp">
-      <Filter>Header Files\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Utility\Event.hpp">
       <Filter>Header Files\Utility</Filter>
@@ -237,17 +291,8 @@
     <ClInclude Include="Camera\Frustum.hpp">
       <Filter>Header Files\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh\VulkanMesh.hpp">
-      <Filter>Header Files\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture\VulkanTexture.hpp">
-      <Filter>Header Files\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\Time.hpp">
       <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\imgui_impl_glfw_gl3.h">
-      <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Components\LightComponent.hpp">
       <Filter>Header Files\Components</Filter>
@@ -257,45 +302,6 @@
     </ClInclude>
     <ClInclude Include="Material\Material.hpp">
       <Filter>Header Files\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="Material\VulkanMaterial.hpp">
-      <Filter>Header Files\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\vk_mem_alloc.h">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\VulkanBuffer.hpp">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\VulkanComputePipeline.hpp">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\VulkanDebugRenderer.hpp">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\VulkanDescriptorPool.hpp">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\VulkanInstance.hpp">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\VulkanLogicalDevice.hpp">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\VulkanPhysicalDevice.hpp">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\VulkanPipeline.hpp">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\VulkanSkeletalMeshRenderer.hpp">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\VulkanSpriteRenderer.hpp">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Vulkan\VulkanStaticMeshRenderer.hpp">
-      <Filter>Header Files\Renderer\Vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Mesh\Mesh.hpp">
       <Filter>Header Files\Mesh</Filter>
@@ -332,9 +338,6 @@
     </ClInclude>
     <ClInclude Include="AssetManagement\Asset.hpp">
       <Filter>Header Files\AssetManagement</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\OpenGLUtility.hpp">
-      <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="AssetManagement\EngineAssetManager.hpp">
       <Filter>Header Files\AssetManagement</Filter>
@@ -453,6 +456,84 @@
     <ClInclude Include="Shader\ShaderConstants.hpp">
       <Filter>Header Files\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Window\VulkanWindow.hpp">
+      <Filter>Header Files\Platform\Vulkan\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Texture\VulkanTexture.hpp">
+      <Filter>Header Files\Platform\Vulkan\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\imgui_impl_glfw_vulkan.h">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\vk_mem_alloc.h">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanBuffer.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanComputePipeline.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanDebugRenderer.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanDescriptorPool.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanInstance.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanLogicalDevice.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanPhysicalDevice.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanPipeline.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanRenderer.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanSkeletalMeshRenderer.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanSpriteRenderer.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Renderer\VulkanStaticMeshRenderer.hpp">
+      <Filter>Header Files\Platform\Vulkan\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\ParticleSystem\VulkanEmitter.hpp">
+      <Filter>Header Files\Platform\Vulkan\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Mesh\VulkanMesh.hpp">
+      <Filter>Header Files\Platform\Vulkan\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\OpenGL\Window\OpenGLWindow.hpp">
+      <Filter>Header Files\Platform\OpenGL\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\OpenGL\Texture\OpenGLTexture.hpp">
+      <Filter>Header Files\Platform\OpenGL\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\OpenGL\Shader\OpenGLShader.hpp">
+      <Filter>Header Files\Platform\OpenGL\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\OpenGL\Renderer\imgui_impl_glfw_gl3.h">
+      <Filter>Header Files\Platform\OpenGL\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\OpenGL\Renderer\OpenGLRenderer.hpp">
+      <Filter>Header Files\Platform\OpenGL\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\OpenGL\Renderer\OpenGLUtility.hpp">
+      <Filter>Header Files\Platform\OpenGL\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\OpenGL\Mesh\OpenGLMesh.hpp">
+      <Filter>Header Files\Platform\OpenGL\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Vulkan\Material\VulkanMaterial.hpp">
+      <Filter>Header Files\Platform\Vulkan\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity\Entity.cpp">
@@ -473,9 +554,6 @@
     <ClCompile Include="Input\InputManager.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\imgui_impl_glfw_vulkan.cpp">
-      <Filter>Source Files\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\IMGUI\imgui.cpp">
       <Filter>Source Files\Renderer\IMGUI</Filter>
     </ClCompile>
@@ -485,13 +563,7 @@
     <ClCompile Include="Renderer\IMGUI\imgui_draw.cpp">
       <Filter>Source Files\Renderer\IMGUI</Filter>
     </ClCompile>
-    <ClCompile Include="Window\VulkanWindow.cpp">
-      <Filter>Source Files\Window</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\Renderer.cpp">
-      <Filter>Source Files\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\VulkanRenderer.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Components\TransformComponent.cpp">
@@ -500,20 +572,8 @@
     <ClCompile Include="Shader\Shader.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Shader\OpenGLShader.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="Texture\Texture.cpp">
       <Filter>Source Files\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture\OpenGLTexture.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Window\OpenGLWindow.cpp">
-      <Filter>Source Files\Window</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\OpenGLRenderer.cpp">
-      <Filter>Source Files\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Model\Model.cpp">
       <Filter>Source Files\Model</Filter>
@@ -521,65 +581,17 @@
     <ClCompile Include="Mesh\Mesh.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh\OpenGLMesh.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Camera\Frustum.cpp">
       <Filter>Source Files\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh\VulkanMesh.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture\VulkanTexture.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\Time.cpp">
       <Filter>Source Files\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\imgui_impl_glfw_gl3.cpp">
-      <Filter>Source Files\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Components\LightComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="Material\Material.cpp">
       <Filter>Source Files\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="Material\VulkanMaterial.cpp">
-      <Filter>Source Files\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\VulkanBuffer.cpp">
-      <Filter>Source Files\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\VulkanComputePipeline.cpp">
-      <Filter>Source Files\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\VulkanDebugRenderer.cpp">
-      <Filter>Source Files\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\VulkanDescriptorPool.cpp">
-      <Filter>Source Files\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\VulkanInstance.cpp">
-      <Filter>Source Files\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\VulkanLogicalDevice.cpp">
-      <Filter>Source Files\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\VulkanPhysicalDevice.cpp">
-      <Filter>Source Files\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\VulkanPipeline.cpp">
-      <Filter>Source Files\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\VulkanSkeletalMeshRenderer.cpp">
-      <Filter>Source Files\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\VulkanSpriteRenderer.cpp">
-      <Filter>Source Files\Renderer\Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Vulkan\VulkanStaticMeshRenderer.cpp">
-      <Filter>Source Files\Renderer\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Utility\Random.cpp">
       <Filter>Source Files\Utility</Filter>
@@ -677,9 +689,6 @@
     <ClCompile Include="Shader\ShaderParameter.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\RenderCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Shader\ShaderStage.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
@@ -688,6 +697,81 @@
     </ClCompile>
     <ClCompile Include="AssetManagement\AssetAssetImporter.cpp">
       <Filter>Source Files\AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Window\VulkanWindow.cpp">
+      <Filter>Source Files\Platform\Vulkan\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Texture\VulkanTexture.cpp">
+      <Filter>Source Files\Platform\Vulkan\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\imgui_impl_glfw_vulkan.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanBuffer.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanComputePipeline.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanDebugRenderer.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanDescriptorPool.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanInstance.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanLogicalDevice.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanPhysicalDevice.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanPipeline.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanRenderer.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanSkeletalMeshRenderer.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanSpriteRenderer.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Renderer\VulkanStaticMeshRenderer.cpp">
+      <Filter>Source Files\Platform\Vulkan\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\ParticleSystem\VulkanEmitter.cpp">
+      <Filter>Source Files\Platform\Vulkan\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Mesh\VulkanMesh.cpp">
+      <Filter>Source Files\Platform\Vulkan\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\OpenGL\Window\OpenGLWindow.cpp">
+      <Filter>Source Files\Platform\OpenGL\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\OpenGL\Texture\OpenGLTexture.cpp">
+      <Filter>Source Files\Platform\OpenGL\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\OpenGL\Shader\OpenGLShader.cpp">
+      <Filter>Source Files\Platform\OpenGL\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\OpenGL\Renderer\imgui_impl_glfw_gl3.cpp">
+      <Filter>Source Files\Platform\OpenGL\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\OpenGL\Renderer\OpenGLRenderer.cpp">
+      <Filter>Source Files\Platform\OpenGL\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\OpenGL\Mesh\OpenGLMesh.cpp">
+      <Filter>Source Files\Platform\OpenGL\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Vulkan\Material\VulkanMaterial.cpp">
+      <Filter>Source Files\Platform\Vulkan\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\RenderCommand.cpp">
+      <Filter>Source Files\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
